@@ -29,6 +29,10 @@ p, div, h6{
     width: 100%;
 }
 
+.form-bg {
+    background-color: rgb(158, 157, 157);
+}
+
 .bg-darkgray{
     background-color: rgb(126, 126, 126);
 }
@@ -143,9 +147,7 @@ p, div, h6{
     overflow: auto;
 }
 
-.form-bg {
-    background-color: rgb(158, 157, 157);
-}
+
 
 .comment-header {
     font-size: 14px;
