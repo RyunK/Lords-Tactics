@@ -1,11 +1,40 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+  <meta charset="UTF-8">
+  <title>Nested Flex</title>
+  <style>
+    .outer {
+      display: flex;
+      justify-content: space-between; /* 바깥 flex 컨테이너 */
+      background-color: lightblue;
+      padding: 20px;
+    }
+
+    .inner {
+      display: flex;
+      justify-content: center; /* 안쪽 flex 컨테이너 */
+      background-color: lightcoral;
+      padding: 10px;
+      width: 100%; /* 내부 flex가 넓게 퍼질 수 있도록 */
+    }
+
+    .box {
+      width: 50px;
+      height: 50px;
+      background-color: black;
+      margin: 5px;
+    }
+  </style>
 </head>
 <body>
-    
+  <div class="outer">
+    <div class="box"></div>
+    <div class="inner">
+      <div class="box"></div>
+      <div class="box"></div>
+    </div>
+    <div class="box"></div>
+  </div>
 </body>
 </html>
