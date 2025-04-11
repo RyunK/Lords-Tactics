@@ -1,0 +1,23 @@
+{
+  "name": "lordtactics",
+  "version": "1.0.0",
+  "description": "모바일 게임 <로드 오브 히어로즈>를 위한 팬메이드 웹사이트",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/RyunK/Lords-Tactics.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/RyunK/Lords-Tactics/issues"
+  },
+  "homepage": "https://github.com/RyunK/Lords-Tactics#readme",
+  "dependencies": {
+    "express": "^5.1.0"
+  }
+}
