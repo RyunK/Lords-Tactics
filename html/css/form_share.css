@@ -2,6 +2,8 @@
 body {
     margin: 0px;
     box-sizing: border-box;
+    background-image: url("../../sources/img/background_img.png"), 
+                    linear-gradient(#f0f0f0, #f0f0f0) ;
 }
 
 p, div, h6{
@@ -92,19 +94,29 @@ p, div, h6{
 }
 
 .character-5 {
-    margin:0px 30px 15px 0px;
-    width: 80px;
-    height: 80px;
-    background-color: white;
+    margin:0px 10px 15px 0px;
+    width: 100px;
+    /* height: 80px; */
+    /* background-color: white; */
     position: relative;
+}
+
+.character-5 img{
+    width: 100px;
+    /* height: 80px; */
 }
 
 .character-10 {
     margin:0px 10px 15px 0px;
     width: 80px;
     height: 80px;
-    background-color: white;
+    /* background-color: white; */
     position: relative;
+}
+
+.character-10 img{
+    width: 80px;
+    height: 80px;
 }
 
 
@@ -128,8 +140,8 @@ p, div, h6{
   font-weight: bold;
 
   position: absolute;
-  bottom: 4px;
-  right: 4px;
+  bottom: 3px;
+  right: 8px;
 }
 
 .arena-party1 {
@@ -159,11 +171,19 @@ p, div, h6{
 }
 
 .character-5-comment {
-    margin:0px 10px 15px 0px;
-    width: 50px;
-    height: 50px;
-    background-color: white;
+    margin:0px 0px 0px 0px;
+    width: 60px;
+    /* height: 50px; */
+    /* background-color: white; */
     position: relative;
+}
+
+.character-5-comment img{
+    /* margin:0px 10px 15px 0px; */
+    width: 60px;
+    /* height: 50px; */
+    /* background-color: white; */
+    /* position: relative; */
 }
 
 .comment-body {
