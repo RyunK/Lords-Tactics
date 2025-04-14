@@ -1,69 +1,50 @@
-@font-face {
-    font-family: 'Pretendard-Regular';
-    src: url('https://fastly.jsdelivr.net/gh/Project-Noonnu/noonfonts_2107@1.1/Pretendard-Regular.woff') format('woff');
-    font-weight: 400;
-    font-style: normal;
-}
 
-
-body {
-    margin: 0px;
-    box-sizing: border-box;
-    background-image: url("../../sources/img/background_img.png"), 
-                    linear-gradient(#f0f0f0, #f0f0f0) ;
-
-    font-family: Pretendard-Regular;
-}
-
-p, div, h6{
-    font-size: 12px;
-    font-weight: bold;
-    margin: 0px;
-}
-
-.btn-close {
+.btn-close-origin {
     height: 100%;
     padding: 0px 8px;
+    
+    font-size: 24px;
+    border: 0;
+}
+
+.btn-close-origin:hover{
+    background-color: #ff5d5d;
+}
+
+.btn-close-origin:active{
+    background-color: #fe8282;
+
 }
 
 .share-card{
    
-    width: 800px;
-    height: 370px;
-    background-color: rgb(158, 157, 157);
+    width: 600px;
+    height: 380px;
+    background-color: #BFC3D4;
 
 }
 
 .post-title{
     display: flex;
-    height: 30px;
+    height: 35px;
     width: 100%;
 }
 
-.form-bg {
-    background-color: rgb(158, 157, 157);
+.title-sizing {
+    padding: 0px 18px;
+    height: 100%;
 }
 
-.bg-darkgray{
-    background-color: rgb(126, 126, 126);
-}
-
-.bg-blue {
-    background-color: lightblue;
-}
-
-.title-pd {
-    padding: 5px 12px;
+.title-size{
+    font-size: 14px;
 }
 
 .mg-10px{
     margin: 10px;
 }
 
-.writer-info{
-    display: flex;
-
-    background-image: linear-gradient(to right, white, rgba(0,0,0,0));
+.color-writer {
+    color: #ce6dfb;
 }
 
 .t-pd {
@@ -74,20 +55,24 @@ p, div, h6{
     height: 240px;
 }
 
-.form-box {    
-    
-    /* margin: auto; */
-    /* background-color: white; */
+.explain-title {
+    font-size: 14px;
+    font-weight: bold;
 }
 
-.explain-title {
-    font-size: 13px;
+.left-box{
+    width: 70%;
 }
 
 .right-box-mg {
     margin-top: 20px;
     margin-right: 20px;
 }
+
+.right-box {
+    width: 40%;
+}
+
 
 .explain-content {
     margin-top: 5px;
@@ -97,22 +82,25 @@ p, div, h6{
 }
 
 .bottom-btn {
-    width: 48%;
-    font-size: 13px;
-    font-weight: bolder;
+    width: 92%;
+    height: 38px;
+
+    font-size: 14px;
+    font-weight: bold;
+
+    border: 0;
 }
 
 .character-5 {
-    margin:0px 10px 15px 0px;
-    width: 100px;
-    /* height: 80px; */
-    /* background-color: white; */
+    margin:0px 15px 10px 0px;
+    width: 90px;
     position: relative;
+
+    z-index: 1;
 }
 
 .character-5 img{
-    width: 100px;
-    /* height: 80px; */
+    width: 90px;
 }
 
 .character-10 {
@@ -137,21 +125,37 @@ p, div, h6{
     width: 600px;
 }
 
-.level-badge{
-    width: 27px;
-  height: 30px;
-  background-color: #ff3e12;
+.empty{
+  width: 90px;
+  height: 103px;
+  background-color: white;
   clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
   display: flex;
   align-items: center;
   justify-content: center;
-  color: white;
-  font-weight: bold;
-
-  position: absolute;
-  bottom: 3px;
-  right: 8px;
+  
+ 
+  font-size: 25px;
 }
+
+.spot-selected{
+    width: 105px;
+    height: 120px;
+    background-color: #3b8fff;
+    clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  
+    font-size: 25px;
+    
+    position: absolute;
+    top: -8px; 
+    left: -8px; 
+
+    z-index: -1;
+
+  }
 
 .arena-party1 {
     width: 100%;
@@ -180,20 +184,24 @@ p, div, h6{
 }
 
 .character-5-comment {
-    margin:0px 0px 0px 0px;
-    width: 60px;
+    margin:0px 10px 0px 0px;
+    width: 50px;
     /* height: 50px; */
     /* background-color: white; */
     position: relative;
 }
 
 .character-5-comment img{
-    /* margin:0px 10px 15px 0px; */
-    width: 60px;
-    /* height: 50px; */
-    /* background-color: white; */
-    /* position: relative; */
+    width: 50px;
 }
+
+.character-5-comment > div{
+    width: 46px;
+    height: 52px;
+
+    font-size: 20px;
+}
+
 
 .comment-body {
     margin: 0px 40px;
@@ -211,9 +219,7 @@ p, div, h6{
     text-align: right;
 }
 
-.color-gray {
-    color: gray;
-}
+
 
 .reply {
     margin-top: 5px;
@@ -226,4 +232,52 @@ p, div, h6{
     font-weight: bold;
     font-size: 13px;
     padding: 7px 30px
+}
+
+
+.btn-cut {
+    clip-path: polygon(0 0, calc(100% - 8px) 0, 100% 8px, 100% 100%, 100% 100%, 8px 100%, 0 calc(100% - 8px), 0 0);
+    box-shadow: inset -1px 1.5px 1px 0px rgba(255, 255, 255, 0.8);
+    
+}
+
+.btn-shadow{
+    width: 100%;
+    filter: drop-shadow(0 2px 0 rgba(0, 0, 0, 0.45));
+}
+
+.btn-blue{
+    background-color: #3b8fff;
+}
+
+.btn-blue:hover{
+    background-color: #4c9aff;
+}
+
+.btn-blue:active{
+    background-color: #5ca3ff;
+}
+
+.btn-black{
+    background-color: #3f3f50;
+}
+
+.btn-black:hover{
+    background-color: #4d4d61;
+}
+
+.btn-black:active{
+    background-color: #58586f;
+}
+
+.btn-yellow{
+    background-color: #ffa801;
+}
+
+.btn-yellow:hover{
+    background-color: #ffb730;
+}
+
+.btn-yellow:active{
+    background-color: #fbc45f;
 }

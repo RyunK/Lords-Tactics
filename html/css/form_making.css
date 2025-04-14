@@ -1,0 +1,31 @@
+.characters-spread{
+    margin-top: 15px;
+    width: 600px;
+    height: 500px;
+    background-color: #BFC3D4;
+
+    padding: 20px;
+}
+
+.characters-container{
+    width: 100%;
+}
+
+.character-list{
+    width: 70px;
+    position: relative;
+}
+
+.character-list img{
+    width: 70px;
+}
+
+.character-list-box{
+    width: calc(100%/6);
+    margin-bottom: 20px;
+}
+
+.select-liner:hover{
+    filter: drop-shadow(0 0 3px #3b8fff);
+    cursor: pointer;
+}
