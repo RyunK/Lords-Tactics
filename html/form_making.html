@@ -35,32 +35,27 @@
                 <!-- 조합들 들어간 칸 -->
                 <div class="content-h d-flex justify-content-center align-items-center">
                     <div class="d-flex flex-wrap justify-content-center c-wrapper width-5">
-                        <div class="character-5">
-                            <!-- <div class="spot-selected"></div> -->
+                        <div class="character-5 form_spot">                           
                             <div class="select-liner">
                                 <div class="empty"><i class="fa-solid fa-plus color-gray"></i> </div>
                             </div>
                         </div>
-                        <div class="character-5">
-                            <div class="spot-selected"></div>
+                        <div class="character-5 form_spot">
                             <div class="select-liner ">
-                                <img src="../sources/img/characters/dark_zhurahan.png">
-                                <span class="lv_dark ">70</span>
+                                <div class="empty"><i class="fa-solid fa-plus color-gray"></i> </div>
                             </div>
                         </div>
-                        <div class="character-5">
+                        <div class="character-5 form_spot">
                             <div class="select-liner">
-                                <img src="../sources/img/characters/grass_raligon.png">
-                                <span class="lv_grass ">70</span>
+                                <div class="empty"><i class="fa-solid fa-plus color-gray"></i> </div>
                             </div>
                         </div>
-                        <div class="character-5">
+                        <div class="character-5 form_spot">
                             <div class="select-liner">
-                                <img src="../sources/img/characters/fire_meiling.png">
-                                <span class="lv_fire ">70</span>
+                                <div class="empty"><i class="fa-solid fa-plus color-gray"></i> </div>
                             </div>
                         </div>
-                        <div class="character-5">
+                        <div class="character-5 form_spot">
                             <div class="select-liner">
                                 <div class="empty"><i class="fa-solid fa-plus color-gray"></i> </div>
                             </div>
@@ -74,8 +69,10 @@
             <!-- 오른쪽 : 작성자 한마디 + 좋아요 / 댓글 펼치기 -->
             <div class="right-box right-box-mg">
                 <h6 class="explain-title ">작성자 한마디</h6>
-                <div class="bg-white content-h explain-content color-gray">
-                    <p>루실리카가 다 해주는 편성입니다. 공공공공치피치피 부옵속 챙겨주면? 고모 짱.</p>
+                <div class="bg-white content-h mt-1 color-gray">
+                    <form>
+                        <textarea class="memo explain-content" placeholder="한마디를 적어주세요" ></textarea>
+                    </form>
                 </div>
 
                 <!-- 좋아요 / 댓글 펼치기 -->
@@ -135,6 +132,126 @@
         </div>
         
     </div>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+    <script>
+
+        /***
+         * 칸 클릭하면 다른 칸 선택 지워지고 클릭한 칸 선택됨
+         ***/
+        $(".form_spot").on('click', function(e){
+            let spot = $(this);
+            if(spot.find(".spot-selected-empty").length>0){
+                spot.find(".spot-selected-empty").remove();
+            }else if(spot.find(".spot-selected-full").length>0) {
+                spot.find(".spot-selected-full").remove();
+            }else {
+                $(".form_spot .spot-selected-empty").remove();
+                $(".form_spot .spot-selected-full").remove();
+                if(spot.find(".empty").length>0){
+                    spot.prepend("<div class='spot-selected-empty'></div>");
+                }else {
+                    spot.prepend("<div class='spot-selected-full'></div>");
+                }
+                
+            }      
+        })
+
+        function putCharInForm(o, t){
+            o.next().children().remove();
+            
+            t.find(".char-selected").remove();
+
+            t.children().clone().appendTo(o.next());
+            o.attr('class', 'spot-selected-full');
+
+            t.prepend("<div class='char-selected'></div>");
+        }
+
+        
+        $(".character-list").on('click', function(e){
+            /***
+            * 캐릭터 클릭했을 때 칸 선택되어 있으면 거기로 들어감
+            ***/
+            if($(".spot-selected-empty").length>0){
+                //클릭한 캐릭터가 다른 곳에 있으면 거길 삭제
+                let clicked_img = $(this).children('img');
+                let existed_img = $(".form_spot img[src$='"+ clicked_img.attr('src') +"']")
+                if(existed_img.length>0){
+                    let ex_parent = existed_img.eq(0).parent();
+                    console.log(ex_parent);
+                    ex_parent.children().remove();
+                    ex_parent.append('<div class="empty"><i class="fa-solid fa-plus color-gray"></i> </div>');
+                }
+
+                putCharInForm($(".spot-selected-empty"), $(this));
+                return false;
+            } else if($(".spot-selected-full").length>0){
+
+                
+                let clicked_img = $(this).children('img');
+                let selected_img = $(".spot-selected-full").next().children();
+                let existed_img = $(".form_spot img[src$='"+ clicked_img.attr('src') +"']")
+     
+                //클릭한 캐릭터가 다른 곳에 있고 클릭한 캐릭터와 선택된 칸의 캐릭터가 다르면
+                //원래 이 칸에 있던 이미지를 거기로 보내고 이 칸에 클릭한 캐릭터를 채운다.
+                if(existed_img.length>0 && clicked_img.attr('src') !== selected_img.eq(0).attr('src')){
+                    let ex_parent = existed_img.parent()
+                    ex_parent.children().remove();
+                    selected_img.clone().appendTo(ex_parent);
+
+                    putCharInForm($(".spot-selected-full"), $(this));
+                    return false;
+                }
+                
+                //selected에 원래 있던 애를 캐릭터 칸에서 찾아서 select div 삭제한다.
+                let same = $(".character-list img[src$='"+ selected_img.eq(0).attr('src') +"']").eq(0).parent();
+                same.find('.char-selected').remove();
+
+                if(clicked_img.attr('src') !== selected_img.eq(0).attr('src')){   
+                    putCharInForm($(".spot-selected-full"), $(this));
+                    return false;
+                } else{
+                    //같은 캐릭터를 눌렀다면 삭제한다.
+                    selected_img.remove();
+                    $(".spot-selected-full").next().append('<div class="empty"><i class="fa-solid fa-plus color-gray"></i> </div>');
+                    $(".spot-selected-full").attr('class', 'spot-selected-empty');
+
+                }
+
+                
+
+                return false;
+                
+            }
+
+            /***
+            * 캐릭터 클릭했을 때 이미 들어가있으면 삭제됨
+            ***/
+            let src = $(this).children().eq(1).attr("src");
+            let same = $(".form_spot img[src$='"+ src +"']").eq(0).parent();
+
+            same.children().remove();
+            same.append('<div class="empty"><i class="fa-solid fa-plus color-gray"></i> </div>');
+            $(this).find(".char-selected").remove();
+            
+
+
+        })
+
+
+        /***
+         * 빈 곳 클릭하면 칸 선택 해제
+         ***/
+        $(document).on('click', function(e){
+            if (!$(e.target).closest(".form_spot").length>0 && !$(e.target).closest(".character-list").length>0) {
+                // console.log($(e.target).closest(".form_spot"))
+                $(".spot-selected-empty").remove();
+                $(".spot-selected-full").remove();
+            }
+        })
+
+    </script>
 
 </body>
 </html>

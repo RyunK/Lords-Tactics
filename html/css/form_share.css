@@ -127,7 +127,7 @@
 
 .empty{
   width: 90px;
-  height: 103px;
+  height: 104px;
   background-color: white;
   clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
   display: flex;
@@ -138,10 +138,11 @@
   font-size: 25px;
 }
 
-.spot-selected{
-    width: 105px;
-    height: 120px;
-    background-color: #3b8fff;
+.spot-selected-empty{
+    width: 100px;
+    height: 115px;
+    background: #BFC3D4;
+    background: radial-gradient(circle,rgba(191, 195, 212, 1) 0%, rgba(255,248,123, 1) 80%);
     clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
     display: flex;
     align-items: center;
@@ -150,8 +151,28 @@
     font-size: 25px;
     
     position: absolute;
-    top: -8px; 
-    left: -8px; 
+    top: -5.5px; 
+    left: -5.5px; 
+
+    z-index: -1;
+
+  }
+
+  .spot-selected-full{
+    width: 100px;
+    height: 115px;
+    background: #BFC3D4;
+    background: radial-gradient(circle,rgba(191, 195, 212, 1) 0%, rgba(255,248,123, 1) 80%);
+    clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 0%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  
+    font-size: 25px;
+    
+    position: absolute;
+    top: -5.5px; 
+    left: -5.5px; 
 
     z-index: -1;
 
