@@ -74,6 +74,10 @@ nav a:hover{
     background-color: #3f3f50;
 }
 
+.bg-white {
+    background-color: white;
+}
+
 .bg-blue {
     background-color: #3b8fff;
 }

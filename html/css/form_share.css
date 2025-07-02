@@ -326,3 +326,15 @@
 .btn-green:active{
     background-color: #bbf789;
 }
+
+.btn-white{
+    background-color: white;
+}
+
+.btn-white:hover{
+    background-color: rgb(242, 242, 244);
+}
+
+.btn-white:active{
+    background-color: rgb(222, 222, 226);
+}
