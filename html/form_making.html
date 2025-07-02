@@ -16,7 +16,16 @@
     <div class="share-card shadow-basic">
         <!-- 상단바 -->
         <div class="post-title title-size ">
-            <button type="button " class="btn-blue title-sizing color-white border-0 d-flex align-items-center"><i class="fa-solid fa-angle-down"></i><p> &nbsp; 조합 공유</p></button>
+            <dix class="share-or-ask ">
+                <button type="button " class="share-or-ask-btn btn-blue title-sizing color-white border-0 d-flex align-items-center justify-content-center"><i class="fa-solid fa-angle-down"></i><p>&nbsp; 편성 공유</p></button>
+                <div class="share-or-ask-menu">
+                    <!-- <button class="share-or-ask-btn btn-blue title-sizing color-white border-0 d-flex align-items-center justify-content-center form-stat-selected">편성 공유</button> -->
+                    <button class="share-or-ask-btn btn-yellow title-sizing color-white border-0 d-flex align-items-center justify-content-center">편성 요청</button>
+                    <button class="share-or-ask-btn btn-purple title-sizing color-white border-0 d-flex align-items-center justify-content-center">편성 저장</button>
+                    <button class="share-or-ask-btn btn-green title-sizing color-white border-0 d-flex align-items-center justify-content-center">편성 완료</button>
+                </div>
+            </dix>
+
             <button type="button"  class="btn-black flex-fill title-sizing color-yellow border-0 d-flex align-items-center"><i class="fa-solid fa-angle-down"></i><p>&nbsp; 아레나</p></button>
             <button type="button" class="bg-red btn-close-origin color-white" ><i class="fa-solid fa-xmark"></i></button>
         </div>
@@ -151,23 +160,6 @@
             if ($(e.target).hasClass("out")) return;
 
             let spot = $(this);
-            // if(spot.find(".spot-selected-empty").length>0){
-            //     spot.find(".spot-selected-empty").remove();
-            // }else if(spot.find(".spot-selected-full").length>0) {
-            //     spot.find(".spot-selected-full").remove();
-            //     spot.find(".out").remove();
-            // }else {
-            //     $(".form_spot .spot-selected-empty").remove();
-            //     $(".form_spot .spot-selected-full").remove();
-            //     $(".form_spot .out").remove();
-            //     if(spot.find(".empty").length>0){
-            //         spot.prepend("<div class='spot-selected-empty'></div>");
-            //     }else {
-            //         spot.prepend('<img src="../sources/img/out_char.png" class="out">');
-            //         spot.prepend("<div class='spot-selected-full'></div>");                   
-            //     }
-                
-            // } 
             
             $(".form_spot .spot-selected-empty").remove();
             $(".form_spot .spot-selected-full").remove();
@@ -282,7 +274,7 @@
             let character_src = $(this).siblings(".select-liner").children("img").attr('src');
             let chararcter = $(".character-list img[src$='"+ character_src +"']")
 
-            console.log(chararcter);
+            // console.log(chararcter);
 
             this_character.children().remove();
             $(".spot-selected-full").siblings(".out").remove();
@@ -296,6 +288,9 @@
             
             
         })
+
+
+        
 
 
         /***
@@ -312,7 +307,87 @@
                 
                 // console.log(e.target)
             }
+
+            // 드롭다운 올라가게
+            if(!$(e.target).closest(".share-or-ask-btn").length>0){
+                $(".share-or-ask-menu").slideUp(150);
+                $(".share-or-ask-menu").siblings("button").children("i").attr('class', "fa-solid fa-angle-down");
+            }
+            
+
         })
+
+
+
+      
+        
+        $(document).ready(function(){
+            
+            const originalButtons = $(".share-or-ask button").map(function () {
+
+                let text = $(this).text().replace(/\u00A0 /g, '');
+
+                return {
+                text: text,
+                class_names: $(this).attr('class')
+                };
+            }).get();
+            
+            let current_selection = "편성 공유";
+
+            /**
+             * 편성 상태 드롭다운 바꾸기
+             **/
+            $(".share-or-ask").on('click', ".share-or-ask-btn" , function(e){
+            const menu =  $(".share-or-ask-menu");
+            const top_btn = menu.siblings("button");
+            const now_class = $(this).attr('class');
+
+            // console.log(originalButtons)        
+
+            if(now_class != top_btn.attr('class')){
+
+                current_selection = $(this).text();
+
+                top_btn.attr('class', now_class);
+                top_btn.children("p").html("&nbsp; " + $(this).text())
+                renderMunu();
+                
+            }
+
+            formStatToggle();
+            });
+
+            function renderMunu(){
+                $(".share-or-ask-menu").empty();
+                originalButtons.forEach(item => {
+                    // console.log("item.text : " + item.text)
+                    // console.log("current_selection : " + current_selection)
+                    if (item.text != current_selection) {
+                        $(".share-or-ask-menu").append(`<button class="${item.class_names}">${item.text}</button>`);
+                    }
+                });
+            }
+
+            /**
+             * 드롭다운 토글 함수
+             **/
+            function formStatToggle(){
+                const menu =  $(".share-or-ask-menu");
+                const top_btn = menu.siblings("button");
+                const now_i = top_btn.children("i");
+                const now_class = $(this).attr('class');
+
+                menu.slideToggle(150);
+
+                if(now_i.attr('class') == "fa-solid fa-angle-down"){
+                    now_i.attr('class', "fa-solid fa-angle-up");
+                } else {
+                    now_i.attr('class', "fa-solid fa-angle-down");
+                }
+            }
+        })
+        
 
 
     </script>

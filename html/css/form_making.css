@@ -64,7 +64,7 @@
 
   }
 
-  .character-5 .out{
+.character-5 .out{
 
     width: 28px;
     position: absolute;
@@ -72,8 +72,34 @@
 
     top: -3px;
     right: 0;
-  }
+}
   
-  .out:hover{
+.out:hover{
     cursor: pointer;
-  }
+    
+}
+
+.share-or-ask{
+    position: relative;
+    display: inline-block;
+
+    width: 108px;
+
+}
+
+.share-or-ask-btn{
+    width: 100%;
+    height: 35px;
+}
+
+.share-or-ask-menu{
+    display: none;
+
+    z-index: 10;
+    position: absolute;
+    
+    width: 100%;
+
+    overflow: hidden;
+
+}

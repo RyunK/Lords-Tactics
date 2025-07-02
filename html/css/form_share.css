@@ -302,3 +302,27 @@
 .btn-yellow:active{
     background-color: #fbc45f;
 }
+
+.btn-purple{
+    background-color: #ce6dfb;
+}
+
+.btn-purple:hover{
+    background-color: #dd93ff;
+}
+
+.btn-purple:active{
+    background-color: #de9efb;
+}
+
+.btn-green{
+    background-color: #92e64e;
+}
+
+.btn-green:hover{
+    background-color: #a0f060;
+}
+
+.btn-green:active{
+    background-color: #bbf789;
+}
