@@ -87,3 +87,63 @@
     bottom: -4px;
     right: 0px;
   }
+
+  .nogak{
+    width: 25%;
+    height: 25%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: black;
+    font-weight: bold;
+  
+    background-image: url("../../sources/img/nogak.png");
+    background-size: contain;
+    background-repeat: no-repeat;
+
+    font-size: 10px;
+  
+    position: absolute;
+    bottom: -8px;
+    right: 26%;
+  }
+
+  .onegak{
+    width: 25%;
+    height: 25%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-weight: bold;
+  
+    background-image: url("../../sources/img/1gak.png");
+    background-size: contain;
+    background-repeat: no-repeat;
+
+    font-size: 10px;
+  
+    position: absolute;
+    bottom: -8px;
+    right: 26%;
+  }
+
+  .twogak{
+    width: 25%;
+    height: 25%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-weight: bold;
+  
+    background-image: url("../../sources/img/2gak.png");
+    background-size: contain;
+    background-repeat: no-repeat;
+
+    font-size: 10px;
+  
+    position: absolute;
+    bottom: -8px;
+    right: 26%;
+  }

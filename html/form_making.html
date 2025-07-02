@@ -35,7 +35,8 @@
                 <!-- 조합들 들어간 칸 -->
                 <div class="content-h d-flex justify-content-center align-items-center">
                     <div class="d-flex flex-wrap justify-content-center c-wrapper width-5">
-                        <div class="character-5 form_spot">                           
+                        <div class="character-5 form_spot">
+                                                     
                             <div class="select-liner">
                                 <div class="empty"><i class="fa-solid fa-plus color-gray"></i> </div>
                             </div>
@@ -96,36 +97,42 @@
                 <div class="character-list">
                     <img src="../sources/img/characters/dark_zhurahan.png">
                     <span class="lv_dark ">70</span>
+                    <span class="nogak ">7</span>
                 </div>
             </div>
             <div class="character-list-box select-liner d-flex justify-content-center">
                 <div class="character-list ">
                     <img src="../sources/img/characters/fire_meiling.png">
                     <span class="lv_fire ">70</span>
+                    <span class="nogak ">7</span>
                 </div>
             </div>
             <div class="character-list-box select-liner d-flex justify-content-center">
                 <div class="character-list">
                     <img src="../sources/img/characters/grass_rairei.png">
                     <span class="lv_grass ">70</span>
+                    <span class="onegak ">7</span>
                 </div>
             </div>
             <div class="character-list-box select-liner d-flex justify-content-center">
                 <div class="character-list">
                     <img src="../sources/img/characters/grass_raligon.png">
                     <span class="lv_grass ">70</span>
+                    <span class="twogak ">7</span>
                 </div>
             </div>
             <div class="character-list-box select-liner d-flex justify-content-center">
                 <div class="character-list">
                     <img src="../sources/img/characters/light_charlotte.png">
                     <span class="lv_light ">70</span>
+                    <span class="twogak ">7</span>
                 </div>
             </div>
             <div class="character-list-box select-liner d-flex justify-content-center">
                 <div class="character-list">
                     <img src="../sources/img/characters/water_rosanna.png">
                     <span class="lv_water ">70</span>
+                    <span class="twogak ">7</span>
                 </div>
             </div>
             
@@ -140,29 +147,50 @@
          * 칸 클릭하면 다른 칸 선택 지워지고 클릭한 칸 선택됨
          ***/
         $(".form_spot").on('click', function(e){
+
+            if ($(e.target).hasClass("out")) return;
+
             let spot = $(this);
-            if(spot.find(".spot-selected-empty").length>0){
-                spot.find(".spot-selected-empty").remove();
-            }else if(spot.find(".spot-selected-full").length>0) {
-                spot.find(".spot-selected-full").remove();
-            }else {
-                $(".form_spot .spot-selected-empty").remove();
-                $(".form_spot .spot-selected-full").remove();
-                if(spot.find(".empty").length>0){
-                    spot.prepend("<div class='spot-selected-empty'></div>");
-                }else {
-                    spot.prepend("<div class='spot-selected-full'></div>");
-                }
+            // if(spot.find(".spot-selected-empty").length>0){
+            //     spot.find(".spot-selected-empty").remove();
+            // }else if(spot.find(".spot-selected-full").length>0) {
+            //     spot.find(".spot-selected-full").remove();
+            //     spot.find(".out").remove();
+            // }else {
+            //     $(".form_spot .spot-selected-empty").remove();
+            //     $(".form_spot .spot-selected-full").remove();
+            //     $(".form_spot .out").remove();
+            //     if(spot.find(".empty").length>0){
+            //         spot.prepend("<div class='spot-selected-empty'></div>");
+            //     }else {
+            //         spot.prepend('<img src="../sources/img/out_char.png" class="out">');
+            //         spot.prepend("<div class='spot-selected-full'></div>");                   
+            //     }
                 
-            }      
+            // } 
+            
+            $(".form_spot .spot-selected-empty").remove();
+            $(".form_spot .spot-selected-full").remove();
+            $(".form_spot .out").remove();
+            if(spot.find(".empty").length>0){
+                spot.prepend("<div class='spot-selected-empty'></div>");
+            }else {
+                spot.prepend('<img src="../sources/img/out_char.png" class="out">');
+                spot.prepend("<div class='spot-selected-full'></div>");                   
+            }
         })
 
+        /***
+         * o = 도착지
+         * t = 클릭한 캐릭터
+         ***/
         function putCharInForm(o, t){
-            o.next().children().remove();
+            o.siblings(".select-liner").children().remove();
             
             t.find(".char-selected").remove();
 
-            t.children().clone().appendTo(o.next());
+            t.children().clone().appendTo(o.siblings(".select-liner"));
+            o.parent().append('<img src="../sources/img/out_char.png" class="out">');
             o.attr('class', 'spot-selected-full');
 
             t.prepend("<div class='char-selected'></div>");
@@ -173,6 +201,7 @@
             /***
             * 캐릭터 클릭했을 때 칸 선택되어 있으면 거기로 들어감
             ***/
+           //빈 칸인지 이미 누군가 있는지 확인
             if($(".spot-selected-empty").length>0){
                 //클릭한 캐릭터가 다른 곳에 있으면 거길 삭제
                 let clicked_img = $(this).children('img');
@@ -190,31 +219,33 @@
 
                 
                 let clicked_img = $(this).children('img');
-                let selected_img = $(".spot-selected-full").next().children();
+                let selected_img = $(".spot-selected-full").siblings(".select-liner").children("img");
                 let existed_img = $(".form_spot img[src$='"+ clicked_img.attr('src') +"']")
      
                 //클릭한 캐릭터가 다른 곳에 있고 클릭한 캐릭터와 선택된 칸의 캐릭터가 다르면
                 //원래 이 칸에 있던 이미지를 거기로 보내고 이 칸에 클릭한 캐릭터를 채운다.
-                if(existed_img.length>0 && clicked_img.attr('src') !== selected_img.eq(0).attr('src')){
+                if(existed_img.length>0 && clicked_img.attr('src') !== selected_img.attr('src')){
                     let ex_parent = existed_img.parent()
                     ex_parent.children().remove();
-                    selected_img.clone().appendTo(ex_parent);
+                    selected_img.parent().children().appendTo(ex_parent);
 
                     putCharInForm($(".spot-selected-full"), $(this));
                     return false;
                 }
                 
-                //selected에 원래 있던 애를 캐릭터 칸에서 찾아서 select div 삭제한다.
-                let same = $(".character-list img[src$='"+ selected_img.eq(0).attr('src') +"']").eq(0).parent();
+                //selected에 원래 있던 애를 캐릭터 칸에서 찾아서 selected div 삭제한다.
+                let same = $(".character-list img[src$='"+ selected_img.attr('src') +"']").eq(0).parent();
                 same.find('.char-selected').remove();
 
-                if(clicked_img.attr('src') !== selected_img.eq(0).attr('src')){   
+                if(clicked_img.attr('src') !== selected_img.attr('src')){  
+                    //다른 캐릭터를 눌렀다면 
                     putCharInForm($(".spot-selected-full"), $(this));
                     return false;
                 } else{
                     //같은 캐릭터를 눌렀다면 삭제한다.
-                    selected_img.remove();
-                    $(".spot-selected-full").next().append('<div class="empty"><i class="fa-solid fa-plus color-gray"></i> </div>');
+                    selected_img.parent().children().remove();
+                    $(".spot-selected-full").siblings(".out").remove();
+                    $(".spot-selected-full").siblings(".select-liner").append('<div class="empty"><i class="fa-solid fa-plus color-gray"></i> </div>');
                     $(".spot-selected-full").attr('class', 'spot-selected-empty');
 
                 }
@@ -228,15 +259,42 @@
             /***
             * 캐릭터 클릭했을 때 이미 들어가있으면 삭제됨
             ***/
-            let src = $(this).children().eq(1).attr("src");
-            let same = $(".form_spot img[src$='"+ src +"']").eq(0).parent();
+            // let src = $(this).children().eq(1).attr("src");
+            // let same = $(".form_spot img[src$='"+ src +"']").eq(0).parent();
 
-            same.children().remove();
-            same.append('<div class="empty"><i class="fa-solid fa-plus color-gray"></i> </div>');
-            $(this).find(".char-selected").remove();
+            // same.children().remove();
+            // same.append('<div class="empty"><i class="fa-solid fa-plus color-gray"></i> </div>');
+            // $(this).find(".char-selected").remove();
             
 
 
+        })
+
+        /***
+         * 마이너스 클릭하면 캐릭터 지워짐
+         ***/
+        $(document).on("click", ".out", function(e){
+            e.stopPropagation();
+            e.preventDefault();
+            
+            // 폼 칸에서 캐릭터 이미지를 삭제하고 빈 칸으로 전환
+            let this_character = $(this).siblings(".select-liner");
+            let character_src = $(this).siblings(".select-liner").children("img").attr('src');
+            let chararcter = $(".character-list img[src$='"+ character_src +"']")
+
+            console.log(chararcter);
+
+            this_character.children().remove();
+            $(".spot-selected-full").siblings(".out").remove();
+            this_character.append('<div class="empty"><i class="fa-solid fa-plus color-gray"></i> </div>');
+
+            // 폼 칸의 선택된 효과를 빈 칸으로 전환
+            $(".spot-selected-full").attr('class', 'spot-selected-empty');
+
+            // 해당 캐릭터와 동일한 얼굴을 아래에서 찾아서 선택 해제
+            chararcter.siblings(".char-selected").remove();
+            
+            
         })
 
 
@@ -244,12 +302,18 @@
          * 빈 곳 클릭하면 칸 선택 해제
          ***/
         $(document).on('click', function(e){
-            if (!$(e.target).closest(".form_spot").length>0 && !$(e.target).closest(".character-list").length>0) {
+            if (!$(e.target).closest(".form_spot").length>0 
+            && !$(e.target).closest(".character-list").length>0
+            && !$(e.target).closest(".out").length>0) {
                 // console.log($(e.target).closest(".form_spot"))
                 $(".spot-selected-empty").remove();
-                $(".spot-selected-full").remove();
+                $(".spot-selected-full").siblings(".out").remove();
+                $(".spot-selected-full").remove();     
+                
+                // console.log(e.target)
             }
         })
+
 
     </script>
 
