@@ -16,6 +16,7 @@
     <div class="share-card shadow-basic">
         <!-- 상단바 -->
         <div class="post-title title-size ">
+            <!-- 편성 공유 / 편성 요청 / 편성 저장 / 편성 완료 -->
             <dix class="share-or-ask ">
                 <button type="button " class="share-or-ask-btn btn-blue title-sizing color-white border-0 d-flex align-items-center justify-content-center"><i class="fa-solid fa-angle-down"></i><p>&nbsp; 편성 공유</p></button>
                 <div class="share-or-ask-menu">
@@ -26,7 +27,19 @@
                 </div>
             </dix>
 
-            <button type="button"  class="btn-black flex-fill title-sizing color-yellow border-0 d-flex align-items-center"><i class="fa-solid fa-angle-down"></i><p>&nbsp; 아레나</p></button>
+            <!-- 스토리 / 아레나 / 망각의 빙하 / 재앙의 경계 / 침묵의 해협 / 시간의 균열 / 오벨리스크 -->
+             <div class="content-name flex-fill">
+                <button type="button"  class="content-name-btn btn-black  title-sizing color-yellow border-0 d-flex align-items-center"><i class="fa-solid fa-angle-down"></i><p>&nbsp; 아레나</p></button>
+                <div class="content-name-menu">
+                    <button class="content-name-btn btn-black flex-fill title-sizing color-white border-0 d-flex align-items-center">스토리</button>
+                    <!-- <button class="content-name-btn btn-black flex-fill title-sizing color-white border-0 d-flex align-items-center">아레나</button> -->
+                    <button class="content-name-btn btn-black flex-fill title-sizing color-white border-0 d-flex align-items-center">망각의 빙하</button>
+                    <button class="content-name-btn btn-black flex-fill title-sizing color-white border-0 d-flex align-items-center">재앙의 경계</button>
+                    <button class="content-name-btn btn-black flex-fill title-sizing color-white border-0 d-flex align-items-center">침묵의 해협</button>
+                    <button class="content-name-btn btn-black flex-fill title-sizing color-white border-0 d-flex align-items-center">시간의 균열</button>
+                    <button class="content-name-btn btn-black flex-fill title-sizing color-white border-0 d-flex align-items-center">오벨리스크</button>
+                </div>
+             </div>
             <button type="button" class="bg-red btn-close-origin color-white" ><i class="fa-solid fa-xmark"></i></button>
         </div>
 
@@ -319,12 +332,17 @@
                 // console.log(e.target)
             }
 
-            // 드롭다운 올라가게
+            // 편성 상태 드롭다운 올라가게
             if(!$(e.target).closest(".share-or-ask-btn").length>0){
                 $(".share-or-ask-menu").slideUp(150);
                 $(".share-or-ask-menu").siblings("button").children("i").attr('class', "fa-solid fa-angle-down");
             }
             
+            // 컨텐츠 이름 드롭다운 올라가게
+            if(!$(e.target).closest(".content-name-btn").length>0){
+                $(".content-name-menu").slideUp(150);
+                $(".content-name-menu").siblings("button").children("i").attr('class', "fa-solid fa-angle-down");
+            }
 
         })
 
@@ -334,7 +352,7 @@
         
         $(document).ready(function(){
             
-            const originalButtons = $(".share-or-ask button").map(function () {
+            const originalButtons_formations = $(".share-or-ask button").map(function () {
 
                 let text = $(this).text().replace(/\u00A0 /g, '');
 
@@ -344,7 +362,7 @@
                 };
             }).get();
             
-            let current_selection = "편성 공유";
+            let current_selection_formation = "편성 공유";
 
             /**
              * 편성 상태 드롭다운 바꾸기
@@ -354,27 +372,27 @@
             const top_btn = menu.siblings("button");
             const now_class = $(this).attr('class');
 
-            // console.log(originalButtons)        
+            // console.log(originalButtons_formations)        
 
             if(now_class != top_btn.attr('class')){
 
-                current_selection = $(this).text();
+                current_selection_formation = $(this).text();
 
                 top_btn.attr('class', now_class);
                 top_btn.children("p").html("&nbsp; " + $(this).text())
-                renderMunu();
+                renderFormStatMunu();
                 
             }
 
             formStatToggle();
             });
 
-            function renderMunu(){
+            function renderFormStatMunu(){
                 $(".share-or-ask-menu").empty();
-                originalButtons.forEach(item => {
+                originalButtons_formations.forEach(item => {
                     // console.log("item.text : " + item.text)
-                    // console.log("current_selection : " + current_selection)
-                    if (item.text != current_selection) {
+                    // console.log("current_selection : " + current_selection_formation)
+                    if (item.text != current_selection_formation) {
                         $(".share-or-ask-menu").append(`<button class="${item.class_names}">${item.text}</button>`);
                     }
                 });
@@ -388,6 +406,72 @@
                 const top_btn = menu.siblings("button");
                 const now_i = top_btn.children("i");
                 const now_class = $(this).attr('class');
+
+                menu.slideToggle(150);
+
+                if(now_i.attr('class') == "fa-solid fa-angle-down"){
+                    now_i.attr('class', "fa-solid fa-angle-up");
+                } else {
+                    now_i.attr('class', "fa-solid fa-angle-down");
+                }
+            }
+
+            
+
+            /** 컨텐츠 이름 드롭다운*******************************************************************/
+            const originalButtons_contentsname = $(".content-name button").map(function () {
+
+                let text = $(this).text().replace(/\u00A0 /g, '');
+
+                return {
+                text: text,
+                };
+            }).get();
+            
+            let current_selection_contentsname = "아레나";
+
+            /**
+             * 편성 상태 드롭다운 바꾸기
+             **/
+            $(".content-name").on('click', ".content-name-btn" , function(e){
+                const menu =  $(".content-name-menu");
+                const top_btn = menu.siblings("button");
+                // const now_class = $(this).attr('class');
+
+                // console.log(originalButtons_formations)        
+
+                if($(this).text() != top_btn.text()){
+
+                    current_selection_contentsname = $(this).text();
+
+                    // top_btn.attr('class', now_class);
+                    top_btn.children("p").html("&nbsp; " + $(this).text())
+                    renderContentNameMunu();
+                    
+                }
+
+                contentNameToggle();
+            });
+
+            function renderContentNameMunu(){
+                $(".content-name-menu").empty();
+                originalButtons_contentsname.forEach(item => {
+                    // console.log("item.text : " + item.text)
+                    // console.log("current_selection : " + current_selection_formation)
+                    if (item.text != current_selection_contentsname) {
+                        $(".content-name-menu").append(`<button class="content-name-btn btn-black flex-fill title-sizing color-white border-0 d-flex align-items-center">${item.text}</button>`);
+                    }
+                });
+            }
+
+            /**
+             * 드롭다운 토글 함수
+             **/
+            function contentNameToggle(){
+                const menu =  $(".content-name-menu");
+                const top_btn = menu.siblings("button");
+                const now_i = top_btn.children("i");
+                // const now_class = $(this).attr('class');
 
                 menu.slideToggle(150);
 
