@@ -332,10 +332,10 @@
 }
 
 .btn-white:hover{
-    background-color: rgb(242, 242, 244);
+    background-color: rgb(224, 224, 225);
 }
 
 .btn-white:active{
-    background-color: rgb(222, 222, 226);
+    background-color: rgb(204, 204, 205);
 }
 

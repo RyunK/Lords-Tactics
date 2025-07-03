@@ -128,7 +128,7 @@
         <!-- 정렬, 필터 / 마이페이지 편집 -->
         <div class="charSpread-top d-flex justify-content-between">
             <div class="char-filter">
-                <button class="charSpread-top-btn btn-white btn-cut"><i class="fa-solid fa-angle-down"></i>&nbsp; 영웅 필터</button>
+                <button class="char-filter-btn charSpread-top-btn btn-white btn-cut"><i class="fa-solid fa-angle-down"></i>&nbsp; 영웅 필터</button>
                 <!-- 정렬, 필터 버튼 누르면 나옴 -->
                 <div class="char-filter-menu bg-lightgray d-flex justify-content-center align-items-top" style="visibility: hidden;">
                     <div class="filter-sort">
@@ -154,18 +154,9 @@
                 </div>
             </div>
             <div class="filter-box-container d-flex justify-content-start flex-fill align-items-center ms-2 me-2">
-                <div class="class_boxes d-flex justify-content-start align-items-center">
-                    <div class="checked-filter-box class-box"><img src="../sources/img/classes/warrior.png"></div>
-                    <div class="checked-filter-box class-box"><img src="../sources/img/classes/warrior.png"></div>
-                    <div class="checked-filter-box class-box"><img src="../sources/img/classes/warrior.png"></div>
-                    <div class="checked-filter-box class-box"><img src="../sources/img/classes/warrior.png"></div>
-                    <!-- <div class="checked-filter-box class-box"><img src="../sources/img/classes/warrior.png"></div> -->
+                <div class="class-boxes d-flex justify-content-start align-items-center">
                 </div>
                 <div class="type-boxes d-flex justify-content-start align-items-center">
-                    <div class="checked-filter-box type-box"><img src="../sources/img/types/dark_2.png"></div>
-                    <div class="checked-filter-box type-box"><img src="../sources/img/types/dark_2.png"></div>
-                    <div class="checked-filter-box type-box"><img src="../sources/img/types/dark_2.png"></div>
-                    <div class="checked-filter-box type-box"><img src="../sources/img/types/dark_2.png"></div>
                 </div>
                 
                 
@@ -397,9 +388,9 @@
             }
 
             // 영웅 필터 올라가게
-            if(!$(e.target).closest(".char-filter-menu").length>0 && !$(e.target).closest(".charSpread-top-btn").length>0){
+            if(!$(e.target).closest(".char-filter-menu").length>0 && !$(e.target).closest(".char-filter-btn").length>0){
                 $(".char-filter-menu").attr('style', 'visibility: hidden;');
-                $(".charSpread-top-btn").children("i").attr('class', "fa-solid fa-angle-down");
+                $(".char-filter-btn").children("i").attr('class', "fa-solid fa-angle-down");
             }
 
         })
@@ -551,7 +542,7 @@
          */ 
         function filterToggle(){
             const menu =  $(".char-filter-menu");
-            const top_btn = $(".charSpread-top-btn");
+            const top_btn = $(".char-filter-btn");
             const now_i = top_btn.children("i");
 
             // menu.slideToggle(150);
@@ -565,7 +556,7 @@
             }
         }
 
-        $(".charSpread-top-btn").on('click', function(e){
+        $(".char-filter-btn").on('click', function(e){
             filterToggle()
         })
 
@@ -596,6 +587,55 @@
             }
         })
         
+
+        /**
+         * 클래스&속성 버튼 체크/언체크
+         */ 
+        $(".filter-checkbox").change(function(e){
+            let btn = $(this).siblings("div");
+            
+            // 안에 있는 아이콘을 
+            let token_src = btn.children("img").attr('src'); 
+            console.log('token_src : ' + token_src);
+
+            if(btn.hasClass('filter-class-btn')){
+
+                if($(this).is(":checked")){
+                    // 클래스용 박스에 넣어서
+                    let html_str = `<div class="checked-filter-box class-box"><img src="${token_src}"></div>`
+                    // 클래스용 박스 컨테이너에 append
+                    $('.class-boxes').append(html_str);
+                } else{
+                    // 이미지 소스가 동일한 애 찾아서 박스 삭제
+                    $(`.class-boxes div img[src="${token_src}"]`).parent().remove();
+                }
+                
+            } else if (btn.hasClass('filter-type-btn')){
+                if($(this).is(":checked")){
+                    // 타입용 박스에 넣어서
+                    let html_str = `<div class="checked-filter-box type-box"><img src="${token_src}"></div>`
+                    // 타입용 박스 컨테이너에 append
+                    $('.type-boxes').append(html_str);
+                } else{
+                    // 이미지 소스가 동일한 애 찾아서 박스 삭제
+                    $(`.type-boxes div img[src="${token_src}"]`).parent().remove();
+                }
+            }
+        });
+
+        /**
+         * 클래스&속성 토큰 눌렀을 때 삭제
+         */
+        $(document).on('click', '.checked-filter-box', function(e){
+            let src = $(this).children('img').attr('src');
+
+            // 동일한 이미지 찾아서 언체크
+            $(`.char-filter-menu img[src="${src}"]`).parent().siblings('input').prop('checked', false);
+            
+            // 토큰 삭제
+            $(this).remove();
+        });
+
     </script>
 
 </body>
