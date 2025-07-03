@@ -90,6 +90,10 @@ nav a:hover{
     background-color: #fff87b;
 }
 
+.bg-lightgray{
+    background-color: #efefef;
+}
+
 .color-gray {
     color: #666666;
 }
@@ -103,7 +107,7 @@ nav a:hover{
 }
 
 .shadow-basic{
-    box-shadow: 2px 2px 4px 2px rgba(0, 0, 0, 0.2);
+    box-shadow: 2px 2px 4px 2px rgba(45, 45, 45, 0.2);
 }
 
 .main-banner {

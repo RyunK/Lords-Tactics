@@ -328,7 +328,7 @@
 }
 
 .btn-white{
-    background-color: white;
+    background-color: #efefef;
 }
 
 .btn-white:hover{
@@ -338,3 +338,4 @@
 .btn-white:active{
     background-color: rgb(222, 222, 226);
 }
+

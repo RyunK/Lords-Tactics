@@ -125,6 +125,58 @@
 
     <!-- 캐릭터가 떠있는 창 -->
     <div class="characters-spread shadow-basic" >
+        <!-- 정렬, 필터 / 마이페이지 편집 -->
+        <div class="charSpread-top d-flex justify-content-between">
+            <div class="char-filter">
+                <button class="charSpread-top-btn btn-white btn-cut"><i class="fa-solid fa-angle-down"></i>&nbsp; 영웅 필터</button>
+                <!-- 정렬, 필터 버튼 누르면 나옴 -->
+                <div class="char-filter-menu bg-lightgray d-flex justify-content-center align-items-top" style="visibility: hidden;">
+                    <div class="filter-sort">
+                        <button class="filter-btn filter-sort-btn filter-unselected"><p>초월 순</p><i class="fa-solid fa-caret-down"></i></button>
+                        <button class="filter-btn filter-sort-btn filter-unselected"><p>각성 순</p><i class="fa-solid fa-caret-down"></i></button>
+                        <button class="filter-btn filter-sort-btn filter-unselected"><p>보유 영웅 순</p><i class="fa-solid fa-caret-down"></i></button>
+                    </div>
+                    <form class="filter-class">
+                        <label class=" filter-class-btn-container"><input type="checkbox" class="filter-checkbox"> <div class="filter-btn filter-class-btn filter-unselected"><img src="../sources/img/classes/guardian.png"><p>가디언</p> </div></label>
+                        <label class=" filter-class-btn-container"><input type="checkbox" class="filter-checkbox"> <div class="filter-btn filter-class-btn filter-unselected"><img src="../sources/img/classes/warrior.png"><p>워리어</p> </div></label>
+                        <label class=" filter-class-btn-container"><input type="checkbox" class="filter-checkbox"> <div class="filter-btn filter-class-btn filter-unselected"><img src="../sources/img/classes/striker.png"><p>스트라이커</p> </div></label>
+                        <label class=" filter-class-btn-container"><input type="checkbox" class="filter-checkbox"> <div class="filter-btn filter-class-btn filter-unselected"><img src="../sources/img/classes/shooter.png"><p>슈터</p> </div></label>
+                        <label class=" filter-class-btn-container"><input type="checkbox" class="filter-checkbox"> <div class="filter-btn filter-class-btn filter-unselected"><img src="../sources/img/classes/priest.png"><p>프리스트</p> </div></label>
+                        <label class=" filter-class-btn-container"><input type="checkbox" class="filter-checkbox"> <div class="filter-btn filter-class-btn filter-unselected"><img src="../sources/img/classes/commander.png"><p>커맨더</p> </div></label>
+                     </form>   
+                    <form class="filter-type">
+                        <label class="filter-type-btn-container"><input type="checkbox" class="filter-checkbox"> <div class="filter-btn filter-type-btn filter-unselected"><img src="../sources/img/types/dark_2.png"><p>어둠</p></div></label>
+                        <label class="filter-type-btn-container"><input type="checkbox" class="filter-checkbox"> <div class="filter-btn filter-type-btn filter-unselected"><img src="../sources/img/types/fire_2.png"><p>불</p></div></label>
+                        <label class="filter-type-btn-container"><input type="checkbox" class="filter-checkbox"> <div class="filter-btn filter-type-btn filter-unselected"><img src="../sources/img/types/water_2.png"><p>물</p></div></label>
+                        <label class="filter-type-btn-container"><input type="checkbox" class="filter-checkbox"> <div class="filter-btn filter-type-btn filter-unselected"><img src="../sources/img/types/grass_2.png"><p>대지</p></div></label>
+                        <label class="filter-type-btn-container"><input type="checkbox" class="filter-checkbox"> <div class="filter-btn filter-type-btn filter-unselected"><img src="../sources/img/types/light_2.png"><p>빛</p></div></label>
+                    </form>
+                </div>
+            </div>
+            <div class="filter-box-container d-flex justify-content-start flex-fill align-items-center ms-2 me-2">
+                <div class="class_boxes d-flex justify-content-start align-items-center">
+                    <div class="checked-filter-box class-box"><img src="../sources/img/classes/warrior.png"></div>
+                    <div class="checked-filter-box class-box"><img src="../sources/img/classes/warrior.png"></div>
+                    <div class="checked-filter-box class-box"><img src="../sources/img/classes/warrior.png"></div>
+                    <div class="checked-filter-box class-box"><img src="../sources/img/classes/warrior.png"></div>
+                    <!-- <div class="checked-filter-box class-box"><img src="../sources/img/classes/warrior.png"></div> -->
+                </div>
+                <div class="type-boxes d-flex justify-content-start align-items-center">
+                    <div class="checked-filter-box type-box"><img src="../sources/img/types/dark_2.png"></div>
+                    <div class="checked-filter-box type-box"><img src="../sources/img/types/dark_2.png"></div>
+                    <div class="checked-filter-box type-box"><img src="../sources/img/types/dark_2.png"></div>
+                    <div class="checked-filter-box type-box"><img src="../sources/img/types/dark_2.png"></div>
+                </div>
+                
+                
+                
+            </div>
+            <div>
+                <button class="charSpread-top-btn btn-white btn-cut">마이페이지 편집</button>
+            </div>
+        </div>
+        
+        <!-- 캐릭터들 -->
         <div class="characters-container d-flex justify-content-start flex-wrap">
             <div class="character-list-box select-liner d-flex justify-content-center">
                 <div class="character-list">
@@ -179,7 +231,7 @@
         /***
          * 칸 클릭하면 다른 칸 선택 지워지고 클릭한 칸 선택됨
          ***/
-        $(".form_spot").on('click', function(e){
+        $(document).on('click',".form_spot", function(e){
 
             if ($(e.target).hasClass("out")) return;
 
@@ -213,7 +265,7 @@
         }
 
         
-        $(".character-list").on('click', function(e){
+        $(document).on('click',".character-list", function(e){
             /***
             * 캐릭터 클릭했을 때 칸 선택되어 있으면 거기로 들어감
             ***/
@@ -275,12 +327,12 @@
             /***
             * 캐릭터 클릭했을 때 이미 들어가있으면 삭제됨
             ***/
-            // let src = $(this).children().eq(1).attr("src");
-            // let same = $(".form_spot img[src$='"+ src +"']").eq(0).parent();
+            let src = $(this).children().eq(1).attr("src");
+            let same = $(".form_spot img[src$='"+ src +"']").eq(0).parent();
 
-            // same.children().remove();
-            // same.append('<div class="empty"><i class="fa-solid fa-plus color-gray"></i> </div>');
-            // $(this).find(".char-selected").remove();
+            same.children().remove();
+            same.append('<div class="empty"><i class="fa-solid fa-plus color-gray"></i> </div>');
+            $(this).find(".char-selected").remove();
             
 
 
@@ -344,7 +396,16 @@
                 $(".content-name-menu").siblings("button").children("i").attr('class', "fa-solid fa-angle-down");
             }
 
+            // 영웅 필터 올라가게
+            if(!$(e.target).closest(".char-filter-menu").length>0 && !$(e.target).closest(".charSpread-top-btn").length>0){
+                $(".char-filter-menu").attr('style', 'visibility: hidden;');
+                $(".charSpread-top-btn").children("i").attr('class', "fa-solid fa-angle-down");
+            }
+
         })
+
+
+
 
 
 
@@ -485,6 +546,56 @@
         
 
 
+        /**
+         * 영웅 필터 토글
+         */ 
+        function filterToggle(){
+            const menu =  $(".char-filter-menu");
+            const top_btn = $(".charSpread-top-btn");
+            const now_i = top_btn.children("i");
+
+            // menu.slideToggle(150);
+
+            if(now_i.attr('class') == "fa-solid fa-angle-down"){
+                now_i.attr('class', "fa-solid fa-angle-up");
+                menu.attr('style', 'visibility: visible;')
+            } else {
+                now_i.attr('class', "fa-solid fa-angle-down");
+                menu.attr('style', 'visibility: hidden;')
+            }
+        }
+
+        $(".charSpread-top-btn").on('click', function(e){
+            filterToggle()
+        })
+
+
+        /**
+         * 영웅 필터 - 정렬 토글
+         */
+        $(".filter-sort-btn").on('click', function(e){
+            if($(this).hasClass('filter-unselected')){
+                $(this).removeClass('filter-unselected');
+                $(this).addClass('filter-selected');
+            }
+            else if($(this).hasClass('filter-selected')){
+
+                if($(this).children("i").hasClass("fa-caret-down")){
+                    $(this).children("i").removeClass('fa-caret-down');
+                    $(this).children("i").addClass('fa-caret-up');
+                } else {
+                    $(this).children("i").removeClass('fa-caret-up');
+                    $(this).children("i").addClass('fa-caret-down');
+
+                    $(this).removeClass('filter-selected');
+                    $(this).addClass('filter-unselected');
+                }                
+            }
+            else{
+                $(this).removeClass('filter-unselected');
+            }
+        })
+        
     </script>
 
 </body>
