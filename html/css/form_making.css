@@ -252,14 +252,12 @@
 }
 
 .filter-selected:hover {
-    /* color: #666666; */
-    background-color: #ffec59 ;
+    background-color: #ffee6d ;
 }
 
-.filter-selected:active {
-    /* color: #666666; */
+/* .filter-selected:active {
     background-color: #ffe23e ;
-}
+} */
 
 
 .filter-sort-btn{

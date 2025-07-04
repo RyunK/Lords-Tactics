@@ -168,51 +168,53 @@
         </div>
         
         <!-- 캐릭터들 -->
-        <div class="characters-container d-flex justify-content-start flex-wrap">
-            <div class="character-list-box select-liner d-flex justify-content-center">
-                <div class="character-list">
-                    <img src="../sources/img/characters/dark_zhurahan.png">
-                    <span class="lv_dark ">70</span>
-                    <span class="nogak ">7</span>
+        <ul class="characters-container d-flex justify-content-start flex-wrap">
+            <li class="character-list-box select-liner d-flex justify-content-center" >
+                <div class="character-list" >
+                    <img src="../sources/img/characters/dark_zhurahan_warrior.png">
+                    <span class="lv_dark lv">70</span>
+                    <span class="nogak gak">7</span>
                 </div>
-            </div>
-            <div class="character-list-box select-liner d-flex justify-content-center">
+            </li>
+            <li class="character-list-box select-liner d-flex justify-content-center">
                 <div class="character-list ">
-                    <img src="../sources/img/characters/fire_meiling.png">
-                    <span class="lv_fire ">70</span>
-                    <span class="nogak ">7</span>
+                    <img src="../sources/img/characters/fire_meiling_shooter.png">
+                    <span class="lv_fire lv">57</span>
+                    <span class="nogak gak">6</span>
                 </div>
-            </div>
-            <div class="character-list-box select-liner d-flex justify-content-center">
+            </li>
+            <li class="character-list-box select-liner d-flex justify-content-center">
                 <div class="character-list">
-                    <img src="../sources/img/characters/grass_rairei.png">
-                    <span class="lv_grass ">70</span>
-                    <span class="onegak ">7</span>
+                    <img src="../sources/img/characters/grass_rairei_striker.png">
+                    <span class="lv_grass lv">60</span>
+                    <span class="onegak gak">6</span>
                 </div>
-            </div>
-            <div class="character-list-box select-liner d-flex justify-content-center">
+            </li>
+            <li class="character-list-box select-liner d-flex justify-content-center">
                 <div class="character-list">
-                    <img src="../sources/img/characters/grass_raligon.png">
-                    <span class="lv_grass ">70</span>
-                    <span class="twogak ">7</span>
+                    <img src="../sources/img/characters/grass_raligon_priest.png">
+                    <span class="lv_grass lv">60</span>
+                    <span class="twogak gak">7</span>
                 </div>
-            </div>
-            <div class="character-list-box select-liner d-flex justify-content-center">
+            </li>
+            <li class="character-list-box select-liner d-flex justify-content-center">
                 <div class="character-list">
-                    <img src="../sources/img/characters/light_charlotte.png">
-                    <span class="lv_light ">70</span>
-                    <span class="twogak ">7</span>
+                    <img src="../sources/img/characters/light_charlotte_priest.png">
+                    <span class="lv_light lv">70</span>
+                    <span class="twogak gak">7</span>
                 </div>
-            </div>
-            <div class="character-list-box select-liner d-flex justify-content-center">
+            </li>
+            <li class="character-list-box select-liner d-flex justify-content-center">
                 <div class="character-list">
-                    <img src="../sources/img/characters/water_rosanna.png">
-                    <span class="lv_water ">70</span>
-                    <span class="twogak ">7</span>
+                    <img src="../sources/img/characters/water_rosanna_commander.png">
+                    <span class="lv_water lv">70</span>
+                    <span class="twogak gak">7</span>
                 </div>
-            </div>
+            </li>
+
             
-        </div>
+            
+        </ul>
         
     </div>
 
@@ -292,7 +294,7 @@
                     return false;
                 }
                 
-                //selected에 원래 있던 애를 캐릭터 칸에서 찾아서 selected div 삭제한다.
+                // selected에 원래 있던 애를 캐릭터 칸에서 찾아서 selected div 삭제한다.
                 let same = $(".character-list img[src$='"+ selected_img.attr('src') +"']").eq(0).parent();
                 same.find('.char-selected').remove();
 
@@ -316,7 +318,7 @@
             }
 
             /***
-            * 캐릭터 클릭했을 때 이미 들어가있으면 삭제됨
+            * 아무 칸도 선택되어있지 않으면 캐릭터 클릭했을 때 이미 들어가있으면 삭제됨
             ***/
             let src = $(this).children().eq(1).attr("src");
             let same = $(".form_spot img[src$='"+ src +"']").eq(0).parent();
@@ -354,7 +356,7 @@
             chararcter.siblings(".char-selected").remove();
             
             
-        })
+        });
 
 
         
@@ -393,7 +395,7 @@
                 $(".char-filter-btn").children("i").attr('class', "fa-solid fa-angle-down");
             }
 
-        })
+        });
 
 
 
@@ -533,6 +535,169 @@
                     now_i.attr('class', "fa-solid fa-angle-down");
                 }
             }
+
+
+            // 필터 및 정렬 ************************************************
+            
+            // 원본 캐릭터 데이터
+            const original_characters = $(".characters-container li").map(function () {
+                return {
+                    img_src: $(this).children('div').children('img').attr('src'),
+                    lv_class: $(this).children('div').children('.lv').attr('class'),
+                    lv : $(this).children('div').children('.lv').text(),
+                    gak_class: $(this).children('div').children('.gak').attr('class'),
+                    cho: $(this).children('div').children('.gak').text()
+                };
+            }).get()
+            
+            /**
+             * 필터
+             * type = ["dark", "fire"] 이런식의 리스트.
+             * class_names = ["warrior, striker"]
+             */
+            function filterByTypeNClass(type, class_names){
+                // 오리지널 캐릭터 배열에서 필터 받은 것들만 만들어서 html 만들기
+                let filtered_characters;
+
+                // 타입 필터
+                if(type == "" || type == []){
+                    filtered_characters = original_characters
+                }else{
+                    filtered_characters = original_characters.filter(function(v){
+                        let rst = 0;
+                            for(let j=0; j<type.length; j++){
+                                if(v.lv_class.includes(type[j])){
+                                    rst ++;
+                                    break;
+                                }
+                            }
+
+                        return rst > 0
+                    });
+                }
+
+                // 클래스 필터
+                if(class_names == "" || class_names == []){}
+                else{
+                    filtered_characters = filtered_characters.filter(function(v){
+                        let rst = 0;
+                            for(let j=0; j<class_names.length; j++){
+                                const filename = v.img_src.split("/").pop(); // dark_zhurahan_warrior.png"
+                                const class_name = filename.split(".")[0].split("_")[2];    // "warrior"
+                                if(class_name == class_names[j]){
+                                    rst ++;
+                                    break;
+                                }
+                            }
+
+                        return rst > 0
+                    });
+                }
+
+                
+
+                // html 만들어서 append
+                $(".characters-container").empty();
+                filtered_characters.forEach(function(v){
+                    let html_str = `<li class="character-list-box select-liner d-flex justify-content-center" >
+                                        <div class="character-list" >
+                                            <img src="${v.img_src}">
+                                            <span class="${v.lv_class}">${v.lv}</span>
+                                            <span class="${v.gak_class}">${v.cho}</span>
+                                        </div>
+                                    </li>`
+                    
+                    $(".characters-container").append(html_str);
+                });
+            }
+
+             /**
+              *  뱃지들 확인해서 필터 배열 생성 
+              **/
+            function typeBadges2FilterArr() {
+                
+                // console.log("함수 들어옴")
+                let filter_arr = $('.type-boxes img').map(function(i){
+                    let src = $(this).attr('src');
+                    // console.log(src)
+                    const filename = src.split("/").pop(); // "dark_2.png"
+                    return filename.split("_")[0];    // "dark"
+                }).get();
+
+                // console.log("filter_arr : " + filter_arr);
+                
+                return filter_arr;
+            }
+
+            function classBadges2FilterArr() {
+                
+                // console.log("함수 들어옴")
+                let filter_arr = $('.class-boxes img').map(function(i){
+                    let src = $(this).attr('src');
+                    // console.log(src)
+                    const filename = src.split("/").pop(); // "commander.png"
+                    return filename.split(".")[0];    // "commander"
+                }).get();
+
+                // console.log("filter_arr : " + filter_arr);
+                
+                return filter_arr;
+            }
+
+            /**
+             * 클래스&속성 버튼 체크/언체크
+             */ 
+            $(".filter-checkbox").change(function(e){
+                let btn = $(this).siblings("div");
+                
+                // 안에 있는 아이콘을 
+                let token_src = btn.children("img").attr('src'); 
+                // console.log('token_src : ' + token_src);
+
+                if(btn.hasClass('filter-class-btn')){
+
+                    if($(this).is(":checked")){
+                        // 클래스용 박스에 넣어서
+                        let html_str = `<div class="checked-filter-box class-box"><img src="${token_src}"></div>`
+                        // 클래스용 박스 컨테이너에 append
+                        $('.class-boxes').append(html_str);
+                        filterByTypeNClass(typeBadges2FilterArr(), classBadges2FilterArr());
+                    } else{
+                        // 이미지 소스가 동일한 애 찾아서 박스 삭제
+                        $(`.class-boxes div img[src="${token_src}"]`).parent().remove();
+                        filterByTypeNClass(typeBadges2FilterArr(), classBadges2FilterArr());
+                    }
+                    
+                } else if (btn.hasClass('filter-type-btn')){
+                    if($(this).is(":checked")){
+                        // 타입용 박스에 넣어서
+                        let html_str = `<div class="checked-filter-box type-box"><img src="${token_src}"></div>`
+                        // 타입용 박스 컨테이너에 append
+                        $('.type-boxes').append(html_str);
+                        
+                        filterByTypeNClass(typeBadges2FilterArr(), classBadges2FilterArr());
+                    } else{
+                        // 이미지 소스가 동일한 애 찾아서 박스 삭제
+                        $(`.type-boxes div img[src="${token_src}"]`).parent().remove();
+                        filterByTypeNClass(typeBadges2FilterArr(), classBadges2FilterArr());
+                    }
+                }
+            });
+
+            /**
+             * 클래스&속성 토큰 눌렀을 때 삭제
+             */
+            $(document).on('click', '.checked-filter-box', function(e){
+                let src = $(this).children('img').attr('src');
+
+                // 동일한 이미지 찾아서 언체크
+                $(`.char-filter-menu img[src="${src}"]`).parent().siblings('input').prop('checked', false);
+                
+                // 토큰 삭제
+                $(this).remove();
+                filterByTypeNClass(typeBadges2FilterArr(), classBadges2FilterArr());
+            });
+            
         })
         
 
@@ -565,15 +730,23 @@
          * 영웅 필터 - 정렬 토글
          */
         $(".filter-sort-btn").on('click', function(e){
+            const text = $(this).text();
+
             if($(this).hasClass('filter-unselected')){
+                // 정렬 필터를 처음 선택함
                 $(this).removeClass('filter-unselected');
                 $(this).addClass('filter-selected');
+
+                charSortHandler(true, text);
             }
             else if($(this).hasClass('filter-selected')){
 
                 if($(this).children("i").hasClass("fa-caret-down")){
+                    // 정렬 필터 두번째 선택 : 값이 낮은것을 위로
                     $(this).children("i").removeClass('fa-caret-down');
                     $(this).children("i").addClass('fa-caret-up');
+
+                    charSortHandler(false, text);
                 } else {
                     $(this).children("i").removeClass('fa-caret-up');
                     $(this).children("i").addClass('fa-caret-down');
@@ -583,58 +756,81 @@
                 }                
             }
             else{
-                $(this).removeClass('filter-unselected');
+                $(this).removeClass('filter-selected');
+                $(this).addClass('filter-unselected');
             }
-        })
+        });
+
+        /**
+         * 정렬 핸들러
+         */
+        function charSortHandler(big2small, text){
+            if(text == "초월 순"){
+                sortByMaxLevel(big2small);
+            }else if(text == "각성 순"){
+                sortByGaksung(big2small);
+            }else if(text == "보유 영웅 순"){
+
+            }
+        }
         
 
         /**
-         * 클래스&속성 버튼 체크/언체크
-         */ 
-        $(".filter-checkbox").change(function(e){
-            let btn = $(this).siblings("div");
-            
-            // 안에 있는 아이콘을 
-            let token_src = btn.children("img").attr('src'); 
-            console.log('token_src : ' + token_src);
-
-            if(btn.hasClass('filter-class-btn')){
-
-                if($(this).is(":checked")){
-                    // 클래스용 박스에 넣어서
-                    let html_str = `<div class="checked-filter-box class-box"><img src="${token_src}"></div>`
-                    // 클래스용 박스 컨테이너에 append
-                    $('.class-boxes').append(html_str);
-                } else{
-                    // 이미지 소스가 동일한 애 찾아서 박스 삭제
-                    $(`.class-boxes div img[src="${token_src}"]`).parent().remove();
-                }
-                
-            } else if (btn.hasClass('filter-type-btn')){
-                if($(this).is(":checked")){
-                    // 타입용 박스에 넣어서
-                    let html_str = `<div class="checked-filter-box type-box"><img src="${token_src}"></div>`
-                    // 타입용 박스 컨테이너에 append
-                    $('.type-boxes').append(html_str);
-                } else{
-                    // 이미지 소스가 동일한 애 찾아서 박스 삭제
-                    $(`.type-boxes div img[src="${token_src}"]`).parent().remove();
-                }
+         * 초월 순 
+         */
+        function sortByMaxLevel(big2small){
+            if(big2small){ // 초월이 높은 게 위로
+                $(".characters-container").html(
+                    $(".characters-container li").sort(function(a, b){
+                        return Number($(b).children('div').children('.gak').text()) - Number($(a).children('div').children('.gak').text())
+                    })
+                )
+            }else{
+                $(".characters-container").html(
+                    $(".characters-container li").sort(function(a, b){
+                        return Number($(a).children('div').children('.gak').text()) - Number($(b).children('div').children('.gak').text())
+                    })
+                )
             }
-        });
+        }
 
         /**
-         * 클래스&속성 토큰 눌렀을 때 삭제
+         * 각성 순 
          */
-        $(document).on('click', '.checked-filter-box', function(e){
-            let src = $(this).children('img').attr('src');
+        function sortByGaksung(big2small){
+            if(big2small){ // 각성이 높은 게 위로
+                $(".characters-container").html(
+                    $(".characters-container li").sort(function(a, b){
+                        return gak2num($(b).children('div').children('.gak').attr('class'))-gak2num($(a).children('div').children('.gak').attr('class'))
+                    })
+                )
+            }else{
+                $(".characters-container").html(
+                    $(".characters-container li").sort(function(a, b){
+                    return gak2num($(a).children('div').children('.gak').attr('class'))-gak2num($(b).children('div').children('.gak').attr('class'))
+                    })
+                )
+            }
+        }
 
-            // 동일한 이미지 찾아서 언체크
-            $(`.char-filter-menu img[src="${src}"]`).parent().siblings('input').prop('checked', false);
-            
-            // 토큰 삭제
-            $(this).remove();
-        });
+        function gak2num(class_names){
+            const gak_to_num = {
+                "no" : 0,
+                "one" : 1,
+                "two" : 2,
+            }
+
+            class_names = class_names.replaceAll(/[gak ]/g, '');
+
+            class_names = gak_to_num[class_names];
+            // console.log(class_names);
+            return class_names;
+        }
+
+        
+
+        
+        
 
     </script>
 
