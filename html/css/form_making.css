@@ -73,6 +73,26 @@
     top: -3px;
     right: 0;
 }
+
+.character-10 .out{
+
+    width: 25px;
+    position: absolute;
+    z-index: 2;
+
+    top: -8px;
+    right: 0;
+}
+
+.character-7 .out{
+
+    width: 27px;
+    position: absolute;
+    z-index: 2;
+
+    top: -5px;
+    right: 0;
+}
   
 .out:hover{
     cursor: pointer;
@@ -356,4 +376,13 @@
 
 .checked-filter-box:hover{
     cursor: pointer;
+}
+
+.party-name{
+    width: 100%;
+    font-size: 15px;
+    font-weight: bold;
+    margin: 12px 0px 6px 10px;
+
+    /* display: none; */
 }

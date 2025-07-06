@@ -104,16 +104,29 @@
 }
 
 .character-10 {
-    margin:0px 10px 15px 0px;
-    width: 80px;
-    height: 80px;
-    /* background-color: white; */
+    margin:0px 8px 10px 0px;
+    width: 70px;
+
+    z-index: 1;
     position: relative;
 }
 
 .character-10 img{
+    width: 70px;
+    /* height: 80px; */
+}
+
+.character-7 {
+    margin:0px 10px 7px 0px;
     width: 80px;
-    height: 80px;
+
+    z-index: 1;
+    position: relative;
+}
+
+.character-7 img{
+    width: 80px;
+    /* height: 80px; */
 }
 
 
@@ -122,10 +135,14 @@
 }
 
 .width-10{
-    width: 600px;
+    width: 400px;
 }
 
-.empty{
+.width-7{
+    width: 400px;
+}
+
+.character-5 .empty{
   width: 90px;
   height: 104px;
   background-color: white;
@@ -137,6 +154,111 @@
  
   font-size: 25px;
 }
+
+.character-10 .empty{
+    width: 70px;
+  height: 80.8px;
+  background-color: white;
+  clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  
+ 
+  font-size: 25px;
+}
+
+.character-7 .empty{
+  width: 80px;
+  height: 92.4px;
+  background-color: white;
+  clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  
+ 
+  font-size: 25px;
+}
+
+.character-10 .spot-selected-empty{
+    width: 80px;
+    height: 92.4px;
+    background: #BFC3D4;
+    background: radial-gradient(circle,rgba(191, 195, 212, 1) 0%, rgba(255,248,123, 1) 80%);
+    clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  
+    font-size: 25px;
+    
+    position: absolute;
+    top: -5px; 
+    left: -5px; 
+
+    z-index: -1;
+}
+
+ .character-10 .spot-selected-full{
+    width: 80px;
+    height: 92.4px;
+    background: #BFC3D4;
+    background: radial-gradient(circle,rgba(191, 195, 212, 1) 0%, rgba(255,248,123, 1) 80%);
+    clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 0%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  
+    font-size: 25px;
+    
+    position: absolute;
+    top: -5px; 
+    left: -5px;  
+
+    z-index: -1;
+
+}
+
+.character-7 .spot-selected-empty{
+    width: 90px;
+    height: 104px;
+    background: #BFC3D4;
+    background: radial-gradient(circle,rgba(191, 195, 212, 1) 0%, rgba(255,248,123, 1) 80%);
+    clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  
+    font-size: 25px;
+    
+    position: absolute;
+    top: -5px; 
+    left: -5px; 
+
+    z-index: -1;
+}
+
+ .character-7 .spot-selected-full{
+    width: 90px;
+    height: 104px;
+    background: #BFC3D4;
+    background: radial-gradient(circle,rgba(191, 195, 212, 1) 0%, rgba(255,248,123, 1) 80%);
+    clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 0%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  
+    font-size: 25px;
+    
+    position: absolute;
+    top: -5px; 
+    left: -5px;  
+
+    z-index: -1;
+
+}
+
 
 .spot-selected-empty{
     width: 100px;
@@ -177,6 +299,8 @@
     z-index: -1;
 
   }
+
+
 
 .arena-party1 {
     width: 100%;
@@ -338,4 +462,6 @@
 .btn-white:active{
     background-color: rgb(204, 204, 205);
 }
+
+
 
