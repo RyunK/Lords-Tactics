@@ -817,6 +817,8 @@
                         filterByTypeNClass(typeBadges2FilterArr(), classBadges2FilterArr());
                     }
                 }
+
+                checkExsistCharacters();
             });
 
             /**
@@ -831,6 +833,8 @@
                 // 토큰 삭제
                 $(this).remove();
                 filterByTypeNClass(typeBadges2FilterArr(), classBadges2FilterArr());
+                checkExsistCharacters();
+
             });
             
         })
@@ -963,7 +967,24 @@
         }
 
         
+        /**
+         * 편성 칸에 있는 영웅들 찾아서 체크 안돼있으면 체크해줌
+         */
+        function checkExsistCharacters(){
+            let imgs = $(".form_spot .select-liner img")
 
+            if(imgs.length>0){
+                for(let i=0; i<imgs.length; i++){
+                    let src = imgs.eq(i).attr('src');
+                    // console.log("src = " + src);
+                    let char_img = $(`.character-list img[src="${src}"]`);
+                    if(char_img.siblings(".char-selected").length <= 0){
+                        // console.log("선택됨");
+                        char_img.parent().prepend(`<div class='char-selected'></div>`);
+                    }
+                }
+            }
+        }
         
         
 
