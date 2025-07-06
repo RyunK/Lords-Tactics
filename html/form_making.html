@@ -611,6 +611,10 @@
                 } else {
                     $(".party-name").remove();
                     for(let i=0; i<5; i++){
+                        if($(".character-10").eq(9-i).find('.empty').length <= 0){
+                            let src = $(".character-10").eq(9-i).find('img').attr('src');
+                            $(`.character-list img[src="${src}"]`).siblings('.char-selected').remove();
+                        }   
                         $(".character-10").eq(9-i).remove();
                     }
 
