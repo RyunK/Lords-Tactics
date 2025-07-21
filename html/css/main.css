@@ -71,7 +71,7 @@ nav a:hover{
 
 
 .form-bg {
-    background-color: rgb(158, 157, 157);
+    background-color: #9e9d9d;
 }
 
 .bg-basicdark{
@@ -96,6 +96,10 @@ nav a:hover{
 
 .bg-lightgray{
     background-color: #efefef;
+}
+
+.bg-gray{
+    background-color: #BFC3D4;
 }
 
 .color-gray {
@@ -164,4 +168,96 @@ nav a:hover{
 .change-line{
     width: 100%;
     height: 1px;
+}
+
+.window-top{
+    min-height: 25px;
+    background-color: #3f3f50;
+}
+
+.btn-cut {
+    clip-path: polygon(0 0, calc(100% - 8px) 0, 100% 8px, 100% 100%, 100% 100%, 8px 100%, 0 calc(100% - 8px), 0 0);
+    box-shadow: inset -1px 1.5px 1px 0px rgba(255, 255, 255, 0.8);
+    
+}
+
+.btn-shadow{
+    /* width: 100%; */
+    filter: drop-shadow(0 2px 0 rgba(0, 0, 0, 0.45));
+}
+.basic-btn{
+    border: 0;
+    font-size: 14px;
+}
+
+.btn-blue{
+    background-color: #3b8fff;
+}
+
+.btn-blue:hover{
+    background-color: #4c9aff;
+}
+
+.btn-blue:active{
+    background-color: #5ca3ff;
+}
+
+.btn-black{
+    background-color: #3f3f50;
+}
+
+.btn-black:hover{
+    background-color: #4d4d61;
+}
+
+.btn-black:active{
+    background-color: #58586f;
+}
+
+.btn-yellow{
+    background-color: #ffa801;
+}
+
+.btn-yellow:hover{
+    background-color: #ffb730;
+}
+
+.btn-yellow:active{
+    background-color: #fbc45f;
+}
+
+.btn-purple{
+    background-color: #ce6dfb;
+}
+
+.btn-purple:hover{
+    background-color: #dd93ff;
+}
+
+.btn-purple:active{
+    background-color: #de9efb;
+}
+
+.btn-green{
+    background-color: #92e64e;
+}
+
+.btn-green:hover{
+    background-color: #a0f060;
+}
+
+.btn-green:active{
+    background-color: #bbf789;
+}
+
+.btn-white{
+    background-color: #efefef;
+}
+
+.btn-white:hover{
+    background-color: rgb(224, 224, 225);
+}
+
+.btn-white:active{
+    background-color: rgb(204, 204, 205);
 }

@@ -1,0 +1,59 @@
+.alert-textbox{
+    padding: 20px 30px;
+    background-color: #ffffff;
+
+    margin: 8px;
+    min-height: 100px;
+    
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    font-size: 14px;
+
+    clip-path: polygon(100% 0, 100% calc(100% - 10px), calc(100% - 10px) 100%, 10px 100%, 0% calc(100% - 10px), 0 0);
+
+    position: relative;
+
+}
+
+.alert-textbox::before {
+    content: '';
+    position: absolute;
+    right: calc(100% - 10px);
+    bottom: 0;
+    width: 10px;
+    height: auto;
+    aspect-ratio: 1 / 1;
+    background: linear-gradient(45deg, transparent 50%, #efefef 50%);
+}
+.alert-textbox::after {
+    content: '';
+    position: absolute;
+    right: 0;
+    bottom: 0;
+    width: 10px;
+    height: auto;
+    aspect-ratio: 1 / 1;
+    background: linear-gradient(135deg, #efefef 50%, transparent 50%);
+}
+
+
+
+.alert-container{
+    padding: 1px;
+    max-width: 350px;
+    min-height: 170px;
+    
+}
+
+.alert-btn-yseNo{
+    width: 80px;
+    height: 33px;
+}
+
+.alert-btn-container{
+    padding-top: 10px;
+    padding-bottom: 15px;
+
+}

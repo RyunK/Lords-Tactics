@@ -391,77 +391,7 @@
     filter: drop-shadow(0 2px 0 rgba(0, 0, 0, 0.45));
 }
 
-.btn-blue{
-    background-color: #3b8fff;
-}
 
-.btn-blue:hover{
-    background-color: #4c9aff;
-}
-
-.btn-blue:active{
-    background-color: #5ca3ff;
-}
-
-.btn-black{
-    background-color: #3f3f50;
-}
-
-.btn-black:hover{
-    background-color: #4d4d61;
-}
-
-.btn-black:active{
-    background-color: #58586f;
-}
-
-.btn-yellow{
-    background-color: #ffa801;
-}
-
-.btn-yellow:hover{
-    background-color: #ffb730;
-}
-
-.btn-yellow:active{
-    background-color: #fbc45f;
-}
-
-.btn-purple{
-    background-color: #ce6dfb;
-}
-
-.btn-purple:hover{
-    background-color: #dd93ff;
-}
-
-.btn-purple:active{
-    background-color: #de9efb;
-}
-
-.btn-green{
-    background-color: #92e64e;
-}
-
-.btn-green:hover{
-    background-color: #a0f060;
-}
-
-.btn-green:active{
-    background-color: #bbf789;
-}
-
-.btn-white{
-    background-color: #efefef;
-}
-
-.btn-white:hover{
-    background-color: rgb(224, 224, 225);
-}
-
-.btn-white:active{
-    background-color: rgb(204, 204, 205);
-}
 
 
 
