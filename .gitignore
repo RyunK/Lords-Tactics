@@ -1,2 +1,7 @@
 node_modules/
-sources/img
+secure/
+
+sources/img/
+
+package-lock.json
+package.json
