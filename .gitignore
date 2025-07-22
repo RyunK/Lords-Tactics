@@ -1,7 +1,7 @@
 node_modules/
 secure/
 
-sources/img/
+statics/sources/img/
 
 package-lock.json
 package.json
