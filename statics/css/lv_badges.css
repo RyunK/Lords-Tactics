@@ -7,7 +7,7 @@
     color: white;
     font-weight: bold;
   
-    background-image: url("../../sources/img/types/lv_dark.png");
+    background-image: url("../sources/img/types/lv_dark.png");
     background-size: contain;
     background-repeat: no-repeat;
   
@@ -25,7 +25,7 @@
     color: white;
     font-weight: bold;
   
-    background-image: url("../../sources/img/types/lv_fire.png");
+    background-image: url("../sources/img/types/lv_fire.png");
     background-size: contain;
     background-repeat: no-repeat;
   
@@ -43,7 +43,7 @@
     color: white;
     font-weight: bold;
   
-    background-image: url("../../sources/img/types/lv_grass.png");
+    background-image: url("../sources/img/types/lv_grass.png");
     background-size: contain;
     background-repeat: no-repeat;
   
@@ -61,7 +61,7 @@
     color: white;
     font-weight: bold;
   
-    background-image: url("../../sources/img/types/lv_light.png");
+    background-image: url("../sources/img/types/lv_light.png");
     background-size: contain;
     background-repeat: no-repeat;
   
@@ -79,7 +79,7 @@
     color: white;
     font-weight: bold;
   
-    background-image: url("../../sources/img/types/lv_water.png");
+    background-image: url("../sources/img/types/lv_water.png");
     background-size: contain;
     background-repeat: no-repeat;
   
@@ -97,7 +97,7 @@
     color: black;
     font-weight: bold;
   
-    background-image: url("../../sources/img/nogak.png");
+    background-image: url("../sources/img/nogak.png");
     background-size: contain;
     background-repeat: no-repeat;
 
@@ -117,7 +117,7 @@
     color: white;
     font-weight: bold;
   
-    background-image: url("../../sources/img/1gak.png");
+    background-image: url("../sources/img/1gak.png");
     background-size: contain;
     background-repeat: no-repeat;
 
@@ -137,7 +137,7 @@
     color: white;
     font-weight: bold;
   
-    background-image: url("../../sources/img/2gak.png");
+    background-image: url("../sources/img/2gak.png");
     background-size: contain;
     background-repeat: no-repeat;
 

@@ -273,3 +273,7 @@ nav a:hover{
 
     display: none;
 }
+
+.right-line{
+    border-right: solid 3px white;
+}
