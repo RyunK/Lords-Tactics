@@ -82,7 +82,7 @@
 }
 
 .bottom-btn {
-    width: 92%;
+    min-width: 80px;
     height: 38px;
 
     font-size: 14px;
@@ -386,10 +386,7 @@
     
 }
 
-.btn-shadow{
-    width: 100%;
-    filter: drop-shadow(0 2px 0 rgba(0, 0, 0, 0.45));
-}
+
 
 
 

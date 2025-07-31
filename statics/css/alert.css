@@ -42,13 +42,32 @@
 
 .alert-container{
     padding: 1px;
-    max-width: 350px;
+    width: 350px;
     min-height: 170px;
     
+    position: fixed;
+    z-index: 20;
+    top: 90px;
+    left: 100px;
+
+    /* display: none; */
 }
 
-.alert-btn-yseNo{
+.alert-yesNo{
+    display: none;
+}
+
+.alert-ok{
+    display: none;
+}
+
+.alert-btn-yesNo{
     width: 80px;
+    height: 33px;
+}
+
+.alert-btn-ok{
+    width: 140px;
     height: 33px;
 }
 

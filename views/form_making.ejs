@@ -11,8 +11,48 @@
     <link href="/css/form_share.css" rel="stylesheet">
     <link href="/css/lv_badges.css" rel="stylesheet">
     <link href="/css/form_making.css" rel="stylesheet">
+    <link href="/css/alert.css" rel="stylesheet">
 </head>
 <body>
+    <div class="own-modal">
+        <div class="alert-container  alert-yesNo bg-gray shadow-basic">
+            <!-- <div class="window-top"></div> -->
+            <div>
+                <div class="alert-textbox ">
+                    <p class="alert-text">편성 영웅 모두 적용하시겠습니까?</p>
+                </div>
+                
+                <div class="alert-btn-container d-flex justify-content-center bg-basicdark">
+                    <div class="btn-shadow me-1">
+                        <button class="btn-cut basic-btn alert-btn-yesNo btn-white">아니오 </button>
+                    </div>
+                    <div class="btn-shadow ms-2">
+                        <button class="btn-cut basic-btn btn-yellow color-white alert-btn-yesNo">예 </button>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <div class="alert-container  alert-ok bg-gray shadow-basic">
+            <!-- <div class="window-top"></div> -->
+            <div>
+                <div class="alert-textbox ">
+                    <p class="alert-text">편성 영웅 모두 적용하시겠습니까?</p>
+                </div>
+                
+                <div class="alert-btn-container d-flex justify-content-center bg-basicdark">
+                    <div class="btn-shadow ms-2">
+                        <button class="btn-cut basic-btn alert-btn-ok btn-white">확인</button>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+    </div>
+    
+
     <div class="share-card shadow-basic">
         <!-- 상단바 -->
         <div class="post-title title-size ">
@@ -110,7 +150,7 @@
                 </div>
 
                 <!-- 좋아요 / 댓글 펼치기 -->
-                <div class="mg-10px ms-0 me-0 d-flex flex-fill justify-content-between">
+                <div class="mg-10px ms-0 me-0 d-flex flex-fill justify-content-evenly">
                     <div class="btn-shadow d-flex justify-content-start">
                         <button class="btn-cut bottom-btn btn-blue color-white">불러오기 </button>
                     </div>
@@ -334,7 +374,8 @@
         $(document).on('click', function(e){
             if (!$(e.target).closest(".form_spot").length>0 
             && !$(e.target).closest(".character-list").length>0
-            && !$(e.target).closest(".out").length>0) {
+            && !$(e.target).closest(".out").length>0
+            && !$(e.target).closest(".charSetting-btn").length>0) {
                 // console.log($(e.target).closest(".form_spot"))
                 $(".spot-selected-empty").remove();
                 $(".spot-selected-full").siblings(".out").remove();
@@ -361,6 +402,13 @@
                 $(".char-filter-btn").children("i").attr('class', "fa-solid fa-angle-down");
             }
 
+            // 모달 창 꺼지게
+            if($(e.target).closest(".own-modal").length>0
+                && !$(e.target).closest(".alert-container").length>0){
+                e.stopPropagation();
+                $('.own-modal').fadeOut();
+                $('alert-container').fadeOut();
+            }
         });
 
 
@@ -951,8 +999,32 @@
                 }
             }
         }
-        
-        
+    
+    
+    /**
+     * 영웅 설정 버튼 클릭
+     */
+    $('.charSetting-btn').on('click', function(e){
+        // $(".spot-selected-full").siblings(".out").remove();
+        // $(".spot-selected-full").remove();
+        let selected = $(".spot-selected-full").siblings(".select-liner").children('img');
+
+        console.log(selected);
+        if(selected.length > 0){
+
+        } else{ // 아무 영웅도 클릭하지 않았을 때
+            // console.log("감지되지 않음");
+            $('.alert-ok .alert-text').text('설정할 영웅을 편성창에서 선택하세요.');
+            $('.own-modal').fadeIn();
+            $('.alert-ok').fadeIn();
+
+        }
+    })
+    
+    $('.alert-btn-ok').on('click', function(e){
+        $('.alert-ok').fadeOut();
+        $('.own-modal').fadeOut();
+    })
 
     </script>
 

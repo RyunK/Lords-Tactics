@@ -13,7 +13,7 @@ app.listen(8080, () => {
 app.get('/formmake', (요청, 응답) => {
   fs.readdir('./statics/sources/img/characters', (err, filelist) => {
     // console.log(err);
-    console.log(filelist);
+    // console.log(filelist);
     let characterslist = filelist.map(e=>{
       let t = e.split('_')[0]
       return {file : e, type: t}
