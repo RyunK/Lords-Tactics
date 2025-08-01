@@ -12,6 +12,7 @@
     <link href="/css/lv_badges.css" rel="stylesheet">
     <link href="/css/form_making.css" rel="stylesheet">
     <link href="/css/alert.css" rel="stylesheet">
+    <link href="/css/hero_setting.css" rel="stylesheet">
 </head>
 <body>
     <div class="own-modal">
@@ -50,6 +51,58 @@
             </div>
         </div>
 
+        <div class="hero-setting bg-gray shadow-basic">
+            <!-- 상단바 -->
+            <div class="post-title title-size d-flex">
+                <div class="bg-basicdark color-yellow title-sizing flex-fill d-flex align-items-center"><p>영웅 설정</p></div>
+                <button type="button" class="bg-red btn-close-origin color-white" ><i class="fa-solid fa-xmark"></i></button>
+            </div>
+
+            <!-- 컨텐츠 -->
+            <div class="setting-content d-flex">
+                <div class="pe-4 right-line">
+                    <div class="setting-charname d-flex align-items-center">
+                        <img src="../sources/img/types/fire.png" class="setting-class-size">
+                        <p class="ms-1">메이링</p>
+                    </div>
+                    <div class="setting-charimg mt-3" >
+                        <img src="../sources/img/characters/fire_meiling_shooter.png">
+                        <span class="lv_fire lv">70</span>
+                        <span class="onegak gak">7</span>
+                    </div>
+
+                </div>
+                <div class="ps-4 setting-form">
+                    <form>
+                        <div class="d-flex align-items-center mt-3"><p class="">레벨</p><div class="btn-shadow lv-input ms-5"><input type="input" class="btn-cut "></div></div>
+                        <div class="d-flex mt-3">
+                            <p>초월</p>
+                            <label class="charSetting-ele d-flex align-self-center me-3">  <input type="radio" name="cho" class="charPublic-checkbox"><span class="checkbox-img"></span> <span class="ms-1">5</span> </label>
+                            <label class="charSetting-ele d-flex align-self-center me-3">  <input type="radio" name="cho" class="charPublic-checkbox"><span class="checkbox-img"></span> <span class="ms-1">6</span> </label>
+                            <label class="charSetting-ele d-flex align-self-center">  <input type="radio" name="cho" class="charPublic-checkbox"><span class="checkbox-img"></span> <span class="ms-1">7</span> </label>
+                        </div>
+                        
+                        <div class="d-flex mt-3">
+                            <p>각성</p>
+                            <label class="charSetting-ele d-flex align-self-center">  <input type="radio" name="gak" class="charPublic-checkbox"><span class="checkbox-img"></span> <img src="../sources/img/nogak.png" class="ms-1"> </label>
+                            <label class="charSetting-ele d-flex align-self-center">  <input type="radio" name="gak" class="charPublic-checkbox"><span class="checkbox-img"></span> <img src="../sources/img/1gak.png" class="ms-1"> </label>
+                            <label class="charSetting-ele d-flex align-self-center">  <input type="radio" name="gak" class="charPublic-checkbox"><span class="checkbox-img"></span> <img src="../sources/img/2gak.png" class="ms-1"> </label>
+                        </div>
+                        
+                        <!-- 하단 버튼들 -->
+                        <div class="setting-btns d-flex">
+                            <div class="btn-shadow ">
+                                <input class="btn-cut basic-btn btn-yellow color-white setting-normal-submit" type="submit" value="적용">
+                            </div>
+                            <div class="btn-shadow ms-2 flex-fill">
+                                <input class="btn-cut basic-btn btn-blue color-white setting-all-submit" type="submit" value="모든 캐릭터 적용">
+                            </div>
+                        </div>
+                        
+                    </form>
+                </div>
+            </div>        
+        </div>
     </div>
     
 
@@ -172,9 +225,9 @@
                 <!-- 정렬, 필터 버튼 누르면 나옴 -->
                 <div class="char-filter-menu bg-lightgray d-flex justify-content-center align-items-top" style="visibility: hidden;">
                     <div class="filter-sort">
-                        <button class="filter-btn filter-sort-btn filter-unselected"><p>초월 순</p><i class="fa-solid fa-caret-down"></i></button>
-                        <button class="filter-btn filter-sort-btn filter-unselected"><p>각성 순</p><i class="fa-solid fa-caret-down"></i></button>
-                        <button class="filter-btn filter-sort-btn filter-unselected"><p>보유 영웅 순</p><i class="fa-solid fa-caret-down"></i></button>
+                        <button class="filter-btn filter-sort-btn filter-selected"><p>보유 영웅</p><p class="have-status">ON</p></button>
+                        <button class="filter-btn filter-sort-btn filter-unselected"><p>등급 순</p><i class="fa-solid fa-caret-down"></i></button>
+                        <button class="filter-btn filter-sort-btn filter-unselected"><p>영웅 순</p><i class="fa-solid fa-caret-down"></i></button>
                     </div>
                     <form class="filter-class">
                         <label class=" filter-class-btn-container"><input type="checkbox" class="filter-checkbox"> <div class="filter-btn filter-class-btn filter-unselected"><img src="/sources/img/classes/guardian.png"><p>가디언</p> </div></label>
@@ -891,6 +944,7 @@
                 $(this).addClass('filter-selected');
 
                 charSortHandler(true, text);
+                // console.log(text);
             }
             else if($(this).hasClass('filter-selected')){
 
@@ -922,7 +976,7 @@
                 sortByMaxLevel(big2small);
             }else if(text == "각성 순"){
                 sortByGaksung(big2small);
-            }else if(text == "보유 영웅 순"){
+            }else if(text == "보유 영웅ON"){
 
             }
         }
@@ -1011,7 +1065,8 @@
 
         console.log(selected);
         if(selected.length > 0){
-
+            $('.own-modal').fadeIn();
+            $('.hero-setting').fadeIn();
         } else{ // 아무 영웅도 클릭하지 않았을 때
             // console.log("감지되지 않음");
             $('.alert-ok .alert-text').text('설정할 영웅을 편성창에서 선택하세요.');
