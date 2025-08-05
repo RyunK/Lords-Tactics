@@ -13,16 +13,20 @@ img {
 
 body {
     /* background-color: #f0f0f0; */
-    background-image: url("../../sources/img/background_img.png"), 
+    background-image: url("../sources/img/background_img.png"), 
                     linear-gradient(#f0f0f0, #f0f0f0) ;
-    margin: 0px;
     box-sizing: border-box;
     background-size: 70px;
     font-family: Pretendard-Regular;
     color: #3f3f50;
 
-    font-size: 12px;
-    margin: 0px;
+    font-size: 14px;
+
+    max-width: 1980px;
+
+    margin-top: 0px;
+    margin-left: auto;
+    margin-right: auto;
 }
 
 p, div, h6{
@@ -41,6 +45,8 @@ ul {padding-left:0; margin-left:0;}
 nav {
     width: 100%;
     height: 55px;
+    
+    margin-bottom: 10px;
 }
 
 nav a{
@@ -102,6 +108,10 @@ nav a:hover{
     background-color: #BFC3D4;
 }
 
+.color-black{
+    color: #3f3f50;
+}
+
 .color-gray {
     color: #666666;
 }
@@ -118,17 +128,16 @@ nav a:hover{
     box-shadow: 2px 2px 4px 2px rgba(45, 45, 45, 0.2);
 }
 
-.main-banner {
-
-    margin-top: 8px;
-
+.top-banner {
     width: 100%;
-    height: 200px;
 }
 
 .notice-banner {
     width: 100%;
-    height: 30px;
+    height: 40px;
+
+    font-size: 15px;
+    font-weight: bold;
 }
 
 .middle-banner {
@@ -143,6 +152,70 @@ nav a:hover{
     height: 100%;
 }
 
+.basic-page-design{
+    background-color: #BFC3D4;
+    padding: 40px 50px ;
+
+    clip-path: polygon(40px 0%, 100% 0, 100% 100%, 0 100%, 0% 40px);
+    text-align: center;
+    position: relative;
+}
+
+.basic-page-design::before{
+    content: '';
+    position: absolute;
+    right: calc(100% - 40px);
+    top: 0;
+    width: 40px;
+    height: auto;
+    aspect-ratio: 1 / 1;
+    background: linear-gradient(135deg, transparent 50%, #3f3f50 50%);
+
+}
+
+.input-box{
+    width: 100%;
+    border: none;
+    padding: 15px;
+    display: block;
+    font-size: 15px;
+
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.checkbox-none{
+    appearance: none;
+}
+
+.basic-checkbox + .checkbox-img {
+    /* appearance: none; */
+    
+    /* display: flex; */
+
+    margin-top: 3px;
+    width: 14px;
+    height: 14px;
+
+    border: 3px solid white;
+}
+
+
+.basic-checkbox:checked + .checkbox-img::before{
+    content:'✔';
+    font-size: 1.6em;
+    text-align: center;
+    position:relative;
+    left: -4px;
+    top: -19px;
+
+    color: #3b8fff;
+    
+}
+
+.checkbox-container{
+    cursor: pointer;
+}
 
 .guid-banner-container {
     width: 45%;
