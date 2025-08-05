@@ -124,6 +124,10 @@ nav a:hover{
     color: white;
 }
 
+.color-red{
+    color:#ff4747
+}
+
 .shadow-basic{
     box-shadow: 2px 2px 4px 2px rgba(45, 45, 45, 0.2);
 }
@@ -215,6 +219,10 @@ nav a:hover{
 
 .checkbox-container{
     cursor: pointer;
+}
+
+.fault-msg{
+    height: 21px;
 }
 
 .guid-banner-container {
