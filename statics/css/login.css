@@ -34,6 +34,27 @@
     margin-bottom: 10px;
 }
 
+.btn-shadow a{
+    display: inline-block;
+    width: 100%;
+
+    font-size: 16px;
+    padding: 14px;
+
+    margin-bottom: 10px;
+
+    text-decoration-line: none;
+
+}
+
+.btn-link{
+    height: 61.97px;
+}
+
+.btn-link:hover {
+    cursor: pointer;
+}
+
 .signup-form{
     width: 400px;
 

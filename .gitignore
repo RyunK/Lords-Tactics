@@ -5,3 +5,4 @@ statics/sources/img/
 
 package-lock.json
 package.json
+.env

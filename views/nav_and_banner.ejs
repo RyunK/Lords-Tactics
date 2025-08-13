@@ -1,0 +1,41 @@
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+
+<nav class="bg-basicdark shadow-basic d-flex justify-content-between align-items-center">
+        <div class="nav-box ">
+            <a href="#" >기사단 편성</a>
+            <a href="#">조합 공유 게시판</a>
+            <a href="#">마이페이지</a>
+            <a href="#">이용안내</a>
+        </div>
+        <div class="nav-box">
+            <% if(username != ''){ %>
+                 <span class="color-white login">
+                    <%=username%>
+                 </span>
+            <%} else{ %>
+                <a href="/login" class="color-white login">
+                    로그인/회원가입
+                </a>
+            <% }%>
+            <a href="#" class="color-white search">검색 &nbsp; <i class="fa-solid fa-magnifying-glass" style="font-size: 15px"></i></a>
+        </div>
+    </nav>
+
+    <script>
+        switch('<%=page%>'){
+        case 'main': 
+            $('.nav-box').children().removeClass('nav-selected');
+            break;
+        case 'login':
+            $('.login').addClass('nav-selected');
+        }
+    </script>
+    
+    <div class="top-banner shadow-basic">
+        <a href="/"><img src="/sources/img/banners/basic.jpg" alt="" width="100%"></a>
+        <!-- 공지사항 배너 -->
+        <div class="notice-banner bg-white d-flex align-items-center">
+            <a href="#" class="ms-5 ps-3 pe-3">공지사항</a>
+            <a href="#" class="ms-5 "><%= notice%></a>
+        </div>
+    </div>
