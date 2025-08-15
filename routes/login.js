@@ -54,7 +54,7 @@ router.post('/register', async (req, res) => {
     }
   });
 
-  res.redirect('/login');
+  res.send("<script>alert('회원가입에 성공했습니다. 해당 아이디로 로그인하세요.'); location.href='/login';</script>");
 })
 
 /**

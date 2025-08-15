@@ -15,7 +15,7 @@
     <%- include('nav_and_banner.ejs', {page: 'login', username:'', notice:'2025.08.01 신규 캐릭터 [물]라플라스 추가 완료'}) %>
 
     <div class="basic-page-design login-container shadow-basic">
-        <form action="/login/register" class="signup-form" method="POST">
+        <form action="/login/register" class="signup-form" method="POST" onsubmit="return submitCheck()">
             <h3 class="mb-5">회원가입</h3>
             <div class="id-input">
                 <div class="d-flex justify-content-between">
@@ -71,7 +71,7 @@
                 <span class="checkbox-img"></span>
                 <span class="ms-2">[필수] 개인정보 수집 및 이용 동의 (이메일)</span> 
             </label>
-            <div class="btn-shadow"> <input type="submit" name="submit" onclick="return submitCheck()" id="" value="가입" class="signup-btn basic-btn btn-cut btn-yellow color-white"></div>
+            <div class="btn-shadow"> <input type="submit" name="submit"  id="" value="가입" class="signup-btn basic-btn btn-cut btn-yellow color-white"></div>
             
            
         </form>
@@ -126,13 +126,16 @@
                             msg.text("사용 가능한 아이디입니다.");
                             msg.removeClass('color-red');
                             msg.addClass('color-black');
-                            $('input[name="userid"]').data("submitable", "true")
+                            $('input[name="userid"]').data("submitable", "true");
+                            // console.log($('input[name="userid"]').data("submitable"))
                         } else {
                             let msg = $('.id-input .fault-msg');
                             msg.text("사용할 수 없는 아이디입니다.");
                             msg.removeClass('color-black');
                             msg.addClass('color-red');
                             $('input[name="userid"]').data("submitable", "false")
+                            $('input[name="userid"]').focus();
+
                         }
                     },
                     error: function(e){
@@ -150,12 +153,26 @@
             else return true;
         }
 
-        function submitCheck(){
+        function submitCheck(e){
             // input 태그들 submitable 변수 싹 검사해
             // false 하나라도 있으면 false 리턴하고, 해당 인풋에 focus해
             // 제대로 입력하라고 alert도 띄워줘
+            let input_objects = $('input[type="text"]');            
+            for(let i=0; i<input_objects.length; i++){
+                if(input_objects.eq(i).data("submitable") == false){
+                    alert("입력창을 다시 확인하세요.");
+                    $('input[type="text"]').eq(i).focus();
+                    return false;
+                }
+            }
+            
             // 다 됐는데 개인정보 수집 이용 동의 체크 안돼있으면 또 반려해
+            if(!$("input[type='checkbox']").is(":checked")){
+                alert("개인정보 수집 및 이용에 동의하셔야 합니다.");
+                return false;
+            }
             // 다 됐으면 submit 해
+            return true;
             
         }
 
@@ -213,9 +230,9 @@
 
         $('input[name="username"]').on('change', function(e){
             let msg = $('.username-input .fault-msg');
-            if($(this).val().length < 8 || $(this).val().length > 20 ){
+            if($(this).val().length < 2 || $(this).val().length > 20 ){
                 // console.log($(this).val().length)
-                msg.text("비밀번호는 8자 이상 20자 이하여야 합니다.");
+                msg.text("닉네임은 2자 이상 20자 이하여야 합니다.");
                 msg.removeClass('color-black');
                 msg.addClass('color-red');
                 $(this).data("submitable", "false");
