@@ -365,3 +365,11 @@ nav a:hover{
 .right-line{
     border-right: solid 3px white;
 }
+
+.only-english{
+    ime-mode: disabled;
+}
+
+.lowercase{
+    text-transform: lowercase;
+}

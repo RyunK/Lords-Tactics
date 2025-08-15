@@ -12,15 +12,17 @@ app.listen(process.env.PORT, () => {
     console.log('http://localhost:8080 에서 서버 실행중')
 })
 
-let connection = require('./database.js')
+const cookieParser = require("cookie-parser");
+app.use(express.urlencoded({ extended: false }))
+app.use(express.json())
+app.use('/static', express.static('public'));
+app.use(cookieParser());
 
-connection.connect(function(err) {
-  if (err) {
-    console.error('MySQL 연결실패 :' + err.stack);
-    return;
-  }
-  console.log('MySQL 연결됨');
-});
+const connection = require('./database.js')
+
+
+
+app.use('/login', require('./routes/login.js'));
 
 
 app.get('/', (요청, 응답) => {
@@ -28,20 +30,6 @@ app.get('/', (요청, 응답) => {
   // console.log(filelist);
   응답.render('index.ejs')
 })
-
-app.get('/login', (요청, 응답) => {
-  // console.log(err);
-  // console.log(filelist);
-  응답.render('login.ejs')
-})
-
-app.get('/signup', (요청, 응답) => {
-  // console.log(err);
-  // console.log(filelist);
-  응답.render('signup.ejs')
-})
-
-
 
 
 app.get('/formmake', (요청, 응답) => {
