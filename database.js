@@ -1,4 +1,4 @@
-const mysql = require('mysql2');
+const mysql = require('mysql2/promise');
 
 const connection = mysql.createConnection({
 host : process.env.DB_HOST,  
@@ -8,12 +8,12 @@ database : process.env.DB_NAME,
 port : process.env.DB_PORT
 });
 
-connection.connect(function(err) {
-  if (err) {
-    console.error('MySQL 연결실패 :' + err.stack);
-    return;
-  }
-  console.log('MySQL 연결됨');
-});
+// connection.connect(function(err) {
+//   if (err) {
+//     console.error('MySQL 연결실패 :' + err.stack);
+//     return;
+//   }
+//   console.log('MySQL 연결됨');
+// });
 
 module.exports = connection

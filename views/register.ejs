@@ -45,7 +45,7 @@
                     <p class="color-red fault-msg text-end"></p>
                 </div>
                 <div class="password-input">
-                    <input type="password" oninput="onlyAlphaNuSymbols(this)"  data-submitable="false" name="re-password" class="input-box mt-1 mb-3" placeholder="비밀번호">
+                    <input type="password" oninput="onlyAlphaNuSymbols(this)"  data-submitable="false" name="re_password" class="input-box mt-1 mb-3" placeholder="비밀번호 확인">
                     <i class="pw-switch fa-solid fa-eye-slash"></i>
                 </div>
             </div>
@@ -55,7 +55,7 @@
                     <h6 class="fw-bold text-start">닉네임</h6>
                     <p class="color-red fault-msg text-end"></p>
                 </div>
-                <input type="text" data-submitable="false" name="username" autocomplete="name" class="input-box mt-1 mb-3" placeholder="닉네임 입력 (2~20자)">
+                <input type="text" data-submitable="false" name="username" autocomplete="name" class="input-box mt-1 mb-3" placeholder="닉네임 입력 (2~8자)">
             </div>
 
             <div class="email-input">
@@ -147,7 +147,7 @@
 
         function checkpw() {
             let pw = $('input[name="password"]').val();
-            let re_pw = $('input[name="re-password"]').val();
+            let re_pw = $('input[name="re_password"]').val();
 
             if(pw != re_pw){ return false; }
             else return true;
@@ -217,7 +217,7 @@
             }
         })
 
-        $('input[name="re-password"]').on('change', function(e){
+        $('input[name="re_password"]').on('change', function(e){
             // console.log(checkpw());
             if(checkpw()){
                 $('.pw-check .fault-msg').text("");
@@ -230,9 +230,9 @@
 
         $('input[name="username"]').on('change', function(e){
             let msg = $('.username-input .fault-msg');
-            if($(this).val().length < 2 || $(this).val().length > 20 ){
+            if($(this).val().length < 2 || $(this).val().length > 8 ){
                 // console.log($(this).val().length)
-                msg.text("닉네임은 2자 이상 20자 이하여야 합니다.");
+                msg.text("닉네임은 2자 이상 8자 이하여야 합니다.");
                 msg.removeClass('color-black');
                 msg.addClass('color-red');
                 $(this).data("submitable", "false");
