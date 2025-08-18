@@ -25,14 +25,15 @@ const connection = require('./database.js')
 app.use('/login', require('./routes/login.js'));
 
 
-app.get('/', (요청, 응답) => {
-  // console.log(err);
-  // console.log(filelist);
-  응답.render('index.ejs')
+app.get('/', (req, res) => {
+
+  console.log(req.user)
+
+  res.render('index.ejs',  {data : {nickname: ""}})
 })
 
 
-app.get('/formmake', (요청, 응답) => {
+app.get('/formmake', res => {
   fs.readdir('./statics/sources/img/characters', (err, filelist) => {
     // console.log(err);
     // console.log(filelist);
@@ -40,6 +41,6 @@ app.get('/formmake', (요청, 응답) => {
       let t = e.split('_')[0]
       return {file : e, type: t}
     })
-    응답.render('form_making.ejs', {characterslist : characterslist})
+    res.render('form_making.ejs', {characterslist : characterslist})
   })
 }) 

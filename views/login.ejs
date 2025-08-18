@@ -12,19 +12,22 @@
 </head>
 <body>
 
-    <%- include('nav_and_banner.ejs', {page: 'login', username:'', notice:'2025.08.01 신규 캐릭터 [물]라플라스 추가 완료'}) %>
+    <%- include('nav_and_banner.ejs', {page: 'login', nickname: data.nickname, notice:'2025.08.01 신규 캐릭터 [물]라플라스 추가 완료'}) %>
 
 
     <div class="basic-page-design login-container shadow-basic">
-        <form action="" class="login-form" method="POST">
+        <form action="/login" class="login-form" method="POST">
             <h3 class="mb-5 text-center">LOGIN</h3>
-            <p class="color-red fault-msg text-start">아이디와 비밀번호를 다시 확인하세요.</p>
-            <input type="text" name="userid" class="input-box mt-1 mb-3" placeholder="아이디">
+            <p class="color-red fault-msg text-start"></p>
+            <input type="text" name="username" class="input-box mt-1 mb-3" placeholder="아이디">
             <div class="password-input">
                 <input type="password" name="password"class="input-box" placeholder="비밀번호">
                 <i class="pw-switch fa-solid fa-eye-slash"></i>
             </div>
-            <label class="checkbox-container mt-3 mb-3 d-flex align-self-center">  <input type="checkbox" name="keep_login" class="basic-checkbox checkbox-none"><span class="checkbox-img"></span> <span class="ms-2">로그인 상태 유지</span>  </label>
+            <label class="checkbox-container mt-3 mb-3 d-flex align-self-center">  
+                <input type="checkbox" name="keep_login" class="basic-checkbox checkbox-none">
+                <span class="checkbox-img"></span> <span class="ms-2">로그인 상태 유지</span>  
+            </label>
             <div class="btn-shadow"> <input type="submit" name="" id="" value="로그인" class="basic-btn btn-cut btn-blue color-white"></div>
             <div class="mb-4 btn-shadow btn-link"> <a href="/login/register"  class="basic-btn btn-cut btn-yellow color-white">회원가입</a></div>
             

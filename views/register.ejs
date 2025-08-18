@@ -12,7 +12,7 @@
 </head>
 <body>
 
-    <%- include('nav_and_banner.ejs', {page: 'login', username:'', notice:'2025.08.01 신규 캐릭터 [물]라플라스 추가 완료'}) %>
+    <%- include('nav_and_banner.ejs', {page: 'login', nickname:nickname, notice:'2025.08.01 신규 캐릭터 [물]라플라스 추가 완료'}) %>
 
     <div class="basic-page-design login-container shadow-basic">
         <form action="/login/register" class="signup-form" method="POST" onsubmit="return submitCheck()">
@@ -22,7 +22,7 @@
                     <h6 class="fw-bold text-start">아이디</h6>
                     <p class="color-red fault-msg text-end"></p>
                 </div>
-                <input type="text" name="userid" autocomplete="username" oninput="onlyAlphaNum(this)" data-submitable="false" data-checkable="false" class="input-box lowercase mt-1 mb-3" placeholder="아이디 입력 (영문, 숫자, _포함 6~20자)">
+                <input type="text" name="username" autocomplete="username" oninput="onlyAlphaNum(this)" data-submitable="false" data-checkable="false" class="input-box lowercase mt-1 mb-3" placeholder="아이디 입력 (영문, 숫자, _포함 6~20자)">
                 <div class="id-check btn-shadow"> 
                     <button type="button" onclick="idcheck()" class="basic-btn btn-cut btn-blue color-white">중복 확인</button>
                 </div>
@@ -50,12 +50,12 @@
                 </div>
             </div>
 
-            <div class = "username-input">
+            <div class = "nickname-input">
                 <div class="d-flex justify-content-between">
                     <h6 class="fw-bold text-start">닉네임</h6>
                     <p class="color-red fault-msg text-end"></p>
                 </div>
-                <input type="text" data-submitable="false" name="username" autocomplete="name" class="input-box mt-1 mb-3" placeholder="닉네임 입력 (2~8자)">
+                <input type="text" data-submitable="false" name="nickname" autocomplete="name" class="input-box mt-1 mb-3" placeholder="닉네임 입력 (2~8자)">
             </div>
 
             <div class="email-input">
@@ -99,26 +99,26 @@
 
 
         function idcheck(){
-            if($('input[name="userid"]').val() == ""){
+            if($('input[name="username"]').val() == ""){
                 alert("아이디를 입력하세요.");
-                $('input[name="userid"]').focus();
-                $('input[name="userid"]').data("submitable", "false")
-            } else if ($('input[name="userid"]').data('submitable') == "true"){
+                $('input[name="username"]').focus();
+                $('input[name="username"]').data("submitable", "false")
+            } else if ($('input[name="username"]').data('submitable') == "true"){
                 alert("이미 확인되었습니다.");
-                $('input[name="userid"]').focus();
-            } else if( $('input[name="userid"]').data("checkable") == "false"){
+                $('input[name="username"]').focus();
+            } else if( $('input[name="username"]').data("checkable") == "false"){
                 alert("잘못된 아이디입니다.");
-                $('input[name="userid"]').focus();
-                $('input[name="userid"]').data("submitable", "false")
+                $('input[name="username"]').focus();
+                $('input[name="username"]').data("submitable", "false")
             } else{
                 //id 중복 검사
-                let userid = $('input[name="userid"]').val();
+                let username = $('input[name="username"]').val();
                 $.ajax({
                     url: '/login/register/idcheck',
                     type: 'POST',
                     async: true,
                     data: {
-                        userid: userid
+                        username: username
                     },
                     success: function(data){
                         if(data.result){
@@ -126,15 +126,15 @@
                             msg.text("사용 가능한 아이디입니다.");
                             msg.removeClass('color-red');
                             msg.addClass('color-black');
-                            $('input[name="userid"]').data("submitable", "true");
-                            // console.log($('input[name="userid"]').data("submitable"))
+                            $('input[name="username"]').data("submitable", "true");
+                            // console.log($('input[name="username"]').data("submitable"))
                         } else {
                             let msg = $('.id-input .fault-msg');
                             msg.text("사용할 수 없는 아이디입니다.");
                             msg.removeClass('color-black');
                             msg.addClass('color-red');
-                            $('input[name="userid"]').data("submitable", "false")
-                            $('input[name="userid"]').focus();
+                            $('input[name="username"]').data("submitable", "false")
+                            $('input[name="username"]').focus();
 
                         }
                     },
@@ -177,8 +177,8 @@
         }
 
 
-        $('input[name="userid"]').on('change', function(e){
-            $('input[name="userid"]').data('submitable', 'false');
+        $('input[name="username"]').on('change', function(e){
+            $('input[name="username"]').data('submitable', 'false');
             $('.id-input .fault-msg').text("");
             const regex = /^[A-Za-z0-9_]*$/gi;
 
@@ -228,8 +228,8 @@
             }
         })
 
-        $('input[name="username"]').on('change', function(e){
-            let msg = $('.username-input .fault-msg');
+        $('input[name="nickname"]').on('change', function(e){
+            let msg = $('.nickname-input .fault-msg');
             if($(this).val().length < 2 || $(this).val().length > 8 ){
                 // console.log($(this).val().length)
                 msg.text("닉네임은 2자 이상 8자 이하여야 합니다.");
