@@ -20,10 +20,22 @@ app.use(cookieParser());
 
 const connection = require('./database.js')
 
+const session = require('express-session')
+const MySQLStore = require("express-mysql-session")(session);
+
+var sessionStore = new MySQLStore({
+  host : process.env.DB_HOST,  
+  user : process.env.DB_USER,
+  password : process.env.DB_PW,
+  database : process.env.DB_NAME,
+  port : process.env.DB_PORT
+});
+
+
 const passportConfig = require('./passport');
 passportConfig();
 
-const session = require('express-session')
+
 const passport = require('passport')
 
 app.use(passport.initialize())
@@ -31,6 +43,7 @@ app.use(session({
   secret: process.env.CODE,
   resave : false,
   saveUninitialized : false,
+  store : sessionStore,
 }));
 
 app.use(passport.initialize()); 
@@ -39,8 +52,12 @@ app.use(passport.session());
 const flash = require("connect-flash");
 app.use(flash());
 
+/**
+ * 로그인 화면 외 링크 저장해둠.
+ * 로그인 성공 후 이전 화면으로 이동하기 위함.
+ */
 app.use((req, res, next) => {
-  if (!req.isAuthenticated() && req.method === 'GET' && req.path !== '/') {
+  if (!req.isAuthenticated() && req.method === 'GET' && req.path !== '/login') {
     req.session.returnTo = req.originalUrl;
   }
   next();

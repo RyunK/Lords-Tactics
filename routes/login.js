@@ -87,9 +87,7 @@ router.post('/register', async (req, res) => {
 router.post('/', async (req, res, next) => {
   // 1. 아이디 비밀번호 검사
   // 2. 다르면 튕기기. 맞으면 로그인 id 적어서 세션 발행
-  passport.authenticate('local', {
-    failureRedirect: '/login?'+""
-  }, 
+  passport.authenticate('local',  
     (error, user, info) => {
       if (error) return res.status(500).json(info.message)
       // if (!user) return res.redirect("/login?error=" + encodeURIComponent(info.message));
@@ -100,6 +98,15 @@ router.post('/', async (req, res, next) => {
       }
       req.logIn(user, (err) => {
         if (err) return next(err)
+        
+        if(req.body.keep_login){
+          // console.log("로그인상태유지")
+          req.session.cookie.maxAge = 1000 * 60 * 60 * 24 * 14; 
+        } else {
+          // console.log("로그인상태유지 안함")
+          req.session.cookie.expires = false;
+        }
+
         const redirectUrl = req.session.returnTo || "/";
         delete req.session.returnTo; // 한 번 쓰고 지워주기
         res.redirect(redirectUrl);
