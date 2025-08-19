@@ -20,16 +20,40 @@ app.use(cookieParser());
 
 const connection = require('./database.js')
 
+const passportConfig = require('./passport');
+passportConfig();
 
+const session = require('express-session')
+const passport = require('passport')
+
+app.use(passport.initialize())
+app.use(session({
+  secret: process.env.CODE,
+  resave : false,
+  saveUninitialized : false,
+}));
+
+app.use(passport.initialize()); 
+app.use(passport.session());
+
+const flash = require("connect-flash");
+app.use(flash());
+
+app.use((req, res, next) => {
+  if (!req.isAuthenticated() && req.method === 'GET' && req.path !== '/') {
+    req.session.returnTo = req.originalUrl;
+  }
+  next();
+});
 
 app.use('/login', require('./routes/login.js'));
 
+const getDatas = require('./routes/getDatas.js')
 
 app.get('/', (req, res) => {
 
-  console.log(req.user)
-
-  res.render('index.ejs',  {data : {nickname: ""}})
+  // console.log(getDatas.loggedInNickname(req, res))
+  res.render('index.ejs',  {data : {nickname: getDatas.loggedInNickname(req, res)}})
 })
 
 

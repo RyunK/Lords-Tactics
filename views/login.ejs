@@ -18,7 +18,9 @@
     <div class="basic-page-design login-container shadow-basic">
         <form action="/login" class="login-form" method="POST">
             <h3 class="mb-5 text-center">LOGIN</h3>
-            <p class="color-red fault-msg text-start"></p>
+            <p class="color-red fault-msg text-start">
+                <%= error && error.length ? error[0] : "" %>
+            </p>
             <input type="text" name="username" class="input-box mt-1 mb-3" placeholder="아이디">
             <div class="password-input">
                 <input type="password" name="password"class="input-box" placeholder="비밀번호">
@@ -54,6 +56,7 @@
                 $(this).siblings('input').attr('type', 'text');
             }
         })
+
     </script>
 </body>
 </html>

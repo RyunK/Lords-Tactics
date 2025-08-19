@@ -4,65 +4,10 @@ const nodemailer = require('nodemailer');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const connection = require('../database.js')
+const { mustLoggedIn, mustNotLoggedIn } = require('./middlewares'); // 내가 만든 사용자 미들웨어
 
-const session = require('express-session')
 const passport = require('passport')
-const LocalStrategy = require('passport-local')
 
-router.use(passport.initialize())
-router.use(session({
-  secret: process.env.CODE,
-  resave : false,
-  saveUninitialized : false,
-}))
-
-router.use(passport.session()) 
-
-/**
- * 로그인 ID 비번 검사
- */
-passport.use(new LocalStrategy(async (inputid, inputpw, cb) => {
-  try {
-    console.log(`id: ${inputid} / pw: ${inputpw}`)
-
-    var sql = `SELECT * FROM USER
-              INNER JOIN user_pw_table ON USER.id = USER_PW_TABLE.USER_ID
-              WHERE USERNAME= ?`;
-
-    var [result, fields] = await (await connection).execute(sql, [inputid]);
-
-    // console.log(result);
-    if (result.length <= 0) {
-      return cb(null, false, { message: '잘못된 ID' })
-    }
-    // console.log(bcrypt.compareSync(inputpw, result[0].user_password))
-    if (await bcrypt.compareSync(inputpw, result[0].user_password)) {
-      return cb(null, result)
-    } else {
-      return cb(null, false, { message: '비번불일치' });
-    }
-  } catch (err){
-    return cb(null, false, { message:  '알 수 없는 오류'})
-  }
-}))
-
-passport.serializeUser((user, done) => {
-  process.nextTick(() => {
-  console.log("serialize / " + user[0].id)
-    done(null, { id: user[0].id, username: user[0].username })
-  })
-})
-
-passport.deserializeUser(async (user, done) => {
-  console.log("dserialize / " + user.id)
-  var sql = `SELECT * FROM USER
-              WHERE ID= ?`;
-
-  let [result, fields] = await (await connection).execute(sql, [user.id]);
-  process.nextTick(() => {
-    return done(null, result)
-  })
-})
 
 // 회원가입
 // 1. 아이디 중복 검사 버튼을 누르면 중복검사 (완)
@@ -76,16 +21,16 @@ passport.deserializeUser(async (user, done) => {
 // 2. 다르면 튕기기. 맞으면 세션 발행
 // 3. 로그인한 사람 닉네임 전달
 
-router.get('/', (req, res) => {
+router.get('/', mustNotLoggedIn ,(req, res) => {
   if(req.user){
     res.redirect('/')
   } else {
-    res.render('login.ejs', {data : {nickname: ""}})
+    res.render('login.ejs', {data : {nickname: ""}, error: req.flash("error") })
   }
   
 })
 
-router.get('/register', (req, res) => {
+router.get('/register', mustNotLoggedIn, (req, res) => {
   if(req.user){
     res.redirect('/')
   } else {
@@ -134,25 +79,42 @@ router.post('/register', async (req, res) => {
   }
 })
 
+
+
 /**
  * 로그인
  */
 router.post('/', async (req, res, next) => {
   // 1. 아이디 비밀번호 검사
-  // 2. 다르면 튕기기. 맞으면 세션 발행
-  // 3. 로그인한 사람 닉네임 전달
-  passport.authenticate('local', (error, user, info) => {
+  // 2. 다르면 튕기기. 맞으면 로그인 id 적어서 세션 발행
+  passport.authenticate('local', {
+    failureRedirect: '/login?'+""
+  }, 
+    (error, user, info) => {
       if (error) return res.status(500).json(info.message)
-      if (!user) return res.status(401).json(info.message)
+      // if (!user) return res.redirect("/login?error=" + encodeURIComponent(info.message));
+
+      if (!user) {
+        req.flash("error", info.message);
+        return res.redirect("/login");
+      }
       req.logIn(user, (err) => {
         if (err) return next(err)
-        res.redirect('/')
+        const redirectUrl = req.session.returnTo || "/";
+        delete req.session.returnTo; // 한 번 쓰고 지워주기
+        res.redirect(redirectUrl);
       })
   })(req, res, next)
 
-  // join 후 select 해서 있으면 로그인 성공 없으면 실패
 })
 
+
+/**
+ * 로그아웃
+ */
+router.post('/logout', mustLoggedIn, (req, res) => {
+
+})
 
 /**
  * 회원가입 - 아이디 체크
