@@ -373,3 +373,27 @@ nav a:hover{
 .lowercase{
     text-transform: lowercase;
 }
+
+.nickname-container{
+    display: inline-block;
+    position: relative;
+}
+
+.nickname:hover{
+    cursor: pointer;
+}
+
+.logout-container{
+    display: none;
+
+    width: 80px;
+
+
+    position: absolute;
+    top: 30px;
+    right: -20px;
+}
+
+.logout-container:hover{
+    cursor: pointer;
+}

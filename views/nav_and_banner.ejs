@@ -9,9 +9,15 @@
         </div>
         <div class="nav-box">
             <% if(nickname != ''){ %>
-                 <span class="color-white login">
-                    <%=nickname%>
-                 </span>
+                <div class="nickname-container">
+                    <span class="nickname color-white login" >
+                        <%=nickname%>                        
+                    </span>
+                    <div class="logout-container bg-basicdark text-center">
+                        <a a href="javascript:void(0)" onClick="javascript:goPost()" class="logout color-white">로그아웃</a> 
+                    </div>
+                </div>
+                 
             <%} else{ %>
                 <a href="/login" class="color-white login">
                     로그인/회원가입
@@ -29,6 +35,20 @@
         case 'login':
             $('.login').addClass('nav-selected');
         }
+
+        $(".nickname").on('click', function(e) {
+            $(".logout-container").slideToggle();
+        })
+
+        function goPost(){
+            let f = document.createElement('form');
+            f.setAttribute('method', 'post');
+            f.setAttribute('action', '/login/logout');
+            document.body.appendChild(f);
+            f.submit();
+        }
+
+
     </script>
     
     <div class="top-banner shadow-basic">

@@ -80,11 +80,14 @@ app.use(flash());
 
 /**
  * 로그인 화면 외 링크 저장해둠.
- * 로그인 성공 후 이전 화면으로 이동하기 위함.
+ * 로그인 및 로그아웃 성공 후 이전 화면으로 이동하기 위함.
  */
 app.use((req, res, next) => {
-  if (!req.isAuthenticated() && req.method === 'GET' && req.path !== '/login') {
+  if (req.method === 'GET' && req.path !== '/login' && !req.path.includes('error')
+    && !req.path.includes('com.chrome.devtools.json') && !req.path.includes('.well-known')) {
     req.session.returnTo = req.originalUrl;
+    // console.log(req.session.returnTo)
+    req.session.save();
   }
   next();
 });
