@@ -87,9 +87,16 @@ router.post('/register', mustNotLoggedIn, async (req, res) => {
 router.post('/', mustNotLoggedIn, async (req, res, next) => {
   // 1. 아이디 비밀번호 검사
   // 2. 다르면 튕기기. 맞으면 로그인 id 적어서 세션 발행
-  console.log("login-returnTo : " + req.session.returnTo);
-  const redirectUrl = req.session.returnTo || "/";
+  var redirectUrl;
+  req.session.save((err) => {
+    if (err) console.error(err);
+    console.log("login-returnTo : " + req.session.returnTo);
+    redirectUrl = req.session.returnTo || "/";
+    // delete req.session.returnTo; // 한 번 쓰고 지워주기
 
+    // console.log("login-redirect : " + redirectUrl);
+  });
+  
   passport.authenticate('local',  
     (error, user, info) => {
       if (error) return res.status(500).json(info.message)
@@ -113,15 +120,9 @@ router.post('/', mustNotLoggedIn, async (req, res, next) => {
           req.session.cookie.expires = false;
           req.session.cookie.maxAge = null;
         }
+        res.redirect(redirectUrl);
 
-        req.session.save((err) => {
-          if (err) console.error(err);
-          
-          // delete req.session.returnTo; // 한 번 쓰고 지워주기
-
-          // console.log("login-redirect : " + redirectUrl);
-          res.redirect(redirectUrl);
-        });
+        
         
       })
   })(req, res, next)
@@ -133,13 +134,10 @@ router.post('/', mustNotLoggedIn, async (req, res, next) => {
  * 로그아웃
  */
 router.post('/logout', mustLoggedIn, async (req, res) => {
-  // console.log("logout-returnTo : " + req.session.returnTo);
-  const redirectUrl = req.session.returnTo || "/";
-  // console.log("logout-redirectUrl : " + req.session.returnTo);
 
   req.session.destroy(function(err){
     if(err) res.status(500).json(err.message);
-    res.redirect(redirectUrl);
+    res.redirect('/');
   })
 })
 

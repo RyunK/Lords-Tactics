@@ -4,17 +4,19 @@
         <div class="nav-box ">
             <a href="#" >기사단 편성</a>
             <a href="#">조합 공유 게시판</a>
-            <a href="#">마이페이지</a>
+            <a href="#" >마이페이지</a>
             <a href="#">이용안내</a>
         </div>
-        <div class="nav-box">
+        <div class="nav-box d-flex justify-content-center align-items-center">
             <% if(nickname != ''){ %>
                 <div class="nickname-container">
                     <span class="nickname color-white login" >
-                        <%=nickname%>                        
+                        <i class="fasize fa-regular fa-circle-user"></i>           
                     </span>
-                    <div class="logout-container bg-basicdark text-center">
-                        <a a href="javascript:void(0)" onClick="javascript:goPost()" class="logout color-white">로그아웃</a> 
+                    <div class="logout-container bg-basicdark text-center shadow-basic">
+                        <p class="color-white"> <span class="color-yellow"><%=nickname%></span>&nbsp; 님 </p>
+                        <a a href="javascript:void(0)" onClick="javascript:goPost()" class="logout color-white">로그아웃</a>
+                        <a href="#" class="color-white">마이페이지</a>
                     </div>
                 </div>
                  

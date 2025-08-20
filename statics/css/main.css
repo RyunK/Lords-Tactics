@@ -49,7 +49,7 @@ nav {
     margin-bottom: 10px;
 }
 
-nav a{
+nav>div> a{
     color: #ffed49;
 
     font-weight: 100;
@@ -63,7 +63,7 @@ nav a{
     height: 55px;
 }
 
-nav a:hover{
+nav>div> a:hover{
     color: rgb(230, 230, 230);
 }
 
@@ -378,6 +378,13 @@ nav a:hover{
     display: inline-block;
     position: relative;
 }
+.nickname {
+    width: 40px;
+    height: 55px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
 
 .nickname:hover{
     cursor: pointer;
@@ -386,14 +393,46 @@ nav a:hover{
 .logout-container{
     display: none;
 
-    width: 80px;
+    width: 150px;
 
 
     position: absolute;
-    top: 30px;
-    right: -20px;
+    top: 50px;
+    right: -55px;
 }
 
-.logout-container:hover{
-    cursor: pointer;
+.logout-container>a{
+    font-weight: 100;
+    font-size: 13px;
+    text-decoration-line: none;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    height: 40px;
+    /* margin: 10px 0px; */
+
+    border-top : 1px solid white
 }
+
+.logout-container>p{
+    font-weight: 100;
+    font-size: 13px;
+    text-decoration-line: none;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    height: 40px;
+    /* margin: 10px 0px; */
+
+}
+
+
+.fasize {
+    font-size: 2em;
+}
+
+
