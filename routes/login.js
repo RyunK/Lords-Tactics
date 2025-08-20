@@ -42,7 +42,7 @@ router.get('/register', mustNotLoggedIn, (req, res) => {
 /**
  * 회원가입
  */
-router.post('/register', async (req, res) => {
+router.post('/register', mustNotLoggedIn, async (req, res) => {
   let username = req.body.username;
   let password = req.body.password;
   let re_password = req.body.re_password;
@@ -84,7 +84,7 @@ router.post('/register', async (req, res) => {
 /**
  * 로그인
  */
-router.post('/', async (req, res, next) => {
+router.post('/', mustNotLoggedIn, async (req, res, next) => {
   // 1. 아이디 비밀번호 검사
   // 2. 다르면 튕기기. 맞으면 로그인 id 적어서 세션 발행
   passport.authenticate('local',  
@@ -101,15 +101,23 @@ router.post('/', async (req, res, next) => {
         
         if(req.body.keep_login){
           // console.log("로그인상태유지")
-          req.session.cookie.maxAge = 1000 * 60 * 60 * 24 * 14; 
+          const maxAge = 1000 * 60 * 60 * 24 * 14;
+          req.session.cookie.maxAge = maxAge; // 쿠키
+          req.session.cookie.expires = new Date(Date.now() + maxAge); // DB 반영
+          req.session.touch();
         } else {
           // console.log("로그인상태유지 안함")
           req.session.cookie.expires = false;
+          req.session.cookie.maxAge = null;
         }
 
-        const redirectUrl = req.session.returnTo || "/";
-        delete req.session.returnTo; // 한 번 쓰고 지워주기
-        res.redirect(redirectUrl);
+        req.session.save((err) => {
+          if (err) console.error(err);
+          const redirectUrl = req.session.returnTo || "/";
+          delete req.session.returnTo; // 한 번 쓰고 지워주기
+          res.redirect(redirectUrl);
+        });
+        
       })
   })(req, res, next)
 
@@ -119,8 +127,11 @@ router.post('/', async (req, res, next) => {
 /**
  * 로그아웃
  */
-router.post('/logout', mustLoggedIn, (req, res) => {
-
+router.post('/logout', mustLoggedIn, async (req, res) => {
+  req.session.destroy(function(err){
+    if(err) res.status(500).json(err.message);
+    res.send(`<script> history.go(-1); </script>`)
+  })
 })
 
 /**

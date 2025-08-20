@@ -21,15 +21,35 @@ app.use(cookieParser());
 const connection = require('./database.js')
 
 const session = require('express-session')
-const MySQLStore = require("express-mysql-session")(session);
+// const MySQLStore = require("express-mysql-session")(session);
 
-var sessionStore = new MySQLStore({
-  host : process.env.DB_HOST,  
-  user : process.env.DB_USER,
-  password : process.env.DB_PW,
-  database : process.env.DB_NAME,
-  port : process.env.DB_PORT
+// var sessionStore = new MySQLStore({
+//   host : process.env.DB_HOST,  
+//   user : process.env.DB_USER,
+//   password : process.env.DB_PW,
+//   database : process.env.DB_NAME,
+//   port : process.env.DB_PORT
+// });
+
+const { RedisStore } = require('connect-redis')
+const redis = require("redis");
+
+
+const client = redis.createClient({
+   url: `redis://${process.env.REDIS_USERNAME}:${process.env.REDIS_PASSWORD}@${process.env.REDIS_HOST}:${process.env.REDIS_PORT}/0`,
 });
+
+client.on("error", (err) => console.error("Redis error:", err));
+client.connect();
+
+// redisClient.on('connect', () => {
+//    console.info('Redis connected!');
+// });
+// redisClient.on('error', (err) => {
+//    console.error('Redis Client Error', err);
+// });
+// redisClient.connect().then(); // redis v4 연결 (비동기)
+// const redisCli = redisClient.v4; // 기본 redisClient 객체는 콜백기반인데 v4버젼은 프로미스 기반이라 사용
 
 
 const passportConfig = require('./passport');
@@ -38,12 +58,18 @@ passportConfig();
 
 const passport = require('passport')
 
+
+
 app.use(passport.initialize())
 app.use(session({
   secret: process.env.CODE,
   resave : false,
   saveUninitialized : false,
-  store : sessionStore,
+  cookie: {
+      httpOnly: true,
+      secure: false,
+    },
+    store: new RedisStore({ client }), 
 }));
 
 app.use(passport.initialize()); 
@@ -74,7 +100,7 @@ app.get('/', (req, res) => {
 })
 
 
-app.get('/formmake', res => {
+app.get('/formmake', (req, res) => {
   fs.readdir('./statics/sources/img/characters', (err, filelist) => {
     // console.log(err);
     // console.log(filelist);
