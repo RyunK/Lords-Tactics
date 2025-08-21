@@ -1,6 +1,6 @@
 const passport = require('passport');
 const local = require('./localStrategy');
-// const naver = require('./naverStrategy'); // 네이버 서버로 로그인할 때
+const google = require('./googleStrategy'); // 네이버 서버로 로그인할 때
 const connection = require('../database.js');
 
 
@@ -24,5 +24,5 @@ module.exports = () => {
   });
 
   local(); // localStrategy.js 실행
-//   naver(); // naverStrategy.js 실행
+  google(); // googleStrategy.js 실행
 };

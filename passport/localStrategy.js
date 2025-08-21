@@ -20,6 +20,9 @@ module.exports = () => {
         }
         // console.log(bcrypt.compareSync(inputpw, result[0].user_password))
         if (await bcrypt.compareSync(inputpw, result[0].user_password)) {
+          var sql = `SELECT * FROM USER
+                WHERE USERNAME= ?`;
+          var [result, fields] = await (await connection).execute(sql, [inputid]);
           return done(null, result)
         } else {
           return done(null, false, { message: '비밀번호가 일치하지 않습니다.' });
