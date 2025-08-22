@@ -100,6 +100,40 @@
     padding: 6px 20px;
 }
 
+
 /* .btn-green{
     background-color: #77cb33;
 } */
+
+.naverlogin-bg{
+    background-color: rgb(3, 199, 90);
+}
+
+.naverlogin-bg:hover{
+    cursor: pointer;
+}
+
+.naver-logo{
+    height: 45px;
+    position: absolute;
+
+    left: 76px;
+    top: 4px;
+}
+
+
+.google-logo{
+    height: 30px;
+    position: absolute;
+
+    left: 95px;
+    top: 11px;
+}
+
+.x-logo{
+    height: 23px;
+    position: absolute;
+
+    left: 83px;
+    top: 16px;
+}

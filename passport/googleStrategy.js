@@ -12,7 +12,7 @@ module.exports = () => {
         callbackURL: '/login/google/callback', // 구글 로그인 Redirect URI 경로
     },
     async function validate(accessToken, refreshToken, profile, cb) {
-        console.log('google profile : ', profile);
+        // console.log('google profile : ', profile);
         try{
             var sql = `SELECT * FROM user 
                         INNER JOIN federated_credentials ON USER.id = federated_credentials.user_id
@@ -24,7 +24,7 @@ module.exports = () => {
             ]
             var [cred, fields] = await (await connection).execute(sql, data);
 
-            console.log("cred :", cred);
+            // console.log("cred :", cred);
 
             if(cred.length <= 0){
                 console.log('cred 없음')
@@ -63,53 +63,9 @@ module.exports = () => {
                 return cb(null, user);
             }
         } catch(err){
-            console.log(err);
+            // console.log(err);
             return cb(null, false, {message: err});
         }
 
-
-        //------------------------
-
-    //     db.get('SELECT * FROM federated_credentials WHERE provider = ? AND subject = ?', 
-    //     [
-    //         'https://accounts.google.com',
-    //         profile.id
-    //     ], 
-    //     function(err, cred) {
-    //         if (err) { return  cb(null, false, {message: err}); }
-            
-    //         if (!cred) {
-    //             // The account at Google has not logged in to this app before.  Create a
-    //             // new user record and associate it with the Google account.
-    //             db.run('INSERT INTO users (name) VALUES (?)', [
-    //             profile.displayName
-    //             ], function(err) {
-    //             if (err) { return  cb(null, false, {message: err}); }
-                
-    //             var id = this.lastID;
-    //             db.run('INSERT INTO federated_credentials (user_id, provider, subject) VALUES (?, ?, ?)', [
-    //                 id,
-    //                 'https://accounts.google.com',
-    //                 profile.id
-    //             ], function(err) {
-    //                 if (err) { return  cb(null, false, {message: err}); }
-                    
-    //                 var user = {
-    //                 id: id,
-    //                 name: profile.displayName
-    //                 };
-    //                 return cb(null, user);
-    //             });
-    //             });
-    //         } else {
-    //             // The account at Google has previously logged in to the app.  Get the
-    //             // user record associated with the Google account and log the user in.
-    //             db.get('SELECT * FROM users WHERE id = ?', [ cred.user_id ], function(err, user) {
-    //                 if (err) { return  cb(null, false, {message: err}); }
-    //                 if (!user) { return  cb(null, false, {message: err}); }
-    //                 return cb(null, user);
-    //             });
-    //         }
-    //     });
     }
 ))}
