@@ -12,7 +12,7 @@ module.exports = () => {
             callbackURL: '/login/naver/callback',
          },
          async (accessToken, refreshToken, profile, cb) => {
-            console.log('naver profile : ', profile);
+            // console.log('naver profile : ', profile);
             try{
                 var sql = `SELECT * FROM user 
                             INNER JOIN federated_credentials ON USER.id = federated_credentials.user_id

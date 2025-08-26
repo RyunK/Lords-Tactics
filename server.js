@@ -93,6 +93,7 @@ app.use((req, res, next) => {
 });
 
 app.use('/login', require('./routes/login.js'));
+app.use('/mailcheck', require('./routes/mailCheck.js'));
 
 const getDatas = require('./routes/getDatas.js')
 
