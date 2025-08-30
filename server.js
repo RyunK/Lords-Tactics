@@ -21,15 +21,6 @@ app.use(cookieParser());
 const connection = require('./database.js')
 
 const session = require('express-session')
-// const MySQLStore = require("express-mysql-session")(session);
-
-// var sessionStore = new MySQLStore({
-//   host : process.env.DB_HOST,  
-//   user : process.env.DB_USER,
-//   password : process.env.DB_PW,
-//   database : process.env.DB_NAME,
-//   port : process.env.DB_PORT
-// });
 
 const { RedisStore } = require('connect-redis')
 const redis = require("redis");
@@ -42,16 +33,6 @@ const client = redis.createClient({
 client.on("error", (err) => console.error("Redis error:", err));
 client.connect();
 
-// redisClient.on('connect', () => {
-//    console.info('Redis connected!');
-// });
-// redisClient.on('error', (err) => {
-//    console.error('Redis Client Error', err);
-// });
-// redisClient.connect().then(); // redis v4 연결 (비동기)
-// const redisCli = redisClient.v4; // 기본 redisClient 객체는 콜백기반인데 v4버젼은 프로미스 기반이라 사용
-
-
 const passportConfig = require('./passport');
 passportConfig();
 
@@ -60,7 +41,7 @@ const passport = require('passport')
 
 
 
-app.use(passport.initialize())
+// app.use(passport.initialize())
 app.use(session({
   secret: process.env.CODE,
   resave : false,
@@ -83,10 +64,10 @@ app.use(flash());
  * 로그인 및 로그아웃 성공 후 이전 화면으로 이동하기 위함.
  */
 app.use((req, res, next) => {
-  if (!req.isAuthenticated() &&req.method === 'GET' && req.path !== '/login' && !req.path.includes('error')
+  if (!req.isAuthenticated() &&req.method === 'GET' && !(req.path).startsWith('/login')  && !req.path.includes('error')
     && !req.path.includes('com.chrome.devtools.json') && !req.path.includes('.well-known')) {
     req.session.returnTo = req.originalUrl;
-    // console.log(req.session.returnTo)
+    console.log(req.session.returnTo)
     req.session.save();
   }
   next();
@@ -99,7 +80,7 @@ const getDatas = require('./routes/getDatas.js')
 
 app.get('/', (req, res) => {
 
-  // console.log(getDatas.loggedInNickname(req, res))
+  console.log(req.user)
   res.render('index.ejs',  {data : {nickname: getDatas.loggedInNickname(req, res)}})
 })
 

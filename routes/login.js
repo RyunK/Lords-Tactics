@@ -41,25 +41,37 @@ router.get('/register', mustNotLoggedIn, (req, res) => {
 //* 구글로 로그인하기 라우터 ***********************
 router.get('/google', [mustNotLoggedIn , passport.authenticate('google', { scope: ['profile', 'email'] })]); // 프로파일과 이메일 정보를 받는다.
 
-//? 위에서 구글 서버 로그인이 되면, 구글 redirect url 설정에 따라 이쪽 라우터로 오게 된다. 인증 코드를 박게됨
+// 위에서 구글 서버 로그인이 되면, 구글 redirect url 설정에 따라 이쪽 라우터로 오게 된다. 인증 코드를 박게됨
 router.get(
    '/google/callback',
-   passport.authenticate('google', { failureRedirect: '/login' }), //? 그리고 passport 로그인 전략에 의해 googleStrategy로 가서 구글계정 정보와 DB를 비교해서 회원가입시키거나 로그인 처리하게 한다.
+   passport.authenticate('google', { failureRedirect: '/login', keepSessionInfo: true  }), // 그리고 passport 로그인 전략에 의해 googleStrategy로 가서 구글계정 정보와 DB를 비교해서 회원가입시키거나 로그인 처리하게 한다.
    (req, res) => {
-      res.redirect('/');
+      console.log("login-returnTo : " + req.session.returnTo);
+      redirectUrl = req.session.returnTo || "/";
+      res.redirect(redirectUrl);
+
+      // res.redirect('/');
    },
 );
+
+
+
 
 //* 네이버로 로그인하기 라우터 ***********************
 router.get('/naver', passport.authenticate('naver', { authType: 'reprompt' }));
 
-//? 위에서 네이버 서버 로그인이 되면, 네이버 redirect url 설정에 따라 이쪽 라우터로 오게 된다.
+// 위에서 네이버 서버 로그인이 되면, 네이버 redirect url 설정에 따라 이쪽 라우터로 오게 된다.
 router.get(
    '/naver/callback',
-   //? 그리고 passport 로그인 전략에 의해 naverStrategy로 가서 카카오계정 정보와 DB를 비교해서 회원가입시키거나 로그인 처리하게 한다.
-   passport.authenticate('naver', { failureRedirect: '/' }),
+   // 그리고 passport 로그인 전략에 의해 naverStrategy로 가서 카카오계정 정보와 DB를 비교해서 회원가입시키거나 로그인 처리하게 한다.
+   passport.authenticate('naver', { failureRedirect: '/', keepSessionInfo: true  }),
    (req, res) => {
-      res.redirect('/');
+    console.log("login-returnTo : " + req.session.returnTo);
+    redirectUrl = req.session.returnTo || "/";
+    res.redirect(redirectUrl);
+
+    // res.redirect('/');
+      
    },
 );
 

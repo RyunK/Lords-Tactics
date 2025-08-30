@@ -4,15 +4,433 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>로드의 전술서</title>
+    <link href="/sources/img/로전아이콘_2.svg" rel="shortcut icon" type="image/x-icon">
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
     <link href="/css/main.css" rel="stylesheet">
+    <link href="/css/index.css" rel="stylesheet">
 </head>
 <body>
     
     <%- include('nav_and_banner.ejs', {page: 'main', nickname: data.nickname, notice:'2025.08.01 신규 캐릭터 [물]라플라스 추가 완료'}) %> 
 
+    <div class="move-btn-container d-flex justify-content-between">
+        <div class="move-btn-shadow">
+        <div class="move-btn ">
+            <h4>기사단 <br> 편성하기</h4>
+            <p class="color-gray">편성 저장 및 공유</p>
+            <!-- <img src="../sources/img/sword-fill-svgrepo-com.svg" class="move-btn-icon"> -->
+            <div class="formmake-btn-icon"></div>
+        </div>
+        </div>
+        <div class="move-btn-right">
+            <div class="move-btn-shadow notice-btn">
+                <div class=" move-btn ">
+                    <h4>이용 안내</h4>
+                    <p class="color-gray">로드의 전술서란?</p>
+                    
+                    <div class="notice-btn-icon"></div>
+                </div>
+            </div>
+
+            <div class="move-btn-shadow">
+                <div class="move-btn ">
+                    <h4>마이페이지</h4>
+                    <p class="color-gray">보유 영웅 설정하러가기</p>
+                    <div class="mypage-btn-icon"></div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+
+    <!-- 게시판 미리보기 ============================================== -->
+
+    <div class="forum-preview-container">
+        <div class="move-btn-shadow">
+            <div class="forum-preview-tag color-white">
+                <h5>오늘의 조합 공유 게시판</h5>
+            </div>
+        </div>
+        <div class="d-flex justify-content-end">
+            <a href="#" class="forum-link color-black">조합 공유 게시판으로 <i class="fa-solid fa-caret-right"></i></a>
+        </div>
+        <div class="forum-preview bg-basicdark d-flex justify-content-between">
+            <div class="forum-preview-line">
+                <h5 class="color-yellow"><i class="fa-solid fa-crown"></i> 베스트 조합 공유</h5>
+                
+                <!-- 공유 게시글 하나 -->
+                <a href="#" class="color-black">
+
+                    <div class="post-preview-container shadow-basic mt-4">
+                        <div class="post-preview-top-container d-flex">
+                            <div class="preview-form-share bg-blue color-white">
+                                <h6>편성 공유</h6>
+                            </div>
+                            <div class="preview-contentname bg-basicdark color-yellow ">
+                                <h6>레이드</h6>
+                            </div>
+                        </div>
+                        <div class="post-preview-bottom-container bg-gray">
+                            <div class="preview-face-container d-flex">
+                                <img src="../sources/img/characters/dark_charlotte_warrior.png" alt="">
+                                <img src="../sources/img/characters/dark_fram_guardian.png" alt="">
+                                <img src="../sources/img/characters/dark_frau_striker.png" alt="">
+                                <img src="../sources/img/characters/dark_helga_warrior.png" alt="">
+                                <img src="../sources/img/characters/dark_johann_striker.png" alt="">
+                                <img class="dots" src="../sources/img/ellipsis-solid-full.svg" alt="">
+                            </div>
+                            <div class="mt-3">
+                                <h6>작성자 한마디</h6>
+                                <div class="preview-paragraph bg-lightgray mt-2">
+                                    <p>레이드 꿀잼 조합 사실 레이드라고 해놓고 애들 싸우는거 구경하는 재미로 해요. 사실 강하진 않고 그냥 어쩌고저쩌고 오늘은 레이드 점수가 이만큼 나왓는데요...
+                                    </p>
+                                </div>
+                            </div>
+                            <div class="text-end mt-3">
+                                <span>조회수 4567</span>
+                                <span>&nbsp;</span>
+                                <span><i class="fa-solid fa-thumbs-up"></i> 46</span>
+                            </div>
+                        </div>
+                    </div>
+                </a>
+                <!-- 공유 게시글 하나 끝 -->
+
+                <!-- 공유 게시글 하나 -->
+                <a href="#" class="color-black">
+                    <div class="post-preview-container shadow-basic mt-4">
+                        <div class="post-preview-top-container d-flex">
+                            <div class="preview-form-share bg-blue color-white">
+                                <h6>편성 공유</h6>
+                            </div>
+                            <div class="preview-contentname bg-basicdark color-yellow ">
+                                <h6>레이드</h6>
+                            </div>
+                        </div>
+                        <div class="post-preview-bottom-container bg-gray">
+                            <div class="preview-face-container d-flex">
+                                <img src="../sources/img/characters/dark_charlotte_warrior.png" alt="">
+                                <img src="../sources/img/characters/dark_fram_guardian.png" alt="">
+                                <img src="../sources/img/characters/dark_frau_striker.png" alt="">
+                                <img src="../sources/img/characters/dark_helga_warrior.png" alt="">
+                                <img src="../sources/img/characters/dark_johann_striker.png" alt="">
+                                <img class="dots" src="../sources/img/ellipsis-solid-full.svg" alt="">
+                            </div>
+                            <div class="mt-3">
+                                <h6>작성자 한마디</h6>
+                                <div class="preview-paragraph bg-lightgray mt-2">
+                                    <p>레이드 꿀잼 조합 사실 레이드라고 해놓고 애들 싸우는거 구경하는 재미로 해요. 사실 강하진 않고 그냥 어쩌고저쩌고 오늘은 레이드 점수가 이만큼 나왓는데요...
+                                    </p>
+                                </div>
+                            </div>
+                            <div class="text-end mt-3">
+                                <span>조회수 4567</span>
+                                <span>&nbsp;</span>
+                                <span><i class="fa-solid fa-thumbs-up"></i> 46</span>
+                            </div>
+                        </div>
+                    </div>
+                </a>
+                <!-- 공유 게시글 하나 끝 -->
+
+                <!-- 공유 게시글 하나 -->
+                <div class="post-preview-container shadow-basic mt-4">
+                    <div class="post-preview-top-container d-flex">
+                        <div class="preview-form-share bg-blue color-white">
+                            <h6>편성 공유</h6>
+                        </div>
+                        <div class="preview-contentname bg-basicdark color-yellow ">
+                            <h6>레이드</h6>
+                        </div>
+                    </div>
+                    <div class="post-preview-bottom-container bg-gray">
+                        <div class="preview-face-container d-flex">
+                            <img src="../sources/img/characters/dark_charlotte_warrior.png" alt="">
+                            <img src="../sources/img/characters/dark_fram_guardian.png" alt="">
+                            <img src="../sources/img/characters/dark_frau_striker.png" alt="">
+                            <img src="../sources/img/characters/dark_helga_warrior.png" alt="">
+                            <img src="../sources/img/characters/dark_johann_striker.png" alt="">
+                            <img class="dots" src="../sources/img/ellipsis-solid-full.svg" alt="">
+                        </div>
+                        <div class="mt-3">
+                            <h6>작성자 한마디</h6>
+                            <div class="preview-paragraph bg-lightgray mt-2">
+                                <p>레이드 꿀잼 조합 사실 레이드라고 해놓고 애들 싸우는거 구경하는 재미로 해요. 사실 강하진 않고 그냥 ...
+                                </p>
+                            </div>
+                        </div>
+                        <div class="text-end mt-3">
+                            <span>조회수 4567</span>
+                            <span>&nbsp;</span>
+                            <span><i class="fa-solid fa-thumbs-up"></i> 46</span>
+                        </div>
+                    </div>
+                </div>
+                <!-- 공유 게시글 하나 끝 -->
+
+                <!-- 공유 게시글 하나 -->
+                <div class="post-preview-container shadow-basic mt-4">
+                    <div class="post-preview-top-container d-flex">
+                        <div class="preview-form-share bg-blue color-white">
+                            <h6>편성 공유</h6>
+                        </div>
+                        <div class="preview-contentname bg-basicdark color-yellow ">
+                            <h6>레이드</h6>
+                        </div>
+                    </div>
+                    <div class="post-preview-bottom-container bg-gray">
+                        <div class="preview-face-container d-flex">
+                            <img src="../sources/img/characters/dark_charlotte_warrior.png" alt="">
+                            <img src="../sources/img/characters/dark_fram_guardian.png" alt="">
+                            <img src="../sources/img/characters/dark_frau_striker.png" alt="">
+                            <img src="../sources/img/characters/dark_helga_warrior.png" alt="">
+                            <img src="../sources/img/characters/dark_johann_striker.png" alt="">
+                            <img class="dots" src="../sources/img/ellipsis-solid-full.svg" alt="">
+                        </div>
+                        <div class="mt-3">
+                            <h6>작성자 한마디</h6>
+                            <div class="preview-paragraph bg-lightgray mt-2">
+                                <p>레이드 꿀잼 조합 사실 레이드라고 해놓고 애들 싸우는거 구경하는 재미로 해요. 사실 강하진 않고 그냥 ...
+                                </p>
+                            </div>
+                        </div>
+                        <div class="text-end mt-3">
+                            <span>조회수 4567</span>
+                            <span>&nbsp;</span>
+                            <span><i class="fa-solid fa-thumbs-up"></i> 46</span>
+                        </div>
+                    </div>
+                </div>
+                <!-- 공유 게시글 하나 끝 -->
+
+                <!-- 공유 게시글 하나 -->
+                <div class="post-preview-container shadow-basic mt-4">
+                    <div class="post-preview-top-container d-flex">
+                        <div class="preview-form-share bg-blue color-white">
+                            <h6>편성 공유</h6>
+                        </div>
+                        <div class="preview-contentname bg-basicdark color-yellow ">
+                            <h6>레이드</h6>
+                        </div>
+                    </div>
+                    <div class="post-preview-bottom-container bg-gray">
+                        <div class="preview-face-container d-flex">
+                            <img src="../sources/img/characters/dark_charlotte_warrior.png" alt="">
+                            <img src="../sources/img/characters/dark_fram_guardian.png" alt="">
+                            <img src="../sources/img/characters/dark_frau_striker.png" alt="">
+                            <img src="../sources/img/characters/dark_helga_warrior.png" alt="">
+                            <img src="../sources/img/characters/dark_johann_striker.png" alt="">
+                            <img class="dots" src="../sources/img/ellipsis-solid-full.svg" alt="">
+                        </div>
+                        <div class="mt-3">
+                            <h6>작성자 한마디</h6>
+                            <div class="preview-paragraph bg-lightgray mt-2">
+                                <p>레이드 꿀잼 조합 사실 레이드라고 해놓고 애들 싸우는거 구경하는 재미로 해요. 사실 강하진 않고 그냥 ...
+                                </p>
+                            </div>
+                        </div>
+                        <div class="text-end mt-3">
+                            <span>조회수 4567</span>
+                            <span>&nbsp;</span>
+                            <span><i class="fa-solid fa-thumbs-up"></i> 46</span>
+                        </div>
+                    </div>
+                </div>
+                <!-- 공유 게시글 하나 끝 -->
+            </div>
+
+
+            <!-- 편성 도움 요청 -->
+            <div class="forum-preview-line">
+                <h5 class="color-yellow"><i class="fa-solid fa-circle-exclamation"></i> 편성 도움 요청</h5>
+                
+                <!-- 공유 게시글 하나 -->
+                <a href="#" class="color-black">
+                    <div class="post-preview-container shadow-basic mt-4">
+                        <div class="post-preview-top-container d-flex">
+                            <div class="preview-form-share bg-green color-black">
+                                <h6>편성 완료</h6>
+                            </div>
+                            <div class="preview-contentname bg-basicdark color-yellow ">
+                                <h6>아레나</h6>
+                            </div>
+                        </div>
+                        <div class="post-preview-bottom-container bg-gray">
+                            <div class="preview-face-container d-flex">
+                                <img src="../sources/img/characters/water_helga_striker.png" alt="">
+                                <img src="../sources/img/characters/fire_meiling_shooter.png" alt="">
+                                <div class="empty"><i class="fa-solid fa-plus color-gray"></i></div>
+                                <div class="empty"><i class="fa-solid fa-plus color-gray"></i></div>
+                                <div class="empty"><i class="fa-solid fa-plus color-gray"></i></div>
+                                <!-- <img class="dots" src="../sources/img/ellipsis-solid-full.svg" alt=""> -->
+                            </div>
+                            <div class="mt-3">
+                                <h6>작성자 한마디</h6>
+                                <div class="preview-paragraph bg-lightgray mt-2">
+                                    <p>라떼는 말이야 얘네 둘만 있어도 아주그냥
+                                    </p>
+                                </div>
+                            </div>
+                            <div class="text-end mt-3">
+                                <span>조회수 35</span>
+                                <span>&nbsp;</span>
+                                <span><i class="fa-solid fa-thumbs-up"></i> 3</span>
+                            </div>
+                        </div>
+                    </div>
+                </a>
+                <!-- 공유 게시글 하나 끝 -->
+
+                <!-- 공유 게시글 하나 -->
+                <div class="post-preview-container shadow-basic mt-4">
+                    <div class="post-preview-top-container d-flex">
+                        <div class="preview-form-share bg-orange color-white">
+                            <h6>편성 요청</h6>
+                        </div>
+                        <div class="preview-contentname bg-basicdark color-yellow ">
+                            <h6>아레나</h6>
+                        </div>
+                    </div>
+                    <div class="post-preview-bottom-container bg-gray">
+                        <div class="preview-face-container d-flex">
+                            <img src="../sources/img/characters/dark_charlotte_warrior.png" alt="">
+                            <img src="../sources/img/characters/dark_fram_guardian.png" alt="">
+                            <div class="empty"><i class="fa-solid fa-plus color-gray"></i></div>
+                            <div class="empty"><i class="fa-solid fa-plus color-gray"></i></div>
+                            <div class="empty"><i class="fa-solid fa-plus color-gray"></i></div>
+                            <img class="dots" src="../sources/img/ellipsis-solid-full.svg" alt="">
+                        </div>
+                        <div class="mt-3">
+                            <h6>작성자 한마디</h6>
+                            <div class="preview-paragraph bg-lightgray mt-2">
+                                <p>해신할 대 얘네랑 잘 어울릴만한 친구 추천해주세요!!
+                                </p>
+                            </div>
+                        </div>
+                        <div class="text-end mt-3">
+                            <span>조회수 4567</span>
+                            <span>&nbsp;</span>
+                            <span><i class="fa-solid fa-thumbs-up"></i> 46</span>
+                        </div>
+                    </div>
+                </div>
+                <!-- 공유 게시글 하나 끝 -->
+
+                 <!-- 공유 게시글 하나 -->
+                <div class="post-preview-container shadow-basic mt-4">
+                    <div class="post-preview-top-container d-flex">
+                        <div class="preview-form-share bg-green color-black">
+                            <h6>편성 완료</h6>
+                        </div>
+                        <div class="preview-contentname bg-basicdark color-yellow ">
+                            <h6>아레나</h6>
+                        </div>
+                    </div>
+                    <div class="post-preview-bottom-container bg-gray">
+                        <div class="preview-face-container d-flex">
+                            <img src="../sources/img/characters/water_helga_striker.png" alt="">
+                            <img src="../sources/img/characters/fire_meiling_shooter.png" alt="">
+                            <div class="empty"><i class="fa-solid fa-plus color-gray"></i></div>
+                            <div class="empty"><i class="fa-solid fa-plus color-gray"></i></div>
+                            <div class="empty"><i class="fa-solid fa-plus color-gray"></i></div>
+                            <!-- <img class="dots" src="../sources/img/ellipsis-solid-full.svg" alt=""> -->
+                        </div>
+                        <div class="mt-3">
+                            <h6>작성자 한마디</h6>
+                            <div class="preview-paragraph bg-lightgray mt-2">
+                                <p>라떼는 말이야 얘네 둘만 있어도 아주그냥
+                                </p>
+                            </div>
+                        </div>
+                        <div class="text-end mt-3">
+                            <span>조회수 35</span>
+                            <span>&nbsp;</span>
+                            <span><i class="fa-solid fa-thumbs-up"></i> 3</span>
+                        </div>
+                    </div>
+                </div>
+                <!-- 공유 게시글 하나 끝 -->
+
+                 <!-- 공유 게시글 하나 -->
+                <div class="post-preview-container shadow-basic mt-4">
+                    <div class="post-preview-top-container d-flex">
+                        <div class="preview-form-share bg-green color-black">
+                            <h6>편성 완료</h6>
+                        </div>
+                        <div class="preview-contentname bg-basicdark color-yellow ">
+                            <h6>아레나</h6>
+                        </div>
+                    </div>
+                    <div class="post-preview-bottom-container bg-gray">
+                        <div class="preview-face-container d-flex">
+                            <img src="../sources/img/characters/water_helga_striker.png" alt="">
+                            <img src="../sources/img/characters/fire_meiling_shooter.png" alt="">
+                            <div class="empty"><i class="fa-solid fa-plus color-gray"></i></div>
+                            <div class="empty"><i class="fa-solid fa-plus color-gray"></i></div>
+                            <div class="empty"><i class="fa-solid fa-plus color-gray"></i></div>
+                            <!-- <img class="dots" src="../sources/img/ellipsis-solid-full.svg" alt=""> -->
+                        </div>
+                        <div class="mt-3">
+                            <h6>작성자 한마디</h6>
+                            <div class="preview-paragraph bg-lightgray mt-2">
+                                <p>라떼는 말이야 얘네 둘만 있어도 아주그냥
+                                </p>
+                            </div>
+                        </div>
+                        <div class="text-end mt-3">
+                            <span>조회수 35</span>
+                            <span>&nbsp;</span>
+                            <span><i class="fa-solid fa-thumbs-up"></i> 3</span>
+                        </div>
+                    </div>
+                </div>
+                <!-- 공유 게시글 하나 끝 -->
+
+                 <!-- 공유 게시글 하나 -->
+                <div class="post-preview-container shadow-basic mt-4">
+                    <div class="post-preview-top-container d-flex">
+                        <div class="preview-form-share bg-green color-black">
+                            <h6>편성 완료</h6>
+                        </div>
+                        <div class="preview-contentname bg-basicdark color-yellow ">
+                            <h6>아레나</h6>
+                        </div>
+                    </div>
+                    <div class="post-preview-bottom-container bg-gray">
+                        <div class="preview-face-container d-flex">
+                            <img src="../sources/img/characters/water_helga_striker.png" alt="">
+                            <img src="../sources/img/characters/fire_meiling_shooter.png" alt="">
+                            <div class="empty"><i class="fa-solid fa-plus color-gray"></i></div>
+                            <div class="empty"><i class="fa-solid fa-plus color-gray"></i></div>
+                            <div class="empty"><i class="fa-solid fa-plus color-gray"></i></div>
+                            <!-- <img class="dots" src="../sources/img/ellipsis-solid-full.svg" alt=""> -->
+                        </div>
+                        <div class="mt-3">
+                            <h6>작성자 한마디</h6>
+                            <div class="preview-paragraph bg-lightgray mt-2">
+                                <p>라떼는 말이야 얘네 둘만 있어도 아주그냥
+                                </p>
+                            </div>
+                        </div>
+                        <div class="text-end mt-3">
+                            <span>조회수 35</span>
+                            <span>&nbsp;</span>
+                            <span><i class="fa-solid fa-thumbs-up"></i> 3</span>
+                        </div>
+                    </div>
+                </div>
+                <!-- 공유 게시글 하나 끝 -->
+
+                
+            
+            </div>
+        </div>
+    </div>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
 
