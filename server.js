@@ -64,10 +64,10 @@ app.use(flash());
  * 로그인 및 로그아웃 성공 후 이전 화면으로 이동하기 위함.
  */
 app.use((req, res, next) => {
-  if (!req.isAuthenticated() &&req.method === 'GET' && !(req.path).startsWith('/login')  && !req.path.includes('error')
+  if (!req.isAuthenticated() &&req.method === 'GET' && !(req.path).startsWith('/login')  && !(req.path).includes('error')
     && !req.path.includes('com.chrome.devtools.json') && !req.path.includes('.well-known')) {
     req.session.returnTo = req.originalUrl;
-    console.log(req.session.returnTo)
+    // console.log(req.session.returnTo)
     req.session.save();
   }
   next();
@@ -80,8 +80,13 @@ const getDatas = require('./routes/getDatas.js')
 
 app.get('/', (req, res) => {
 
-  console.log(req.user)
-  res.render('index.ejs',  {data : {nickname: getDatas.loggedInNickname(req, res)}})
+  // console.log(req.query.error)
+  if(req.query.error){
+    res.render('error_alret.ejs', {data: {err: req.query.error}})
+
+  } else{
+    res.render('index.ejs',  {data : {nickname: getDatas.loggedInNickname(req, res)}})
+  }
 })
 
 

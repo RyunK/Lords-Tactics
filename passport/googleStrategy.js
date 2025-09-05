@@ -27,7 +27,7 @@ module.exports = () => {
             // console.log("cred :", cred);
 
             if(cred.length <= 0){
-                console.log('cred 없음')
+                // console.log('cred 없음')
                 // The account at Google has not logged in to this app before.  Create a
                 // new user record and associate it with the Google account.
                 var sql = `INSERT INTO user (username, nickname) VALUES (?, ?)`;
@@ -50,7 +50,7 @@ module.exports = () => {
                 if (!user) { return  cb(null, false, {message: err}); }
                 return cb(null, user);
             } else {
-                console.log('cred 있음')
+                // console.log('cred 있음')
                 // The account at Google has previously logged in to the app.  Get the
                 // user record associated with the Google account and log the user in.
 

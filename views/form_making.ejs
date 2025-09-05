@@ -15,47 +15,14 @@
     <link href="/css/hero_setting.css" rel="stylesheet">
 </head>
 <body>
-    <div class="own-modal">
-        <div class="alert-container  alert-yesNo bg-gray shadow-basic">
-            <!-- <div class="window-top"></div> -->
-            <div>
-                <div class="alert-textbox ">
-                    <p class="alert-text">편성 영웅 모두 적용하시겠습니까?</p>
-                </div>
-                
-                <div class="alert-btn-container d-flex justify-content-center bg-basicdark">
-                    <div class="btn-shadow me-1">
-                        <button class="btn-cut basic-btn alert-btn-yesNo btn-white">아니오 </button>
-                    </div>
-                    <div class="btn-shadow ms-2">
-                        <button class="btn-cut basic-btn btn-yellow color-white alert-btn-yesNo">예 </button>
-                    </div>
-                </div>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
 
-            </div>
-        </div>
-
-        <div class="alert-container  alert-ok bg-gray shadow-basic">
-            <!-- <div class="window-top"></div> -->
-            <div>
-                <div class="alert-textbox ">
-                    <p class="alert-text">편성 영웅 모두 적용하시겠습니까?</p>
-                </div>
-                
-                <div class="alert-btn-container d-flex justify-content-center bg-basicdark">
-                    <div class="btn-shadow ms-2">
-                        <button class="btn-cut basic-btn alert-btn-ok btn-white">확인</button>
-                    </div>
-                </div>
-
-            </div>
-        </div>
-
+    <div class="own-modal">    
         <div class="hero-setting bg-gray shadow-basic">
             <!-- 상단바 -->
             <div class="post-title title-size d-flex">
                 <div class="bg-basicdark color-yellow title-sizing flex-fill d-flex align-items-center"><p>영웅 설정</p></div>
-                <button type="button" class="bg-red btn-close-origin color-white" ><i class="fa-solid fa-xmark"></i></button>
+                <button type="button" class="x-btn bg-red btn-close-origin color-white" ><i class="fa-solid fa-xmark"></i></button>
             </div>
 
             <!-- 컨텐츠 -->
@@ -74,19 +41,36 @@
                 </div>
                 <div class="ps-4 setting-form">
                     <form>
-                        <div class="d-flex align-items-center mt-3"><p class="">레벨</p><div class="btn-shadow lv-input ms-5"><input type="input" class="btn-cut "></div></div>
+                        <div class="d-flex align-items-center mt-3">
+                            <p class="lv">레벨</p>
+                            <div class="btn-shadow lv-input ms-5">
+                                <input type="input" class="btn-cut">
+                            </div>
+                        </div>
                         <div class="d-flex mt-3">
                             <p>초월</p>
-                            <label class="charSetting-ele d-flex align-self-center me-3">  <input type="radio" name="cho" class="charPublic-checkbox"><span class="checkbox-img"></span> <span class="ms-1">5</span> </label>
-                            <label class="charSetting-ele d-flex align-self-center me-3">  <input type="radio" name="cho" class="charPublic-checkbox"><span class="checkbox-img"></span> <span class="ms-1">6</span> </label>
-                            <label class="charSetting-ele d-flex align-self-center">  <input type="radio" name="cho" class="charPublic-checkbox"><span class="checkbox-img"></span> <span class="ms-1">7</span> </label>
+                            <label class="charSetting-ele d-flex align-self-center me-3">  
+                                <input type="radio" name="cho" class="charPublic-checkbox 5cho"><span class="checkbox-img"></span> <span class="ms-1">5</span> 
+                            </label>
+                            <label class="charSetting-ele d-flex align-self-center me-3">  
+                                <input type="radio" name="cho" class="charPublic-checkbox 6cho"><span class="checkbox-img"></span> <span class="ms-1">6</span> 
+                            </label>
+                            <label class="charSetting-ele d-flex align-self-center">  
+                                <input type="radio" name="cho" class="charPublic-checkbox 7cho"><span class="checkbox-img"></span> <span class="ms-1">7</span> 
+                            </label>
                         </div>
                         
                         <div class="d-flex mt-3">
                             <p>각성</p>
-                            <label class="charSetting-ele d-flex align-self-center">  <input type="radio" name="gak" class="charPublic-checkbox"><span class="checkbox-img"></span> <img src="../sources/img/nogak.png" class="ms-1"> </label>
-                            <label class="charSetting-ele d-flex align-self-center">  <input type="radio" name="gak" class="charPublic-checkbox"><span class="checkbox-img"></span> <img src="../sources/img/1gak.png" class="ms-1"> </label>
-                            <label class="charSetting-ele d-flex align-self-center">  <input type="radio" name="gak" class="charPublic-checkbox"><span class="checkbox-img"></span> <img src="../sources/img/2gak.png" class="ms-1"> </label>
+                            <label class="charSetting-ele d-flex align-self-center">  
+                                <input type="radio" name="gak" class="charPublic-checkbox nogak-radio"><span class="checkbox-img"></span> <img src="../sources/img/nogak.png" class="ms-1"> 
+                            </label>
+                            <label class="charSetting-ele d-flex align-self-center">  
+                                <input type="radio" name="gak" class="charPublic-checkbox onegak-radio"><span class="checkbox-img"></span> <img src="../sources/img/1gak.png" class="ms-1"> 
+                            </label>
+                            <label class="charSetting-ele d-flex align-self-center"> 
+                                <input type="radio" name="gak" class="charPublic-checkbox twogak-radio"><span class="checkbox-img"></span> <img src="../sources/img/2gak.png" class="ms-1"> 
+                            </label>
                         </div>
                         
                         <!-- 하단 버튼들 -->
@@ -137,7 +121,9 @@
         </div>
 
         <!-- 컨텐츠 -->
+        <form action="#" method="POST" class="">
         <div class="d-flex justify-content-center">
+        
 
             <!-- 왼쪽 -->
             <div class="left-box">
@@ -150,8 +136,7 @@
                 <!-- 조합들 들어간 칸 -->
                 <div class="content-h d-flex justify-content-center align-items-center">
                     <div class="form-container d-flex flex-wrap justify-content-center c-wrapper width-5">
-                        <div class="character-5 form_spot">
-                                                     
+                        <div class="character-5 form_spot">                  
                             <div class="select-liner">
                                 <div class="empty"><i class="fa-solid fa-plus color-gray"></i> </div>
                             </div>
@@ -183,11 +168,16 @@
 
                 <!-- 하단 버튼 -->
                 <div class="charSetting-container d-flex justify-content-center align-self-center">
-                    <form action=""><label class="charSetting-ele d-flex align-self-center"> <span class="me-2">나의 영웅들 공개하기</span> <input type="checkbox" name="character_public" class="charPublic-checkbox"><span class="checkbox-img"></span>  </label></form>
+                    <!-- <form action=""> -->
+                        <label class="charSetting-ele d-flex align-self-center"> 
+                            <span class="me-2">나의 영웅들 공개하기</span> <input type="checkbox" name="character_public" class="charPublic-checkbox">
+                            <span class="checkbox-img"></span>  
+                        </label>
+                    <!-- </form> -->
                     
                     <div style="width: 148.5px;">
                     <div class="btn-shadow">
-                        <button class="charSetting-btn charSetting-ele  btn-cut btn-white">  영웅 설정 <i class="fa-solid fa-user-gear"></i> </button>
+                        <button type="button" class="charSetting-btn charSetting-ele  btn-cut btn-white">  영웅 설정 <i class="fa-solid fa-user-gear"></i> </button>
                     </div>
                     </div>
                 </div>
@@ -205,16 +195,17 @@
                 <!-- 좋아요 / 댓글 펼치기 -->
                 <div class="mg-10px ms-0 me-0 d-flex flex-fill justify-content-evenly">
                     <div class="btn-shadow d-flex justify-content-start">
-                        <button class="btn-cut bottom-btn btn-blue color-white">불러오기 </button>
+                        <button type="button" class="btn-cut bottom-btn btn-blue color-white">불러오기 </button>
                     </div>
                     <div class="btn-shadow d-flex justify-content-end">
-                        <button class="btn-cut bottom-btn btn-yellow color-white">저장/게시 </button>
+                        <button type="submit" class="btn-cut bottom-btn btn-yellow color-white">저장/게시 </button>
                     </div>
                 </div>
             </div>
         </div>
         
     </div>
+    </form>
 
     <!-- 캐릭터가 떠있는 창 -->
     <div class="characters-spread shadow-basic" >
@@ -261,826 +252,76 @@
         </div>
         
         <!-- 캐릭터들 -->
-        <ul class="characters-container d-flex justify-content-start flex-wrap">
+        <div class="characters-container-box">
+            <ul class="characters-container d-flex justify-content-start flex-wrap">
 
-            <% for(let i=0; i<characterslist.length; i++){ %>
-                <li class="character-list-box select-liner d-flex justify-content-center" >
-                    <div class="character-list" >
-                        <img src="/sources/img/characters/<%=characterslist[i].file%>">
-                        <span class="lv_<%=characterslist[i].type%> lv">70</span>
-                        <span class="nogak gak">7</span>
-                    </div>
-                </li>
-            <% } %>
-           
-        </ul>
+                <% for(let i=0; i<characterslist.length; i++){ %>
+                    <li class="character-list-box select-liner d-flex justify-content-center">
+                        <div class="character-list" >
+                            <img src="/sources/img/characters/<%=characterslist[i].file%>">
+                            <span class="lv_<%=characterslist[i].type%> lv">70</span>
+                            <span class="nogak gak">7</span>
+                        </div>
+                    </li>
+                <% } %>
+            
+            </ul>
+        </div>
         
     </div>
 
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+    <script src="/js/formmake/pickHeroes.js"></script>
+    <script src="/js/formmake/dropdownSet.js"></script>
+    <script src="/js/formmake/filterAndSort.js"></script>
+    <script src="/js/formmake/heroSetting.js"></script>
     <script>
 
-        /***
-         * 칸 클릭하면 다른 칸 선택 지워지고 클릭한 칸 선택됨
-         ***/
-        $(document).on('click',".form_spot", function(e){
-
-            if ($(e.target).hasClass("out")) return;
-
-            let spot = $(this);
-            
-            $(".form_spot .spot-selected-empty").remove();
-            $(".form_spot .spot-selected-full").remove();
-            $(".form_spot .out").remove();
-            if(spot.find(".empty").length>0){
-                spot.prepend("<div class='spot-selected-empty'></div>");
-            }else {
-                spot.prepend('<img src="../sources/img/out_char.png" class="out">');
-                spot.prepend("<div class='spot-selected-full'></div>");                   
-            }
-        })
-
-        /***
-         * o = 도착지
-         * t = 클릭한 캐릭터
-         ***/
-        function putCharInForm(o, t){
-            o.siblings(".select-liner").children().remove();
-            
-            t.find(".char-selected").remove();
-
-            t.children().clone().appendTo(o.siblings(".select-liner"));
-            o.parent().append('<img src="../sources/img/out_char.png" class="out">');
-            o.attr('class', 'spot-selected-full');
-
-            t.prepend("<div class='char-selected'></div>");
-        }
-
-        
-        $(document).on('click',".character-list", function(e){
-            /***
-            * 캐릭터 클릭했을 때 칸 선택되어 있으면 거기로 들어감
-            ***/
-           //빈 칸인지 이미 누군가 있는지 확인
-            if($(".spot-selected-empty").length>0){
-                //클릭한 캐릭터가 다른 곳에 있으면 거길 삭제
-                let clicked_img = $(this).children('img');
-                let existed_img = $(".form_spot img[src$='"+ clicked_img.attr('src') +"']")
-                if(existed_img.length>0){
-                    let ex_parent = existed_img.eq(0).parent();
-                    console.log(ex_parent);
-                    ex_parent.children().remove();
-                    ex_parent.append('<div class="empty"><i class="fa-solid fa-plus color-gray"></i> </div>');
-                }
-
-                putCharInForm($(".spot-selected-empty"), $(this));
-                return false;
-            } else if($(".spot-selected-full").length>0){
-
-                
-                let clicked_img = $(this).children('img');
-                let selected_img = $(".spot-selected-full").siblings(".select-liner").children("img");
-                let existed_img = $(".form_spot img[src$='"+ clicked_img.attr('src') +"']")
-     
-                //클릭한 캐릭터가 다른 곳에 있고 클릭한 캐릭터와 선택된 칸의 캐릭터가 다르면
-                //원래 이 칸에 있던 이미지를 거기로 보내고 이 칸에 클릭한 캐릭터를 채운다.
-                if(existed_img.length>0 && clicked_img.attr('src') !== selected_img.attr('src')){
-                    let ex_parent = existed_img.parent()
-                    ex_parent.children().remove();
-                    selected_img.parent().children().appendTo(ex_parent);
-
-                    putCharInForm($(".spot-selected-full"), $(this));
-                    return false;
-                }
-                
-                // selected에 원래 있던 애를 캐릭터 칸에서 찾아서 selected div 삭제한다.
-                let same = $(".character-list img[src$='"+ selected_img.attr('src') +"']").eq(0).parent();
-                same.find('.char-selected').remove();
-
-                if(clicked_img.attr('src') !== selected_img.attr('src')){  
-                    //다른 캐릭터를 눌렀다면 
-                    putCharInForm($(".spot-selected-full"), $(this));
-                    return false;
-                } else{
-                    //같은 캐릭터를 눌렀다면 삭제한다.
-                    selected_img.parent().children().remove();
-                    $(".spot-selected-full").siblings(".out").remove();
-                    $(".spot-selected-full").siblings(".select-liner").append('<div class="empty"><i class="fa-solid fa-plus color-gray"></i> </div>');
-                    $(".spot-selected-full").attr('class', 'spot-selected-empty');
-
-                }
-
-                
-
-                return false;
-                
-            }
-
-            /***
-            * 아무 칸도 선택되어있지 않으면 캐릭터 클릭했을 때 이미 들어가있으면 삭제됨
-            ***/
-            let src = $(this).children().eq(1).attr("src");
-            let same = $(".form_spot img[src$='"+ src +"']").eq(0).parent();
-
-            same.children().remove();
-            same.append('<div class="empty"><i class="fa-solid fa-plus color-gray"></i> </div>');
-            $(this).find(".char-selected").remove();
-            
-
-
-        })
-
-        /***
-         * 마이너스 클릭하면 캐릭터 지워짐
-         ***/
-        $(document).on("click", ".out", function(e){
-            e.stopPropagation();
-            e.preventDefault();
-            
-            // 폼 칸에서 캐릭터 이미지를 삭제하고 빈 칸으로 전환
-            let this_character = $(this).siblings(".select-liner");
-            let character_src = $(this).siblings(".select-liner").children("img").attr('src');
-            let chararcter = $(".character-list img[src$='"+ character_src +"']")
-
-            // console.log(chararcter);
-
-            this_character.children().remove();
+    /***
+     * 빈 곳 클릭하면 칸 선택 해제
+     ***/
+    $(document).on('click', function(e){
+        if (!$(e.target).closest(".form_spot").length>0 
+        && !$(e.target).closest(".character-list").length>0
+        && !$(e.target).closest(".out").length>0
+        && !$(e.target).closest(".charSetting-btn").length>0) {
+            // console.log($(e.target).closest(".form_spot"))
+            $(".spot-selected-empty").remove();
             $(".spot-selected-full").siblings(".out").remove();
-            this_character.append('<div class="empty"><i class="fa-solid fa-plus color-gray"></i> </div>');
-
-            // 폼 칸의 선택된 효과를 빈 칸으로 전환
-            $(".spot-selected-full").attr('class', 'spot-selected-empty');
-
-            // 해당 캐릭터와 동일한 얼굴을 아래에서 찾아서 선택 해제
-            chararcter.siblings(".char-selected").remove();
+            $(".spot-selected-full").remove();     
             
-            
-        });
-
-
-        
-
-
-        /***
-         * 빈 곳 클릭하면 칸 선택 해제
-         ***/
-        $(document).on('click', function(e){
-            if (!$(e.target).closest(".form_spot").length>0 
-            && !$(e.target).closest(".character-list").length>0
-            && !$(e.target).closest(".out").length>0
-            && !$(e.target).closest(".charSetting-btn").length>0) {
-                // console.log($(e.target).closest(".form_spot"))
-                $(".spot-selected-empty").remove();
-                $(".spot-selected-full").siblings(".out").remove();
-                $(".spot-selected-full").remove();     
-                
-                // console.log(e.target)
-            }
-
-            // 편성 상태 드롭다운 올라가게
-            if(!$(e.target).closest(".share-or-ask-btn").length>0){
-                $(".share-or-ask-menu").slideUp(150);
-                $(".share-or-ask-menu").siblings("button").children("i").attr('class', "fa-solid fa-angle-down");
-            }
-            
-            // 컨텐츠 이름 드롭다운 올라가게
-            if(!$(e.target).closest(".content-name-btn").length>0){
-                $(".content-name-menu").slideUp(150);
-                $(".content-name-menu").siblings("button").children("i").attr('class', "fa-solid fa-angle-down");
-            }
-
-            // 영웅 필터 올라가게
-            if(!$(e.target).closest(".char-filter-menu").length>0 && !$(e.target).closest(".char-filter-btn").length>0){
-                $(".char-filter-menu").attr('style', 'visibility: hidden;');
-                $(".char-filter-btn").children("i").attr('class', "fa-solid fa-angle-down");
-            }
-
-            // 모달 창 꺼지게
-            if($(e.target).closest(".own-modal").length>0
-                && !$(e.target).closest(".alert-container").length>0){
-                e.stopPropagation();
-                $('.own-modal').fadeOut();
-                $('alert-container').fadeOut();
-            }
-        });
-
-
-
-
-
-
-      
-        
-        $(document).ready(function(){
-            
-            const originalButtons_formations = $(".share-or-ask button").map(function () {
-
-                let text = $(this).text().replace(/\u00A0 /g, '');
-
-                return {
-                text: text,
-                class_names: $(this).attr('class')
-                };
-            }).get();
-            
-            let current_selection_formation = "편성 공유";
-
-            /**
-             * 편성 상태 드롭다운 바꾸기
-             **/
-            $(".share-or-ask").on('click', ".share-or-ask-btn" , function(e){
-            const menu =  $(".share-or-ask-menu");
-            const top_btn = menu.siblings("button");
-            const now_class = $(this).attr('class');
-
-            // console.log(originalButtons_formations)        
-
-            if(now_class != top_btn.attr('class')){
-
-                current_selection_formation = $(this).text();
-
-                top_btn.attr('class', now_class);
-                top_btn.children("p").html("&nbsp; " + $(this).text())
-                renderFormStatMunu();
-                
-            }
-
-            formStatToggle();
-            });
-
-            function renderFormStatMunu(){
-                $(".share-or-ask-menu").empty();
-                originalButtons_formations.forEach(item => {
-                    // console.log("item.text : " + item.text)
-                    // console.log("current_selection : " + current_selection_formation)
-                    if (item.text != current_selection_formation) {
-                        $(".share-or-ask-menu").append(`<button class="${item.class_names}">${item.text}</button>`);
-                    }
-                });
-            }
-
-            /**
-             * 드롭다운 토글 함수
-             **/
-            function formStatToggle(){
-                const menu =  $(".share-or-ask-menu");
-                const top_btn = menu.siblings("button");
-                const now_i = top_btn.children("i");
-                const now_class = $(this).attr('class');
-
-                menu.slideToggle(150);
-
-                if(now_i.attr('class') == "fa-solid fa-angle-down"){
-                    now_i.attr('class', "fa-solid fa-angle-up");
-                } else {
-                    now_i.attr('class', "fa-solid fa-angle-down");
-                }
-            }
-
-            
-
-            /** 컨텐츠 이름 드롭다운*******************************************************************/
-            const originalButtons_contentsname = $(".content-name button").map(function () {
-
-                let text = $(this).text().replace(/\u00A0 /g, '');
-
-                return {
-                text: text,
-                };
-            }).get();
-            
-            let current_selection_contentsname = "아레나";
-
-            /**
-             * 컨텐츠 이름 드롭다운 바꾸기
-             **/
-            $(".content-name").on('click', ".content-name-btn" , function(e){
-                const menu =  $(".content-name-menu");
-                const top_btn = menu.siblings("button");
-                // const now_class = $(this).attr('class');
-
-                // console.log(originalButtons_formations)        
-
-                if($(this).text() != top_btn.text()){
-
-                    current_selection_contentsname = $(this).text();
-
-                    // top_btn.attr('class', now_class);
-                    top_btn.children("p").html("&nbsp; " + $(this).text())
-                    renderContentNameMunu();
-                    
-                    switch($(this).text()){
-                        case "아레나" :
-                        case "스토리" :
-                        case "침묵의 해협" :
-                        case "오벨리스크" :
-                            turnFormto5();
-                            break;
-                        case "망각의 빙하" :
-                            turnFormto7()
-                            break;
-                        case "재앙의 경계" :
-                        case "시간의 균열" :
-                            turnFormto10();
-                            break;
-                    }
-                }
-
-                contentNameToggle();
-            });
-
-            function renderContentNameMunu(){
-                $(".content-name-menu").empty();
-                originalButtons_contentsname.forEach(item => {
-                    // console.log("item.text : " + item.text)
-                    // console.log("current_selection : " + current_selection_formation)
-                    if (item.text != current_selection_contentsname) {
-                        $(".content-name-menu").append(`<button class="content-name-btn btn-black flex-fill title-sizing color-white border-0 d-flex align-items-center">${item.text}</button>`);
-                    }
-                });
-            }
-
-            /**
-             * 드롭다운 토글 함수
-             **/
-            function contentNameToggle(){
-                const menu =  $(".content-name-menu");
-                const top_btn = menu.siblings("button");
-                const now_i = top_btn.children("i");
-                // const now_class = $(this).attr('class');
-
-                menu.slideToggle(150);
-
-                if(now_i.attr('class') == "fa-solid fa-angle-down"){
-                    now_i.attr('class', "fa-solid fa-angle-up");
-                } else {
-                    now_i.attr('class', "fa-solid fa-angle-down");
-                }
-            }
-
-
-            function turnFormto10(){
-                const container = $(".form-container")
-
-                if(container.hasClass('width-10')){
-                    return;
-                }  else if(container.hasClass('width-7')){
-                    $(".char-selected").remove();
-                    container.empty();
-                    for(let i=0; i<5; i++){
-                    container.append(`<div class="character-5 form_spot">
-                                        <div class="select-liner ">
-                                            <div class="empty"><i class="fa-solid fa-plus color-gray"></i> </div>
-                                        </div>
-                                      </div>`)
-                    }
-                } else {
-
-                }
-                container.prepend(`<div class="party-name">첫 번째 파티</div>`);
-                container.append(`<div class="party-name">두 번째 파티</div>`);
-
-                for(let i=0; i<5; i++){
-                    container.append(`<div class="character-5 form_spot">
-                                        <div class="select-liner ">
-                                            <div class="empty"><i class="fa-solid fa-plus color-gray"></i> </div>
-                                        </div>
-                                      </div>`)
-                }
-
-                container.removeClass('width-5');
-                container.removeClass('width-7');
-                container.addClass('width-10');
-
-                const form_spot = $(".form_spot");
-                form_spot.removeClass('character-5');
-                form_spot.removeClass('character-7');
-                form_spot.addClass('character-10');
-
-                
-            }
-
-            function turnFormto5(){
-                const container = $(".form-container")
-
-                if(container.hasClass('width-5')){
-                    return;
-                } else if(container.hasClass('width-7')){
-                    $(".char-selected").remove();
-                    container.empty();
-                    for(let i=0; i<5; i++){
-                    container.append(`<div class="character-5 form_spot">
-                                        <div class="select-liner ">
-                                            <div class="empty"><i class="fa-solid fa-plus color-gray"></i> </div>
-                                        </div>
-                                      </div>`)
-                    }
-                } else {
-                    $(".party-name").remove();
-                    for(let i=0; i<5; i++){
-                        if($(".character-10").eq(9-i).find('.empty').length <= 0){
-                            let src = $(".character-10").eq(9-i).find('img').attr('src');
-                            $(`.character-list img[src="${src}"]`).siblings('.char-selected').remove();
-                        }   
-                        $(".character-10").eq(9-i).remove();
-                    }
-
-                    const form_spot = $(".form_spot");
-                    form_spot.removeClass('character-10');
-                    form_spot.addClass('character-5');
-                }
-
-
-                container.removeClass('width-10');
-                container.removeClass('width-7');
-                container.addClass('width-5');
-
-                
-
-                
-            }
-
-            function turnFormto7(){
-                const container = $(".form-container")
-
-                if(container.hasClass('width-7')){
-                    return;
-                }
-                
-                $(".char-selected").remove();
-                
-                container.empty();
-                for(let i=0; i<3; i++){
-                    container.append(`<div class="character-7 form_spot">
-                                        <div class="select-liner ">
-                                            <div class="empty"><i class="fa-solid fa-plus color-gray"></i> </div>
-                                        </div>
-                                      </div>`)
-                }
-                container.append(`<div class="change-line"></div>`)
-                for(let i=0; i<4; i++){
-                    container.append(`<div class="character-7 form_spot">
-                                        <div class="select-liner ">
-                                            <div class="empty"><i class="fa-solid fa-plus color-gray"></i> </div>
-                                        </div>
-                                      </div>`)
-                }
-
-                container.removeClass('width-10');
-                container.removeClass('width-5');
-                container.addClass('width-7');
-
-                const form_spot = $(".form_spot");
-                form_spot.removeClass('character-10');
-                form_spot.removeClass('character-5');
-                form_spot.addClass('character-7');
-
-                
-            }
-
-
-            // 필터 및 정렬 ************************************************
-            
-            // 원본 캐릭터 데이터
-            const original_characters = $(".characters-container li").map(function () {
-                return {
-                    img_src: $(this).children('div').children('img').attr('src'),
-                    lv_class: $(this).children('div').children('.lv').attr('class'),
-                    lv : $(this).children('div').children('.lv').text(),
-                    gak_class: $(this).children('div').children('.gak').attr('class'),
-                    cho: $(this).children('div').children('.gak').text()
-                };
-            }).get()
-            
-            /**
-             * 필터
-             * type = ["dark", "fire"] 이런식의 리스트.
-             * class_names = ["warrior, striker"]
-             */
-            function filterByTypeNClass(type, class_names){
-                // 오리지널 캐릭터 배열에서 필터 받은 것들만 만들어서 html 만들기
-                let filtered_characters;
-
-                // 타입 필터
-                if(type == "" || type == []){
-                    filtered_characters = original_characters
-                }else{
-                    filtered_characters = original_characters.filter(function(v){
-                        let rst = 0;
-                            for(let j=0; j<type.length; j++){
-                                if(v.lv_class.includes(type[j])){
-                                    rst ++;
-                                    break;
-                                }
-                            }
-
-                        return rst > 0
-                    });
-                }
-
-                // 클래스 필터
-                if(class_names == "" || class_names == []){}
-                else{
-                    filtered_characters = filtered_characters.filter(function(v){
-                        let rst = 0;
-                            for(let j=0; j<class_names.length; j++){
-                                const filename = v.img_src.split("/").pop(); // dark_zhurahan_warrior.png"
-                                const class_name = filename.split(".")[0].split("_")[2];    // "warrior"
-                                if(class_name == class_names[j]){
-                                    rst ++;
-                                    break;
-                                }
-                            }
-
-                        return rst > 0
-                    });
-                }
-
-                
-
-                // html 만들어서 append
-                $(".characters-container").empty();
-                filtered_characters.forEach(function(v){
-                    let html_str = `<li class="character-list-box select-liner d-flex justify-content-center" >
-                                        <div class="character-list" >
-                                            <img src="${v.img_src}">
-                                            <span class="${v.lv_class}">${v.lv}</span>
-                                            <span class="${v.gak_class}">${v.cho}</span>
-                                        </div>
-                                    </li>`
-                    
-                    $(".characters-container").append(html_str);
-                });
-            }
-
-             /**
-              *  뱃지들 확인해서 필터 배열 생성 
-              **/
-            function typeBadges2FilterArr() {
-                
-                // console.log("함수 들어옴")
-                let filter_arr = $('.type-boxes img').map(function(i){
-                    let src = $(this).attr('src');
-                    // console.log(src)
-                    const filename = src.split("/").pop(); // "dark_2.png"
-                    return filename.split("_")[0];    // "dark"
-                }).get();
-
-                // console.log("filter_arr : " + filter_arr);
-                
-                return filter_arr;
-            }
-
-            function classBadges2FilterArr() {
-                
-                // console.log("함수 들어옴")
-                let filter_arr = $('.class-boxes img').map(function(i){
-                    let src = $(this).attr('src');
-                    // console.log(src)
-                    const filename = src.split("/").pop(); // "commander.png"
-                    return filename.split(".")[0];    // "commander"
-                }).get();
-
-                // console.log("filter_arr : " + filter_arr);
-                
-                return filter_arr;
-            }
-
-            /**
-             * 클래스&속성 버튼 체크/언체크
-             */ 
-            $(".filter-checkbox").change(function(e){
-                let btn = $(this).siblings("div");
-                
-                // 안에 있는 아이콘을 
-                let token_src = btn.children("img").attr('src'); 
-                // console.log('token_src : ' + token_src);
-
-                if(btn.hasClass('filter-class-btn')){
-
-                    if($(this).is(":checked")){
-                        // 클래스용 박스에 넣어서
-                        let html_str = `<div class="checked-filter-box class-box"><img src="${token_src}"></div>`
-                        // 클래스용 박스 컨테이너에 append
-                        $('.class-boxes').append(html_str);
-                        filterByTypeNClass(typeBadges2FilterArr(), classBadges2FilterArr());
-                    } else{
-                        // 이미지 소스가 동일한 애 찾아서 박스 삭제
-                        $(`.class-boxes div img[src="${token_src}"]`).parent().remove();
-                        filterByTypeNClass(typeBadges2FilterArr(), classBadges2FilterArr());
-                    }
-                    
-                } else if (btn.hasClass('filter-type-btn')){
-                    if($(this).is(":checked")){
-                        // 타입용 박스에 넣어서
-                        let html_str = `<div class="checked-filter-box type-box"><img src="${token_src}"></div>`
-                        // 타입용 박스 컨테이너에 append
-                        $('.type-boxes').append(html_str);
-                        
-                        filterByTypeNClass(typeBadges2FilterArr(), classBadges2FilterArr());
-                    } else{
-                        // 이미지 소스가 동일한 애 찾아서 박스 삭제
-                        $(`.type-boxes div img[src="${token_src}"]`).parent().remove();
-                        filterByTypeNClass(typeBadges2FilterArr(), classBadges2FilterArr());
-                    }
-                }
-
-                checkExsistCharacters();
-            });
-
-            /**
-             * 클래스&속성 토큰 눌렀을 때 삭제
-             */
-            $(document).on('click', '.checked-filter-box', function(e){
-                let src = $(this).children('img').attr('src');
-
-                // 동일한 이미지 찾아서 언체크
-                $(`.char-filter-menu img[src="${src}"]`).parent().siblings('input').prop('checked', false);
-                
-                // 토큰 삭제
-                $(this).remove();
-                filterByTypeNClass(typeBadges2FilterArr(), classBadges2FilterArr());
-                checkExsistCharacters();
-
-            });
-            
-        })
-        
-
-
-        /**
-         * 영웅 필터 토글
-         */ 
-        function filterToggle(){
-            const menu =  $(".char-filter-menu");
-            const top_btn = $(".char-filter-btn");
-            const now_i = top_btn.children("i");
-
-            // menu.slideToggle(150);
-
-            if(now_i.attr('class') == "fa-solid fa-angle-down"){
-                now_i.attr('class', "fa-solid fa-angle-up");
-                menu.attr('style', 'visibility: visible;')
-            } else {
-                now_i.attr('class', "fa-solid fa-angle-down");
-                menu.attr('style', 'visibility: hidden;')
-            }
+            // console.log(e.target)
         }
 
-        $(".char-filter-btn").on('click', function(e){
-            filterToggle()
-        })
-
-
-        /**
-         * 영웅 필터 - 정렬 토글
-         */
-        $(".filter-sort-btn").on('click', function(e){
-            const text = $(this).text();
-
-            if($(this).hasClass('filter-unselected')){
-                // 정렬 필터를 처음 선택함
-                $(this).removeClass('filter-unselected');
-                $(this).addClass('filter-selected');
-
-                charSortHandler(true, text);
-                // console.log(text);
-            }
-            else if($(this).hasClass('filter-selected')){
-
-                if($(this).children("i").hasClass("fa-caret-down")){
-                    // 정렬 필터 두번째 선택 : 값이 낮은것을 위로
-                    $(this).children("i").removeClass('fa-caret-down');
-                    $(this).children("i").addClass('fa-caret-up');
-
-                    charSortHandler(false, text);
-                } else {
-                    $(this).children("i").removeClass('fa-caret-up');
-                    $(this).children("i").addClass('fa-caret-down');
-
-                    $(this).removeClass('filter-selected');
-                    $(this).addClass('filter-unselected');
-                }                
-            }
-            else{
-                $(this).removeClass('filter-selected');
-                $(this).addClass('filter-unselected');
-            }
-        });
-
-        /**
-         * 정렬 핸들러
-         */
-        function charSortHandler(big2small, text){
-            if(text == "초월 순"){
-                sortByMaxLevel(big2small);
-            }else if(text == "각성 순"){
-                sortByGaksung(big2small);
-            }else if(text == "보유 영웅ON"){
-
-            }
+        // 편성 상태 드롭다운 올라가게
+        if(!$(e.target).closest(".share-or-ask-btn").length>0){
+            $(".share-or-ask-menu").slideUp(150);
+            $(".share-or-ask-menu").siblings("button").children("i").attr('class', "fa-solid fa-angle-down");
         }
         
-
-        /**
-         * 초월 순 
-         */
-        function sortByMaxLevel(big2small){
-            if(big2small){ // 초월이 높은 게 위로
-                $(".characters-container").html(
-                    $(".characters-container li").sort(function(a, b){
-                        return Number($(b).children('div').children('.gak').text()) - Number($(a).children('div').children('.gak').text())
-                    })
-                )
-            }else{
-                $(".characters-container").html(
-                    $(".characters-container li").sort(function(a, b){
-                        return Number($(a).children('div').children('.gak').text()) - Number($(b).children('div').children('.gak').text())
-                    })
-                )
-            }
+        // 컨텐츠 이름 드롭다운 올라가게
+        if(!$(e.target).closest(".content-name-btn").length>0){
+            $(".content-name-menu").slideUp(150);
+            $(".content-name-menu").siblings("button").children("i").attr('class', "fa-solid fa-angle-down");
         }
 
-        /**
-         * 각성 순 
-         */
-        function sortByGaksung(big2small){
-            if(big2small){ // 각성이 높은 게 위로
-                $(".characters-container").html(
-                    $(".characters-container li").sort(function(a, b){
-                        return gak2num($(b).children('div').children('.gak').attr('class'))-gak2num($(a).children('div').children('.gak').attr('class'))
-                    })
-                )
-            }else{
-                $(".characters-container").html(
-                    $(".characters-container li").sort(function(a, b){
-                    return gak2num($(a).children('div').children('.gak').attr('class'))-gak2num($(b).children('div').children('.gak').attr('class'))
-                    })
-                )
-            }
+        // 영웅 필터 올라가게
+        if(!$(e.target).closest(".char-filter-menu").length>0 && !$(e.target).closest(".char-filter-btn").length>0){
+            $(".char-filter-menu").attr('style', 'visibility: hidden;');
+            $(".char-filter-btn").children("i").attr('class', "fa-solid fa-angle-down");
         }
 
-        function gak2num(class_names){
-            const gak_to_num = {
-                "no" : 0,
-                "one" : 1,
-                "two" : 2,
-            }
-
-            class_names = class_names.replaceAll(/[gak ]/g, '');
-
-            class_names = gak_to_num[class_names];
-            // console.log(class_names);
-            return class_names;
+        // 모달 창 꺼지게
+        if($(e.target).closest(".own-modal").length>0
+            && !$(e.target).closest(".hero-setting").length>0){
+            e.stopPropagation();
+            $('.own-modal').fadeOut();
+            $('.hero-setting').fadeOut();
         }
-
+    });
         
-        /**
-         * 편성 칸에 있는 영웅들 찾아서 체크 안돼있으면 체크해줌
-         */
-        function checkExsistCharacters(){
-            let imgs = $(".form_spot .select-liner img")
-
-            if(imgs.length>0){
-                for(let i=0; i<imgs.length; i++){
-                    let src = imgs.eq(i).attr('src');
-                    // console.log("src = " + src);
-                    let char_img = $(`.character-list img[src="${src}"]`);
-                    if(char_img.siblings(".char-selected").length <= 0){
-                        // console.log("선택됨");
-                        char_img.parent().prepend(`<div class='char-selected'></div>`);
-                    }
-                }
-            }
-        }
     
     
-    /**
-     * 영웅 설정 버튼 클릭
-     */
-    $('.charSetting-btn').on('click', function(e){
-        // $(".spot-selected-full").siblings(".out").remove();
-        // $(".spot-selected-full").remove();
-        let selected = $(".spot-selected-full").siblings(".select-liner").children('img');
-
-        console.log(selected);
-        if(selected.length > 0){
-            $('.own-modal').fadeIn();
-            $('.hero-setting').fadeIn();
-        } else{ // 아무 영웅도 클릭하지 않았을 때
-            // console.log("감지되지 않음");
-            $('.alert-ok .alert-text').text('설정할 영웅을 편성창에서 선택하세요.');
-            $('.own-modal').fadeIn();
-            $('.alert-ok').fadeIn();
-
-        }
-    })
     
-    $('.alert-btn-ok').on('click', function(e){
-        $('.alert-ok').fadeOut();
-        $('.own-modal').fadeOut();
-    })
-
     </script>
 
 </body>

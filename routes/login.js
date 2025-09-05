@@ -55,8 +55,6 @@ router.get(
 );
 
 
-
-
 //* 네이버로 로그인하기 라우터 ***********************
 router.get('/naver', passport.authenticate('naver', { authType: 'reprompt' }));
 
@@ -198,7 +196,7 @@ async function usernameCheck(username){
 }
 
 router.post('/register/idcheck', async (req, res) => {
-  console.log(`요청 들어옴. 데이터 : ${req.body.username}`);
+  // console.log(`요청 들어옴. 데이터 : ${req.body.username}`);
   // console.log( await usernameCheck(req.body.username))
   res.send({result : await usernameCheck(req.body.username)});
 })

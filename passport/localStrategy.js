@@ -6,7 +6,7 @@ const bcrypt = require('bcrypt');
 module.exports = () => {
   passport.use(new LocalStrategy(async (inputid, inputpw, done) => {
     try {
-        console.log(`id: ${inputid}`)
+        // console.log(`id: ${inputid}`)
 
         var sql = `SELECT * FROM USER
                 INNER JOIN user_pw_table ON USER.id = USER_PW_TABLE.USER_ID

@@ -1,0 +1,143 @@
+/**
+ * 조합 수정하는 기능 개발
+ * 캐릭터 늘어진 창에서 img 태그 그대로 가져옴
+ */
+
+
+
+/***
+ * 칸 클릭하면 다른 칸 선택 지워지고 클릭한 칸 선택됨
+ ***/
+$(document).on('click',".form_spot", function(e){
+
+    if ($(e.target).hasClass("out")) return;
+
+    let spot = $(this);
+    
+    $(".form_spot .spot-selected-empty").remove();
+    $(".form_spot .spot-selected-full").remove();
+    $(".form_spot .out").remove();
+    if(spot.find(".empty").length>0){
+        spot.prepend("<div class='spot-selected-empty'></div>");
+    }else {
+        spot.prepend('<img src="../sources/img/out_char.png" class="out">');
+        spot.prepend("<div class='spot-selected-full'></div>");                   
+    }
+})
+
+/***
+ * o = 도착지
+ * t = 클릭한 캐릭터
+ ***/
+function putCharInForm(o, t){
+    o.siblings(".select-liner").children().remove();
+    
+    t.find(".char-selected").remove();
+
+    t.children().clone().appendTo(o.siblings(".select-liner"));
+    o.parent().append('<img src="../sources/img/out_char.png" class="out">');
+    o.attr('class', 'spot-selected-full');
+
+    t.prepend("<div class='char-selected'></div>");
+}
+
+
+$(document).on('click',".character-list", function(e){
+    /***
+    * 캐릭터 클릭했을 때 칸 선택되어 있으면 거기로 들어감
+    ***/
+    //빈 칸인지 이미 누군가 있는지 확인
+    if($(".spot-selected-empty").length>0){
+        //클릭한 캐릭터가 다른 곳에 있으면 거길 삭제
+        let clicked_img = $(this).children('img');
+        let existed_img = $(".form_spot img[src$='"+ clicked_img.attr('src') +"']")
+        if(existed_img.length>0){
+            let ex_parent = existed_img.eq(0).parent();
+            console.log(ex_parent);
+            ex_parent.children().remove();
+            ex_parent.append('<div class="empty"><i class="fa-solid fa-plus color-gray"></i> </div>');
+        }
+
+        putCharInForm($(".spot-selected-empty"), $(this));
+        return false;
+    } else if($(".spot-selected-full").length>0){
+
+        
+        let clicked_img = $(this).children('img');
+        let selected_img = $(".spot-selected-full").siblings(".select-liner").children("img");
+        let existed_img = $(".form_spot img[src$='"+ clicked_img.attr('src') +"']")
+
+        //클릭한 캐릭터가 다른 곳에 있고 클릭한 캐릭터와 선택된 칸의 캐릭터가 다르면
+        //원래 이 칸에 있던 이미지를 거기로 보내고 이 칸에 클릭한 캐릭터를 채운다.
+        if(existed_img.length>0 && clicked_img.attr('src') !== selected_img.attr('src')){
+            let ex_parent = existed_img.parent()
+            ex_parent.children().remove();
+            selected_img.parent().children().appendTo(ex_parent);
+
+            putCharInForm($(".spot-selected-full"), $(this));
+            return false;
+        }
+        
+        // selected에 원래 있던 애를 캐릭터 칸에서 찾아서 selected div 삭제한다.
+        let same = $(".character-list img[src$='"+ selected_img.attr('src') +"']").eq(0).parent();
+        same.find('.char-selected').remove();
+
+        if(clicked_img.attr('src') !== selected_img.attr('src')){  
+            //다른 캐릭터를 눌렀다면 
+            putCharInForm($(".spot-selected-full"), $(this));
+            return false;
+        } else{
+            //같은 캐릭터를 눌렀다면 삭제한다.
+            selected_img.parent().children().remove();
+            $(".spot-selected-full").siblings(".out").remove();
+            $(".spot-selected-full").siblings(".select-liner").append('<div class="empty"><i class="fa-solid fa-plus color-gray"></i> </div>');
+            $(".spot-selected-full").attr('class', 'spot-selected-empty');
+
+        }
+
+        
+
+        return false;
+        
+    }
+
+    /***
+    * 아무 칸도 선택되어있지 않으면 캐릭터 클릭했을 때 이미 들어가있으면 삭제됨
+    ***/
+    let src = $(this).children().eq(1).attr("src");
+    let same = $(".form_spot img[src$='"+ src +"']").eq(0).parent();
+
+    same.children().remove();
+    same.append('<div class="empty"><i class="fa-solid fa-plus color-gray"></i> </div>');
+    $(this).find(".char-selected").remove();
+    
+
+
+})
+
+/***
+ * 마이너스 클릭하면 캐릭터 지워짐
+ ***/
+$(document).on("click", ".out", function(e){
+    e.stopPropagation();
+    e.preventDefault();
+    
+    // 폼 칸에서 캐릭터 이미지를 삭제하고 빈 칸으로 전환
+    let this_character = $(this).siblings(".select-liner");
+    let character_src = $(this).siblings(".select-liner").children("img").attr('src');
+    let chararcter = $(".character-list img[src$='"+ character_src +"']")
+
+    // console.log(chararcter);
+
+    this_character.children().remove();
+    $(".spot-selected-full").siblings(".out").remove();
+    this_character.append('<div class="empty"><i class="fa-solid fa-plus color-gray"></i> </div>');
+
+    // 폼 칸의 선택된 효과를 빈 칸으로 전환
+    $(".spot-selected-full").attr('class', 'spot-selected-empty');
+
+    // 해당 캐릭터와 동일한 얼굴을 아래에서 찾아서 선택 해제
+    chararcter.siblings(".char-selected").remove();
+    
+    
+});
