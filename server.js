@@ -90,14 +90,28 @@ app.get('/', (req, res) => {
 })
 
 
-app.get('/formmake', (req, res) => {
-  fs.readdir('./statics/sources/img/characters', (err, filelist) => {
+app.get('/formmake', async(req, res) => {
+
+
+  let filelist =  fs.readdir('./statics/sources/img/characters', async (err, filelist) => {
     // console.log(err);
     // console.log(filelist);
-    let characterslist = filelist.map(e=>{
-      let t = e.split('_')[0]
-      return {file : e, type: t}
-    })
+
+    // console.log(filelist)
+    let characterslist = [];
+
+    for(let i=0; i<filelist.length; i++){
+      let t = filelist[i].split('_')[0]
+      let name = filelist[i].split('_')[1]
+
+      var sql = `SELECT KOR_NAME FROM HERO_NAMES
+                WHERE ENG_NAME= ?`;
+      var [result, fields] = await (await connection).execute(sql, [name]);
+
+      // console.log(e);
+
+      characterslist.push({file : filelist[i], type: t, name: result[0].KOR_NAME}); 
+    }
     res.render('form_making.ejs', {characterslist : characterslist})
   })
 }) 

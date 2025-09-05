@@ -16,7 +16,11 @@ $('.charSetting-btn').on('click', function(e){
         $('.hero-setting').fadeIn();
 
         $('.setting-charimg').html(selected.html())
-        $('.setting-charname').children('img').attr('src', "../sources/img/types/dark.png")
+        let name = selected.children('img').data('charname');
+        $('.setting-charname p').text(name);
+
+        let type = selected.children('img').data('type');
+        $('.setting-charname').children('img').attr('src', `../sources/img/types/${type}.png`)
         
         let lv = selected.children('.lv').text();
         $('.hero-setting .lv-input>input').val(lv)

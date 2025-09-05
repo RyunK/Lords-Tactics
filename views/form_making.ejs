@@ -258,7 +258,7 @@
                 <% for(let i=0; i<characterslist.length; i++){ %>
                     <li class="character-list-box select-liner d-flex justify-content-center">
                         <div class="character-list" >
-                            <img src="/sources/img/characters/<%=characterslist[i].file%>">
+                            <img src="/sources/img/characters/<%=characterslist[i].file%>" data-charname="<%=characterslist[i].name%>" data-type="<%=characterslist[i].type%>">
                             <span class="lv_<%=characterslist[i].type%> lv">70</span>
                             <span class="nogak gak">7</span>
                         </div>
