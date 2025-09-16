@@ -161,6 +161,7 @@ function turnFormto10(){
         container.append(`<div class="character-5 form_spot">
                             <div class="select-liner ">
                                 <div class="empty"><i class="fa-solid fa-plus color-gray"></i> </div>
+                                <input value="" disabled name="hero" type="hidden"> 
                             </div>
                             </div>`)
         }
@@ -174,6 +175,7 @@ function turnFormto10(){
         container.append(`<div class="character-5 form_spot">
                             <div class="select-liner ">
                                 <div class="empty"><i class="fa-solid fa-plus color-gray"></i> </div>
+                                <input value="" disabled name="hero" type="hidden"> 
                             </div>
                             </div>`)
     }
@@ -244,6 +246,7 @@ function turnFormto7(){
         container.append(`<div class="character-7 form_spot">
                             <div class="select-liner ">
                                 <div class="empty"><i class="fa-solid fa-plus color-gray"></i> </div>
+                                <input value="" disabled name="hero" type="hidden"> 
                             </div>
                             </div>`)
     }
@@ -252,6 +255,7 @@ function turnFormto7(){
         container.append(`<div class="character-7 form_spot">
                             <div class="select-liner ">
                                 <div class="empty"><i class="fa-solid fa-plus color-gray"></i> </div>
+                                <input value="" disabled name="hero" type="hidden"> 
                             </div>
                             </div>`)
     }
