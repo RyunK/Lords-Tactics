@@ -13,7 +13,7 @@ const originalButtons_formations = $(".share-or-ask button").map(function () {
     };
 }).get();
 
-let current_selection_formation = "편성 공유";
+let current_selection_formation = "편성 저장";
 
 /**
  * 편성 상태 드롭다운 바꾸기
@@ -22,6 +22,7 @@ $(".share-or-ask").on('click', ".share-or-ask-btn" , function(e){
     const menu =  $(".share-or-ask-menu");
     const top_btn = menu.siblings("button");
     const now_class = $(this).attr('class');
+    const data_input = $("input[name='form_status']")
 
     // console.log(originalButtons_formations)        
 
@@ -30,7 +31,8 @@ $(".share-or-ask").on('click', ".share-or-ask-btn" , function(e){
         current_selection_formation = $(this).text();
 
         top_btn.attr('class', now_class);
-        top_btn.children("p").html("&nbsp; " + $(this).text())
+        top_btn.children("p").html("&nbsp; " + $(this).text());
+        data_input.val($(this).text());
         renderFormStatMunu();
         
     }
@@ -79,7 +81,7 @@ const originalButtons_contentsname = $(".content-name button").map(function () {
     };
 }).get();
 
-let current_selection_contentsname = "아레나";
+let current_selection_contentsname = "스토리";
 
 /**
  * 컨텐츠 이름 드롭다운 바꾸기
@@ -87,6 +89,8 @@ let current_selection_contentsname = "아레나";
 $(".content-name").on('click', ".content-name-btn" , function(e){
     const menu =  $(".content-name-menu");
     const top_btn = menu.siblings("button");
+    const data_input = $("input[name='content_name']")
+
     // const now_class = $(this).attr('class');
 
     // console.log(originalButtons_formations)        
@@ -97,11 +101,12 @@ $(".content-name").on('click', ".content-name-btn" , function(e){
 
         // top_btn.attr('class', now_class);
         top_btn.children("p").html("&nbsp; " + $(this).text())
+        data_input.val($(this).text());
         renderContentNameMunu();
         
         switch($(this).text()){
-            case "아레나" :
             case "스토리" :
+            case "아레나" :
             case "침묵의 해협" :
             case "오벨리스크" :
                 turnFormto5();
@@ -109,6 +114,7 @@ $(".content-name").on('click', ".content-name-btn" , function(e){
             case "망각의 빙하" :
                 turnFormto7()
                 break;
+            case "성운 쟁탈전" :
             case "재앙의 경계" :
             case "시간의 균열" :
                 turnFormto10();

@@ -10,6 +10,7 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
     <link href="/css/main.css" rel="stylesheet">
     <link href="/css/index.css" rel="stylesheet">
+    <link href="/css/form_card.css" rel="stylesheet">
 </head>
 <body>
     
@@ -17,30 +18,36 @@
 
     <div class="move-btn-container d-flex justify-content-between">
         <div class="move-btn-shadow">
-        <div class="move-btn ">
-            <h4>기사단 <br> 편성하기</h4>
-            <p class="color-gray">편성 저장 및 공유</p>
-            <!-- <img src="../sources/img/sword-fill-svgrepo-com.svg" class="move-btn-icon"> -->
-            <div class="formmake-btn-icon"></div>
-        </div>
+            <a href="/formmake" class="color-black">
+            <div class="move-btn ">
+                <h4>기사단 <br> 편성하기</h4>
+                <p class="color-gray">편성 저장 및 공유</p>
+                <!-- <img src="../sources/img/sword-fill-svgrepo-com.svg" class="move-btn-icon"> -->
+                <div class="formmake-btn-icon"></div>
+            </div>
+            </a>
         </div>
         <div class="move-btn-right">
             <div class="move-btn-shadow notice-btn">
+                <a>
                 <div class=" move-btn ">
                     <h4>이용 안내</h4>
                     <p class="color-gray">로드의 전술서란?</p>
                     
                     <div class="notice-btn-icon"></div>
                 </div>
+                </a>
             </div>
 
             <div class="move-btn-shadow">
+                <a>
                 <div class="move-btn ">
                     <h4>마이페이지</h4>
                     <p class="color-gray">보유 영웅 설정하러가기</p>
                     <div class="mypage-btn-icon"></div>
 
                 </div>
+                </a>
             </div>
         </div>
     </div>
@@ -59,7 +66,7 @@
         <div class="d-flex justify-content-end">
             <a href="#" class="forum-link color-black">조합 공유 게시판으로 <i class="fa-solid fa-caret-right"></i></a>
         </div>
-        <div class="forum-preview bg-basicdark d-flex justify-content-between">
+        <div class="forum-preview bg-basicdark d-flex justify-content-around">
             <div class="forum-preview-line">
                 <h5 class="color-yellow"><i class="fa-solid fa-crown"></i> 베스트 조합 공유</h5>
                 
@@ -85,16 +92,24 @@
                                 <img class="dots" src="../sources/img/ellipsis-solid-full.svg" alt="">
                             </div>
                             <div class="mt-3">
-                                <h6>작성자 한마디</h6>
-                                <div class="preview-paragraph bg-lightgray mt-2">
-                                    <p>레이드 꿀잼 조합 사실 레이드라고 해놓고 애들 싸우는거 구경하는 재미로 해요. 사실 강하진 않고 그냥 어쩌고저쩌고 오늘은 레이드 점수가 이만큼 나왓는데요...
+                                <div class="bg-basicdark p-2">
+                                    <h6><span class="color-white me-2">작성자</span>
+                                        <span class="color-purple">여덟글자정도어때</span></h6>
+                                </div>
+                                <div class="preview-paragraph bg-lightgray">
+                                    <p>레이드 꿀잼 조합 사실 레이드라고 해놓고 애들 싸우는거 구경하는 재미로 해요. 사실 강하진 않고 그냥 어쩌고저쩌고 오늘은 레이드...
                                     </p>
                                 </div>
                             </div>
-                            <div class="text-end mt-3">
-                                <span>조회수 4567</span>
-                                <span>&nbsp;</span>
-                                <span><i class="fa-solid fa-thumbs-up"></i> 46</span>
+                            <div class="d-flex justify-content-between mt-3">
+                                <div>
+                                    <span>2025-11-06</span>
+                                </div>
+                                <div class="text-end">
+                                    <span>조회수 35</span>
+                                    <span>&nbsp;</span>
+                                    <span><i class="fa-solid fa-thumbs-up"></i> 3</span>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -122,16 +137,24 @@
                                 <img class="dots" src="../sources/img/ellipsis-solid-full.svg" alt="">
                             </div>
                             <div class="mt-3">
-                                <h6>작성자 한마디</h6>
-                                <div class="preview-paragraph bg-lightgray mt-2">
-                                    <p>레이드 꿀잼 조합 사실 레이드라고 해놓고 애들 싸우는거 구경하는 재미로 해요. 사실 강하진 않고 그냥 어쩌고저쩌고 오늘은 레이드 점수가 이만큼 나왓는데요...
+                                <div class="bg-basicdark p-2">
+                                    <h6><span class="color-white me-2">작성자</span>
+                                        <span class="color-purple">여덟글자정도어때</span></h6>
+                                </div>
+                                <div class="preview-paragraph bg-lightgray">
+                                    <p>레이드 꿀잼 조합 사실 레이드라고 해놓고 애들 싸우는거 구경하는 재미로 해요. 사실 강하진 않고 그냥 어쩌고저쩌고 오늘은 레이드...
                                     </p>
                                 </div>
                             </div>
-                            <div class="text-end mt-3">
-                                <span>조회수 4567</span>
-                                <span>&nbsp;</span>
-                                <span><i class="fa-solid fa-thumbs-up"></i> 46</span>
+                            <div class="d-flex justify-content-between mt-3">
+                                <div>
+                                    <span>2025-11-06</span>
+                                </div>
+                                <div class="text-end">
+                                    <span>조회수 35</span>
+                                    <span>&nbsp;</span>
+                                    <span><i class="fa-solid fa-thumbs-up"></i> 3</span>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -270,16 +293,24 @@
                                 <!-- <img class="dots" src="../sources/img/ellipsis-solid-full.svg" alt=""> -->
                             </div>
                             <div class="mt-3">
-                                <h6>작성자 한마디</h6>
-                                <div class="preview-paragraph bg-lightgray mt-2">
-                                    <p>라떼는 말이야 얘네 둘만 있어도 아주그냥
+                                <div class="bg-basicdark p-2">
+                                    <h6><span class="color-white me-2">작성자</span>
+                                        <span class="color-purple">여덟글자정도어때</span></h6>
+                                </div>
+                                <div class="preview-paragraph bg-lightgray">
+                                    <p>레이드 꿀잼 조합 사실 레이드라고 해놓고 애들 싸우는거 구경하는 재미로 해요. 사실 강하진 않고 그냥 어쩌고저쩌고 오늘은 레이드...
                                     </p>
                                 </div>
                             </div>
-                            <div class="text-end mt-3">
-                                <span>조회수 35</span>
-                                <span>&nbsp;</span>
-                                <span><i class="fa-solid fa-thumbs-up"></i> 3</span>
+                            <div class="d-flex justify-content-between mt-3">
+                                <div>
+                                    <span>2025-11-06</span>
+                                </div>
+                                <div class="text-end">
+                                    <span>조회수 35</span>
+                                    <span>&nbsp;</span>
+                                    <span><i class="fa-solid fa-thumbs-up"></i> 3</span>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -307,7 +338,7 @@
                         </div>
                         <div class="mt-3">
                             <h6>작성자 한마디</h6>
-                            <div class="preview-paragraph bg-lightgray mt-2">
+                            <div class="preview-paragraph bg-lightgray mt-3">
                                 <p>해신할 대 얘네랑 잘 어울릴만한 친구 추천해주세요!!
                                 </p>
                             </div>

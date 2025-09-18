@@ -17,6 +17,8 @@
 <body>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
 
+    
+
     <div class="own-modal">    
         <div class="hero-setting bg-gray shadow-basic">
             <!-- 상단바 -->
@@ -89,27 +91,30 @@
         </div>
     </div>
     
+    <%- include('nav_and_banner.ejs', {page: 'formmake', nickname: data.nickname, notice:'2025.08.01 신규 캐릭터 [물]라플라스 추가 완료'}) %> 
+
 
     <div class="share-card shadow-basic">
         <!-- 상단바 -->
         <div class="post-title title-size ">
             <!-- 편성 공유 / 편성 요청 / 편성 저장 / 편성 완료 -->
             <dix class="share-or-ask ">
-                <button type="button " class="share-or-ask-btn btn-blue title-sizing color-white border-0 d-flex align-items-center justify-content-center"><i class="fa-solid fa-angle-down"></i><p>&nbsp; 편성 공유</p></button>
+                <button type="button " class="share-or-ask-btn btn-purple title-sizing color-white border-0 d-flex align-items-center justify-content-center"><i class="fa-solid fa-angle-down"></i><p>&nbsp; 편성 저장</p></button>
                 <div class="share-or-ask-menu">
-                    <!-- <button class="share-or-ask-btn btn-blue title-sizing color-white border-0 d-flex align-items-center justify-content-center form-stat-selected">편성 공유</button> -->
+                    <button class="share-or-ask-btn btn-blue title-sizing color-white border-0 d-flex align-items-center justify-content-center form-stat-selected">편성 공유</button>
                     <button class="share-or-ask-btn btn-yellow title-sizing color-white border-0 d-flex align-items-center justify-content-center">편성 요청</button>
-                    <button class="share-or-ask-btn btn-purple title-sizing color-white border-0 d-flex align-items-center justify-content-center">편성 저장</button>
+                    <!-- <button class="share-or-ask-btn btn-purple title-sizing color-white border-0 d-flex align-items-center justify-content-center">편성 저장</button> -->
                     <button class="share-or-ask-btn btn-green title-sizing color-white border-0 d-flex align-items-center justify-content-center">편성 완료</button>
                 </div>
             </dix>
 
-            <!-- 스토리 / 아레나 / 망각의 빙하 / 재앙의 경계 / 침묵의 해협 / 시간의 균열 / 오벨리스크 -->
+            <!-- 스토리 / 성운 쟁탈전 / 망각의 빙하 / 재앙의 경계 / 침묵의 해협 / 시간의 균열 / 오벨리스크 -->
              <div class="content-name flex-fill">
-                <button type="button"  class="content-name-btn btn-black  title-sizing color-yellow border-0 d-flex align-items-center"><i class="fa-solid fa-angle-down"></i><p>&nbsp; 아레나</p></button>
+                <button type="button"  class="content-name-btn btn-black  title-sizing color-yellow border-0 d-flex align-items-center"><i class="fa-solid fa-angle-down"></i><p>&nbsp; 스토리</p></button>
                 <div class="content-name-menu">
-                    <button class="content-name-btn btn-black flex-fill title-sizing color-white border-0 d-flex align-items-center">스토리</button>
-                    <!-- <button class="content-name-btn btn-black flex-fill title-sizing color-white border-0 d-flex align-items-center">아레나</button> -->
+                    <!-- <button class="content-name-btn btn-black flex-fill title-sizing color-white border-0 d-flex align-items-center">스토리</button> -->
+                    <button class="content-name-btn btn-black flex-fill title-sizing color-white border-0 d-flex align-items-center">아레나</button>
+                    <button class="content-name-btn btn-black flex-fill title-sizing color-white border-0 d-flex align-items-center">성운 쟁탈전</button>
                     <button class="content-name-btn btn-black flex-fill title-sizing color-white border-0 d-flex align-items-center">망각의 빙하</button>
                     <button class="content-name-btn btn-black flex-fill title-sizing color-white border-0 d-flex align-items-center">재앙의 경계</button>
                     <button class="content-name-btn btn-black flex-fill title-sizing color-white border-0 d-flex align-items-center">침묵의 해협</button>
@@ -122,6 +127,10 @@
 
         <!-- 컨텐츠 -->
         <form action="#" method="POST" class="">
+            <input value="편성 저장" disabled name="form_status" type="hidden" class="form-status-input"> 
+            <input value="스토리" disabled name="content_name" type="hidden" class="content-name-input"> 
+
+
             <div class="d-flex justify-content-center">
             
 
@@ -260,11 +269,11 @@
         <div class="characters-container-box">
             <ul class="characters-container d-flex justify-content-start flex-wrap">
 
-                <% for(let i=0; i<characterslist.length; i++){ %>
+                <% for(let i=0; i<data.characterslist.length; i++){ %>
                     <li class="character-list-box select-liner d-flex justify-content-center">
                         <div class="character-list" >
-                            <img src="/sources/img/characters/<%=characterslist[i].file%>" data-charname="<%=characterslist[i].name%>" data-type="<%=characterslist[i].type%>">
-                            <span class="lv_<%=characterslist[i].type%> lv">70</span>
+                            <img src="/sources/img/characters/<%=data.characterslist[i].file%>" data-charname="<%=data.characterslist[i].name%>" data-type="<%=data.characterslist[i].type%>">
+                            <span class="lv_<%=data.characterslist[i].type%> lv">70</span>
                             <span class="nogak gak">7</span>
                         </div>
                     </li>

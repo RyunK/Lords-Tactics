@@ -2,9 +2,9 @@
 
 <nav class="fw-bold bg-basicdark shadow-basic d-flex justify-content-between align-items-center">
         <div class="nav-box ">
-            <a href="#" >기사단 편성</a>
-            <a href="#">조합 공유 게시판</a>
-            <a href="#">이용안내</a>
+            <a href="/formmake" class="formmake" >기사단 편성</a>
+            <a href="/forum" class="forum">조합 공유 게시판</a>
+            <a href="#" class="notice">이용안내</a>
         </div>
         <div class=" nav-box d-flex justify-content-center align-items-center">
             <% if(nickname != ''){ %>
@@ -35,7 +35,18 @@
             break;
         case 'login':
             $('.login').addClass('nav-selected');
+            break;
+        case 'forum':
+            $('.forum').addClass('nav-selected');
+            break;
+        case 'formmake':
+            $('.formmake').addClass('nav-selected');
+            break;
+        case 'notice':
+            $('.notice').addClass('nav-selected');
+            break;
         }
+        
 
         $(".nickname").on('click', function(e) {
             $(".logout-container").slideToggle();

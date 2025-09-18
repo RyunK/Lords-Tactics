@@ -28,7 +28,7 @@ body {
     margin-left: auto;
     margin-right: auto;
 
-    min-width: 1050px;
+    min-width: 1200px;
 }
 
 p, div, h6{
@@ -82,7 +82,39 @@ nav>div> a:hover{
 }
 
 .nav-selected {
-    border-bottom: 3px solid #ffed49;
+    /* border-bottom: 3px solid #ffed49; */
+    position: relative;
+}
+
+.nav-selected::before{
+    content: "";
+    background-color: #ffed49;
+    
+    display: block;
+    width: 98%;
+    height: 3px;
+    
+    top: 52px;
+    right: 0px;
+
+    position: absolute;
+    z-index: 1;
+    filter: drop-shadow(2px 3px 2px rgba(45, 45, 45, 0.4));
+
+}
+
+.nav-selected::after{
+    content: "▼";
+    color: #ffed49;
+    
+    position: absolute;
+    z-index: 1;
+
+    top: 48px;
+    right: 45%;
+
+    filter: drop-shadow(2px 4px 2px rgba(45, 45, 45, 0.3));
+
 }
 
 
@@ -151,8 +183,16 @@ nav>div> a:hover{
     color: #ce6dfb;
 }
 
+.color-lightgray {
+    color: #efefef;
+}
+
 .shadow-basic{
     box-shadow: 2px 2px 4px 2px rgba(45, 45, 45, 0.2);
+}
+
+.shadow-filter-basic{
+    filter: drop-shadow(2px 4px 2px rgba(45, 45, 45, 0.2));
 }
 
 .top-banner {
@@ -373,6 +413,19 @@ nav>div> a:hover{
     background-color: rgb(204, 204, 205);
 }
 
+.btn-gray{
+    background-color: #666666;
+}
+
+.btn-gray:hover{
+    background-color: #757575;
+}
+
+.btn-gray:active{
+    background-color: #8c8c8c;
+}
+
+
 .own-modal{
     z-index: 10;
     position: fixed;
@@ -425,7 +478,7 @@ nav>div> a:hover{
 }
 
 .logout-container>a{
-    font-weight: 100;
+    font-weight: 400;
     font-size: 13px;
     text-decoration-line: none;
 
@@ -439,8 +492,12 @@ nav>div> a:hover{
     border-top : 1px solid white
 }
 
+.logout-container>a:hover{
+    background-color: #4d4d60;
+}
+
 .logout-container>p{
-    font-weight: 100;
+    font-weight: 400;
     font-size: 13px;
     text-decoration-line: none;
 

@@ -75,6 +75,7 @@ app.use((req, res, next) => {
 
 app.use('/login', require('./routes/login.js'));
 app.use('/mailcheck', require('./routes/mailCheck.js'));
+app.use('/forum', require('./routes/forum.js'));
 
 const getDatas = require('./routes/getDatas.js')
 
@@ -112,6 +113,8 @@ app.get('/formmake', async(req, res) => {
 
       characterslist.push({file : filelist[i], type: t, name: result[0].KOR_NAME}); 
     }
-    res.render('form_making.ejs', {characterslist : characterslist})
+    res.render('form_making.ejs', {data: {
+      nickname: getDatas.loggedInNickname(req, res),
+      characterslist : characterslist}})
   })
 }) 
