@@ -515,4 +515,8 @@ nav>div> a:hover{
     font-size: 2em;
 }
 
+.important-title {
+    font-size: 20px !important;
+}
+
 

@@ -1,8 +1,10 @@
 .forum-container{
     margin-top: 50px;
 
-    padding-left: 100px;
-    padding-right: 100px;
+    /* padding-left: 100px;
+    padding-right: 100px; */
+    padding: 0 calc(1vw * 2.5);
+
 
     margin-bottom: 50px;
 }
@@ -27,8 +29,8 @@
 .forum-category a{
     display: inline-flex;
 
-    width: 230px;
-    height: 50px;
+    width: 280px;
+    height: 70px;
 
     margin: 0px;
 
@@ -41,6 +43,9 @@
     border: 0;
     box-shadow: none;
 
+    clip-path: polygon(0 0, calc(100% - 25px) 0, 100% 25px, 100% 100%, 100% 100%, 25px 100%, 0 calc(100% - 25px), 0 0);
+    /* clip-path: polygon(25px 0%, 100% 0, 100% 100%, 0 100%, 0% 25px); */
+
     /* z-index: 2; */
 }
 
@@ -50,7 +55,7 @@
 
 .forum-category::after{
     content: "";
-    width:30px;
+    width:100px;
     height: 100%;
 
     background-color: #666666;
@@ -60,7 +65,7 @@
 
     filter:none;
 
-    /* right: 0px;  */
+    /* right: 10px;  */
 }
 
 .forum-sort-container {
@@ -87,15 +92,19 @@
 
 .searchAndPosts-container {
     width: 100%;
+    box-shadow: 4px 4px 4px 2px rgba(45, 45, 45, 0.2);
+
+
 }
 
 .search-container{
-    height: 60px;
+    height: 100px;
+    
 }
 
 .search-btn{
     height: 100%;
-    aspect-ratio: 1/1;
+    padding: 0px 30px;
 
     border: none;
 
@@ -104,34 +113,81 @@
 }
 
 .search-content{
+    height: 100%;
     clip-path: polygon(25px 0%, 100% 0, 100% 100%, 0 100%, 0% 25px);
     
-    font-size: 15px;
+    font-size: 17px;
     font-weight: 600;
+
+    padding: 20px;
 }
 
 .search-hero-container{
-    width: 200px;
+    width: 230px;
 }
 
 .search-hero-container img{
-    width: 38px;
+    width: 44px;
     margin-right: 3px;
+
+    transition: 0.1s;
     /* aspect-ratio: 1/1; */
+}
+
+.search-hero-img:hover{
+    cursor: pointer;
+    /* filter: brightness(70%); */
+}
+
+.search-hero-img:hover img{
+    /* cursor: pointer; */
+    filter: brightness(70%);
+}
+
+
+.search-hero-container span {
+    position: absolute;
+    background-color: white;
+
+    width: 20px;
+    height: 5px;
+
+    z-index: 1;
+    right: 15px;
+    bottom: 22px;
+
+    box-shadow: 2px 2px 4px 2px rgba(45, 45, 45, 0.2);
+    
+    display: none;
+}
+
+.search-hero-img:hover span{
+    display: block;
+
+}
+
+
+.search-hero-img{
+    position: relative;
 }
 
 .search-content button{
     border: none;
     /* width: 240px; */
-    height: 35px;
+    /* height: 100%; */
+
     text-align: start;
-    padding-left: 15px;
-    padding-right: 15px;
+
+    padding: 8px 15px;
+
+    /* padding-left: 15px;
+    padding-right: 15px; */
 
     margin: 0px 15px;
 }
 
 .hero-namesearch{
+    height: 100%;
     width: 220px;
 }
 
@@ -174,8 +230,8 @@
     display: none;
 
     position: absolute;
-    left: calc(50% + 127px);
-    top: -12px;
+    left: calc(50% + 113px);
+    top: -29px;
     z-index: 1;
 }
 
@@ -192,4 +248,10 @@
 
 .forum-search-result-title{
     width: 100%;
+}
+
+@media screen and (max-width: 1500px) {
+    /* .forum-container{
+        padding: 0 calc(1vw * 2.5);
+    } */
 }

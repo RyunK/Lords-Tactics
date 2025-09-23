@@ -3,7 +3,7 @@
     margin-top: 70px;
 
     max-width: 1500px;
-    min-width: 1050;
+    /* min-width: 1050; */
 
     margin-left: auto;
     margin-right: auto;
@@ -46,7 +46,7 @@
 
 .forum-preview a{
     max-width: 650px;
-    width: 550px;
+    width: 400px;
     margin: 0px 10px;
 }
 
@@ -75,8 +75,8 @@
 
     /* max-width: 100%;
     width: 550px; */
-    min-width: 550px;
-    font-size: 17px;
+    min-width: 400px;
+    font-size: 0.9rem;
     font-weight: 500;
 
 }
@@ -93,16 +93,25 @@
     width: 100%;
 }
 
+.post-preview-top-container h6{
+    font-size: 1.2em;
+}
+
+.post-preview-bottom-container h6{
+    font-size: 1.1em;
+}
+
+
 .post-preview-bottom-container {
     width: 100%;
-    padding: 20px;
+    padding: 3%;
 }
 
 .preview-paragraph {
     width: 100%;
     padding: 8px;
 
-    height: 70px;
+    height: 65px;
 
     overflow: hidden;
     padding-left: 15px;
@@ -113,7 +122,7 @@
 }
 
 .preview-contentname{
-    padding:15px 25px;
+    padding: 15px 25px;
 }
 
 

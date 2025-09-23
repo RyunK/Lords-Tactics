@@ -20,28 +20,65 @@
         <h4 class="text-center forum-title">조합 공유 게시판</h4>
 
         <div class="forum-category btn-shadow " >
-            <a class="btn-cut btn-gray color-lightgray left-btn">편셩 공유</a>
-            <a class="btn-cut btn-yellow color-white">편성 도움</a>
+            <% if (data.forumtab == "help") { %>
+                <a href="/forum/share" class="important-title btn-gray color-lightgray left-btn">편성 공유</a>
+                <a href="/forum/help" class="important-title  btn-yellow color-white">편성 도움</a>
+            <% } else { %>
+                <a href="/forum/share" class="important-title btn-blue color-white left-btn">편성 공유</a>
+                <a href="/forum/help" class="important-title btn-gray color-lightgray">편성 도움</a>
+            <% }  %>
+            
         </div>
 
-        <div class="forum-sort-container">
-            <a class="active">• 좋아요 수</a>
-            <a>• 조회수</a>
-            <a>• 최신순</a>
+        <div class="forum-sort-container color-black">
+            <% if(data.sort == "tu"){ %>
+                <a href="?sort=tu" class="active">• 좋아요 수</a>
+            <% } else { %>
+                <a href="?sort=tu" class="color-black">• 좋아요 수</a>
+            <% }  %>
+
+            <% if(data.sort == "view"){ %>
+                <a href="?sort=view" class="active">• 조회수</a>
+            <% } else { %>
+                <a href="?sort=view" class="color-black">• 조회수</a>
+            <% }  %>
+
+            <% if(data.sort == "new"){ %>
+                <a href="?sort=new" class="active">• 최신순</a>
+            <% } else { %>
+                <a href="?sort=new" class="color-black">• 최신순</a>
+            <% }  %>
+
+            <!-- <a href="?sort=view" class="color-black">• 조회수</a>
+            <a href="?sort=new" >• 최신순</a> -->
         </div>
 
 
-        <div class="searchAndPosts-container">
-            <form class="search-container d-flex">
+        <div class="searchAndPosts-container ">
+            <form action="" method="get" class="search-container d-flex">
                 <div class="search-content bg-gray flex-fill d-flex align-items-center justify-content-center">
                     <div>
                         <span>영웅 필터</span>
-                        <button type="button" class="hero-namesearch bg-lightgray color-gray">영웅 이름 검색</button>
+                        <button type="button" class="hero-namesearch bg-lightgray d-inline-flex justify-content-between align-items-center"><span> 영웅 이름 검색 </span> <i class="fa-solid fa-chevron-down"></i></button>
                         <!-- 영웅 얼굴 디스플레이 -->
                         <div class="search-hero-container d-inline-block">
-                            <img src="../sources/img/characters/dark_rosanna_guardian.png" alt="">
+                            <div class="search-hero-img d-inline-block">
+                                <img src="/sources/img/characters/dark_rosanna_guardian.png" alt="">
+                                <span></span>
+                            </div>
+                            <div class="search-hero-img d-inline-block">
+                                <img src="/sources/img/characters/grass_charlotte_priest.png" alt="">
+                                <span></span>
+                            </div>
+                            <div class="search-hero-img d-inline-block">
+                                <img src="/sources/img/characters/fire_mikhail_striker.png" alt="">
+                                <span></span>
+                            </div>
+                            
+                            <!-- <span>-</span>
                             <img src="../sources/img/characters/grass_charlotte_priest.png" alt="">
-                            <img src="../sources/img/characters/fire_mikhail_striker.png" alt="">
+                            <span>-</span>
+                            <img src="../sources/img/characters/fire_mikhail_striker.png" alt=""> -->
 
                             <input type="hidden" name="hero" value="dark_rosanna_guardian" >
                             <input type="hidden" name="hero" value="grass_charlotte_priest" >
@@ -51,257 +88,78 @@
                     <div>
                         <span>컨텐츠</span>
                         <div class="dropdown-group d-inline-block">
-                            <button type="button" class="content-search bg-lightgray d-flex justify-content-between align-items-center"><span>전체 컨텐츠</span> <i class="fa-solid fa-chevron-down"></i></button>
-                            <input type="hidden" name="content" value="all" >
+                            <button type="button" class="content-search bg-lightgray d-flex justify-content-between align-items-center">
+                                <span><%= data.content.kor_name %></span> <i class="fa-solid fa-chevron-down"></i>
+                            </button>
+                            <input type="hidden" name="content" value="<%= data.content.engname %>" >
                             
                         </div>
                     </div>
                 </div>
-                <button type="submit" class="search-btn btn-blue color-white"><i class="fa-solid fa-magnifying-glass"></i></button>
+                <button type="submit" class="search-btn btn-blue color-white"> <span class="me-2">검색</span> <i class="fa-solid fa-magnifying-glass"></i></button>
             </form>
             <div class="content-dropdown-container">
                 <ul class="content-dropdown-menu bg-lightgray ">
-                    <li>전체 컨텐츠</li>
-                    <li>스토리</li>
-                    <li>아레나</li>
-                    <li>성운 쟁탈전</li>
-                    <li>망각의 빙하</li>
-                    <li>재앙의 경계</li>
-                    <li>침묵의 해협</li>
-                    <li>시간의 균열</li>
-                    <li>오벨리스크</li>
+                    <% for(let i=0; i<data.contents_list.length; i++){ %>
+                        <li data-engname="<%= data.contents_list[i]['eng_name']%>"> <%= data.contents_list[i]['kor_name']%> </li>
+                    <% } %>
                 </ul>
             </div>
             
-            <div class="forum-posts-container">
+            <div class="forum-posts-container ">
                 <div class="forum-preview bg-basicdark ">
                     <h6 class="forum-search-result-title color-yellow"><i class="fa-solid fa-feather-pointed"></i> 검색 결과 124건</h5>
                     
-                    <div class="d-flex justify-content-evenly flex-wrap"> 
-                        <!-- 공유 게시글 하나 -->
-                        <a href="#" class="color-black flex-fill">
-                            <div class="post-preview-container shadow-basic mt-4">
-                                <div class="post-preview-top-container d-flex">
-                                    <div class="preview-form-share bg-orange color-white">
-                                        <h6>편성 도움</h6>
+                    <div class="d-flex justify-content-evenly flex-wrap">
+                        <% for(let i=0; i<11; i++){ %>
+                            <!-- 공유 게시글 하나 -->
+                            <a href="#" class="color-black flex-fill">
+                                <div class="post-preview-container shadow-basic mt-4">
+                                    <div class="post-preview-top-container d-flex">
+                                        <div class="preview-form-share bg-orange color-white">
+                                            <h6>편성 도움</h6>
+                                        </div>
+                                        <div class="preview-contentname bg-basicdark color-yellow ">
+                                            <h6>아레나</h6>
+                                        </div>
                                     </div>
-                                    <div class="preview-contentname bg-basicdark color-yellow ">
-                                        <h6>아레나</h6>
+                                    <div class="post-preview-bottom-container bg-gray">
+                                        <div class="preview-face-container d-flex">
+                                            <img src="/sources/img/characters/water_helga_striker.png" alt="">
+                                            <img src="/sources/img/characters/fire_meiling_shooter.png" alt="">
+                                            <div class="empty"><i class="fa-solid fa-plus color-gray"></i></div>
+                                            <div class="empty"><i class="fa-solid fa-plus color-gray"></i></div>
+                                            <div class="empty"><i class="fa-solid fa-plus color-gray"></i></div>
+                                            <!-- <img class="dots" src="/sources/img/ellipsis-solid-full.svg" alt=""> -->
+                                        </div>
+                                        <div class="mt-3">
+                                            <div class="bg-basicdark p-2 ps-3">
+                                                <h6><span class="color-white me-2">작성자</span>
+                                                    <span class="color-purple">여덟글자정도어때</span></h6>
+                                            </div>
+                                            <div class="preview-paragraph bg-lightgray">
+                                                <p>라떼는 말이야 얘네 둘만 있어도 아주그냥
+                                                </p>
+                                            </div>
+                                        </div>
+                                        <div class="d-flex justify-content-between mt-2">
+                                            <div>
+                                                <span>2025-11-06</span>
+                                            </div>
+                                            <div class="text-end">
+                                                <span>조회수 35</span>
+                                                <span>&nbsp;</span>
+                                                <span><i class="fa-solid fa-thumbs-up"></i> 3</span>
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
-                                <div class="post-preview-bottom-container bg-gray">
-                                    <div class="preview-face-container d-flex">
-                                        <img src="../sources/img/characters/water_helga_striker.png" alt="">
-                                        <img src="../sources/img/characters/fire_meiling_shooter.png" alt="">
-                                        <div class="empty"><i class="fa-solid fa-plus color-gray"></i></div>
-                                        <div class="empty"><i class="fa-solid fa-plus color-gray"></i></div>
-                                        <div class="empty"><i class="fa-solid fa-plus color-gray"></i></div>
-                                        <!-- <img class="dots" src="../sources/img/ellipsis-solid-full.svg" alt=""> -->
-                                    </div>
-                                    <div class="mt-3">
-                                        <div class="bg-basicdark p-2">
-                                            <h6><span class="color-white me-2">작성자</span>
-                                                <span class="color-purple">여덟글자정도어때</span></h6>
-                                        </div>
-                                        <div class="preview-paragraph bg-lightgray">
-                                            <p>라떼는 말이야 얘네 둘만 있어도 아주그냥
-                                            </p>
-                                        </div>
-                                    </div>
-                                    <div class="d-flex justify-content-between mt-3">
-                                        <div>
-                                            <span>2025-11-06</span>
-                                        </div>
-                                        <div class="text-end">
-                                            <span>조회수 35</span>
-                                            <span>&nbsp;</span>
-                                            <span><i class="fa-solid fa-thumbs-up"></i> 3</span>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </a>
-                        <!-- 공유 게시글 하나 끝 -->
+                            </a>
+                            <!-- 공유 게시글 하나 끝 -->
+                        <%  }%>
+                        
 
-                        <!-- 공유 게시글 하나 -->
-                        <a href="#" class="color-black flex-fill">
-                            <div class="post-preview-container shadow-basic mt-4">
-                                <div class="post-preview-top-container d-flex">
-                                    <div class="preview-form-share bg-orange color-white">
-                                        <h6>편성 도움</h6>
-                                    </div>
-                                    <div class="preview-contentname bg-basicdark color-yellow ">
-                                        <h6>아레나</h6>
-                                    </div>
-                                </div>
-                                <div class="post-preview-bottom-container bg-gray">
-                                    <div class="preview-face-container d-flex">
-                                        <img src="../sources/img/characters/water_helga_striker.png" alt="">
-                                        <img src="../sources/img/characters/fire_meiling_shooter.png" alt="">
-                                        <div class="empty"><i class="fa-solid fa-plus color-gray"></i></div>
-                                        <div class="empty"><i class="fa-solid fa-plus color-gray"></i></div>
-                                        <div class="empty"><i class="fa-solid fa-plus color-gray"></i></div>
-                                        <!-- <img class="dots" src="../sources/img/ellipsis-solid-full.svg" alt=""> -->
-                                    </div>
-                                    <div class="mt-3 ">
-                                        <div class="bg-basicdark p-2">
-                                            <h6><span class="color-white me-2">작성자</span>
-                                                <span class="color-purple">여덟글자정도어때</span></h6>
-                                        </div>
-                                        <div class="preview-paragraph bg-lightgray">
-                                            <p>라떼는 말이야 얘네 둘만 있어도 아주그냥
-                                            </p>
-                                        </div>
-                                    </div>
-                                    <div class="d-flex justify-content-between mt-3">
-                                        <div>
-                                            <span>2025-11-06</span>
-                                        </div>
-                                        <div class="text-end">
-                                            <span>조회수 35</span>
-                                            <span>&nbsp;</span>
-                                            <span><i class="fa-solid fa-thumbs-up"></i> 3</span>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </a>
-                        <!-- 공유 게시글 하나 끝 -->
-
-                        <!-- 공유 게시글 하나 -->
-                        <a href="#" class="color-black flex-fill">
-                            <div class="post-preview-container shadow-basic mt-4">
-                                <div class="post-preview-top-container d-flex">
-                                    <div class="preview-form-share bg-orange color-white">
-                                        <h6>편성 도움</h6>
-                                    </div>
-                                    <div class="preview-contentname bg-basicdark color-yellow ">
-                                        <h6>아레나</h6>
-                                    </div>
-                                </div>
-                                <div class="post-preview-bottom-container bg-gray">
-                                    <div class="preview-face-container d-flex">
-                                        <img src="../sources/img/characters/water_helga_striker.png" alt="">
-                                        <img src="../sources/img/characters/fire_meiling_shooter.png" alt="">
-                                        <div class="empty"><i class="fa-solid fa-plus color-gray"></i></div>
-                                        <div class="empty"><i class="fa-solid fa-plus color-gray"></i></div>
-                                        <div class="empty"><i class="fa-solid fa-plus color-gray"></i></div>
-                                        <!-- <img class="dots" src="../sources/img/ellipsis-solid-full.svg" alt=""> -->
-                                    </div>
-                                    <div class="mt-3">
-                                        <div class="bg-basicdark p-2">
-                                            <h6><span class="color-white me-2">작성자</span>
-                                                <span class="color-purple">여덟글자정도어때</span></h6>
-                                        </div>
-                                        <div class="preview-paragraph bg-lightgray">
-                                            <p>라떼는 말이야 얘네 둘만 있어도 아주그냥
-                                            </p>
-                                        </div>
-                                    </div>
-                                    <div class="d-flex justify-content-between mt-3">
-                                        <div>
-                                            <span>2025-11-06</span>
-                                        </div>
-                                        <div class="text-end">
-                                            <span>조회수 35</span>
-                                            <span>&nbsp;</span>
-                                            <span><i class="fa-solid fa-thumbs-up"></i> 3</span>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </a>
-                        <!-- 공유 게시글 하나 끝 -->
-
-                        <!-- 공유 게시글 하나 -->
-                        <a href="#" class="color-black flex-fill">
-                            <div class="post-preview-container shadow-basic mt-4">
-                                <div class="post-preview-top-container d-flex">
-                                    <div class="preview-form-share bg-orange color-white">
-                                        <h6>편성 도움</h6>
-                                    </div>
-                                    <div class="preview-contentname bg-basicdark color-yellow ">
-                                        <h6>아레나</h6>
-                                    </div>
-                                </div>
-                                <div class="post-preview-bottom-container bg-gray">
-                                    <div class="preview-face-container d-flex">
-                                        <img src="../sources/img/characters/water_helga_striker.png" alt="">
-                                        <img src="../sources/img/characters/fire_meiling_shooter.png" alt="">
-                                        <div class="empty"><i class="fa-solid fa-plus color-gray"></i></div>
-                                        <div class="empty"><i class="fa-solid fa-plus color-gray"></i></div>
-                                        <div class="empty"><i class="fa-solid fa-plus color-gray"></i></div>
-                                        <!-- <img class="dots" src="../sources/img/ellipsis-solid-full.svg" alt=""> -->
-                                    </div>
-                                    <div class="mt-3">
-                                        <div class="bg-basicdark p-2">
-                                            <h6><span class="color-white me-3">작성자</span>
-                                                <span class="color-purple">여덟글자정도어때</span></h6>
-                                        </div>
-                                        <div class="preview-paragraph bg-lightgray">
-                                            <p>라떼는 말이야 얘네 둘만 있어도 아주그냥
-                                            </p>
-                                        </div>
-                                    </div>
-                                    <div class="d-flex justify-content-between mt-3">
-                                        <div>
-                                            <span>2025-11-06</span>
-                                        </div>
-                                        <div class="text-end">
-                                            <span>조회수 35</span>
-                                            <span>&nbsp;</span>
-                                            <span><i class="fa-solid fa-thumbs-up"></i> 3</span>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </a>
-                        <!-- 공유 게시글 하나 끝 -->
-
-                        <!-- 공유 게시글 하나 -->
-                        <a href="#" class="color-black flex-fill">
-                            <div class="post-preview-container shadow-basic mt-4">
-                                <div class="post-preview-top-container d-flex">
-                                    <div class="preview-form-share bg-orange color-white">
-                                        <h6>편성 도움</h6>
-                                    </div>
-                                    <div class="preview-contentname bg-basicdark color-yellow ">
-                                        <h6>아레나</h6>
-                                    </div>
-                                </div>
-                                <div class="post-preview-bottom-container bg-gray">
-                                    <div class="preview-face-container d-flex">
-                                        <img src="../sources/img/characters/water_helga_striker.png" alt="">
-                                        <img src="../sources/img/characters/fire_meiling_shooter.png" alt="">
-                                        <div class="empty"><i class="fa-solid fa-plus color-gray"></i></div>
-                                        <div class="empty"><i class="fa-solid fa-plus color-gray"></i></div>
-                                        <div class="empty"><i class="fa-solid fa-plus color-gray"></i></div>
-                                        <!-- <img class="dots" src="../sources/img/ellipsis-solid-full.svg" alt=""> -->
-                                    </div>
-                                    <div class="mt-3">
-                                        <div class="bg-basicdark p-2">
-                                            <h6><span class="color-white me-2">작성자</span>
-                                                <span class="color-purple">여덟글자정도어때</span></h6>
-                                        </div>
-                                        <div class="preview-paragraph bg-lightgray">
-                                            <p>라떼는 말이야 얘네 둘만 있어도 아주그냥
-                                            </p>
-                                        </div>
-                                    </div>
-                                    <div class="d-flex justify-content-between mt-3">
-                                        <div>
-                                            <span>2025-11-06</span>
-                                        </div>
-                                        <div class="text-end">
-                                            <span>조회수 35</span>
-                                            <span>&nbsp;</span>
-                                            <span><i class="fa-solid fa-thumbs-up"></i> 3</span>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </a>
-                        <!-- 공유 게시글 하나 끝 -->
+                        
 
                         <!-- 공유 게시글 하나 -->
                         <a href="#" class="color-black flex-fill">
@@ -316,12 +174,12 @@
                                 </div>
                                 <div class="post-preview-bottom-container bg-gray">
                                     <div class="preview-face-container d-flex">
-                                        <img src="../sources/img/characters/dark_charlotte_warrior.png" alt="">
-                                        <img src="../sources/img/characters/dark_fram_guardian.png" alt="">
-                                        <img src="../sources/img/characters/dark_frau_striker.png" alt="">
-                                        <img src="../sources/img/characters/dark_helga_warrior.png" alt="">
-                                        <img src="../sources/img/characters/dark_johann_striker.png" alt="">
-                                        <img class="dots" src="../sources/img/ellipsis-solid-full.svg" alt="">
+                                        <img src="/sources/img/characters/dark_charlotte_warrior.png" alt="">
+                                        <img src="/sources/img/characters/dark_fram_guardian.png" alt="">
+                                        <img src="/sources/img/characters/dark_frau_striker.png" alt="">
+                                        <img src="/sources/img/characters/dark_helga_warrior.png" alt="">
+                                        <img src="/sources/img/characters/dark_johann_striker.png" alt="">
+                                        <img class="dots" src="/sources/img/ellipsis-solid-full.svg" alt="">
                                     </div>
                                     <div class="mt-3">
                                         <div class="bg-basicdark p-2">
@@ -329,11 +187,11 @@
                                                 <span class="color-purple">여덟글자정도어때</span></h6>
                                         </div>
                                         <div class="preview-paragraph bg-lightgray">
-                                            <p>레이드 꿀잼 조합 사실 레이드라고 해놓고 애들 싸우는거 구경하는 재미로 해요. 사실 강하진 않고 그냥 어쩌고저쩌고 오늘은 레이드...
+                                            <p>레이드 꿀잼 조합 사실 레이드라고 해놓고 애들 싸우는거 구경하는 재미로 해요. 사실 강하진 않고 그냥 어쩌고저쩌고 오늘은...
                                             </p>
                                         </div>
                                     </div>
-                                    <div class="d-flex justify-content-between mt-3">
+                                    <div class="d-flex justify-content-between mt-2">
                                         <div>
                                             <span>2025-11-06</span>
                                         </div>
@@ -364,15 +222,103 @@
     
     <script>
 
+        /**
+         * 드롭다운 아이콘 토글 함수
+         **/
+        function dropdownIconToggle(btn){
+            const now_i = btn.children("i");
+
+            if(now_i.attr('class') == "fa-solid fa-chevron-down"){
+                now_i.attr('class', "fa-solid fa-chevron-up");
+            } else {
+                now_i.attr('class', "fa-solid fa-chevron-down");
+            }
+        }
+
         $(".content-search").on('click', function(e){
             $(".content-dropdown-menu").slideToggle();
+            dropdownIconToggle($(this));
         })
 
         $(".content-dropdown-menu li").on('click', function(e){
             $(".content-search span").text($(this).text());
+            $(".content-search ~ input").val($(this).data('engname'));
             $(".content-dropdown-menu").slideUp();
+            dropdownIconToggle($(".content-search"));
+
         })
 
+
+        /**
+         * form 제출 시 쿼리스트링 추가 및 변경만 하기
+         **/
+        $('form').on('submit', function(e){
+            // console.log('어쩌고')
+            e.preventDefault();
+
+            const query = $(this).serializeArray();
+            console.log(query)
+
+            // let url = new URLSearchParams(window.location.href);
+            const currentparams = new URLSearchParams(window.location.search);
+            const newparams = new URLSearchParams();
+
+            newparams.append('sort', currentparams.get('sort')? currentparams.get('sort'):'tu');
+            newparams.append('hero', query[0]['value']);
+            newparams.append('hero', query[1]['value']);
+            newparams.append('hero', query[2]['value']);
+            newparams.append('content', query[3]['value']);
+
+            let newUrl = `${window.location.pathname}?${newparams}`
+            // console.log(newUrl);
+
+            // 새로운 URL로 이동하며 페이지를 새로고침합니다.
+            window.location.href = newUrl;
+        })
+
+        /**
+         * 탭 전환시 쿼리스트링 보존
+         **/
+        $(document).on('click', '.forum-category a', function(e){
+            // console.log('어쩌고')
+            e.preventDefault();
+            const currentQuery = window.location.search;
+            // console.log('currentQuery : ' + currentQuery);
+
+            const currentPath = $(this).attr('href')
+
+            let newUrl
+            if(currentQuery){
+                newUrl = currentPath  + currentQuery;
+            } else {
+                newUrl = currentPath;
+            }
+
+            // const newUrl = currentPath + '?' + queryString;
+            // console.log(newUrl);
+
+            // 새로운 URL로 이동하며 페이지를 새로고침합니다.
+            window.location.href = newUrl;
+        })
+
+
+        /**
+         * 정렬 방식 변경 시 쿼리스트링 보존
+         **/
+        $(document).on('click', '.forum-sort-container a', function(e){
+            e.preventDefault();
+
+            let url = new URL(window.location.href);
+            const params = url.searchParams;
+
+            let sortquery = $(this).attr('href');
+            sortquery = sortquery.replace('?sort=', '');
+
+            params.set('sort', sortquery);
+
+            let newUrl = `${url.pathname}?${params}`
+            window.location.href = newUrl;
+        })
     </script>
     
 
