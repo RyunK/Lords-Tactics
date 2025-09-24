@@ -187,6 +187,10 @@ nav>div> a:hover{
     color: #efefef;
 }
 
+.color-blue {
+    color: #3b8fff;
+}
+
 .shadow-basic{
     box-shadow: 2px 2px 4px 2px rgba(45, 45, 45, 0.2);
 }
@@ -423,6 +427,18 @@ nav>div> a:hover{
 
 .btn-gray:active{
     background-color: #8c8c8c;
+}
+
+.btn-red{
+    background-color: #ff4747;
+}
+
+.btn-red:hover{
+    background-color: #ff6262;
+}
+
+.btn-red:active{
+    background-color: #ff8181;
 }
 
 

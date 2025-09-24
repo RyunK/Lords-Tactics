@@ -59,7 +59,7 @@
                 <div class="search-content bg-gray flex-fill d-flex align-items-center justify-content-center">
                     <div>
                         <span>영웅 필터</span>
-                        <button type="button" class="hero-namesearch bg-lightgray d-inline-flex justify-content-between align-items-center"><span> 영웅 이름 검색 </span> <i class="fa-solid fa-chevron-down"></i></button>
+                        <button type="button" class="hero-namesearch bg-lightgray d-inline-flex justify-content-between align-items-center"><span> 영웅 검색 </span> <i class="fa-solid fa-chevron-down"></i></button>
                         <!-- 영웅 얼굴 디스플레이 -->
                         <div class="search-hero-container d-inline-block">
                             <div class="search-hero-img d-inline-block">
@@ -75,15 +75,11 @@
                                 <span></span>
                             </div>
                             
-                            <!-- <span>-</span>
-                            <img src="../sources/img/characters/grass_charlotte_priest.png" alt="">
-                            <span>-</span>
-                            <img src="../sources/img/characters/fire_mikhail_striker.png" alt=""> -->
-
                             <input type="hidden" name="hero" value="dark_rosanna_guardian" >
                             <input type="hidden" name="hero" value="grass_charlotte_priest" >
                             <input type="hidden" name="hero" value="fire_mikhail_striker" >
                         </div>
+
                     </div>
                     <div>
                         <span>컨텐츠</span>
@@ -104,7 +100,55 @@
                         <li data-engname="<%= data.contents_list[i]['eng_name']%>"> <%= data.contents_list[i]['kor_name']%> </li>
                     <% } %>
                 </ul>
+
+                <div class="hero-search-container">
+                    <div class="hero-search-top color-black d-flex color-white justify-content-center align-items-center">
+                        <div class="class-search">
+                            <span>클래스</span>
+                            <input type="text" name="hero-class" class="bg-lightgray border-0">
+                        </div>
+                        <div class="type-search">
+                            <span>속성</span>
+                            <input type="text" name="hero-type" class="bg-lightgray border-0">
+                        </div>
+                        <div class="name-search">
+                            <span>이름</span>
+                            <input type="text" name="hero-name" class="bg-lightgray border-0">
+                        </div>
+                    </div>
+
+                    <!-- 영웅 검색창 -->
+                    <div class="hero-search-bottom d-flex">
+                        <div class="selected-hero-container">
+                            <div class="selected-heros">
+                                <!-- 선택된 캐릭터들 들어가는 곳 -->
+                                
+
+                            </div>
+                            <div class="selected-btn d-flex justify-content-between">
+                                <div class="selected-num"> <span class="color-blue">0</span>/3</div>
+                                <div class="btn-shadow">
+                                    <button type="button" class="trash-btn btn-red btn-close-origin color-white"> <i class="fa-solid fa-trash-can"></i> </button>
+                                    <button type="button" class="btn-blue color-white">적용</button>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="searched-hero-container">
+                            <% for(let i=0; i<data.hero_list.length; i++){  %>
+                            <div class="searching-hero bg-gray d-flex">
+                                <input type="hidden" name="hero_id" value="<%= data.hero_list[i]['ID']%>">
+                                <img src="../sources/img/characters/<%= data.hero_list[i].eng_type %>_<%= data.hero_list[i].eng_name %>_<%= data.hero_list[i].eng_class %>.png" alt="">
+                                <img src="../sources/img/classes/<%= data.hero_list[i].eng_class %>.png" alt="" class="class-img">
+                                <img src="../sources/img/types/<%= data.hero_list[i].eng_type %>.png" alt="">
+                                <span class="flex-fill"><%= data.hero_list[i].kor_name %></span>
+                                <div class="btn-shadow btn-plus"><button type="button" class="btn-blue"></button></div>
+                            </div>
+                            <% } %>
+                       </div>
+                    </div>
+                </div>
             </div>
+            
             
             <div class="forum-posts-container ">
                 <div class="forum-preview bg-basicdark ">
@@ -187,7 +231,7 @@
                                                 <span class="color-purple">여덟글자정도어때</span></h6>
                                         </div>
                                         <div class="preview-paragraph bg-lightgray">
-                                            <p>레이드 꿀잼 조합 사실 레이드라고 해놓고 애들 싸우는거 구경하는 재미로 해요. 사실 강하진 않고 그냥 어쩌고저쩌고 오늘은...
+                                            <p>레이드 꿀잼 조합 사실 레이드라고 해놓고 애들 싸우는거 구경하는 재미로 해요. 사실 강하진 않고 그냥 어쩌고저쩌고...
                                             </p>
                                         </div>
                                     </div>
@@ -221,6 +265,55 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
     
     <script>
+
+        /**
+         * 캐릭터 선택시 호출
+         */
+
+        class HeroSelecter{
+            static selected_heroes = [];
+
+            static add(idx){
+                HeroSelecter.selected_heroes.push(idx);
+                return HeroSelecter.selected_heroes;
+            }
+            
+            static remove(idx){
+                HeroSelecter.selected_heroes = HeroSelecter.selected_heroes.filter((element) => element !== idx)
+                return HeroSelecter.selected_heroes;
+            }
+
+            static getter(){
+                return HeroSelecter.selected_heroes;
+            }
+
+            static reset(){
+                HeroSelecter.selected_heroes = [];
+                return HeroSelecter.selected_heroes;
+            }
+
+
+        }
+
+        // const selected_heroes = ( function makeSelectedHero() {
+ 
+        //     var selected_heroes = []; // 카운트 상태를 유지하기 위한 자유 변수
+            
+        //     // 클로저를 반환
+        //     return { 
+        //         add: function(idx) {
+        //             selected_heroes = selected_heroes.append(idx);
+        //             return selected_heroes;
+        //         },
+        //         remove: function(idx){
+        //             selected_heroes = selected_heroes.append(idx);
+        //             return selected_heroes;
+        //         },
+        //         get : function(idx){
+        //             return selected_heroes;
+        //         }
+        //     };
+        // })();
 
         /**
          * 드롭다운 아이콘 토글 함수
@@ -319,6 +412,171 @@
             let newUrl = `${url.pathname}?${params}`
             window.location.href = newUrl;
         })
+
+
+        /**
+         * 영웅 필터링해서 적용까지
+         **/
+        function hero_filter(){
+            let result="";
+            let hero_list = '<%- JSON.stringify(data.hero_list) %>';
+            hero_list = JSON.parse(hero_list);
+
+            let class_name = $('.class-search input').val();
+            let type_name = $('.type-search input').val();
+            let hero_name = $('.name-search input').val();
+
+
+            for(let i=0; i < hero_list.length; i++){
+                if((class_name == hero_list[i]["kor_class"] || !class_name)
+                && (type_name == hero_list[i]["kor_type"] || !type_name)
+                && ((hero_list[i]["kor_name"]).includes(hero_name) || !hero_name)){
+
+                    if(HeroSelecter.getter().includes(`${hero_list[i]['ID']}`)){
+                        result = result +
+                            `<div class="searching-hero bg-gray d-flex">
+                                <input type="hidden" name="hero_id" value="${hero_list[i]['ID']}">
+                                <img src="../sources/img/characters/${hero_list[i].eng_type}_${hero_list[i].eng_name}_${hero_list[i].eng_class}.png" alt="">
+                                <img src="../sources/img/classes/${hero_list[i].eng_class}.png" alt="" class="class-img">
+                                <img src="../sources/img/types/${hero_list[i].eng_type}.png" alt="">
+                                <span class="flex-fill">${hero_list[i].kor_name}</span>
+                                <div class="btn-shadow"><button type="button" class="btn-red"></button></div>
+                            </div>`
+                    } else{
+                        result = result +
+                            `<div class="searching-hero bg-gray d-flex">
+                                <input type="hidden" name="hero_id" value="${hero_list[i]['ID']}">
+                                <img src="../sources/img/characters/${hero_list[i].eng_type}_${hero_list[i].eng_name}_${hero_list[i].eng_class}.png" alt="">
+                                <img src="../sources/img/classes/${hero_list[i].eng_class}.png" alt="" class="class-img">
+                                <img src="../sources/img/types/${hero_list[i].eng_type}.png" alt="">
+                                <span class="flex-fill">${hero_list[i].kor_name}</span>
+                                <div class="btn-shadow btn-plus"><button type="button" class="btn-blue"></button></div>
+                            </div>`
+                    }
+
+                }
+            }
+
+
+
+
+            $(".searched-hero-container").html(result);
+        }
+        
+
+        /**
+         * input 들어올 때 필터
+         **/
+        $(".class-search input").on('propertychange change keyup paste input', function(e){
+            hero_filter();
+        })
+
+        $(".type-search input").on('propertychange change keyup paste input', function(e){
+            hero_filter();
+        })
+
+        $(".name-search input").on('propertychange change keyup paste input', function(e){
+            hero_filter();
+        })
+
+
+        /**
+         * + 누르면 들어가기
+         */
+        $(document).on('click',".searching-hero .btn-blue", function(e){
+
+            let selected_num = parseInt($(".selected-num span").text(), 10);
+            if(selected_num >= 3){
+                return;
+            }
+            $(".selected-num span").text(selected_num + 1);
+
+            $(this).removeClass('btn-blue');
+            $(this).addClass('btn-red');
+            $(this).parent().removeClass('btn-plus');
+
+            $('.selected-heros').append($(this).parent().parent().clone());
+
+            let idx = $(this).parent().siblings('input[name="hero_id"]').val();
+            
+            // console.log(HeroSelecter.getter())
+            HeroSelecter.add(idx);
+
+            // console.log(idx);
+            // console.log(HeroSelecter.getter())
+        })
+
+
+        /**
+         * - 누르면 삭제되기
+         **/
+        $(document).on('click',".selected-heros .btn-red", function(e){
+
+            let selected_num = parseInt($(".selected-num span").text(), 10);
+            if(selected_num <= 0){
+                return;
+            }
+            $(".selected-num span").text(selected_num - 1);
+
+            let idx = $(this).parent().siblings('input[name="hero_id"]').val();
+            
+            // console.log(HeroSelecter.getter())
+            HeroSelecter.remove(idx);
+
+            // console.log(idx);
+            // console.log(HeroSelecter.getter())
+
+            let btn = $(`input[value=${idx}]`).siblings('div').children('button');
+            btn.removeClass('btn-red');
+            btn.addClass('btn-blue');
+            btn.parent().addClass('btn-plus');
+
+            $(this).parent().parent().remove();
+
+
+        })
+
+        $(document).on('click',".searched-hero-container .btn-red", function(e){
+
+            let selected_num = parseInt($(".selected-num span").text(), 10);
+            if(selected_num <= 0){
+                return;
+            }
+            $(".selected-num span").text(selected_num - 1);
+
+            $(this).removeClass('btn-red');
+            $(this).addClass('btn-blue');
+            $(this).parent().addClass('btn-plus');
+
+            let idx = $(this).parent().siblings('input[name="hero_id"]').val();
+            // console.log(HeroSelecter.getter())
+            HeroSelecter.remove(idx);
+
+            // console.log(idx);
+            // console.log(HeroSelecter.getter())
+
+            $(`.selected-heros input[value=${idx}]`).parent().remove();
+        })
+
+        // 쓰레기통 리셋
+        $('.trash-btn').on("click", function(e){
+            $('.selected-heros').empty();
+
+            let selected_heros = HeroSelecter.getter();
+
+            for(let i=0; i<selected_heros.length; i++){
+                let btn = $(`input[value=${selected_heros[i]}]`).siblings('div').children('button');
+                btn.removeClass('btn-red');
+                btn.addClass('btn-blue');
+                btn.parent().addClass('btn-plus');
+            }
+
+            HeroSelecter.reset();
+
+            $(".selected-num span").text(0);
+
+        })
+
     </script>
     
 
