@@ -252,6 +252,7 @@
 
 .hero-search-container{
     display: grid;
+    /* visibility: hidden; */
     grid-template-rows: 60px 1fr;
 
     width: 850px;

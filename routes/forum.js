@@ -33,15 +33,31 @@ router.get('/:forumtab', async(req, res) => {
                 INNER JOIN HERO_TYPES  types ON types.IDX = TYPE_ID
                 ORDER BY names.KOR_NAME, types.KOR_NAME`;
     var [hero_list, fields] = await (await connection).execute(sql);
+
+    let filtered_heroes_list = req.query.hero? req.query.hero : [];
+    let filtered_heroes_list_forrender = []
+    for(let i=0; i<filtered_heroes_list.length; i++){
+        var sql = `SELECT LH.ID, types.ENG_NAME AS 'eng_type', types.KOR_NAME AS 'kor_type', 
+                names.ENG_NAME AS 'eng_name', names.KOR_NAME AS 'kor_name', 
+                classes.ENG_NAME AS 'eng_class', classes.KOR_NAME AS 'kor_class'  FROM LAUNCHED_HEROES AS LH
+                INNER JOIN HERO_NAMES  names ON names.IDX = NAME_ID
+                INNER JOIN HERO_CLASSES  classes ON classes.IDX = CLASS_ID
+                INNER JOIN HERO_TYPES  types ON types.IDX = TYPE_ID
+                WHERE LH.ID = ?`;
+        var [filtered_hero, fields] = await (await connection).execute(sql, [filtered_heroes_list[i]]);
+
+        filtered_heroes_list_forrender.push(filtered_hero[0]);
+    }
     
     
     let data = {
         nickname: getDatas.loggedInNickname(req, res),
         forumtab: req.params.forumtab,
         sort : req.query.sort? req.query.sort : 'tu',
+        filtered_heroes : filtered_heroes_list_forrender,
         content : {
              kor_name : result? result[0]['kor_name'] : '전체 컨텐츠',
-             eng_name : req.query.content
+             eng_name : req.query.content? req.query.content : 'all',
             },
         contents_list : contents_list,
         hero_list : hero_list,

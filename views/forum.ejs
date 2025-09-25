@@ -60,24 +60,15 @@
                     <div>
                         <span>영웅 필터</span>
                         <button type="button" class="hero-namesearch bg-lightgray d-inline-flex justify-content-between align-items-center"><span> 영웅 검색 </span> <i class="fa-solid fa-chevron-down"></i></button>
-                        <!-- 영웅 얼굴 디스플레이 -->
                         <div class="search-hero-container d-inline-block">
-                            <div class="search-hero-img d-inline-block">
-                                <img src="/sources/img/characters/dark_rosanna_guardian.png" alt="">
-                                <span></span>
-                            </div>
-                            <div class="search-hero-img d-inline-block">
-                                <img src="/sources/img/characters/grass_charlotte_priest.png" alt="">
-                                <span></span>
-                            </div>
-                            <div class="search-hero-img d-inline-block">
-                                <img src="/sources/img/characters/fire_mikhail_striker.png" alt="">
-                                <span></span>
-                            </div>
-                            
-                            <input type="hidden" name="hero" value="dark_rosanna_guardian" >
-                            <input type="hidden" name="hero" value="grass_charlotte_priest" >
-                            <input type="hidden" name="hero" value="fire_mikhail_striker" >
+                            <!-- 영웅 얼굴 디스플레이 -->
+                            <% for(let i=0; i<data.filtered_heroes.length; i++){ %>
+                                <div class="search-hero-img d-inline-block">
+                                    <img src="/sources/img/characters/<%= data.filtered_heroes[i].eng_type %>_<%= data.filtered_heroes[i].eng_name %>_<%= data.filtered_heroes[i].eng_class %>.png" alt="">
+                                    <span></span>
+                                    <input type="hidden" name="hero" value="<%= data.filtered_heroes[i]['ID']%>" >
+                                </div>    
+                            <% } %>
                         </div>
 
                     </div>
@@ -87,7 +78,7 @@
                             <button type="button" class="content-search bg-lightgray d-flex justify-content-between align-items-center">
                                 <span><%= data.content.kor_name %></span> <i class="fa-solid fa-chevron-down"></i>
                             </button>
-                            <input type="hidden" name="content" value="<%= data.content.engname %>" >
+                            <input type="hidden" name="content" value="<%= data.content.eng_name %>" >
                             
                         </div>
                     </div>
@@ -126,10 +117,10 @@
 
                             </div>
                             <div class="selected-btn d-flex justify-content-between">
-                                <div class="selected-num"> <span class="color-blue">0</span>/3</div>
+                                <div class="selected-num"> <span class="color-blue"><%= data.filtered_heroes.length  %></span>/3</div>
                                 <div class="btn-shadow">
                                     <button type="button" class="trash-btn btn-red btn-close-origin color-white"> <i class="fa-solid fa-trash-can"></i> </button>
-                                    <button type="button" class="btn-blue color-white">적용</button>
+                                    <button type="button" class="apply btn-blue color-white">적용</button>
                                 </div>
                             </div>
                         </div>
@@ -137,9 +128,9 @@
                             <% for(let i=0; i<data.hero_list.length; i++){  %>
                             <div class="searching-hero bg-gray d-flex">
                                 <input type="hidden" name="hero_id" value="<%= data.hero_list[i]['ID']%>">
-                                <img src="../sources/img/characters/<%= data.hero_list[i].eng_type %>_<%= data.hero_list[i].eng_name %>_<%= data.hero_list[i].eng_class %>.png" alt="">
-                                <img src="../sources/img/classes/<%= data.hero_list[i].eng_class %>.png" alt="" class="class-img">
-                                <img src="../sources/img/types/<%= data.hero_list[i].eng_type %>.png" alt="">
+                                <img src="/sources/img/characters/<%= data.hero_list[i].eng_type %>_<%= data.hero_list[i].eng_name %>_<%= data.hero_list[i].eng_class %>.png" alt="">
+                                <img src="/sources/img/classes/<%= data.hero_list[i].eng_class %>.png" alt="" class="class-img">
+                                <img src="/sources/img/types/<%= data.hero_list[i].eng_type %>.png" alt="">
                                 <span class="flex-fill"><%= data.hero_list[i].kor_name %></span>
                                 <div class="btn-shadow btn-plus"><button type="button" class="btn-blue"></button></div>
                             </div>
@@ -295,25 +286,13 @@
 
         }
 
-        // const selected_heroes = ( function makeSelectedHero() {
- 
-        //     var selected_heroes = []; // 카운트 상태를 유지하기 위한 자유 변수
+        
+
+        window.onload = function() {
+            $(".hero-search-container").hide(10);
             
-        //     // 클로저를 반환
-        //     return { 
-        //         add: function(idx) {
-        //             selected_heroes = selected_heroes.append(idx);
-        //             return selected_heroes;
-        //         },
-        //         remove: function(idx){
-        //             selected_heroes = selected_heroes.append(idx);
-        //             return selected_heroes;
-        //         },
-        //         get : function(idx){
-        //             return selected_heroes;
-        //         }
-        //     };
-        // })();
+            // 필터된 영웅들 선택하기 
+        }
 
         /**
          * 드롭다운 아이콘 토글 함수
@@ -350,17 +329,21 @@
             e.preventDefault();
 
             const query = $(this).serializeArray();
-            console.log(query)
+            // console.log(query)
 
             // let url = new URLSearchParams(window.location.href);
             const currentparams = new URLSearchParams(window.location.search);
             const newparams = new URLSearchParams();
 
             newparams.append('sort', currentparams.get('sort')? currentparams.get('sort'):'tu');
-            newparams.append('hero', query[0]['value']);
-            newparams.append('hero', query[1]['value']);
-            newparams.append('hero', query[2]['value']);
-            newparams.append('content', query[3]['value']);
+            let i=0;
+            for(; i<HeroSelecter.getter().length; i++){
+                newparams.append('hero', query[i]['value']);
+            }
+            // newparams.append('hero', query[0]['value']);
+            // newparams.append('hero', query[1]['value']);
+            // newparams.append('hero', query[2]['value']);
+            newparams.append('content', query[i]['value']);
 
             let newUrl = `${window.location.pathname}?${newparams}`
             // console.log(newUrl);
@@ -526,7 +509,7 @@
             // console.log(idx);
             // console.log(HeroSelecter.getter())
 
-            let btn = $(`input[value=${idx}]`).siblings('div').children('button');
+            let btn = $(`.searched-hero-container input[value=${idx}]`).siblings('div').children('button');
             btn.removeClass('btn-red');
             btn.addClass('btn-blue');
             btn.parent().addClass('btn-plus');
@@ -577,6 +560,58 @@
 
         })
 
+
+        $('.hero-namesearch').on("click", function(){
+            $(".hero-search-container").slideToggle(200);
+        })
+
+        function reloadHeroFilterFaces(){
+            $(".search-hero-container").empty();
+            let selected_imgs = $(".selected-heros .searching-hero img[src*=characters]");
+            let selected_idxes = HeroSelecter.getter();
+            
+            for(let i=0; i<selected_idxes.length; i++){
+                let appendig = `
+                <div class="search-hero-img d-inline-block">
+                    <img src="${selected_imgs.eq(i).attr('src')}" alt="">
+                    <span></span>
+                    <input type="hidden" name="hero" value="${selected_idxes[i]}" >
+                </div>`
+
+                $(".search-hero-container").append(appendig);
+            }
+        }
+
+        // 영웅 검색 필터 적용 버튼 
+        $('.selected-hero-container .apply').on("click", function(){
+            $(".hero-search-container").slideUp(200);
+            
+            reloadHeroFilterFaces();
+            
+        })
+
+        // 얼굴에 -버튼 누르면 해제
+        $(document).on("click", ".search-hero-img ", function(e){
+            // 그냥 - 누르고 적용한거랑 똑같이 동작하면 될듯
+
+            let selected_num = parseInt($(".selected-num span").text(), 10);
+            if(selected_num <= 0){
+                return;
+            }
+            $(".selected-num span").text(selected_num - 1);
+
+            let idx = $(this).children('input').val();
+            HeroSelecter.remove(idx);
+
+            let btn = $(`.searched-hero-container input[value=${idx}]`).siblings('div').children('button');
+            btn.removeClass('btn-red');
+            btn.addClass('btn-blue');
+            btn.parent().addClass('btn-plus');
+
+            $(`.selected-heros input[value=${idx}]`).parent().remove();
+
+            reloadHeroFilterFaces();
+        })
     </script>
     
 
