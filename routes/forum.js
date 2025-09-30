@@ -54,7 +54,8 @@ router.get('/:forumtab', async(req, res) => {
         nickname: getDatas.loggedInNickname(req, res),
         forumtab: req.params.forumtab,
         sort : req.query.sort? req.query.sort : 'tu',
-        filtered_heroes : filtered_heroes_list_forrender,
+        filtered_heroes : filtered_heroes_list,
+        filtered_heroes_forrender : filtered_heroes_list_forrender,
         content : {
              kor_name : result? result[0]['kor_name'] : '전체 컨텐츠',
              eng_name : req.query.content? req.query.content : 'all',
@@ -62,6 +63,7 @@ router.get('/:forumtab', async(req, res) => {
         contents_list : contents_list,
         hero_list : hero_list,
     }
+    // console.log("filtered_heroes : " + filtered_heroes_list)
 
     res.render('forum.ejs',  {data : data})
 
