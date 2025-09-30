@@ -201,7 +201,7 @@ $(".filter-sort-btn").on('click', function(e){
         charSortHandler(true, text);
         // console.log(text);
     }
-    else if($(this).hasClass('filter-selected')){
+    else if($(this).hasClass('filter-selected') && $(this).children("i").length > 0){
 
         if($(this).children("i").hasClass("fa-caret-down")){
             // 정렬 필터 두번째 선택 : 값이 낮은것을 위로
@@ -220,6 +220,8 @@ $(".filter-sort-btn").on('click', function(e){
     else{
         $(this).removeClass('filter-selected');
         $(this).addClass('filter-unselected');
+        charSortHandler(false, text);
+
     }
 });
 
@@ -231,8 +233,21 @@ function charSortHandler(big2small, text){
         sortByMaxLevel(big2small);
     }else if(text == "각성 순"){
         sortByGaksung(big2small);
-    }else if(text == "보유 영웅ON"){
+    }else if(text.includes("보유 영웅")){
+        haveHeroToggle();
+    }
+}
 
+/**
+ * 보유 영웅 ON/OFF
+ */
+function haveHeroToggle(){
+    let now_status = $(".have-status").text();
+
+    if(now_status == "ON"){
+        $(".have-status").text("OFF");
+    } else {
+        $(".have-status").text("ON");
     }
 }
 

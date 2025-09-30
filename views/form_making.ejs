@@ -99,36 +99,33 @@
         <div class="post-title title-size ">
             <!-- 편성 공유 / 편성 요청 / 편성 저장 / 편성 완료 -->
             <dix class="share-or-ask ">
-                <button type="button " class="share-or-ask-btn btn-purple title-sizing color-white border-0 d-flex align-items-center justify-content-center"><i class="fa-solid fa-angle-down"></i><p>&nbsp; 편성 저장</p></button>
+                <button type="button" data-engname="save" class="share-or-ask-btn btn-purple title-sizing color-white border-0 d-flex align-items-center justify-content-center"><i class="fa-solid fa-angle-down"></i><p>&nbsp; 편성 저장</p></button>
                 <div class="share-or-ask-menu">
-                    <button class="share-or-ask-btn btn-blue title-sizing color-white border-0 d-flex align-items-center justify-content-center form-stat-selected">편성 공유</button>
-                    <button class="share-or-ask-btn btn-yellow title-sizing color-white border-0 d-flex align-items-center justify-content-center">편성 요청</button>
+                    <button data-engname="share" class="share-or-ask-btn btn-blue title-sizing color-white border-0 d-flex align-items-center justify-content-center form-stat-selected">편성 공유</button>
+                    <button data-engname="request" class="share-or-ask-btn btn-yellow title-sizing color-white border-0 d-flex align-items-center justify-content-center">편성 요청</button>
                     <!-- <button class="share-or-ask-btn btn-purple title-sizing color-white border-0 d-flex align-items-center justify-content-center">편성 저장</button> -->
-                    <button class="share-or-ask-btn btn-green title-sizing color-white border-0 d-flex align-items-center justify-content-center">편성 완료</button>
+                    <button data-engname="end" class="share-or-ask-btn btn-green title-sizing color-white border-0 d-flex align-items-center justify-content-center">편성 완료</button>
                 </div>
             </dix>
 
-            <!-- 스토리 / 성운 쟁탈전 / 망각의 빙하 / 재앙의 경계 / 침묵의 해협 / 시간의 균열 / 오벨리스크 -->
              <div class="content-name flex-fill">
                 <button type="button"  class="content-name-btn btn-black  title-sizing color-yellow border-0 d-flex align-items-center"><i class="fa-solid fa-angle-down"></i><p>&nbsp; 스토리</p></button>
                 <div class="content-name-menu">
-                    <!-- <button class="content-name-btn btn-black flex-fill title-sizing color-white border-0 d-flex align-items-center">스토리</button> -->
-                    <button class="content-name-btn btn-black flex-fill title-sizing color-white border-0 d-flex align-items-center">아레나</button>
-                    <button class="content-name-btn btn-black flex-fill title-sizing color-white border-0 d-flex align-items-center">성운 쟁탈전</button>
-                    <button class="content-name-btn btn-black flex-fill title-sizing color-white border-0 d-flex align-items-center">망각의 빙하</button>
-                    <button class="content-name-btn btn-black flex-fill title-sizing color-white border-0 d-flex align-items-center">재앙의 경계</button>
-                    <button class="content-name-btn btn-black flex-fill title-sizing color-white border-0 d-flex align-items-center">침묵의 해협</button>
-                    <button class="content-name-btn btn-black flex-fill title-sizing color-white border-0 d-flex align-items-center">시간의 균열</button>
-                    <button class="content-name-btn btn-black flex-fill title-sizing color-white border-0 d-flex align-items-center">오벨리스크</button>
+                    <% for(let i=0; i<data.contents_list.length; i++){ %>
+                    <% if(data.contents_list[i]['eng_name'] == "all"){ continue; } %>
+                    <button class="content-name-btn btn-black flex-fill title-sizing color-white border-0 d-flex align-items-center" data-engname="<%= data.contents_list[i]['eng_name']%>">
+                        <%= data.contents_list[i]['kor_name']%>
+                    </button>
+                    <% } %>
                 </div>
              </div>
             <button type="button" class="bg-red btn-close-origin color-white" ><i class="fa-solid fa-xmark"></i></button>
         </div>
 
         <!-- 컨텐츠 -->
-        <form action="#" method="POST" class="">
-            <input value="편성 저장" disabled name="form_status" type="hidden" class="form-status-input"> 
-            <input value="스토리" disabled name="content_name" type="hidden" class="content-name-input"> 
+        <form action="" method="get" class="">
+            <input value="save"  name="form_status" type="hidden" class="form-status-input"> 
+            <input value="story"  name="content_name" type="hidden" class="content-name-input"> 
 
 
             <div class="d-flex justify-content-center">
@@ -145,37 +142,14 @@
                     <!-- 조합들 들어간 칸 -->
                     <div class="content-h d-flex justify-content-center align-items-center">
                         <div class="form-container d-flex flex-wrap justify-content-center c-wrapper width-5">
-                            <div class="character-5 form_spot">                  
-                                <div class="select-liner">
-                                    <div class="empty"><i class="fa-solid fa-plus color-gray"></i> </div>
-                                    <input value="" disabled name="hero" type="hidden"> 
-                                </div>
-                            </div>
+                            <% for(let i=0; i<5; i++) { %>
                             <div class="character-5 form_spot">
                                 <div class="select-liner ">
                                     <div class="empty"><i class="fa-solid fa-plus color-gray"></i> </div>
-                                    <input value="" disabled name="hero" type="hidden"> 
+                                    <input value=""  name="hero" type="hidden"> 
                                 </div>
                             </div>
-                            <div class="character-5 form_spot">
-                                <div class="select-liner">
-                                    <div class="empty"><i class="fa-solid fa-plus color-gray"></i> </div>
-                                    <input value="" disabled name="hero" type="hidden"> 
-                                </div>
-                            </div>
-                            <div class="character-5 form_spot">
-                                <div class="select-liner">
-                                    <div class="empty"><i class="fa-solid fa-plus color-gray"></i> </div>
-                                    <input value="" disabled name="hero" type="hidden"> 
-                                </div>
-                            </div>
-                            <div class="character-5 form_spot">
-                                <div class="select-liner">
-                                    <div class="empty"><i class="fa-solid fa-plus color-gray"></i> </div>
-                                    <input value="" disabled name="hero" type="hidden"> 
-                                </div>
-                            </div>
-                            
+                            <% } %>                           
                         </div>
 
                     </div>
@@ -231,8 +205,8 @@
                 <div class="char-filter-menu bg-lightgray d-flex justify-content-center align-items-top" style="visibility: hidden;">
                     <div class="filter-sort">
                         <button class="filter-btn filter-sort-btn filter-selected"><p>보유 영웅</p><p class="have-status">ON</p></button>
+                        <button class="filter-btn filter-sort-btn filter-selected"><p>영웅 순</p><i class="fa-solid fa-caret-down"></i></button>
                         <button class="filter-btn filter-sort-btn filter-unselected"><p>등급 순</p><i class="fa-solid fa-caret-down"></i></button>
-                        <button class="filter-btn filter-sort-btn filter-unselected"><p>영웅 순</p><i class="fa-solid fa-caret-down"></i></button>
                     </div>
                     <form class="filter-class">
                         <label class=" filter-class-btn-container"><input type="checkbox" class="filter-checkbox"> <div class="filter-btn filter-class-btn filter-unselected"><img src="/sources/img/classes/guardian.png"><p>가디언</p> </div></label>
@@ -289,24 +263,15 @@
     <script src="/js/formmake/filterAndSort.js"></script>
     <script src="/js/formmake/heroSetting.js"></script>
     <script>
+    
+    window.onload = function(){
+        $('.form_spot').eq(0).prepend("<div class='spot-selected-empty'></div>");
+    }
 
     /***
      * 빈 곳 클릭하면 칸 선택 해제
      ***/
     $(document).on('click', function(e){
-        if (!$(e.target).closest(".form_spot").length>0 
-        && !$(e.target).closest(".character-list").length>0
-        && !$(e.target).closest(".out").length>0
-        && !$(e.target).closest(".charSetting-btn").length>0) {
-            // console.log($(e.target).closest(".form_spot"))
-            $(".spot-selected-empty").remove();
-            $(".spot-selected-full").siblings(".out").remove();
-            $(".spot-selected-full").remove();     
-            
-            // console.log(e.target)
-        }
-
-        // 편성 상태 드롭다운 올라가게
         if(!$(e.target).closest(".share-or-ask-btn").length>0){
             $(".share-or-ask-menu").slideUp(150);
             $(".share-or-ask-menu").siblings("button").children("i").attr('class', "fa-solid fa-angle-down");

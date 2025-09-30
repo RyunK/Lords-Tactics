@@ -2,7 +2,6 @@
  * 드롭다운 세팅에 대한 코드
  */
 
-
 const originalButtons_formations = $(".share-or-ask button").map(function () {
 
     let text = $(this).text().replace(/\u00A0 /g, '');
@@ -32,7 +31,7 @@ $(".share-or-ask").on('click', ".share-or-ask-btn" , function(e){
 
         top_btn.attr('class', now_class);
         top_btn.children("p").html("&nbsp; " + $(this).text());
-        data_input.val($(this).text());
+        data_input.val($(this).data("engname"));
         renderFormStatMunu();
         
     }
@@ -72,16 +71,6 @@ function formStatToggle(){
 
 
 /** 컨텐츠 이름 드롭다운*******************************************************************/
-const originalButtons_contentsname = $(".content-name button").map(function () {
-
-    let text = $(this).text().replace(/\u00A0 /g, '');
-
-    return {
-    text: text,
-    };
-}).get();
-
-let current_selection_contentsname = "스토리";
 
 /**
  * 컨텐츠 이름 드롭다운 바꾸기
@@ -90,19 +79,12 @@ $(".content-name").on('click', ".content-name-btn" , function(e){
     const menu =  $(".content-name-menu");
     const top_btn = menu.siblings("button");
     const data_input = $("input[name='content_name']")
-
-    // const now_class = $(this).attr('class');
-
-    // console.log(originalButtons_formations)        
+      
 
     if($(this).text() != top_btn.text()){
 
-        current_selection_contentsname = $(this).text();
-
-        // top_btn.attr('class', now_class);
         top_btn.children("p").html("&nbsp; " + $(this).text())
-        data_input.val($(this).text());
-        renderContentNameMunu();
+        data_input.val($(this).data("engname"));
         
         switch($(this).text()){
             case "스토리" :
@@ -125,16 +107,6 @@ $(".content-name").on('click', ".content-name-btn" , function(e){
     contentNameToggle();
 });
 
-function renderContentNameMunu(){
-    $(".content-name-menu").empty();
-    originalButtons_contentsname.forEach(item => {
-        // console.log("item.text : " + item.text)
-        // console.log("current_selection : " + current_selection_formation)
-        if (item.text != current_selection_contentsname) {
-            $(".content-name-menu").append(`<button class="content-name-btn btn-black flex-fill title-sizing color-white border-0 d-flex align-items-center">${item.text}</button>`);
-        }
-    });
-}
 
 /**
  * 드롭다운 토글 함수

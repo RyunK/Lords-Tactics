@@ -113,8 +113,27 @@ app.get('/formmake', async(req, res) => {
 
       characterslist.push({file : filelist[i], type: t, name: result[0].KOR_NAME}); 
     }
-    res.render('form_making.ejs', {data: {
-      nickname: getDatas.loggedInNickname(req, res),
-      characterslist : characterslist}})
+
+    var sql = `SELECT * FROM CONTENTS_NAME
+                ORDER BY KOR_NAME`;
+    var [contents_list, fields] = await (await connection).execute(sql);
+
+    var sql = `SELECT LH.ID, types.ENG_NAME AS 'eng_type', types.KOR_NAME AS 'kor_type', 
+                names.ENG_NAME AS 'eng_name', names.KOR_NAME AS 'kor_name', 
+                classes.ENG_NAME AS 'eng_class', classes.KOR_NAME AS 'kor_class'  FROM LAUNCHED_HEROES AS LH
+                INNER JOIN HERO_NAMES  names ON names.IDX = NAME_ID
+                INNER JOIN HERO_CLASSES  classes ON classes.IDX = CLASS_ID
+                INNER JOIN HERO_TYPES  types ON types.IDX = TYPE_ID
+                ORDER BY names.KOR_NAME, types.KOR_NAME`;
+    var [hero_list, fields] = await (await connection).execute(sql);
+
+    let data = {
+            nickname: getDatas.loggedInNickname(req, res),
+            contents_list : contents_list,
+            hero_list : hero_list,
+            characterslist : characterslist,
+        }
+
+    res.render('form_making.ejs', {data : data})
   })
 }) 
