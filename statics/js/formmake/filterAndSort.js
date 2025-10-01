@@ -22,12 +22,12 @@ function filterByTypeNClass(type, class_names){
 
     // 타입 필터
     if(type == "" || type == []){
-        filtered_characters = original_characters
+        filtered_characters = hero_list
     }else{
-        filtered_characters = original_characters.filter(function(v){
+        filtered_characters = hero_list.filter(function(v){
             let rst = 0;
                 for(let j=0; j<type.length; j++){
-                    if(v.lv_class.includes(type[j])){
+                    if(type[j].includes(v.eng_type)){
                         rst ++;
                         break;
                     }
@@ -43,8 +43,7 @@ function filterByTypeNClass(type, class_names){
         filtered_characters = filtered_characters.filter(function(v){
             let rst = 0;
                 for(let j=0; j<class_names.length; j++){
-                    const filename = v.img_src.split("/").pop(); // dark_zhurahan_warrior.png"
-                    const class_name = filename.split(".")[0].split("_")[2];    // "warrior"
+                    const class_name = v.eng_class
                     if(class_name == class_names[j]){
                         rst ++;
                         break;
@@ -59,22 +58,38 @@ function filterByTypeNClass(type, class_names){
 
     // html 만들어서 append
     $(".characters-container").empty();
-    filtered_characters.forEach(function(v){
-        let html_str = `<li class="character-list-box select-liner d-flex justify-content-center" >
-                            <div class="character-list" >
-                                <img src="${v.img_src}">
-                                <span class="${v.lv_class}">${v.lv}</span>
-                                <span class="${v.gak_class}">${v.cho}</span>
-                            </div>
-                        </li>`
-        
-        $(".characters-container").append(html_str);
-    });
+    if( $('.login').text().includes('로그인')){
+        filtered_characters.forEach(function(v){
+            let html_str = `<li class="character-list-box select-liner d-flex justify-content-center" >
+                                <div class="character-list" >
+                                    <img src="/sources/img/characters/${v.eng_type}_${v.eng_name}_${v.eng_class}.png" 
+                                    alt="" data-id="${v["ID"]}"
+                                    onerror="this.onerror=null; this.src='/sources/img/1gak.png';">
+                                </div>
+                            </li>`
+            
+            $(".characters-container").append(html_str);
+        });
+    } else {
+        filtered_characters.forEach(function(v){
+            let html_str = `<li class="character-list-box select-liner d-flex justify-content-center" >
+                                <div class="character-list" >
+                                    <img src="/sources/img/characters/${v.eng_type}_${v.eng_name}_${v.eng_class}.png" 
+                                    alt="" data-id="${v["ID"]}"
+                                    onerror="this.onerror=null; this.src='/sources/img/1gak.png';">
+                                    <span class="lv_${v.eng_type} lv">70</span>
+                                    <span class="nogak gak">7</span>
+                                </div>
+                            </li>`
+            
+            $(".characters-container").append(html_str);
+        });
+    }
 }
 
-    /**
-     *  뱃지들 확인해서 필터 배열 생성 
-     **/
+/**
+ *  뱃지들 확인해서 필터 배열 생성 
+ **/
 function typeBadges2FilterArr() {
     
     // console.log("함수 들어옴")

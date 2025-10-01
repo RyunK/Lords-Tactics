@@ -94,25 +94,25 @@ app.get('/', (req, res) => {
 app.get('/formmake', async(req, res) => {
 
 
-  let filelist =  fs.readdir('./statics/sources/img/characters', async (err, filelist) => {
+  // let filelist =  fs.readdir('./statics/sources/img/characters', async (err, filelist) => {
     // console.log(err);
     // console.log(filelist);
 
     // console.log(filelist)
     let characterslist = [];
 
-    for(let i=0; i<filelist.length; i++){
-      let t = filelist[i].split('_')[0]
-      let name = filelist[i].split('_')[1]
+    // for(let i=0; i<filelist.length; i++){
+    //   let t = filelist[i].split('_')[0]
+    //   let name = filelist[i].split('_')[1]
 
-      var sql = `SELECT KOR_NAME FROM HERO_NAMES
-                WHERE ENG_NAME= ?`;
-      var [result, fields] = await (await connection).execute(sql, [name]);
+    //   var sql = `SELECT KOR_NAME FROM HERO_NAMES
+    //             WHERE ENG_NAME= ?`;
+    //   var [result, fields] = await (await connection).execute(sql, [name]);
 
-      // console.log(e);
+    //   // console.log(e);
 
-      characterslist.push({file : filelist[i], type: t, name: result[0].KOR_NAME}); 
-    }
+    //   characterslist.push({file : filelist[i], type: t, name: result[0].KOR_NAME}); 
+    // }
 
     var sql = `SELECT * FROM CONTENTS_NAME
                 ORDER BY KOR_NAME`;
@@ -131,9 +131,9 @@ app.get('/formmake', async(req, res) => {
             nickname: getDatas.loggedInNickname(req, res),
             contents_list : contents_list,
             hero_list : hero_list,
-            characterslist : characterslist,
+            // characterslist : characterslist,
         }
 
     res.render('form_making.ejs', {data : data})
-  })
+  // })
 }) 

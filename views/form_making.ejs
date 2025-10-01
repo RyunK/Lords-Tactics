@@ -134,9 +134,14 @@
                 <!-- 왼쪽 -->
                 <div class="left-box">
                     <!-- 작성자정보 -->
-                    <div class="d-flex mg-10px ">
+                    <div class="d-flex mg-10px " >
+                        <% if(data.nickname){ %>
                         <p class="t-pd color-white bg-basicdark">작성자</p>
-                        <p class="t-pd color-writer bg-basicdark">여덟글자정도어때</p>
+                        <p class="t-pd color-writer bg-basicdark"><%= data.nickname %></p>
+                        <% } else{ %>
+                        <p class="t-pd color-white bg-basicdark">비회원 작성중</p>
+                        <!-- <p class="t-pd color-writer bg-basicdark"> </p> -->
+                        <% } %>
                     </div>
 
                     <!-- 조합들 들어간 칸 -->
@@ -146,7 +151,7 @@
                             <div class="character-5 form_spot">
                                 <div class="select-liner ">
                                     <div class="empty"><i class="fa-solid fa-plus color-gray"></i> </div>
-                                    <input value=""  name="hero" type="hidden"> 
+                                    <input value="0"  name="hero" type="hidden"> 
                                 </div>
                             </div>
                             <% } %>                           
@@ -206,7 +211,9 @@
                     <div class="filter-sort">
                         <button class="filter-btn filter-sort-btn filter-selected"><p>보유 영웅</p><p class="have-status">ON</p></button>
                         <button class="filter-btn filter-sort-btn filter-selected"><p>영웅 순</p><i class="fa-solid fa-caret-down"></i></button>
+                        <% if(data.nickname){ %>
                         <button class="filter-btn filter-sort-btn filter-unselected"><p>등급 순</p><i class="fa-solid fa-caret-down"></i></button>
+                        <% } %>
                     </div>
                     <form class="filter-class">
                         <label class=" filter-class-btn-container"><input type="checkbox" class="filter-checkbox"> <div class="filter-btn filter-class-btn filter-unselected"><img src="/sources/img/classes/guardian.png"><p>가디언</p> </div></label>
@@ -230,9 +237,6 @@
                 </div>
                 <div class="type-boxes d-flex justify-content-start align-items-center">
                 </div>
-                
-                
-                
             </div>
             <div>
                 <button class="charSpread-top-btn btn-white btn-cut">마이페이지 편집</button>
@@ -242,13 +246,17 @@
         <!-- 캐릭터들 -->
         <div class="characters-container-box">
             <ul class="characters-container d-flex justify-content-start flex-wrap">
-
-                <% for(let i=0; i<data.characterslist.length; i++){ %>
+                <% for(let i=0; i<data.hero_list.length; i++){ %>
                     <li class="character-list-box select-liner d-flex justify-content-center">
                         <div class="character-list" >
-                            <img src="/sources/img/characters/<%=data.characterslist[i].file%>" data-charname="<%=data.characterslist[i].name%>" data-type="<%=data.characterslist[i].type%>">
-                            <span class="lv_<%=data.characterslist[i].type%> lv">70</span>
+                            <img src="/sources/img/characters/<%= data.hero_list[i].eng_type %>_<%= data.hero_list[i].eng_name %>_<%= data.hero_list[i].eng_class %>.png" 
+                            alt="" data-id="<%= data.hero_list[i]["ID"] %>"
+                            onerror="this.onerror=null; this.src='/sources/img/1gak.png';">
+
+                        <% if(data.nickname){ %>
+                            <span class="lv_<%=data.hero_list[i].eng_type%> lv">70</span>
                             <span class="nogak gak">7</span>
+                        <% } %>
                         </div>
                     </li>
                 <% } %>
@@ -257,6 +265,15 @@
         </div>
         
     </div>
+    
+    <script>
+        window.onload = function(){
+            $('.form_spot').eq(0).prepend("<div class='spot-selected-empty'></div>");
+        
+        }
+        let hero_list = '<%- JSON.stringify(data.hero_list) %>'; 
+        hero_list = JSON.parse(hero_list);
+    </script>
 
     <script src="/js/formmake/pickHeroes.js"></script>
     <script src="/js/formmake/dropdownSet.js"></script>
@@ -264,9 +281,7 @@
     <script src="/js/formmake/heroSetting.js"></script>
     <script>
     
-    window.onload = function(){
-        $('.form_spot').eq(0).prepend("<div class='spot-selected-empty'></div>");
-    }
+    
 
     /***
      * 빈 곳 클릭하면 칸 선택 해제
@@ -297,7 +312,7 @@
             $('.hero-setting').fadeOut();
         }
     });
-        
+    
     
     
     

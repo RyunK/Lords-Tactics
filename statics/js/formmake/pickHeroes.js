@@ -4,6 +4,44 @@
  */
 
 
+/**
+ * 
+ * @param {string} key 
+ * @param {string} value 
+ */
+function addHeroQueryStringParam(key, value){
+    const url = new URL(window.location.href);
+    url.searchParams.append(key, value);
+    window.history.pushState(null, '', url.toString());
+}
+
+/**
+ * 
+ * @param {string} key 
+ * @param {string} value 
+ */
+function removeHeroQueryStringParam(key, value){
+    const url = new URL(window.location.href);
+    let values = url.searchParams.getAll(key);
+    
+    console.log("key: " + key)
+    console.log("values: " + values)
+
+    url.searchParams.delete(key);
+    window.history.pushState(null, '', url.toString());
+
+    let cnt = 0;
+    for(let i=0; i<values.length; i++){
+        if(values[i] == value && cnt < 1){
+            values.splice(i, 1);
+            i--;
+            cnt++;
+        } else {
+            addHeroQueryStringParam(key, values[i])
+        }
+    }
+}
+
 
 /***
  * 칸 클릭하면 다른 칸 선택 지워지고 클릭한 칸 선택됨
@@ -26,31 +64,42 @@ $(document).on('click',".form_spot", function(e){
 })
 
 /***
- * o = 도착지 / spot-selected-full & spot-selected-empty 클래스 지정하는 div. 실제 컨텐츠는 하위의 select-liner 내부에 존재
- * t = 클릭한 캐릭터 / character-list 클래스 div
+ * @param {} o 도착지 / spot-selected-full & spot-selected-empty 클래스 지정하는 div. 실제 컨텐츠는 하위의 select-liner 내부에 존재
+ * @param {} t 클릭한 캐릭터 / character-list 클래스 div
  * 캐릭터와 함께 붙여놓는 input 태그에는 '(영어 속성) (한글 이름)' 형식으로 담겨있음.
  ***/
 function putCharInForm(o, t){
-    o.siblings(".select-liner").children().remove();
-    
+    let deleting_val = o.siblings(".select-liner").children("input").val();
+    // console.log("deleting_val = " + deleting_val)
+    removeHeroQueryStringParam("hero", deleting_val);
+
+    o.siblings(".select-liner").empty();
     t.find(".char-selected").remove();
 
     t.children().clone().appendTo(o.siblings(".select-liner"));
                                      
     o.parent().append('<img src="../sources/img/out_char.png" class="out">');
-    o.siblings(".select-liner").append(`<input value="${t.children("img").data('type')} ${t.children("img").data('charname')}" disabled name="hero" type="hidden">`)
+    o.siblings(".select-liner").append(`<input value="${t.children("img").data('id')}" name="hero" type="hidden">`)
+    addHeroQueryStringParam("hero", t.children("img").data('id'));
+    // console.log("adding_val = " + t.children("img").data('id'))
+
     o.attr('class', 'spot-selected-full');
 
     t.prepend("<div class='char-selected'></div>");
+
+
 }
 
 /***
  * o = 도착지 / 실질 컨텐츠 들어있는 select-liner
  ***/
 function removeCharInForm(o){
+    let deleting_val = o.children("input").val();
+    removeHeroQueryStringParam("hero", deleting_val);
+    
     o.children().remove();
     o.append(`<div class="empty"><i class="fa-solid fa-plus color-gray"></i> </div>
-              <input type="hidden" value="" disabled name="hero">`);
+              <input type="hidden" value="0"  name="hero">`);
 }
 
 $(document).on('click',".character-list", function(e){
@@ -81,6 +130,8 @@ $(document).on('click',".character-list", function(e){
         // 원래 이 칸에 있던 이미지를 거기로 보내고 이 칸에 클릭한 캐릭터를 채운다.
         if(existed_img.length>0 && clicked_img.attr('src') !== selected_img.attr('src')){
             let ex_parent = existed_img.parent()
+            let deleting_val = ex_parent.children("input").val();
+            removeHeroQueryStringParam("hero", deleting_val);
             ex_parent.children().remove();
             selected_img.parent().children().appendTo(ex_parent);
 

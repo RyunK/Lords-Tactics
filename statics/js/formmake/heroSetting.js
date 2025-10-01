@@ -2,15 +2,21 @@
  * 영웅 설정에 관한 js
  */
 
+
+
 /**
  * 영웅 설정 버튼 클릭
  */
 $('.charSetting-btn').on('click', function(e){
-    // $(".spot-selected-full").siblings(".out").remove();
-    // $(".spot-selected-full").remove();
     let selected = $(".spot-selected-full").siblings(".select-liner");
 
-    console.log(selected);
+    console.log('<%=data.nickname%>');
+    if( $('.login').text().includes('로그인')){
+        alert('로그인이 필요한 기능입니다.');
+        return;
+    }
+
+    // console.log(selected);
     if(selected.length > 0){
         $('.own-modal').fadeIn();
         $('.hero-setting').fadeIn();
