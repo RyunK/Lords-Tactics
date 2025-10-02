@@ -45,6 +45,7 @@ router.get('/', async(req, res) => {
             nickname: getDatas.loggedInNickname(req, res),
             contents_list : contents_list,
             hero_list : hero_list,
+            form_herolist : form_herolist,
             form_herolist_forrender : form_herolist_forrender,
             now_content : now_content[0],
         }

@@ -149,12 +149,33 @@
 
                     <!-- 조합들 들어간 칸 -->
                     <div class="content-h d-flex justify-content-center align-items-center">
+                        <% if(data.now_content.num_of_heroes == "5"){ %>
                         <div class="form-container d-flex flex-wrap justify-content-center c-wrapper width-5">
-
-                            <% if(data.form_herolist_forrender){ %>
-                                <% let i = 0 %>
-                                <% for(; i<data.form_herolist_forrender.length; i++) { %>
-                                <div class="character-5 form_spot">
+                            <% let i = 0 %>
+                            <% for(; i<data.form_herolist_forrender.length && i<5; i++) { %>
+                            <div class="character-5 form_spot">
+                                <div class="select-liner ">
+                                    <img src="/sources/img/characters/<%= data.form_herolist_forrender[i].eng_type %>_<%= data.form_herolist_forrender[i].eng_name %>_<%= data.form_herolist_forrender[i].eng_class %>.png" alt="" 
+                                    data-id="<%= data.form_herolist_forrender[i]["ID"] %>" 
+                                    onerror="this.onerror=null; this.src='/sources/img/1gak.png';">
+                                    <input value="<%= data.form_herolist_forrender[i]["ID"] %>"  name="hero" type="hidden"> 
+                                </div>
+                            </div>
+                            <% } %>
+                            <% for(; i<5; i++) { %>
+                            <div class="character-5 form_spot">
+                                <div class="select-liner ">
+                                    <div class="empty"><i class="fa-solid fa-plus color-gray"></i> </div>
+                                    <input value="0"  name="hero" type="hidden"> 
+                                </div>
+                            </div>
+                            <% } %>
+                        </div>
+                        <% } else if(data.now_content.num_of_heroes == "7"){%>
+                        <div class="form-container d-flex flex-wrap justify-content-center c-wrapper width-7">
+                            <% let i = 0 %>
+                            <% for(; i<data.form_herolist_forrender.length && i<3; i++) { %>
+                                <div class="character-7 form_spot">
                                     <div class="select-liner ">
                                         <img src="/sources/img/characters/<%= data.form_herolist_forrender[i].eng_type %>_<%= data.form_herolist_forrender[i].eng_name %>_<%= data.form_herolist_forrender[i].eng_class %>.png" alt="" 
                                         data-id="<%= data.form_herolist_forrender[i]["ID"] %>" 
@@ -162,28 +183,81 @@
                                         <input value="<%= data.form_herolist_forrender[i]["ID"] %>"  name="hero" type="hidden"> 
                                     </div>
                                 </div>
-                                <% } %>
-                                <% for(; i<5; i++) { %>
-                                <div class="character-5 form_spot">
-                                    <div class="select-liner ">
-                                        <div class="empty"><i class="fa-solid fa-plus color-gray"></i> </div>
-                                        <input value="0"  name="hero" type="hidden"> 
-                                    </div>
-                                </div>
-                                <% } %>
-                            <% } else{ %>
-                                <% for(let i=0; i<5; i++) { %>
-                                <div class="character-5 form_spot">
-                                    <div class="select-liner ">
-                                        <div class="empty"><i class="fa-solid fa-plus color-gray"></i> </div>
-                                        <input value="0"  name="hero" type="hidden"> 
-                                    </div>
-                                </div>
-                                <% } %>         
                             <% } %>
+                            <% for(;  i<3; i++) { %>
+                            <div class="character-7 form_spot">
+                                <div class="select-liner ">
+                                    <div class="empty"><i class="fa-solid fa-plus color-gray"></i> </div>
+                                    <input value="0"  name="hero" type="hidden"> 
+                                </div>
+                            </div>
+                            <% } %>
+                            <div class="change-line"></div>
+                            <% for(; i<data.form_herolist_forrender.length && i<7; i++) { %>
+                                <div class="character-7 form_spot">
+                                    <div class="select-liner ">
+                                        <img src="/sources/img/characters/<%= data.form_herolist_forrender[i].eng_type %>_<%= data.form_herolist_forrender[i].eng_name %>_<%= data.form_herolist_forrender[i].eng_class %>.png" alt="" 
+                                        data-id="<%= data.form_herolist_forrender[i]["ID"] %>" 
+                                        onerror="this.onerror=null; this.src='/sources/img/1gak.png';">
+                                        <input value="<%= data.form_herolist_forrender[i]["ID"] %>"  name="hero" type="hidden"> 
+                                    </div>
+                                </div>
+                            <% } %>
+                            <% for(;  i<7; i++) { %>
+                            <div class="character-7 form_spot">
+                                <div class="select-liner ">
+                                    <div class="empty"><i class="fa-solid fa-plus color-gray"></i> </div>
+                                    <input value="0"  name="hero" type="hidden"> 
+                                </div>
+                            </div>
+                            <% } %>
+                            
+                        </div>
+                        <% } else { %>
+                        <div class="form-container d-flex flex-wrap justify-content-center c-wrapper width-10">
+                            <div class="party-name">첫 번째 파티</div>
+                            <% let i = 0 %>
+                            <% for(; i<data.form_herolist_forrender.length && i<5; i++) { %>
+                                <div class="character-10 form_spot">
+                                    <div class="select-liner ">
+                                        <img src="/sources/img/characters/<%= data.form_herolist_forrender[i].eng_type %>_<%= data.form_herolist_forrender[i].eng_name %>_<%= data.form_herolist_forrender[i].eng_class %>.png" alt="" 
+                                        data-id="<%= data.form_herolist_forrender[i]["ID"] %>" 
+                                        onerror="this.onerror=null; this.src='/sources/img/1gak.png';">
+                                        <input value="<%= data.form_herolist_forrender[i]["ID"] %>"  name="hero" type="hidden"> 
+                                    </div>
+                                </div>
+                            <% } %>
+                            <% for(; i<5; i++) { %>
+                            <div class="character-10 form_spot">
+                                <div class="select-liner ">
+                                    <div class="empty"><i class="fa-solid fa-plus color-gray"></i> </div>
+                                    <input value="0"  name="hero" type="hidden"> 
+                                </div>
+                            </div>
+                            <% } %>
+                            <div class="party-name">두 번째 파티</div>
+                            <% for(; i<data.form_herolist_forrender.length && i<10; i++) { %>
+                                <div class="character-10 form_spot">
+                                    <div class="select-liner ">
+                                        <img src="/sources/img/characters/<%= data.form_herolist_forrender[i].eng_type %>_<%= data.form_herolist_forrender[i].eng_name %>_<%= data.form_herolist_forrender[i].eng_class %>.png" alt="" 
+                                        data-id="<%= data.form_herolist_forrender[i]["ID"] %>" 
+                                        onerror="this.onerror=null; this.src='/sources/img/1gak.png';">
+                                        <input value="<%= data.form_herolist_forrender[i]["ID"] %>"  name="hero" type="hidden"> 
+                                    </div>
+                                </div>
+                            <% } %>
+                            <% for(; i<10; i++) { %>
+                            <div class="character-10 form_spot">
+                                <div class="select-liner ">
+                                    <div class="empty"><i class="fa-solid fa-plus color-gray"></i> </div>
+                                    <input value="0"  name="hero" type="hidden"> 
+                                </div>
+                            </div>
+                            <% } %>
+                        </div>
+                        <% } %>
 
                                               
-                        </div>
 
                     </div>
 
