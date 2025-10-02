@@ -283,9 +283,7 @@
                 <div class="right-box right-box-mg">
                     <h6 class="explain-title ">작성자 한마디</h6>
                     <div class="bg-white content-h mt-1 color-gray">
-                        <form>
-                            <textarea class="memo explain-content" placeholder="한마디를 적어주세요" ></textarea>
-                        </form>
+                        <textarea name="writer_memo" class="memo explain-content" placeholder="한마디를 적어주세요" ><%= data.writer_memo %></textarea>
                     </div>
 
                     <!-- 좋아요 / 댓글 펼치기 -->
@@ -421,7 +419,14 @@
         }
     });
     
-    
+    /**
+     * 한마디 변경 시 링크에 삽입
+     */
+    $(".explain-content").on("propertychange change keyup paste input", function() {
+        const url = new URL(window.location.href);
+        url.searchParams.set("writer_memo", $(this).val());
+        window.history.pushState(null, '', url.toString());
+    })
     
     
     </script>

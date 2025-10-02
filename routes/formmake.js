@@ -48,6 +48,7 @@ router.get('/', async(req, res) => {
             form_herolist : form_herolist,
             form_herolist_forrender : form_herolist_forrender,
             now_content : now_content[0],
+            writer_memo : req.query.writer_memo? req.query.writer_memo : "", 
         }
 
     res.render('form_making.ejs', {data : data})
