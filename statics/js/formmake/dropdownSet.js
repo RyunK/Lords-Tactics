@@ -1,7 +1,10 @@
+
+
+
+
 /**
  * 드롭다운 세팅에 대한 코드
  */
-
 const originalButtons_formations = $(".share-or-ask button").map(function () {
 
     let text = $(this).text().replace(/\u00A0 /g, '');
@@ -73,6 +76,19 @@ function formStatToggle(){
 /** 컨텐츠 이름 드롭다운*******************************************************************/
 
 /**
+ * 컨텐츠 이름을 쿼리에 추가
+ * @param {string} key 
+ * @param {string} value 
+ */
+function setContentQueryStringParam(value){
+    const url = new URL(window.location.href);
+    url.searchParams.set("content", value);
+    window.history.pushState(null, '', url.toString());
+}
+
+
+
+/**
  * 컨텐츠 이름 드롭다운 바꾸기
  **/
 $(".content-name").on('click', ".content-name-btn" , function(e){
@@ -85,23 +101,18 @@ $(".content-name").on('click', ".content-name-btn" , function(e){
 
         top_btn.children("p").html("&nbsp; " + $(this).text())
         data_input.val($(this).data("engname"));
-        
-        switch($(this).text()){
-            case "스토리" :
-            case "아레나" :
-            case "침묵의 해협" :
-            case "오벨리스크" :
-                turnFormto5();
-                break;
-            case "망각의 빙하" :
-                turnFormto7()
-                break;
-            case "성운 쟁탈전" :
-            case "재앙의 경계" :
-            case "시간의 균열" :
-                turnFormto10();
-                break;
-        }
+        setContentQueryStringParam($(this).data("engname"));
+
+        // console.log($(this).text())
+        let content_name = $(this).text();
+        if(content_name.includes("스토리") ||  content_name.includes("아레나")
+        || content_name.includes("침묵의 해협") || content_name.includes("오벨리스크")){
+            turnFormto5();
+        } else if (content_name.includes("망각의 빙하")){
+            turnFormto7();
+        } else {
+            turnFormto10();
+        }     
     }
 
     contentNameToggle();
@@ -133,9 +144,13 @@ function turnFormto10(){
     if(container.hasClass('width-10')){
         return;
     }  else if(container.hasClass('width-7')){
-        $(".char-selected").remove();
-        container.empty();
-        for(let i=0; i<5; i++){
+
+        $(".change-line").remove();
+        container.prepend(`<div class="party-name">첫 번째 파티</div>`);
+        $(".form_spot").eq(4).after(`<div class="party-name">두 번째 파티</div>`);
+
+        // container.empty();
+        for(let i=0; i<3; i++){
         container.append(`<div class="character-5 form_spot">
                             <div class="select-liner ">
                                 <div class="empty"><i class="fa-solid fa-plus color-gray"></i> </div>
@@ -144,20 +159,21 @@ function turnFormto10(){
                             </div>`)
         }
     } else {
+        $(".change-line").remove();
+        container.prepend(`<div class="party-name">첫 번째 파티</div>`);
+        $(".form_spot").eq(4).after(`<div class="party-name">두 번째 파티</div>`);
+
+        for(let i=0; i<5; i++){
+            container.append(`<div class="character-5 form_spot">
+                                <div class="select-liner ">
+                                    <div class="empty"><i class="fa-solid fa-plus color-gray"></i> </div>
+                                    <input value="0"  name="hero" type="hidden">
+                                </div>
+                                </div>`)
+        }
 
     }
-    container.prepend(`<div class="party-name">첫 번째 파티</div>`);
-    container.append(`<div class="party-name">두 번째 파티</div>`);
-
-    for(let i=0; i<5; i++){
-        container.append(`<div class="character-5 form_spot">
-                            <div class="select-liner ">
-                                <div class="empty"><i class="fa-solid fa-plus color-gray"></i> </div>
-                                <input value="0"  name="hero" type="hidden">
-                            </div>
-                            </div>`)
-    }
-
+    
     container.removeClass('width-5');
     container.removeClass('width-7');
     container.addClass('width-10');
@@ -167,6 +183,13 @@ function turnFormto10(){
     form_spot.removeClass('character-7');
     form_spot.addClass('character-10');
 
+    let spot = $('.form_spot').eq(0)
+    if(spot.find(".empty").length>0 && $(".spot-selected-empty").length <= 0 && $(".spot-selected-full").length <= 0){
+        spot.prepend("<div class='spot-selected-empty'></div>");
+    }else if($(".spot-selected-empty").length <= 0 && $(".spot-selected-full").length <= 0) {
+        spot.prepend('<img src="../sources/img/out_char.png" class="out">');
+        spot.prepend("<div class='spot-selected-full'></div>");                   
+    }
     
 }
 
@@ -176,22 +199,28 @@ function turnFormto5(){
     if(container.hasClass('width-5')){
         return;
     } else if(container.hasClass('width-7')){
-        $(".char-selected").remove();
-        container.empty();
-        for(let i=0; i<5; i++){
-        container.append(`<div class="character-5 form_spot">
-                            <div class="select-liner ">
-                                <div class="empty"><i class="fa-solid fa-plus color-gray"></i> </div>
-                                <input value="0"  name="hero" type="hidden">
-                            </div>
-                            </div>`)
+
+        for(let i=0; i<2; i++){
+            if($(".character-7").eq(6-i).find('.empty').length <= 0){
+                let src = $(".character-7").eq(6-i).find('img').attr('src');
+                $(`.character-list img[src="${src}"]`).siblings('.char-selected').remove();
+                removeCharInForm($(".character-7").eq(6-i).find('img').parent())
+            }   
+            $(".character-7").eq(6-i).remove();
         }
+
+        const form_spot = $(".form_spot");
+        form_spot.removeClass('character-7');
+        form_spot.addClass('character-5');
+        $(".change-line").remove();
+
     } else {
         $(".party-name").remove();
         for(let i=0; i<5; i++){
             if($(".character-10").eq(9-i).find('.empty').length <= 0){
                 let src = $(".character-10").eq(9-i).find('img').attr('src');
                 $(`.character-list img[src="${src}"]`).siblings('.char-selected').remove();
+                removeCharInForm($(".character-10").eq(9-i).find('img').parent())
             }   
             $(".character-10").eq(9-i).remove();
         }
@@ -207,7 +236,13 @@ function turnFormto5(){
     container.addClass('width-5');
 
     
-
+    let spot = $('.form_spot').eq(0)
+    if(spot.find(".empty").length>0 && $(".spot-selected-empty").length <= 0 && $(".spot-selected-full").length <= 0){
+        spot.prepend("<div class='spot-selected-empty'></div>");
+    }else if($(".spot-selected-empty").length <= 0 && $(".spot-selected-full").length <= 0) {
+        spot.prepend('<img src="../sources/img/out_char.png" class="out">');
+        spot.prepend("<div class='spot-selected-full'></div>");                   
+    }
     
 }
 
@@ -216,27 +251,28 @@ function turnFormto7(){
 
     if(container.hasClass('width-7')){
         return;
-    }
-    
-    $(".char-selected").remove();
-    
-    container.empty();
-    for(let i=0; i<3; i++){
-        container.append(`<div class="character-7 form_spot">
-                            <div class="select-liner ">
-                                <div class="empty"><i class="fa-solid fa-plus color-gray"></i> </div>
-                                <input value="0"  name="hero" type="hidden"> 
-                            </div>
-                            </div>`)
-    }
-    container.append(`<div class="change-line"></div>`)
-    for(let i=0; i<4; i++){
-        container.append(`<div class="character-7 form_spot">
-                            <div class="select-liner ">
-                                <div class="empty"><i class="fa-solid fa-plus color-gray"></i> </div>
-                                <input value="0"  name="hero" type="hidden">
-                            </div>
-                            </div>`)
+    } else if (container.hasClass('width-5')){
+        for(let i=0; i<2; i++){
+            container.append(`<div class="character-7 form_spot">
+                                <div class="select-liner ">
+                                    <div class="empty"><i class="fa-solid fa-plus color-gray"></i> </div>
+                                    <input value="0"  name="hero" type="hidden"> 
+                                </div>
+                                </div>`)
+        }
+        $(".form_spot").eq(2).after(`<div class="change-line"></div>`);
+
+    } else {
+        $(".party-name").remove();
+        for(let i=0; i<3; i++){
+            if($(".character-10").eq(9-i).find('.empty').length <= 0){
+                let src = $(".character-10").eq(9-i).find('img').attr('src');
+                $(`.character-list img[src="${src}"]`).siblings('.char-selected').remove();
+                removeCharInForm($(".character-10").eq(9-i).find('img').parent())
+            }   
+            $(".character-10").eq(9-i).remove();
+        }
+        $(".form_spot").eq(2).after(`<div class="change-line"></div>`);
     }
 
     container.removeClass('width-10');
@@ -248,5 +284,13 @@ function turnFormto7(){
     form_spot.removeClass('character-5');
     form_spot.addClass('character-7');
 
+
+    let spot = $('.form_spot').eq(0)
+    if(spot.find(".empty").length>0 && $(".spot-selected-empty").length <= 0 && $(".spot-selected-full").length <= 0){
+        spot.prepend("<div class='spot-selected-empty'></div>");
+    }else if($(".spot-selected-empty").length <= 0 && $(".spot-selected-full").length <= 0) {
+        spot.prepend('<img src="../sources/img/out_char.png" class="out">');
+        spot.prepend("<div class='spot-selected-full'></div>");                   
+    }
     
 }

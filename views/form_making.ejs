@@ -109,11 +109,14 @@
             </dix>
 
              <div class="content-name flex-fill">
-                <button type="button"  class="content-name-btn btn-black  title-sizing color-yellow border-0 d-flex align-items-center"><i class="fa-solid fa-angle-down"></i><p>&nbsp; 스토리</p></button>
+                <button type="button"  class="content-name-btn btn-black  title-sizing color-yellow border-0 d-flex align-items-center">
+                    <i class="fa-solid fa-angle-down"></i><p>&nbsp; <%= data.now_content.kor_name %></p>
+                </button>
                 <div class="content-name-menu">
                     <% for(let i=0; i<data.contents_list.length; i++){ %>
                     <% if(data.contents_list[i]['eng_name'] == "all"){ continue; } %>
-                    <button class="content-name-btn btn-black flex-fill title-sizing color-white border-0 d-flex align-items-center" data-engname="<%= data.contents_list[i]['eng_name']%>">
+                    <button class="content-name-btn btn-black flex-fill title-sizing color-white border-0 d-flex align-items-center" 
+                    data-engname="<%= data.contents_list[i]['eng_name']%>">
                         <%= data.contents_list[i]['kor_name']%>
                     </button>
                     <% } %>
@@ -125,7 +128,7 @@
         <!-- 컨텐츠 -->
         <form action="" method="get" class="">
             <input value="save"  name="form_status" type="hidden" class="form-status-input"> 
-            <input value="story"  name="content_name" type="hidden" class="content-name-input"> 
+            <input value="<%= data.now_content.eng_name %>"  name="content_name" type="hidden" class="content-name-input"> 
 
 
             <div class="d-flex justify-content-center">
@@ -147,14 +150,39 @@
                     <!-- 조합들 들어간 칸 -->
                     <div class="content-h d-flex justify-content-center align-items-center">
                         <div class="form-container d-flex flex-wrap justify-content-center c-wrapper width-5">
-                            <% for(let i=0; i<5; i++) { %>
-                            <div class="character-5 form_spot">
-                                <div class="select-liner ">
-                                    <div class="empty"><i class="fa-solid fa-plus color-gray"></i> </div>
-                                    <input value="0"  name="hero" type="hidden"> 
+
+                            <% if(data.form_herolist_forrender){ %>
+                                <% let i = 0 %>
+                                <% for(; i<data.form_herolist_forrender.length; i++) { %>
+                                <div class="character-5 form_spot">
+                                    <div class="select-liner ">
+                                        <img src="/sources/img/characters/<%= data.form_herolist_forrender[i].eng_type %>_<%= data.form_herolist_forrender[i].eng_name %>_<%= data.form_herolist_forrender[i].eng_class %>.png" alt="" 
+                                        data-id="<%= data.form_herolist_forrender[i]["ID"] %>" 
+                                        onerror="this.onerror=null; this.src='/sources/img/1gak.png';">
+                                        <input value="<%= data.form_herolist_forrender[i]["ID"] %>"  name="hero" type="hidden"> 
+                                    </div>
                                 </div>
-                            </div>
-                            <% } %>                           
+                                <% } %>
+                                <% for(; i<5; i++) { %>
+                                <div class="character-5 form_spot">
+                                    <div class="select-liner ">
+                                        <div class="empty"><i class="fa-solid fa-plus color-gray"></i> </div>
+                                        <input value="0"  name="hero" type="hidden"> 
+                                    </div>
+                                </div>
+                                <% } %>
+                            <% } else{ %>
+                                <% for(let i=0; i<5; i++) { %>
+                                <div class="character-5 form_spot">
+                                    <div class="select-liner ">
+                                        <div class="empty"><i class="fa-solid fa-plus color-gray"></i> </div>
+                                        <input value="0"  name="hero" type="hidden"> 
+                                    </div>
+                                </div>
+                                <% } %>         
+                            <% } %>
+
+                                              
                         </div>
 
                     </div>
@@ -268,7 +296,13 @@
     
     <script>
         window.onload = function(){
-            $('.form_spot').eq(0).prepend("<div class='spot-selected-empty'></div>");
+            let spot = $('.form_spot').eq(0)
+            if(spot.find(".empty").length>0){
+                spot.prepend("<div class='spot-selected-empty'></div>");
+            }else {
+                spot.prepend('<img src="../sources/img/out_char.png" class="out">');
+                spot.prepend("<div class='spot-selected-full'></div>");                   
+            }
         
         }
         let hero_list = '<%- JSON.stringify(data.hero_list) %>'; 

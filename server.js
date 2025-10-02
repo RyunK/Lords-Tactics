@@ -76,6 +76,7 @@ app.use((req, res, next) => {
 app.use('/login', require('./routes/login.js'));
 app.use('/mailcheck', require('./routes/mailCheck.js'));
 app.use('/forum', require('./routes/forum.js'));
+app.use('/formmake', require('./routes/formmake.js'));
 
 const getDatas = require('./routes/getDatas.js')
 
@@ -90,50 +91,3 @@ app.get('/', (req, res) => {
   }
 })
 
-
-app.get('/formmake', async(req, res) => {
-
-
-  // let filelist =  fs.readdir('./statics/sources/img/characters', async (err, filelist) => {
-    // console.log(err);
-    // console.log(filelist);
-
-    // console.log(filelist)
-    let characterslist = [];
-
-    // for(let i=0; i<filelist.length; i++){
-    //   let t = filelist[i].split('_')[0]
-    //   let name = filelist[i].split('_')[1]
-
-    //   var sql = `SELECT KOR_NAME FROM HERO_NAMES
-    //             WHERE ENG_NAME= ?`;
-    //   var [result, fields] = await (await connection).execute(sql, [name]);
-
-    //   // console.log(e);
-
-    //   characterslist.push({file : filelist[i], type: t, name: result[0].KOR_NAME}); 
-    // }
-
-    var sql = `SELECT * FROM CONTENTS_NAME
-                ORDER BY KOR_NAME`;
-    var [contents_list, fields] = await (await connection).execute(sql);
-
-    var sql = `SELECT LH.ID, types.ENG_NAME AS 'eng_type', types.KOR_NAME AS 'kor_type', 
-                names.ENG_NAME AS 'eng_name', names.KOR_NAME AS 'kor_name', 
-                classes.ENG_NAME AS 'eng_class', classes.KOR_NAME AS 'kor_class'  FROM LAUNCHED_HEROES AS LH
-                INNER JOIN HERO_NAMES  names ON names.IDX = NAME_ID
-                INNER JOIN HERO_CLASSES  classes ON classes.IDX = CLASS_ID
-                INNER JOIN HERO_TYPES  types ON types.IDX = TYPE_ID
-                ORDER BY names.KOR_NAME, types.KOR_NAME`;
-    var [hero_list, fields] = await (await connection).execute(sql);
-
-    let data = {
-            nickname: getDatas.loggedInNickname(req, res),
-            contents_list : contents_list,
-            hero_list : hero_list,
-            // characterslist : characterslist,
-        }
-
-    res.render('form_making.ejs', {data : data})
-  // })
-}) 
