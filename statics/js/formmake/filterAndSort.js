@@ -1,15 +1,62 @@
 // 필터 및 정렬 ************************************************
+
+// 정렬 후 필터 눌렀을 때 정렬 안 망가지게 해야함
+
+/**
+ * 리스트를 전달하면 html로 만들어줌
+ * @param {Array} list 필터 혹은 정렬한 리스트
+ * @returns {String} 삽입하면 되는 html 요소 문자열
+ */
+function renderCharacterList(list){
+    let ret = "";
+    if($('.login').text().includes('로그인')){
+        list.forEach(function(v){
+            let html_str = `<li class="character-list-box select-liner d-flex justify-content-center" >
+                                <div class="character-list" >
+                                    <img src="/sources/img/characters/${v.eng_type}_${v.eng_name}_${v.eng_class}.png" 
+                                    alt="" data-id="${v["ID"]}" data-korname="${v.kor_name}"
+                                    onerror="this.onerror=null; this.src='/sources/img/characters/Chr_Error.png';">
+                                </div>
+                            </li>`
             
-// 원본 캐릭터 데이터
-const original_characters = $(".characters-container li").map(function () {
-    return {
-        img_src: $(this).children('div').children('img').attr('src'),
-        lv_class: $(this).children('div').children('.lv').attr('class'),
-        lv : $(this).children('div').children('.lv').text(),
-        gak_class: $(this).children('div').children('.gak').attr('class'),
-        cho: $(this).children('div').children('.gak').text()
-    };
-}).get()
+            ret += html_str;
+        });
+    } else {
+        list.forEach(function(v){
+            let html_str = `<li class="character-list-box select-liner d-flex justify-content-center" >
+                                <div class="character-list" >
+                                    <img src="/sources/img/characters/${v.eng_type}_${v.eng_name}_${v.eng_class}.png" 
+                                    alt="" data-id="${v["ID"]}" data-korname="${v.kor_name}
+                                    onerror="this.onerror=null; this.src='/sources/img/characters/Chr_Error.png';">
+                                    <span class="lv_${v.eng_type} lv">70</span>
+                                    <span class="nogak gak">7</span>
+                                </div>
+                            </li>`
+            
+            ret += html_str;
+        });
+    }
+
+    return ret;
+}
+
+/**
+ * 현재 정렬된 리스트 상태
+ */
+class CurrentChr{
+    static current_herolist = hero_list;
+
+    static setter(list){
+        CurrentChr.current_herolist = list;
+        return CurrentChr.current_herolist;
+    }
+
+    static getter(){
+        return CurrentChr.current_herolist;
+    }
+
+}
+
 
 /**
  * 필터
@@ -22,9 +69,9 @@ function filterByTypeNClass(type, class_names){
 
     // 타입 필터
     if(type == "" || type == []){
-        filtered_characters = hero_list
+        filtered_characters = CurrentChr.getter()
     }else{
-        filtered_characters = hero_list.filter(function(v){
+        filtered_characters = CurrentChr.getter().filter(function(v){
             let rst = 0;
                 for(let j=0; j<type.length; j++){
                     if(type[j].includes(v.eng_type)){
@@ -55,67 +102,33 @@ function filterByTypeNClass(type, class_names){
     }
 
     
-
     // html 만들어서 append
     $(".characters-container").empty();
-    if( $('.login').text().includes('로그인')){
-        filtered_characters.forEach(function(v){
-            let html_str = `<li class="character-list-box select-liner d-flex justify-content-center" >
-                                <div class="character-list" >
-                                    <img src="/sources/img/characters/${v.eng_type}_${v.eng_name}_${v.eng_class}.png" 
-                                    alt="" data-id="${v["ID"]}"
-                                    onerror="this.onerror=null; this.src='/sources/img/1gak.png';">
-                                </div>
-                            </li>`
-            
-            $(".characters-container").append(html_str);
-        });
-    } else {
-        filtered_characters.forEach(function(v){
-            let html_str = `<li class="character-list-box select-liner d-flex justify-content-center" >
-                                <div class="character-list" >
-                                    <img src="/sources/img/characters/${v.eng_type}_${v.eng_name}_${v.eng_class}.png" 
-                                    alt="" data-id="${v["ID"]}"
-                                    onerror="this.onerror=null; this.src='/sources/img/1gak.png';">
-                                    <span class="lv_${v.eng_type} lv">70</span>
-                                    <span class="nogak gak">7</span>
-                                </div>
-                            </li>`
-            
-            $(".characters-container").append(html_str);
-        });
-    }
+    $(".characters-container").append(renderCharacterList(filtered_characters));
+
 }
 
 /**
  *  뱃지들 확인해서 필터 배열 생성 
  **/
 function typeBadges2FilterArr() {
-    
-    // console.log("함수 들어옴")
     let filter_arr = $('.type-boxes img').map(function(i){
         let src = $(this).attr('src');
         // console.log(src)
         const filename = src.split("/").pop(); // "dark_2.png"
         return filename.split("_")[0];    // "dark"
     }).get();
-
-    // console.log("filter_arr : " + filter_arr);
     
     return filter_arr;
 }
 
 function classBadges2FilterArr() {
-    
-    // console.log("함수 들어옴")
     let filter_arr = $('.class-boxes img').map(function(i){
         let src = $(this).attr('src');
         // console.log(src)
         const filename = src.split("/").pop(); // "commander.png"
         return filename.split(".")[0];    // "commander"
     }).get();
-
-    // console.log("filter_arr : " + filter_arr);
     
     return filter_arr;
 }
@@ -126,33 +139,32 @@ function classBadges2FilterArr() {
 $(".filter-checkbox").change(function(e){
     let btn = $(this).siblings("div");
     
-    // 안에 있는 아이콘을 
+    // 안에 있는 아이콘
     let token_src = btn.children("img").attr('src'); 
-    // console.log('token_src : ' + token_src);
 
     if(btn.hasClass('filter-class-btn')){
 
-        if($(this).is(":checked")){
+        if($(this).is(":checked")){ // 필터 적용
             // 클래스용 박스에 넣어서
             let html_str = `<div class="checked-filter-box class-box"><img src="${token_src}"></div>`
             // 클래스용 박스 컨테이너에 append
             $('.class-boxes').append(html_str);
             filterByTypeNClass(typeBadges2FilterArr(), classBadges2FilterArr());
-        } else{
+        } else{ // 필터 해제
             // 이미지 소스가 동일한 애 찾아서 박스 삭제
             $(`.class-boxes div img[src="${token_src}"]`).parent().remove();
             filterByTypeNClass(typeBadges2FilterArr(), classBadges2FilterArr());
         }
         
     } else if (btn.hasClass('filter-type-btn')){
-        if($(this).is(":checked")){
+        if($(this).is(":checked")){ // 필터 적용
             // 타입용 박스에 넣어서
             let html_str = `<div class="checked-filter-box type-box"><img src="${token_src}"></div>`
             // 타입용 박스 컨테이너에 append
             $('.type-boxes').append(html_str);
             
             filterByTypeNClass(typeBadges2FilterArr(), classBadges2FilterArr());
-        } else{
+        } else{ // 필터 해제
             // 이미지 소스가 동일한 애 찾아서 박스 삭제
             $(`.type-boxes div img[src="${token_src}"]`).parent().remove();
             filterByTypeNClass(typeBadges2FilterArr(), classBadges2FilterArr());
@@ -224,12 +236,13 @@ $(".filter-sort-btn").on('click', function(e){
             $(this).children("i").addClass('fa-caret-up');
 
             charSortHandler(false, text);
-        } else {
+        } else { // 정렬 끄기
             $(this).children("i").removeClass('fa-caret-up');
             $(this).children("i").addClass('fa-caret-down');
 
             $(this).removeClass('filter-selected');
             $(this).addClass('filter-unselected');
+            charSortHandler(true, text);
         }                
     }
     else{
@@ -244,8 +257,8 @@ $(".filter-sort-btn").on('click', function(e){
  * 정렬 핸들러
  */
 function charSortHandler(big2small, text){
-    if(text == "초월 순"){
-        sortByMaxLevel(big2small);
+    if(text.includes("영웅 순")){
+        sortByHeroName(big2small);
     }else if(text == "각성 순"){
         sortByGaksung(big2small);
     }else if(text.includes("보유 영웅")){
@@ -266,24 +279,22 @@ function haveHeroToggle(){
     }
 }
 
-
 /**
- * 초월 순 
+ * 영웅 이름 순서 정렬 
+ * @param {boolean} big2small true : 내림차순 / false : 오름차순
  */
-function sortByMaxLevel(big2small){
-    if(big2small){ // 초월이 높은 게 위로
-        $(".characters-container").html(
-            $(".characters-container li").sort(function(a, b){
-                return Number($(b).children('div').children('.gak').text()) - Number($(a).children('div').children('.gak').text())
+function sortByHeroName(big2small){
+    let sorted_list = hero_list.slice();
+    if(big2small){ // 가나다 순
+        sorted_list = hero_list;
+    } else { // 역순 
+        sorted_list.sort(function(a, b){
+                return b.kor_name.localeCompare(a.kor_name);
             })
-        )
-    }else{
-        $(".characters-container").html(
-            $(".characters-container li").sort(function(a, b){
-                return Number($(a).children('div').children('.gak').text()) - Number($(b).children('div').children('.gak').text())
-            })
-        )
     }
+    $(".characters-container").html(renderCharacterList(sorted_list));
+    CurrentChr.setter(sorted_list);
+    filterByTypeNClass(typeBadges2FilterArr(), classBadges2FilterArr());
 }
 
 /**

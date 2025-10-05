@@ -309,7 +309,9 @@
                 <!-- 정렬, 필터 버튼 누르면 나옴 -->
                 <div class="char-filter-menu bg-lightgray d-flex justify-content-center align-items-top" style="visibility: hidden;">
                     <div class="filter-sort">
+                        <% if(data.nickname){ %>
                         <button class="filter-btn filter-sort-btn filter-selected"><p>보유 영웅</p><p class="have-status">ON</p></button>
+                        <% } %>
                         <button class="filter-btn filter-sort-btn filter-selected"><p>영웅 순</p><i class="fa-solid fa-caret-down"></i></button>
                         <% if(data.nickname){ %>
                         <button class="filter-btn filter-sort-btn filter-unselected"><p>등급 순</p><i class="fa-solid fa-caret-down"></i></button>
@@ -350,8 +352,8 @@
                     <li class="character-list-box select-liner d-flex justify-content-center">
                         <div class="character-list" >
                             <img src="/sources/img/characters/<%= data.hero_list[i].eng_type %>_<%= data.hero_list[i].eng_name %>_<%= data.hero_list[i].eng_class %>.png" 
-                            alt="" data-id="<%= data.hero_list[i]["ID"] %>"
-                            onerror="this.onerror=null; this.src='/sources/img/1gak.png';">
+                            alt="" data-id="<%= data.hero_list[i]["ID"] %>" data-korname="<%= data.hero_list[i].kor_name %>"
+                            onerror="this.onerror=null; this.src='/sources/img/characters/Chr_Error.png';">
 
                         <% if(data.nickname){ %>
                             <span class="lv_<%=data.hero_list[i].eng_type%> lv">70</span>
