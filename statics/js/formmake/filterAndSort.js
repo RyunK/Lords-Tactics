@@ -259,8 +259,8 @@ $(".filter-sort-btn").on('click', function(e){
 function charSortHandler(big2small, text){
     if(text.includes("영웅 순")){
         sortByHeroName(big2small);
-    }else if(text == "각성 순"){
-        sortByGaksung(big2small);
+    }else if(text.includes("등급 순")){
+        sortByGrade(big2small);
     }else if(text.includes("보유 영웅")){
         haveHeroToggle();
     }
@@ -295,39 +295,6 @@ function sortByHeroName(big2small){
     $(".characters-container").html(renderCharacterList(sorted_list));
     CurrentChr.setter(sorted_list);
     filterByTypeNClass(typeBadges2FilterArr(), classBadges2FilterArr());
-}
-
-/**
- * 각성 순 
- */
-function sortByGaksung(big2small){
-    if(big2small){ // 각성이 높은 게 위로
-        $(".characters-container").html(
-            $(".characters-container li").sort(function(a, b){
-                return gak2num($(b).children('div').children('.gak').attr('class'))-gak2num($(a).children('div').children('.gak').attr('class'))
-            })
-        )
-    }else{
-        $(".characters-container").html(
-            $(".characters-container li").sort(function(a, b){
-            return gak2num($(a).children('div').children('.gak').attr('class'))-gak2num($(b).children('div').children('.gak').attr('class'))
-            })
-        )
-    }
-}
-
-function gak2num(class_names){
-    const gak_to_num = {
-        "no" : 0,
-        "one" : 1,
-        "two" : 2,
-    }
-
-    class_names = class_names.replaceAll(/[gak ]/g, '');
-
-    class_names = gak_to_num[class_names];
-    // console.log(class_names);
-    return class_names;
 }
 
 

@@ -159,6 +159,11 @@
                                     data-id="<%= data.form_herolist_forrender[i]["ID"] %>" 
                                     onerror="this.onerror=null; this.src='/sources/img/1gak.png';">
                                     <input value="<%= data.form_herolist_forrender[i]["ID"] %>"  name="hero" type="hidden"> 
+                                
+                                    <% if(data.nickname){ %>
+                                        <span class="lv_<%=data.hero_list[i].eng_type%> lv">70</span>
+                                        <span class="nogak gak">7</span>
+                                    <% } %>
                                 </div>
                             </div>
                             <% } %>
@@ -181,6 +186,12 @@
                                         data-id="<%= data.form_herolist_forrender[i]["ID"] %>" 
                                         onerror="this.onerror=null; this.src='/sources/img/1gak.png';">
                                         <input value="<%= data.form_herolist_forrender[i]["ID"] %>"  name="hero" type="hidden"> 
+                                        
+                                        <% if(data.nickname){ %>
+                                        <span class="lv_<%=data.hero_list[i].eng_type%> lv">70</span>
+                                        <span class="nogak gak">7</span>
+                                        <% } %>
+                                        
                                     </div>
                                 </div>
                             <% } %>
@@ -200,6 +211,10 @@
                                         data-id="<%= data.form_herolist_forrender[i]["ID"] %>" 
                                         onerror="this.onerror=null; this.src='/sources/img/1gak.png';">
                                         <input value="<%= data.form_herolist_forrender[i]["ID"] %>"  name="hero" type="hidden"> 
+                                        <% if(data.nickname){ %>
+                                        <span class="lv_<%=data.hero_list[i].eng_type%> lv">70</span>
+                                        <span class="nogak gak">7</span>
+                                        <% } %>
                                     </div>
                                 </div>
                             <% } %>
@@ -224,6 +239,10 @@
                                         data-id="<%= data.form_herolist_forrender[i]["ID"] %>" 
                                         onerror="this.onerror=null; this.src='/sources/img/1gak.png';">
                                         <input value="<%= data.form_herolist_forrender[i]["ID"] %>"  name="hero" type="hidden"> 
+                                        <% if(data.nickname){ %>
+                                        <span class="lv_<%=data.hero_list[i].eng_type%> lv">70</span>
+                                        <span class="nogak gak">7</span>
+                                        <% } %>
                                     </div>
                                 </div>
                             <% } %>
@@ -243,6 +262,10 @@
                                         data-id="<%= data.form_herolist_forrender[i]["ID"] %>" 
                                         onerror="this.onerror=null; this.src='/sources/img/1gak.png';">
                                         <input value="<%= data.form_herolist_forrender[i]["ID"] %>"  name="hero" type="hidden"> 
+                                        <% if(data.nickname){ %>
+                                        <span class="lv_<%=data.hero_list[i].eng_type%> lv">70</span>
+                                        <span class="nogak gak">7</span>
+                                        <% } %>
                                     </div>
                                 </div>
                             <% } %>
@@ -355,10 +378,10 @@
                             alt="" data-id="<%= data.hero_list[i]["ID"] %>" data-korname="<%= data.hero_list[i].kor_name %>"
                             onerror="this.onerror=null; this.src='/sources/img/characters/Chr_Error.png';">
 
-                        <% if(data.nickname){ %>
+                            <% if(data.nickname){ %>
                             <span class="lv_<%=data.hero_list[i].eng_type%> lv">70</span>
                             <span class="nogak gak">7</span>
-                        <% } %>
+                            <% } %>
                         </div>
                     </li>
                 <% } %>
@@ -381,6 +404,7 @@
         }
         let hero_list = '<%- JSON.stringify(data.hero_list) %>'; 
         hero_list = JSON.parse(hero_list);
+
     </script>
 
     <script src="/js/formmake/pickHeroes.js"></script>
@@ -389,6 +413,7 @@
     <script src="/js/formmake/heroSetting.js"></script>
     <script>
     
+    checkExsistCharacters();
     
 
     /***
