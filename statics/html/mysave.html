@@ -1,0 +1,377 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>로드의 전술서:마이페이지</title>
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <link href="../css/main.css" rel="stylesheet">
+    <link href="../css/form_card.css" rel="stylesheet">
+    <link href="../css/forum.css" rel="stylesheet">
+    <link href="../css/mypage.css" rel="stylesheet">
+</head>
+<body>
+
+    <nav class="bg-basicdark shadow-basic d-flex justify-content-between align-items-center">
+        <div class="nav-box ">
+            <a href="#" >기사단 편성</a>
+            <a href="#">조합 공유 게시판</a>
+            <a href="#">마이페이지</a>
+            <a href="#">이용안내</a>
+        </div>
+        <div class="nav-box">
+            <a href="#" class="color-white nav-selected">로그인/회원가입</a>
+            <a href="#" class="color-white">검색 &nbsp; <i class="fa-solid fa-magnifying-glass" style="font-size: 15px"></i></a>
+        </div>
+    </nav>
+    
+    <div class="top-banner shadow-basic">
+        <img src="../sources/img/banners/basic.jpg" alt="" width="100%">
+        <!-- 공지사항 배너 -->
+        <div class="notice-banner bg-white d-flex align-items-center">
+            <div class="ms-5 ps-3 pe-3">공지사항</div>
+            <div class="ms-5 ">2025.03.04 신규 캐릭터 뫄뫄 추가 완료</div>
+        </div>
+    </div>
+
+    <!-- 왼쪽 리모콘(?) -->
+    <div class="mypage-remote shadow-filter-basic">
+        <a class="formmake-link btn-cut btn-blue border-0">
+            <h6 class="color-white w-100">편성 만들러 가기</h6>
+        </a>
+        <div class="tab">
+            <div class="name-container bg-basicdark">
+                <h6 class="color-lightgray">닉네임 | <span class="color-purple">여덟글자정도어때</span></h6>
+            </div>
+            <ul class="left-blue-bar width-100">
+                <li class="border-top-0 active"><a href="#" class=" color-black">저장한 편성</a></li>
+                <li><a href="#" class="color-black">내 영웅설정</a></li>
+                <li class="border-bottom-0"><a href="#" class="color-black">개인정보 편집</a></li>
+            </ul>
+        </div>
+        <div class="filter-container">
+            <div>
+                <h6>편성 상태</h6>
+                <button class="color-black">편성 공유 <i class="fa-solid fa-chevron-down"></i></button>
+            </div>
+            <div>
+                <h6>영웅 필터</h6>
+                <button class="color-gray">영웅 이름 검색 <i class="fa-solid fa-magnifying-glass color-black"></i></button>
+                <div class="search-hero-container d-inline-block mt-3">
+                    <img src="../sources/img/characters/dark_rosanna_guardian.png" alt="">
+                    <img src="../sources/img/characters/grass_charlotte_priest.png" alt="">
+                    <img src="../sources/img/characters/fire_mikhail_striker.png" alt="">
+
+                    <input type="hidden" name="hero" value="dark_rosanna_guardian" >
+                    <input type="hidden" name="hero" value="grass_charlotte_priest" >
+                    <input type="hidden" name="hero" value="fire_mikhail_striker" >
+                </div>
+            </div>
+            <div>
+                <h6>컨텐츠</h6>
+                <button class="color-black">전체 컨텐츠 <i class="fa-solid fa-chevron-down"></i></button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 오른쪽 컨텐츠 -->
+    <div class="mypage-maincontents shadow-basic" >
+        <div class="forum-posts-container">
+            <div class="forum-preview bg-basicdark">
+                <!-- <h6 class="forum-search-result-title color-yellow"><i class="fa-solid fa-feather-pointed"></i> 검색 결과 124건</h5> -->
+                <ul class=" d-flex justify-content-end color-white mb-0 me-1">
+                    <li> <a  href="#" class="active">• 좋아요 수</a></li>
+                    <li> <a href="#">• 조회수</a></li>
+                    <li><a href="#">• 최신순</a></li>
+                    <li><a href="#">• 날짜순</a></li>
+                </ul>
+                <div class="d-flex justify-content-evenly flex-wrap"> 
+                    <!-- 공유 게시글 하나 -->
+                    <a href="#" class="color-black flex-fill">
+                        <div class="post-preview-container shadow-basic mt-4">
+                            <div class="post-preview-top-container d-flex">
+                                <div class="preview-form-share bg-orange color-white">
+                                    <h6>편성 도움</h6>
+                                </div>
+                                <div class="preview-contentname bg-basicdark color-yellow ">
+                                    <h6>아레나</h6>
+                                </div>
+                            </div>
+                            <div class="post-preview-bottom-container bg-gray">
+                                <div class="preview-face-container d-flex">
+                                    <img src="../sources/img/characters/water_helga_striker.png" alt="">
+                                    <img src="../sources/img/characters/fire_meiling_shooter.png" alt="">
+                                    <div class="empty"><i class="fa-solid fa-plus color-gray"></i></div>
+                                    <div class="empty"><i class="fa-solid fa-plus color-gray"></i></div>
+                                    <div class="empty"><i class="fa-solid fa-plus color-gray"></i></div>
+                                    <!-- <img class="dots" src="../sources/img/ellipsis-solid-full.svg" alt=""> -->
+                                </div>
+                                <div class="mt-3">
+                                    <div class="bg-basicdark p-2">
+                                        <h6><span class="color-white me-2">작성자</span>
+                                            <span class="color-purple">여덟글자정도어때</span></h6>
+                                    </div>
+                                    <div class="preview-paragraph bg-lightgray">
+                                        <p>라떼는 말이야 얘네 둘만 있어도 아주그냥
+                                        </p>
+                                    </div>
+                                </div>
+                                <div class="d-flex justify-content-between mt-3">
+                                    <div>
+                                        <span>2025-11-06</span>
+                                    </div>
+                                    <div class="text-end">
+                                        <span>조회수 35</span>
+                                        <span>&nbsp;</span>
+                                        <span><i class="fa-solid fa-thumbs-up"></i> 3</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </a>
+                    <!-- 공유 게시글 하나 끝 -->
+
+                    <!-- 공유 게시글 하나 -->
+                    <a href="#" class="color-black flex-fill">
+                        <div class="post-preview-container shadow-basic mt-4">
+                            <div class="post-preview-top-container d-flex">
+                                <div class="preview-form-share bg-orange color-white">
+                                    <h6>편성 도움</h6>
+                                </div>
+                                <div class="preview-contentname bg-basicdark color-yellow ">
+                                    <h6>아레나</h6>
+                                </div>
+                            </div>
+                            <div class="post-preview-bottom-container bg-gray">
+                                <div class="preview-face-container d-flex">
+                                    <img src="../sources/img/characters/water_helga_striker.png" alt="">
+                                    <img src="../sources/img/characters/fire_meiling_shooter.png" alt="">
+                                    <div class="empty"><i class="fa-solid fa-plus color-gray"></i></div>
+                                    <div class="empty"><i class="fa-solid fa-plus color-gray"></i></div>
+                                    <div class="empty"><i class="fa-solid fa-plus color-gray"></i></div>
+                                    <!-- <img class="dots" src="../sources/img/ellipsis-solid-full.svg" alt=""> -->
+                                </div>
+                                <div class="mt-3 ">
+                                    <div class="bg-basicdark p-2">
+                                        <h6><span class="color-white me-2">작성자</span>
+                                            <span class="color-purple">여덟글자정도어때</span></h6>
+                                    </div>
+                                    <div class="preview-paragraph bg-lightgray">
+                                        <p>라떼는 말이야 얘네 둘만 있어도 아주그냥
+                                        </p>
+                                    </div>
+                                </div>
+                                <div class="d-flex justify-content-between mt-3">
+                                    <div>
+                                        <span>2025-11-06</span>
+                                    </div>
+                                    <div class="text-end">
+                                        <span>조회수 35</span>
+                                        <span>&nbsp;</span>
+                                        <span><i class="fa-solid fa-thumbs-up"></i> 3</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </a>
+                    <!-- 공유 게시글 하나 끝 -->
+
+                    <!-- 공유 게시글 하나 -->
+                    <a href="#" class="color-black flex-fill">
+                        <div class="post-preview-container shadow-basic mt-4">
+                            <div class="post-preview-top-container d-flex">
+                                <div class="preview-form-share bg-orange color-white">
+                                    <h6>편성 도움</h6>
+                                </div>
+                                <div class="preview-contentname bg-basicdark color-yellow ">
+                                    <h6>아레나</h6>
+                                </div>
+                            </div>
+                            <div class="post-preview-bottom-container bg-gray">
+                                <div class="preview-face-container d-flex">
+                                    <img src="../sources/img/characters/water_helga_striker.png" alt="">
+                                    <img src="../sources/img/characters/fire_meiling_shooter.png" alt="">
+                                    <div class="empty"><i class="fa-solid fa-plus color-gray"></i></div>
+                                    <div class="empty"><i class="fa-solid fa-plus color-gray"></i></div>
+                                    <div class="empty"><i class="fa-solid fa-plus color-gray"></i></div>
+                                    <!-- <img class="dots" src="../sources/img/ellipsis-solid-full.svg" alt=""> -->
+                                </div>
+                                <div class="mt-3">
+                                    <div class="bg-basicdark p-2">
+                                        <h6><span class="color-white me-2">작성자</span>
+                                            <span class="color-purple">여덟글자정도어때</span></h6>
+                                    </div>
+                                    <div class="preview-paragraph bg-lightgray">
+                                        <p>라떼는 말이야 얘네 둘만 있어도 아주그냥
+                                        </p>
+                                    </div>
+                                </div>
+                                <div class="d-flex justify-content-between mt-3">
+                                    <div>
+                                        <span>2025-11-06</span>
+                                    </div>
+                                    <div class="text-end">
+                                        <span>조회수 35</span>
+                                        <span>&nbsp;</span>
+                                        <span><i class="fa-solid fa-thumbs-up"></i> 3</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </a>
+                    <!-- 공유 게시글 하나 끝 -->
+
+                    <!-- 공유 게시글 하나 -->
+                    <a href="#" class="color-black flex-fill">
+                        <div class="post-preview-container shadow-basic mt-4">
+                            <div class="post-preview-top-container d-flex">
+                                <div class="preview-form-share bg-orange color-white">
+                                    <h6>편성 도움</h6>
+                                </div>
+                                <div class="preview-contentname bg-basicdark color-yellow ">
+                                    <h6>아레나</h6>
+                                </div>
+                            </div>
+                            <div class="post-preview-bottom-container bg-gray">
+                                <div class="preview-face-container d-flex">
+                                    <img src="../sources/img/characters/water_helga_striker.png" alt="">
+                                    <img src="../sources/img/characters/fire_meiling_shooter.png" alt="">
+                                    <div class="empty"><i class="fa-solid fa-plus color-gray"></i></div>
+                                    <div class="empty"><i class="fa-solid fa-plus color-gray"></i></div>
+                                    <div class="empty"><i class="fa-solid fa-plus color-gray"></i></div>
+                                    <!-- <img class="dots" src="../sources/img/ellipsis-solid-full.svg" alt=""> -->
+                                </div>
+                                <div class="mt-3">
+                                    <div class="bg-basicdark p-2">
+                                        <h6><span class="color-white me-3">작성자</span>
+                                            <span class="color-purple">여덟글자정도어때</span></h6>
+                                    </div>
+                                    <div class="preview-paragraph bg-lightgray">
+                                        <p>라떼는 말이야 얘네 둘만 있어도 아주그냥
+                                        </p>
+                                    </div>
+                                </div>
+                                <div class="d-flex justify-content-between mt-2">
+                                    <div>
+                                        <span>2025-11-06</span>
+                                    </div>
+                                    <div class="text-end">
+                                        <span>조회수 35</span>
+                                        <span>&nbsp;</span>
+                                        <span><i class="fa-solid fa-thumbs-up"></i> 3</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </a>
+                    <!-- 공유 게시글 하나 끝 -->
+
+                    <!-- 공유 게시글 하나 -->
+                    <a href="#" class="color-black flex-fill">
+                        <div class="post-preview-container shadow-basic mt-4">
+                            <div class="post-preview-top-container d-flex">
+                                <div class="preview-form-share bg-orange color-white">
+                                    <h6>편성 도움</h6>
+                                </div>
+                                <div class="preview-contentname bg-basicdark color-yellow ">
+                                    <h6>아레나</h6>
+                                </div>
+                            </div>
+                            <div class="post-preview-bottom-container bg-gray">
+                                <div class="preview-face-container d-flex">
+                                    <img src="../sources/img/characters/water_helga_striker.png" alt="">
+                                    <img src="../sources/img/characters/fire_meiling_shooter.png" alt="">
+                                    <div class="empty"><i class="fa-solid fa-plus color-gray"></i></div>
+                                    <div class="empty"><i class="fa-solid fa-plus color-gray"></i></div>
+                                    <div class="empty"><i class="fa-solid fa-plus color-gray"></i></div>
+                                    <!-- <img class="dots" src="../sources/img/ellipsis-solid-full.svg" alt=""> -->
+                                </div>
+                                <div class="mt-3">
+                                    <div class="bg-basicdark p-2">
+                                        <h6><span class="color-white me-2">작성자</span>
+                                            <span class="color-purple">여덟글자정도어때</span></h6>
+                                    </div>
+                                    <div class="preview-paragraph bg-lightgray">
+                                        <p>라떼는 말이야 얘네 둘만 있어도 아주그냥
+                                        </p>
+                                    </div>
+                                </div>
+                                <div class="d-flex justify-content-between mt-3">
+                                    <div>
+                                        <span>2025-11-06</span>
+                                    </div>
+                                    <div class="text-end">
+                                        <span>조회수 35</span>
+                                        <span>&nbsp;</span>
+                                        <span><i class="fa-solid fa-thumbs-up"></i> 3</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </a>
+                    <!-- 공유 게시글 하나 끝 -->
+
+                    <!-- 공유 게시글 하나 -->
+                    <a href="#" class="color-black flex-fill">
+                        <div class="post-preview-container shadow-basic mt-4">
+                            <div class="post-preview-top-container d-flex">
+                                <div class="preview-form-share bg-orange color-white">
+                                    <h6>편성 도움</h6>
+                                </div>
+                                <div class="preview-contentname bg-basicdark color-yellow ">
+                                    <h6>레이드</h6>
+                                </div>
+                            </div>
+                            <div class="post-preview-bottom-container bg-gray">
+                                <div class="preview-face-container d-flex">
+                                    <img src="../sources/img/characters/dark_charlotte_warrior.png" alt="">
+                                    <img src="../sources/img/characters/dark_fram_guardian.png" alt="">
+                                    <img src="../sources/img/characters/dark_frau_striker.png" alt="">
+                                    <img src="../sources/img/characters/dark_helga_warrior.png" alt="">
+                                    <img src="../sources/img/characters/dark_johann_striker.png" alt="">
+                                    <img class="dots" src="../sources/img/ellipsis-solid-full.svg" alt="">
+                                </div>
+                                <div class="mt-3">
+                                    <div class="bg-basicdark p-2">
+                                        <h6><span class="color-white me-2">작성자</span>
+                                            <span class="color-purple">여덟글자정도어때</span></h6>
+                                    </div>
+                                    <div class="preview-paragraph bg-lightgray">
+                                        <p>레이드 꿀잼 조합 사실 레이드라고 해놓고 애들 싸우는거 구경하는 재미로 해요. 사실 강하진 않고 그냥 어쩌고저쩌고 오늘은 레이드...
+                                        </p>
+                                    </div>
+                                </div>
+                                <div class="d-flex justify-content-between mt-3">
+                                    <div>
+                                        <span>2025-11-06</span>
+                                    </div>
+                                    <div class="text-end">
+                                        <span>조회수 35</span>
+                                        <span>&nbsp;</span>
+                                        <span><i class="fa-solid fa-thumbs-up"></i> 3</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </a>
+                    <!-- 공유 게시글 하나 끝 -->
+
+
+                        
+                            
+                    
+                </div>
+            </div>
+                
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script> 
+    <script>
+
+    </script>
+</body>
+</html>

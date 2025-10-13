@@ -58,7 +58,8 @@
 
 .char-selected{
     width: 78px;
-    height: 90px;
+    /* height: 90px; */
+    aspect-ratio: 1/1.15;
     /* background: #BFC3D4; */
     background: radial-gradient(circle,rgba(191, 195, 212, 1) 0%, rgba(255,248,123, 1) 80%);
     clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 0%);

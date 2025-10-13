@@ -66,9 +66,9 @@ app.use(flash());
 app.use((req, res, next) => {
   if (!req.isAuthenticated() &&req.method === 'GET' && !(req.path).startsWith('/login')  && !(req.path).includes('error')
     && !req.path.includes('com.chrome.devtools.json') && !req.path.includes('.well-known') && !req.path.includes('.png')
-    && !req.path.includes('.svg')) {
+    && !req.path.includes('favicon.ico') && !req.path.includes('.') && !req.path.includes('download')) {
     req.session.returnTo = req.originalUrl;
-    // console.log(req.session.returnTo)
+    console.log(req.session.returnTo)
     req.session.save();
   }
   next();

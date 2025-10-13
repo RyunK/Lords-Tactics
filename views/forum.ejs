@@ -137,7 +137,8 @@
                             <% for(let i=0; i<data.hero_list.length; i++){  %>
                             <div class="searching-hero bg-gray d-flex">
                                 <input type="hidden" name="hero_id" value="<%= data.hero_list[i]['ID']%>">
-                                <img src="/sources/img/characters/<%= data.hero_list[i].eng_type %>_<%= data.hero_list[i].eng_name %>_<%= data.hero_list[i].eng_class %>.png" alt="">
+                                <img src="/sources/img/characters/<%= data.hero_list[i].eng_type %>_<%= data.hero_list[i].eng_name %>_<%= data.hero_list[i].eng_class %>.png" alt=""
+                                onerror="this.onerror=null; this.src='/sources/img/characters/Chr_Error.png';">
                                 <img src="/sources/img/classes/<%= data.hero_list[i].eng_class %>.png" alt="" class="class-img">
                                 <img src="/sources/img/types/<%= data.hero_list[i].eng_type %>.png" alt="">
                                 <span class="flex-fill"><%= data.hero_list[i].kor_name %></span>
@@ -270,6 +271,17 @@
     
     <script>
 
+
+    $(document).on('click', function(e){
+        // 빈 곳 클릭하면 영웅 필터 올라감
+        if(!$(e.target).closest(".hero-search-container").length>0
+        && !$(e.target).closest(".hero-namesearch").length>0
+        && !$(e.target).closest(".btn-red").length>0){
+            $(".hero-search-container").slideUp(200);
+        }
+    });
+
+
         /**
          * 캐릭터 선택시 호출
          */
@@ -357,7 +369,7 @@
 
             newparams.append('sort', currentparams.get('sort')? currentparams.get('sort'):'tu');
             let i=0;
-            for(; i<HeroSelecter.getter().length; i++){
+            for(; i<$('.search-hero-img input').length; i++){
                 newparams.append('hero', query[i]['value']);
             }
             // newparams.append('hero', query[0]['value']);

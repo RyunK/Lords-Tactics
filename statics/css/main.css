@@ -70,7 +70,7 @@ nav>div> a{
     display: inline-flex;
     align-items: center;
 
-    height: 55px;
+    /* height: 55px; */
 }
 
 nav>div> a:hover{
@@ -94,7 +94,7 @@ nav>div> a:hover{
     width: 98%;
     height: 3px;
     
-    top: 52px;
+    bottom: -18px;
     right: 0px;
 
     position: absolute;
@@ -110,7 +110,7 @@ nav>div> a:hover{
     position: absolute;
     z-index: 1;
 
-    top: 48px;
+    bottom: -30px;
     right: 45%;
 
     filter: drop-shadow(2px 4px 2px rgba(45, 45, 45, 0.3));
@@ -148,6 +148,10 @@ nav>div> a:hover{
 
 .bg-gray{
     background-color: #BFC3D4;
+}
+
+.bg-deepgray{
+    background-color: #666666;
 }
 
 .bg-green{
@@ -351,6 +355,7 @@ nav>div> a:hover{
 
 .btn-blue:hover{
     background-color: #4c9aff;
+    cursor: pointer;
 }
 
 .btn-blue:active{
@@ -363,6 +368,7 @@ nav>div> a:hover{
 
 .btn-black:hover{
     background-color: #4d4d61;
+    cursor: pointer;
 }
 
 .btn-black:active{
@@ -375,6 +381,7 @@ nav>div> a:hover{
 
 .btn-yellow:hover{
     background-color: #ffa42d;
+    cursor: pointer;
 }
 
 .btn-yellow:active{
@@ -387,6 +394,7 @@ nav>div> a:hover{
 
 .btn-purple:hover{
     background-color: #dd93ff;
+    cursor: pointer;
 }
 
 .btn-purple:active{
@@ -399,6 +407,7 @@ nav>div> a:hover{
 
 .btn-green:hover{
     background-color: #a0f060;
+    cursor: pointer;
 }
 
 .btn-green:active{
@@ -411,6 +420,7 @@ nav>div> a:hover{
 
 .btn-white:hover{
     background-color: rgb(224, 224, 225);
+    cursor: pointer;
 }
 
 .btn-white:active{
@@ -423,6 +433,7 @@ nav>div> a:hover{
 
 .btn-gray:hover{
     background-color: #757575;
+    cursor: pointer;
 }
 
 .btn-gray:active{
@@ -435,6 +446,7 @@ nav>div> a:hover{
 
 .btn-red:hover{
     background-color: #ff6262;
+    cursor: pointer;
 }
 
 .btn-red:active{

@@ -47,7 +47,7 @@ router.get(
    passport.authenticate('google', { failureRedirect: '/login', keepSessionInfo: true  }), // 그리고 passport 로그인 전략에 의해 googleStrategy로 가서 구글계정 정보와 DB를 비교해서 회원가입시키거나 로그인 처리하게 한다.
    (req, res) => {
       console.log("login-returnTo : " + req.session.returnTo);
-      redirectUrl = req.session.returnTo || "/";
+      let redirectUrl = req.session.returnTo || "/";
       res.redirect(redirectUrl);
 
       // res.redirect('/');
@@ -65,7 +65,7 @@ router.get(
    passport.authenticate('naver', { failureRedirect: '/', keepSessionInfo: true  }),
    (req, res) => {
     console.log("login-returnTo : " + req.session.returnTo);
-    redirectUrl = req.session.returnTo || "/";
+    let redirectUrl = req.session.returnTo || "/";
     res.redirect(redirectUrl);
 
     // res.redirect('/');

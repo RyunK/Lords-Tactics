@@ -1,0 +1,387 @@
+.mypage-remote{
+    width: 280px;
+
+    margin-top: 40px;
+    margin-left: 30px;
+
+    float: left;
+
+    position: relative;
+}
+
+h6{
+    font-size: 20px;
+}
+
+
+
+.mypage-remote > div{
+    margin-bottom: 20px;
+}
+
+.mypage-remote .formmake-link{
+    width: 100%;
+    /* aspect-ratio: 4 / 1.1; */
+    padding: 23px 0;
+    text-align: center;
+
+    display: block;
+
+    margin-bottom: 20px;
+}
+
+.mypage-remote .formmake-link:hover{
+    cursor: pointer;
+}
+
+.mypage-remote .tab{
+    width: 100%;
+}
+
+.mypage-remote .tab .name-container{
+    padding: 10px 15px;
+}
+
+.mypage-remote .tab ul{
+    height: 204.5px;
+}
+
+.mypage-remote .tab li{
+    text-align: center;
+    padding: 16px 0;
+
+    font-size: 17px;
+    font-weight: 500;
+
+    background-color: #BFC3D4;
+    border: #efefef 2px solid;
+    border-left: none;
+    border-right: none;
+}
+
+.mypage-remote .tab .active {
+    background-color: #fff87b;
+
+    position: relative;
+    width: calc(100% + 20px);
+
+    clip-path: polygon(calc(100% - 10px) 0%, 100% 10px, 100% 100%, 0 100%, 0 0);
+}
+
+.mypage-remote .tab .active:hover{
+    background-color: #fff87b;
+}
+
+.mypage-remote .tab li:hover{
+    cursor: pointer;
+    background-color: #d5d8e6;
+
+}
+
+.mypage-remote .tab a{
+    width: 100%;
+    height: 100%;
+    font-size: 20px;
+}
+
+.mypage-remote .tab .left-blue-bar{
+    height: 100%;
+}
+
+.mypage-remote .tab .left-blue-bar::before{
+    content: "";
+
+    display: block;
+    width: 10px;
+    height: 194px;
+
+    background-color: #3b8fff;
+
+    position: absolute;
+    z-index: 1;
+}
+
+.mypage-remote .filter-container {
+    width: 100%;
+    background-color: #BFC3D4;
+    padding: 30px 25px;
+    padding-bottom: 10px;
+    clip-path: polygon(30px 0%, 100% 0, 100% 100%, 0 100%, 0% 30px);
+
+    position: relative;
+    z-index: 2;
+
+}
+
+.mypage-remote .filter-container > div {
+    margin-bottom: 20px;
+}
+
+.mypage-remote .filter-container button,
+.mypage-remote .filter-container input[type="text"]
+{
+    width: 100%;
+    padding: 10px 13px;
+    margin-top: 8px;
+
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    border: none;
+
+    font-size: 16px;
+    font-weight: 500;
+    
+}
+
+.mypage-remote .filter-container i{
+    font-size: 1.4em;
+}
+
+.mypage-maincontents{
+    width: calc(100% - 420px);
+    /* height: 20px; */
+
+    margin: 40px;
+
+    float: right;
+}
+
+.mypage-maincontents ul a{
+    color: #efefef;
+
+}
+
+.mypage-maincontents ul .active{
+    color: #3b8fff;
+}
+
+.mypage-remote .filter-container .typeselecter{
+    width: 100%;
+
+    display: flex;
+    justify-content: space-around;
+}
+
+.mypage-remote .filter-container .typeselecter img{
+    width: 45px;
+}
+
+.mypage-remote .filter-container .typeselecter img:hover{
+    cursor: pointer;
+}
+
+.mypage-remote .filter-container .typeselecter .inactive{
+    filter: grayscale(1);
+}
+
+.mypage-remote .filter-container .herosetting-filterreset{
+    width: 175px;
+
+    position: absolute;
+
+    right: -10px;
+    top: -20px;
+}
+
+.charPublic-checkbox:checked + .checkbox-img::before{
+    font-size: 1.7em;
+
+    left: -7px;
+    top: -24px;
+    
+}
+
+.charPublic-checkbox + .checkbox-img {
+    top: 2px;
+}
+
+.havinghero-check{
+    margin-top: 60px;
+}
+
+.mypage-remote .hero-namesearch{
+    position: relative;
+}
+
+.mypage-remote .hero-namesearch i{
+    position: absolute;
+
+    top: 45px;
+    right: 15px;
+    
+    font-weight: bolder;
+}
+
+.mypage-remote .hero-namesearch i:hover{
+    cursor: pointer;
+}
+
+.hero-setting{
+    /* float: right; */
+
+    display: block;
+    position: relative;
+
+    width: 780px;
+    height: 337px;
+    left: 0;
+    top: 0;
+
+    margin-right: auto;
+    margin-left: auto;
+}
+
+.post-title div{
+    padding: 15px 20px;
+}
+
+.setting-content{
+    height: calc(100% - 57px);
+}
+
+.setting-content p,
+.setting-content input,
+.setting-content label
+{
+    font-size: 1.2em;
+    font-weight: 600;
+}
+
+.setting-charinfo{
+    width: 34%;
+    max-width: 300px;
+}
+
+.setting-charimg{
+    width: 150px;
+
+}
+
+.setting-charimg span{
+    font-size: 18px;
+}
+
+.setting-form{
+    width: 60%;
+    /* padding-left: 8%; */
+    max-width: 700px;
+
+}
+
+.setting-btns{
+    width: 85%;
+}
+
+.setting-btns .all-submit{
+    width: 180px;
+}
+
+.characters-container{
+    margin-top: 30px;
+
+    padding: 100px 20px 20px 20px;
+    position: relative;
+    
+    z-index: 2;
+}
+
+.character-list-box {
+    width: calc(100% / (100% / 140px));
+}
+
+.character-list{
+    width: 80px;
+    height: 80px;
+}
+
+.character-list img{
+    width: 80px;
+}
+
+.character-list span{
+    font-size: 15px;
+}
+
+.characters-container .havinghero-set{
+    position: absolute;
+
+    display: flex;
+
+    top: 25px;
+    left: 40px;
+    
+}
+
+.characters-container .havinghero-set div{
+    display: block;
+    height: 100%;
+
+    padding: 10px 15px;
+
+    font-size: 1.2em;
+    box-shadow: inset -1px 1.5px 1px 0px rgba(255, 255, 255, 0.8);
+
+    
+}
+
+
+.characters-container .havinghero-set .btn-blue{
+    box-shadow: inset 0px 1.5px 1px 0px rgba(255, 255, 255, 0.8);
+}
+
+.havinghero-blocker{
+    z-index: 2;
+    position: fixed;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.4);
+}
+ 
+.havinghero-zindex{
+    filter: none;
+}
+
+.havinghero-notice{
+    /* width: 320px; */
+    position: absolute;
+
+    top: 37px;
+    left: 280px;
+}
+
+.havingheroset-check{
+    color: #3b8fff;
+
+    position: absolute;
+    font-size: 40px;
+    -webkit-text-stroke: 0.5px white;
+
+    top: -5px;
+    right: -10px;
+    z-index: 1;
+}
+
+.char-selected{
+    width: 88px;
+    /* height: 90px; */
+    /* aspect-ratio: 1.15/1; */
+    /* background: #BFC3D4; */
+    background: radial-gradient(circle,rgba(191, 195, 212, 1) 0%, rgba(255,248,123, 1) 80%);
+    clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 0%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  
+    font-size: 25px;
+    
+    position: absolute;
+    top: -4px; 
+    left: -4px; 
+
+    z-index: -1;
+
+  }
