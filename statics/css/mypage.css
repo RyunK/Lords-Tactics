@@ -135,6 +135,43 @@ h6{
     
 }
 
+.dropdown-contents ul{
+    position: absolute;
+    width: calc(100% - 50px);
+
+    left: 25px;
+    display: none;
+}  
+
+.dropdown-contents li{
+    width: 100%;
+    padding: 10px 13px;
+    font-size: 15px;
+    font-weight: 400;
+
+    /* position: absolute; */
+}
+
+.dropdown-contents li:hover{
+    cursor: pointer;
+    background-color: rgb(224, 224, 225);
+    
+}
+
+.dropdown-contents .form_status{
+    top: 450px;
+}
+
+.dropdown-contents .content{
+    top: 710px;
+}
+
+.dropdown-contents .hero-search-container{
+    left: 25px;
+    top: 550px;
+    
+}
+
 .mypage-remote .filter-container i{
     font-size: 1.4em;
 }

@@ -14,8 +14,8 @@
                     </span>
                     <div class="logout-container bg-basicdark text-center shadow-basic">
                         <p class="color-white"> <span class="color-purple"><%=nickname%></span>&nbsp; 님 </p>
-                        <a a href="javascript:void(0)" onClick="javascript:goPost()" class="logout color-white">로그아웃</a>
-                        <a href="#" class="color-white">마이페이지</a>
+                        <a a href="javascript:void(0)" onClick="javascript:logoutBtn()" class="logout color-white">로그아웃</a>
+                        <a href="/mypage" class="color-white">마이페이지</a>
                     </div>
                 </div>
                  
@@ -30,7 +30,8 @@
 
     <script>
         switch('<%=page%>'){
-        case 'main': 
+        case 'main':
+        case '' : 
             $('.nav-box').children().removeClass('nav-selected');
             break;
         case 'login':
@@ -52,7 +53,7 @@
             $(".logout-container").slideToggle();
         })
 
-        function goPost(){
+        function logoutBtn(){
             let f = document.createElement('form');
             f.setAttribute('method', 'post');
             f.setAttribute('action', '/login/logout');

@@ -1,0 +1,36 @@
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+
+<div class="shadow-filter-basic">
+    <a href="/formmake" class="formmake-link btn-cut btn-blue border-0">
+        <h6 class="color-white w-100">편성 만들러 가기</h6>
+    </a>
+</div>
+<div class="tab shadow-basic">
+    <div class="name-container bg-basicdark">
+        <h6 class="color-lightgray">닉네임 | <span class="color-purple"><%=nickname%></span></h6>
+    </div>
+    <ul class="left-blue-bar width-100">
+        <li class="border-top-0 "><a href="/mypage/formsave" class=" color-black">저장한 편성</a></li>
+        <li class=""><a href="#" class="color-black">내 영웅설정</a></li>
+        <li class="border-bottom-0"><a href="#" class="color-black">개인정보 편집</a></li>
+    </ul>
+</div>
+
+<script>
+    switch('<%=page%>'){
+    case 'form save':
+        $('.tab li').eq(0).addClass('active');
+        break;
+    case 'hero setting':
+        $('.tab li').eq(1).addClass('active');
+        break;
+    case 'user setting':
+        $('.tab li').eq(2).addClass('active');
+        break;
+    }
+
+    if('<%=nickname%>' == ''){
+        alert("로그인이 필요한 컨텐츠입니다.");
+        history.go(-1);
+    }
+</script>
