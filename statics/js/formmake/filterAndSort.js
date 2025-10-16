@@ -14,7 +14,7 @@ function renderCharacterList(list){
             let html_str = `<li class="character-list-box select-liner d-flex justify-content-center" >
                                 <div class="character-list" >
                                     <img src="/sources/img/characters/${v.eng_type}_${v.eng_name}_${v.eng_class}.png" 
-                                    alt="" data-id="${v["ID"]}" data-korname="${v.kor_name}"
+                                    alt="" data-id="${v["ID"]}" data-korname="${v.kor_name}" data-type="${v.eng_type}"
                                     onerror="this.onerror=null; this.src='/sources/img/characters/Chr_Error.png';">
                                 </div>
                             </li>`
@@ -26,7 +26,7 @@ function renderCharacterList(list){
             let html_str = `<li class="character-list-box select-liner d-flex justify-content-center" >
                                 <div class="character-list" >
                                     <img src="/sources/img/characters/${v.eng_type}_${v.eng_name}_${v.eng_class}.png" 
-                                    alt="" data-id="${v["ID"]}" data-korname="${v.kor_name}
+                                    alt="" data-id="${v["ID"]}" data-korname="${v.kor_name} data-type="${v.eng_type}"
                                     onerror="this.onerror=null; this.src='/sources/img/characters/Chr_Error.png';">
                                     <span class="lv_${v.eng_type} lv">70</span>
                                     <span class="nogak gak">7</span>

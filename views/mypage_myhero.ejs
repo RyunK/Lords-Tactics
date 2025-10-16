@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>로드의 전술서:마이페이지</title>
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <link href="/css/main.css" rel="stylesheet">
+    <link href="/css/form_card.css" rel="stylesheet">
+    <link href="/css/forum.css" rel="stylesheet">
+    <link href="/css/form_making.css" rel="stylesheet">
+    <link href="/css/hero_setting.css" rel="stylesheet">
+    <link href="/css/lv_badges.css" rel="stylesheet">
+    <link href="/css/mypage.css" rel="stylesheet">
+</head>
+<body>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+
+    <%- include('nav_and_banner.ejs', {page: '', nickname: data.nickname, notice:'2025.08.01 신규 캐릭터 [물]라플라스 추가 완료'}) %> 
+
+    <!-- <div class="havinghero-blocker"></div> -->
+
+    <!-- 왼쪽 리모콘(?) -->
+    <div class="mypage-remote ">
+        <%- include('mypage_nav.ejs', {page: 'hero setting', nickname: data.nickname}) %> 
+        <!-- <div class="shadow-filter-basic havinghero-zindex"> -->
+        <div class="shadow-filter-basic">
+            <div class="filter-container shadow-filter-basic ">
+            <div class="btn-shadow">
+                <button class="herosetting-filterreset btn-red btn-cut color-white">
+                    <h6>필터 초기화</h6> <i class="fa-solid fa-rotate-right"></i> 
+                </button>
+            </div>
+            <div class="havinghero-check">
+                <h6>
+                    <label class=" d-flex align-self-center"> 
+                        <span class="me-2">보유 영웅만 보이기</span> 
+                        <input type="checkbox" name="character_public" class="charPublic-checkbox">
+                        <span class="checkbox-img"></span>  
+                    </label>
+                </h6>
+            </div>
+            <div class="hero-namesearch">
+                <h6>영웅 이름 검색</h6>
+                <input type="text" name="" id="" class="color-black bg-lightgray">
+                <i class="fa-solid fa-magnifying-glass color-black"></i>
+                <!-- <button class="color-black"><span> </span> <i class="fa-solid fa-magnifying-glass color-black"></i></button> -->
+            </div>
+            <div>
+                <h6>속성</h6>
+                <div class="typeselecter d-flex ">
+                    <img src="../sources/img/types/dark.png" alt="">
+                    <img src="../sources/img/types/fire.png" alt="">
+                    <img src="../sources/img/types/water.png" class="inactive" alt="">
+                    <img src="../sources/img/types/grass.png" class="inactive" alt="">
+                    <img src="../sources/img/types/light.png" class="inactive" alt="">
+                </div>
+            </div>
+            <div>
+                <h6>클래스</h6>
+                <button class="color-black"><span><img src="../sources/img/classes/striker.png" width="18px"> 스트라이커</span> <i class="fa-solid fa-chevron-down"></i></button>
+            </div>
+            <div>
+                <h6>영웅 정렬</h6>
+                <button class="color-black">이름순 <i class="fa-solid fa-chevron-down"></i></button>
+            </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 오른쪽 컨텐츠 -->
+    <div class="mypage-maincontents ">
+        <div class="hero-setting bg-gray ">
+            <!-- 상단바 -->
+            <div class="post-title title-size d-flex">
+                <div class="bg-basicdark color-yellow title-sizing flex-fill d-flex align-items-center"><h6>영웅 설정</h6></div>
+            </div>
+
+            <!-- 컨텐츠 -->
+            <div class="setting-content bg-gray d-flex justify-content-center">
+                <div class="setting-charinfo pe-4  d-flex justify-content-center ">
+                    <div>
+                    <div class="setting-charname d-flex align-items-center">
+                        <img src="/sources/img/types/fire.png" class="setting-class-size">
+                        <p class="ms-1">메이링</p>
+                    </div>
+                    <div class="setting-charimg mt-3" >
+                        <img src="/sources/img/characters/fire_meiling_shooter.png">
+                        <span class="lv_fire lv">70</span>
+                        <span class="onegak gak">7</span>
+                    </div>
+                    </div>
+                </div>
+                <div class="right-line"></div>
+                <div class="setting-form d-flex justify-content-center">
+                    <form class="">
+                        <div class="d-flex align-items-center mt-3"><p class="">레벨</p><div class="btn-shadow lv-input ms-5"><input type="input" class="btn-cut "></div></div>
+                        <div class="d-flex mt-3">
+                            <p>초월</p>
+                            <label class="charSetting-ele d-flex align-self-center me-3">  
+                                <input type="radio" name="cho" class="charPublic-checkbox 5cho"><span class="checkbox-img"></span> <span class="ms-1">5</span> 
+                            </label>
+                            <label class="charSetting-ele d-flex align-self-center me-3">  
+                                <input type="radio" name="cho" class="charPublic-checkbox 6cho"><span class="checkbox-img"></span> <span class="ms-1">6</span> 
+                            </label>
+                            <label class="charSetting-ele d-flex align-self-center">  
+                                <input type="radio" name="cho" class="charPublic-checkbox 7cho"><span class="checkbox-img"></span> <span class="ms-1">7</span> 
+                            </label>
+                        </div>
+                        
+                        <div class="d-flex mt-3">
+                            <p>각성</p>
+                            <label class="charSetting-ele d-flex align-self-center">  
+                                <input type="radio" name="gak" class="charPublic-checkbox nogak-radio"><span class="checkbox-img"></span> <img src="../sources/img/nogak.png" class="ms-1"> 
+                            </label>
+                            <label class="charSetting-ele d-flex align-self-center">  
+                                <input type="radio" name="gak" class="charPublic-checkbox onegak-radio"><span class="checkbox-img"></span> <img src="../sources/img/1gak.png" class="ms-1"> 
+                            </label>
+                            <label class="charSetting-ele d-flex align-self-center"> 
+                                <input type="radio" name="gak" class="charPublic-checkbox twogak-radio"><span class="checkbox-img"></span> <img src="../sources/img/2gak.png" class="ms-1"> 
+                            </label>
+                        </div>
+                        
+                        <!-- 하단 버튼들 -->
+                        <div class="setting-btns d-flex justify-content-end">
+                            <div class="btn-shadow ">
+                                <input class="btn-cut basic-btn btn-yellow color-white setting-normal-submit" type="submit" value="적용">
+                            </div>
+                            <div class="btn-shadow ms-2 all-submit">
+                                <input class="btn-cut basic-btn btn-blue color-white setting-all-submit" type="submit" value="모든 캐릭터 적용">
+                            </div>
+                        </div>
+                        
+                    </form>
+                </div>
+            </div>        
+        </div>
+        
+        <div class="bg-basicdark shadow-basic">
+            <ul class="characters-container  d-flex justify-content-center flex-wrap">
+                <div class="havinghero-set color-white btn-cut">
+                    <div class="btn-blue">보유 영웅 설정</div>
+                    <!-- <div class="btn-red">OFF</div> -->
+                    <div class="btn-gray">ON</div>
+                </div>
+                <!-- <span class="color-white havinghero-notice">• 체크된 영웅은 보유 영웅으로, 체크가 해제된 영웅은 미보유 영웅으로 저장됩니다.</span> -->
+                
+                <li class="character-list-box select-liner d-flex justify-content-center" >
+                    <div class="character-list" >
+                        <div class='char-selected'></div>
+                        <i class="havingheroset-check fa-solid fa-check"></i>
+                        <img src="/sources/img/characters/dark_zhurahan_warrior.png">
+                        <span class="lv_dark lv">70</span>
+                        <span class="nogak gak">7</span>
+                    </div>
+                </li>
+
+                <% for(let i=0; i<data.hero_list.length; i++){ %>
+                <li class="character-list-box select-liner d-flex justify-content-center">
+                    <div class="character-list" >
+                        <img src="/sources/img/characters/<%= data.hero_list[i].eng_type %>_<%= data.hero_list[i].eng_name %>_<%= data.hero_list[i].eng_class %>.png" 
+                        alt="" data-id="<%= data.hero_list[i]["ID"] %>" data-korname="<%= data.hero_list[i].kor_name %>" data-type="<%=data.hero_list[i].eng_type%>"
+                        onerror="this.onerror=null; this.src='/sources/img/characters/Chr_Error.png';">
+
+                        <% if(data.nickname){ %>
+                        <span class="lv_<%=data.hero_list[i].eng_type%> lv">70</span>
+                        <span class="nogak gak">7</span>
+                        <% } %>
+                    </div>
+                </li>
+                <% } %>
+                
+                
+            </ul>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script> 
+    <script src="/js/formmake/heroSetting.js"></script>
+    <script>
+
+
+        // 영웅을 클릭했을 때 선택되며 영웅 설정창에 뜨기
+        $('.character-list').on("click", function(){
+            $('.char-selected').remove();
+            $(this).prepend(`<div class='char-selected'></div>`);
+
+            selectHeroSetting($(this));
+        })
+    </script>
+</body>
+</html>

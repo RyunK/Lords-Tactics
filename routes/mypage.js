@@ -29,7 +29,7 @@ router.get('/formsave', async(req, res) => {
                 WHERE ID= ?`;
     var [now_formstatus, fields] = await (await connection).execute(sql, [req.query.form_status ? req.query.form_status : '1']);
 
-    console.log(now_formstatus)
+    // console.log(now_formstatus)
 
     var sql = `SELECT LH.ID, types.ENG_NAME AS 'eng_type', types.KOR_NAME AS 'kor_type', 
                 names.ENG_NAME AS 'eng_name', names.KOR_NAME AS 'kor_name', 
@@ -46,7 +46,7 @@ router.get('/formsave', async(req, res) => {
     if(!Array.isArray(filtered_heroes_list)){
         filtered_heroes_list = [filtered_heroes_list];
     }
-    
+
     for(let i=0; i<filtered_heroes_list.length; i++){
         var sql = `SELECT LH.ID, types.ENG_NAME AS 'eng_type', types.KOR_NAME AS 'kor_type', 
                 names.ENG_NAME AS 'eng_name', names.KOR_NAME AS 'kor_name', 
@@ -78,5 +78,24 @@ router.get('/formsave', async(req, res) => {
     res.render('mypage_formsave.ejs',  {data : data})
 
 })
+
+router.get('/myhero', async(req, res) => {
+
+    var sql = `SELECT LH.ID, types.ENG_NAME AS 'eng_type', types.KOR_NAME AS 'kor_type', 
+                names.ENG_NAME AS 'eng_name', names.KOR_NAME AS 'kor_name', 
+                classes.ENG_NAME AS 'eng_class', classes.KOR_NAME AS 'kor_class'  FROM LAUNCHED_HEROES AS LH
+                INNER JOIN HERO_NAMES  names ON names.IDX = NAME_ID
+                INNER JOIN HERO_CLASSES  classes ON classes.IDX = CLASS_ID
+                INNER JOIN HERO_TYPES  types ON types.IDX = TYPE_ID
+                ORDER BY names.KOR_NAME, types.KOR_NAME`;
+    var [hero_list, fields] = await (await connection).execute(sql);
+
+    let data = {
+        nickname: getDatas.loggedInNickname(req, res),
+        hero_list : hero_list,
+    }
+    res.render('mypage_myhero.ejs',  {data : data})
+})
+
 
 module.exports=router;

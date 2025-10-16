@@ -2,50 +2,33 @@
  * 영웅 설정에 관한 js
  */
 
-
-
 /**
- * 영웅 설정 버튼 클릭
+ * 영웅 설정 UI에 관련 정보 삽입. UI는 .hero-setting으로 잡음.
+ * @param {DOM} hero 캐릭터리스트에 있던 캐릭터 원본 .character-list
  */
-$('.charSetting-btn').on('click', function(e){
-    let selected = $(".spot-selected-full").siblings(".select-liner");
+function selectHeroSetting(hero){
+    $('.setting-charimg').html(hero.html())
 
-    console.log('<%=data.nickname%>');
-    if( $('.login').text().includes('로그인')){
-        alert('로그인이 필요한 기능입니다.');
-        return;
-    }
+    $('.setting-charimg').empty();
+    hero.children('img').clone().appendTo(".setting-charimg");
+    hero.children('span').clone().appendTo('.setting-charimg');
 
-    // console.log(selected);
-    if(selected.length > 0){
-        $('.own-modal').fadeIn();
-        $('.hero-setting').fadeIn();
+    let name = hero.children('img').data('korname');
+    $('.setting-charname p').text(name);
 
-        $('.setting-charimg').html(selected.html())
-        let name = selected.children('img').data('charname');
-        $('.setting-charname p').text(name);
+    let type = hero.children('img').data('type');
+    $('.setting-charname').children('img').attr('src', `../sources/img/types/${type}.png`)
+    
+    let lv = hero.children('.lv').text();
+    $('.hero-setting .lv-input>input').val(lv)
 
-        let type = selected.children('img').data('type');
-        $('.setting-charname').children('img').attr('src', `../sources/img/types/${type}.png`)
-        
-        let lv = selected.children('.lv').text();
-        $('.hero-setting .lv-input>input').val(lv)
+    let cho = hero.children('.gak').text();
+    $(`.hero-setting .${cho}cho`).prop("checked", true);
 
-        let cho = selected.children('.gak').text();
-        $(`.hero-setting .${cho}cho`).prop("checked", true);
+    let gak = hero.children('.gak').attr('class');
+    gak = gak.split(' ')[0];
+    $(`.hero-setting .${gak}-radio`).prop("checked", true);
+}
 
-        let gak = selected.children('.gak').attr('class');
-        gak = gak.split(' ')[0];
-        $(`.hero-setting .${gak}-radio`).prop("checked", true);
 
-    } else{ // 아무 영웅도 클릭하지 않았을 때
-        // console.log("감지되지 않음");
-        alert('설정할 영웅을 편성창에서 선택하세요.');
 
-    }
-})
-
-$('.x-btn').on('click', function(e){
-    $('.own-modal').fadeOut();
-    $('.hero-setting').fadeOut();
-})

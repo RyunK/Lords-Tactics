@@ -31,11 +31,11 @@
             <div class="setting-content d-flex">
                 <div class="pe-4 right-line">
                     <div class="setting-charname d-flex align-items-center">
-                        <img src="../sources/img/types/fire.png" class="setting-class-size">
+                        <img src="/sources/img/types/fire.png" class="setting-class-size">
                         <p class="ms-1">메이링</p>
                     </div>
                     <div class="setting-charimg mt-3" >
-                        <img src="../sources/img/characters/fire_meiling_shooter.png">
+                        <img src="/sources/img/characters/fire_meiling_shooter.png">
                         <span class="lv_fire lv">70</span>
                         <span class="onegak gak">7</span>
                     </div>
@@ -155,13 +155,13 @@
                             <% for(; i<data.form_herolist_forrender.length && i<5; i++) { %>
                             <div class="character-5 form_spot">
                                 <div class="select-liner ">
-                                    <img src="/sources/img/characters/<%= data.form_herolist_forrender[i].eng_type %>_<%= data.form_herolist_forrender[i].eng_name %>_<%= data.form_herolist_forrender[i].eng_class %>.png" alt="" 
-                                    data-id="<%= data.form_herolist_forrender[i]["ID"] %>" 
-                                    onerror="this.onerror=null; this.src='/sources/img/1gak.png';">
+                                    <img src="/sources/img/characters/<%= data.form_herolist_forrender[i].eng_type %>_<%= data.form_herolist_forrender[i].eng_name %>_<%= data.form_herolist_forrender[i].eng_class %>.png"
+                                    alt="" data-id="<%= data.form_herolist_forrender[i]["ID"] %>" data-korname="<%= data.form_herolist_forrender[i].kor_name %>" data-type="<%=data.form_herolist_forrender[i].eng_type%>"
+                                    onerror="this.onerror=null; this.src='/sources/img/characters/Chr_Error.png';">
                                     <input value="<%= data.form_herolist_forrender[i]["ID"] %>"  name="hero" type="hidden"> 
                                 
                                     <% if(data.nickname){ %>
-                                        <span class="lv_<%=data.hero_list[i].eng_type%> lv">70</span>
+                                        <span class="lv_<%=data.form_herolist_forrender[i].eng_type%> lv">70</span>
                                         <span class="nogak gak">7</span>
                                     <% } %>
                                 </div>
@@ -182,13 +182,13 @@
                             <% for(; i<data.form_herolist_forrender.length && i<3; i++) { %>
                                 <div class="character-7 form_spot">
                                     <div class="select-liner ">
-                                        <img src="/sources/img/characters/<%= data.form_herolist_forrender[i].eng_type %>_<%= data.form_herolist_forrender[i].eng_name %>_<%= data.form_herolist_forrender[i].eng_class %>.png" alt="" 
-                                        data-id="<%= data.form_herolist_forrender[i]["ID"] %>" 
-                                        onerror="this.onerror=null; this.src='/sources/img/1gak.png';">
+                                        <img src="/sources/img/characters/<%= data.form_herolist_forrender[i].eng_type %>_<%= data.form_herolist_forrender[i].eng_name %>_<%= data.form_herolist_forrender[i].eng_class %>.png" 
+                                        alt="" data-id="<%= data.form_herolist_forrender[i]["ID"] %>" data-korname="<%= data.form_herolist_forrender[i].kor_name %>" data-type="<%=data.form_herolist_forrender[i].eng_type%>"
+                                        onerror="this.onerror=null; this.src='/sources/img/characters/Chr_Error.png';">
                                         <input value="<%= data.form_herolist_forrender[i]["ID"] %>"  name="hero" type="hidden"> 
                                         
                                         <% if(data.nickname){ %>
-                                        <span class="lv_<%=data.hero_list[i].eng_type%> lv">70</span>
+                                        <span class="lv_<%=data.form_herolist_forrender[i].eng_type%> lv">70</span>
                                         <span class="nogak gak">7</span>
                                         <% } %>
                                         
@@ -207,12 +207,12 @@
                             <% for(; i<data.form_herolist_forrender.length && i<7; i++) { %>
                                 <div class="character-7 form_spot">
                                     <div class="select-liner ">
-                                        <img src="/sources/img/characters/<%= data.form_herolist_forrender[i].eng_type %>_<%= data.form_herolist_forrender[i].eng_name %>_<%= data.form_herolist_forrender[i].eng_class %>.png" alt="" 
-                                        data-id="<%= data.form_herolist_forrender[i]["ID"] %>" 
-                                        onerror="this.onerror=null; this.src='/sources/img/1gak.png';">
+                                        <img src="/sources/img/characters/<%= data.form_herolist_forrender[i].eng_type %>_<%= data.form_herolist_forrender[i].eng_name %>_<%= data.form_herolist_forrender[i].eng_class %>.png"  
+                                        alt="" data-id="<%= data.form_herolist_forrender[i]["ID"] %>" data-korname="<%= data.form_herolist_forrender[i].kor_name %>" data-type="<%=data.form_herolist_forrender[i].eng_type%>"
+                                        onerror="this.onerror=null; this.src='/sources/img/characters/Chr_Error.png';">
                                         <input value="<%= data.form_herolist_forrender[i]["ID"] %>"  name="hero" type="hidden"> 
                                         <% if(data.nickname){ %>
-                                        <span class="lv_<%=data.hero_list[i].eng_type%> lv">70</span>
+                                        <span class="lv_<%=data.form_herolist_forrender[i].eng_type%> lv">70</span>
                                         <span class="nogak gak">7</span>
                                         <% } %>
                                     </div>
@@ -235,12 +235,12 @@
                             <% for(; i<data.form_herolist_forrender.length && i<5; i++) { %>
                                 <div class="character-10 form_spot">
                                     <div class="select-liner ">
-                                        <img src="/sources/img/characters/<%= data.form_herolist_forrender[i].eng_type %>_<%= data.form_herolist_forrender[i].eng_name %>_<%= data.form_herolist_forrender[i].eng_class %>.png" alt="" 
-                                        data-id="<%= data.form_herolist_forrender[i]["ID"] %>" 
-                                        onerror="this.onerror=null; this.src='/sources/img/1gak.png';">
+                                        <img src="/sources/img/characters/<%= data.form_herolist_forrender[i].eng_type %>_<%= data.form_herolist_forrender[i].eng_name %>_<%= data.form_herolist_forrender[i].eng_class %>.png" 
+                                        alt="" data-id="<%= data.form_herolist_forrender[i]["ID"] %>" data-korname="<%= data.form_herolist_forrender[i].kor_name %>" data-type="<%=data.form_herolist_forrender[i].eng_type%>"
+                                        onerror="this.onerror=null; this.src='/sources/img/characters/Chr_Error.png';">
                                         <input value="<%= data.form_herolist_forrender[i]["ID"] %>"  name="hero" type="hidden"> 
                                         <% if(data.nickname){ %>
-                                        <span class="lv_<%=data.hero_list[i].eng_type%> lv">70</span>
+                                        <span class="lv_<%=data.form_herolist_forrender[i].eng_type%> lv">70</span>
                                         <span class="nogak gak">7</span>
                                         <% } %>
                                     </div>
@@ -258,12 +258,12 @@
                             <% for(; i<data.form_herolist_forrender.length && i<10; i++) { %>
                                 <div class="character-10 form_spot">
                                     <div class="select-liner ">
-                                        <img src="/sources/img/characters/<%= data.form_herolist_forrender[i].eng_type %>_<%= data.form_herolist_forrender[i].eng_name %>_<%= data.form_herolist_forrender[i].eng_class %>.png" alt="" 
-                                        data-id="<%= data.form_herolist_forrender[i]["ID"] %>" 
-                                        onerror="this.onerror=null; this.src='/sources/img/1gak.png';">
+                                        <img src="/sources/img/characters/<%= data.form_herolist_forrender[i].eng_type %>_<%= data.form_herolist_forrender[i].eng_name %>_<%= data.form_herolist_forrender[i].eng_class %>.png" 
+                                        alt="" data-id="<%= data.form_herolist_forrender[i]["ID"] %>" data-korname="<%= data.form_herolist_forrender[i].kor_name %>" data-type="<%=data.form_herolist_forrender[i].eng_type%>"
+                                        onerror="this.onerror=null; this.src='/sources/img/characters/Chr_Error.png';">
                                         <input value="<%= data.form_herolist_forrender[i]["ID"] %>"  name="hero" type="hidden"> 
                                         <% if(data.nickname){ %>
-                                        <span class="lv_<%=data.hero_list[i].eng_type%> lv">70</span>
+                                        <span class="lv_<%=data.form_herolist_forrender[i].eng_type%> lv">70</span>
                                         <span class="nogak gak">7</span>
                                         <% } %>
                                     </div>
@@ -375,7 +375,7 @@
                     <li class="character-list-box select-liner d-flex justify-content-center">
                         <div class="character-list" >
                             <img src="/sources/img/characters/<%= data.hero_list[i].eng_type %>_<%= data.hero_list[i].eng_name %>_<%= data.hero_list[i].eng_class %>.png" 
-                            alt="" data-id="<%= data.hero_list[i]["ID"] %>" data-korname="<%= data.hero_list[i].kor_name %>"
+                            alt="" data-id="<%= data.hero_list[i]["ID"] %>" data-korname="<%= data.hero_list[i].kor_name %>" data-type="<%=data.hero_list[i].eng_type%>"
                             onerror="this.onerror=null; this.src='/sources/img/characters/Chr_Error.png';">
 
                             <% if(data.nickname){ %>
@@ -400,6 +400,7 @@
                 spot.prepend('<img src="../sources/img/out_char.png" class="out">');
                 spot.prepend("<div class='spot-selected-full'></div>");                   
             }
+
         
         }
         let hero_list = '<%- JSON.stringify(data.hero_list) %>'; 
@@ -455,7 +456,36 @@
         window.history.pushState(null, '', url.toString());
     })
     
-    
+    /**
+     * 영웅 설정 버튼 클릭
+     */
+    $('.charSetting-btn').on('click', function(e){
+        let selected = $(".spot-selected-full").siblings(".select-liner");
+
+        // console.log('<%=data.nickname%>');
+        if( $('.login').text().includes('로그인')){
+            alert('로그인이 필요한 기능입니다.');
+            return;
+        }
+
+        if(selected.length > 0){
+            $('.own-modal').fadeIn();
+            $('.hero-setting').fadeIn();
+
+            let selected_seed = $(`.character-list img[src='${selected.children('img').attr('src')}']`).parent()
+            selectHeroSetting(selected_seed)
+
+        } else{ // 아무 영웅도 클릭하지 않았을 때
+            alert('설정할 영웅을 편성창에서 선택하세요.');
+
+        }
+    })
+
+    $('.x-btn').on('click', function(e){
+        $('.own-modal').fadeOut();
+        $('.hero-setting').fadeOut();
+    })
+        
     </script>
 
 </body>
