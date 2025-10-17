@@ -322,6 +322,8 @@ h6{
     position: relative;
     
     z-index: 2;
+
+    text-align: center;
 }
 
 .character-list-box {
@@ -405,4 +407,14 @@ h6{
 
 .char-selected{
     width: 93px;
-  }
+}
+
+.class-dropdown{
+    position: absolute;
+    top: 744px;
+}
+
+.hero-sort{
+    position: absolute;
+    top: 840px;
+}

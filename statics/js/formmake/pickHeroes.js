@@ -106,6 +106,12 @@ $(document).on('click',".character-list", function(e){
     /***
     * 캐릭터 클릭했을 때 칸 선택되어 있으면 거기로 들어감
     ***/
+
+    // 오류 이미지이면 선택 못함
+    if($(this).children('img').attr('src').includes('Error')){
+        return;
+    }
+
     //빈 칸인지 이미 누군가 있는지 확인
     if($(".spot-selected-empty").length>0){
         // 선택한 칸이 빈 칸이며, 클릭한 캐릭터가 다른 곳에 있으면 거길 삭제

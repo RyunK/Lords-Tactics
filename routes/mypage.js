@@ -90,9 +90,14 @@ router.get('/myhero', async(req, res) => {
                 ORDER BY names.KOR_NAME, types.KOR_NAME`;
     var [hero_list, fields] = await (await connection).execute(sql);
 
+    var sql = `SELECT * FROM HERO_CLASSES
+                ORDER BY KOR_NAME`;
+    var [class_list, fields] = await (await connection).execute(sql);
+
     let data = {
         nickname: getDatas.loggedInNickname(req, res),
         hero_list : hero_list,
+        class_list: class_list,
     }
     res.render('mypage_myhero.ejs',  {data : data})
 })

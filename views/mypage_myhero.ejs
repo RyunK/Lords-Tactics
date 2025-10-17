@@ -28,46 +28,69 @@
         <!-- <div class="shadow-filter-basic havinghero-zindex"> -->
         <div class="shadow-filter-basic">
             <div class="filter-container shadow-filter-basic ">
-            <div class="btn-shadow">
-                <button class="herosetting-filterreset btn-red btn-cut color-white">
-                    <h6>필터 초기화</h6> <i class="fa-solid fa-rotate-right"></i> 
-                </button>
-            </div>
-            <div class="havinghero-check">
-                <h6>
-                    <label class=" d-flex align-self-center"> 
-                        <span class="me-2">보유 영웅만 보이기</span> 
-                        <input type="checkbox" name="character_public" class="charPublic-checkbox">
-                        <span class="checkbox-img"></span>  
-                    </label>
-                </h6>
-            </div>
-            <div class="hero-namesearch">
-                <h6>영웅 이름 검색</h6>
-                <input type="text" name="" id="" class="color-black bg-lightgray">
-                <i class="fa-solid fa-magnifying-glass color-black"></i>
-                <!-- <button class="color-black"><span> </span> <i class="fa-solid fa-magnifying-glass color-black"></i></button> -->
-            </div>
-            <div>
-                <h6>속성</h6>
-                <div class="typeselecter d-flex ">
-                    <img src="../sources/img/types/dark.png" alt="">
-                    <img src="../sources/img/types/fire.png" alt="">
-                    <img src="../sources/img/types/water.png" class="inactive" alt="">
-                    <img src="../sources/img/types/grass.png" class="inactive" alt="">
-                    <img src="../sources/img/types/light.png" class="inactive" alt="">
+                <div class="btn-shadow">
+                    <button class="herosetting-filterreset btn-red btn-cut color-white">
+                        <h6>필터 초기화</h6> <i class="fa-solid fa-rotate-right"></i> 
+                    </button>
+                </div>
+                <div class="havinghero-check">
+                    <h6>
+                        <label class=" d-flex align-self-center"> 
+                            <span class="me-2">보유 영웅만 보이기</span> 
+                            <input type="checkbox" name="character_public" class="charPublic-checkbox">
+                            <span class="checkbox-img"></span>  
+                        </label>
+                    </h6>
+                </div>
+                <div class="hero-namesearch">
+                    <h6>영웅 이름 검색</h6>
+                    <input type="text" name="" id="" class="hero-name-search color-black bg-lightgray">
+                    <i class="fa-solid fa-magnifying-glass color-black"></i>
+                </div>
+                <div>
+                    <h6>속성</h6>
+                    <div class="typeselecter d-flex ">
+                        <img src="/sources/img/types/dark.png" alt="">
+                        <img src="/sources/img/types/fire.png" alt="">
+                        <img src="/sources/img/types/water.png" class="inactive" alt="">
+                        <img src="/sources/img/types/grass.png" class="inactive" alt="">
+                        <img src="/sources/img/types/light.png" class="inactive" alt="">
+                    </div>
+                </div>
+                <div>
+                    <h6>클래스</h6>
+                    <button data-btn="class-dropdown" class="hero-class-search color-black"><span>
+                        <img src="../sources/img/classes/guardian.png" width="18px" class="invisible me-2"><span class="classnamespan">전체 클래스</span></span><i class="fa-solid fa-chevron-down"></i></button>
+                </div>
+                <div>
+                    <h6>영웅 정렬</h6>
+                    <button data-btn="hero-sort" class="hero-sort-btn color-black">영웅순<i class="fa-solid fa-chevron-down"></i></button>
                 </div>
             </div>
-            <div>
-                <h6>클래스</h6>
-                <button class="color-black"><span><img src="../sources/img/classes/striker.png" width="18px"> 스트라이커</span> <i class="fa-solid fa-chevron-down"></i></button>
-            </div>
-            <div>
-                <h6>영웅 정렬</h6>
-                <button class="color-black">이름순 <i class="fa-solid fa-chevron-down"></i></button>
-            </div>
-            </div>
         </div>
+        <div class="dropdown-contents">
+            <ul class="class-dropdown bg-lightgray">
+                <% for(let i=0; i<data.class_list.length; i++){ %>
+                    <li data-id="<%= data.class_list[i]['id']%>">
+                        <img src="../sources/img/classes/<%=data.class_list[i]['eng_name'] %>.png" width="18px" class="me-2">
+                        <%=data.class_list[i]['kor_name'] %></li>
+                <% } %>
+                <li data-id="0">전체 클래스</li>
+            </ul>
+
+            <ul class="hero-sort bg-lightgray">
+                <li data-sort="hero">영웅순</li>
+                <li data-sort="grade">등급순</li>
+            </ul>
+        </div>
+        <script>
+            $(".filter-container button").on("click", function(){
+                let btn_name = $(this).data('btn');
+                $(".dropdown-contents").children(`.${btn_name}`).slideToggle();
+                // console.log(btn_name)
+                dropdownIconToggle($(this));
+            })
+        </script>
     </div>
 
     <!-- 오른쪽 컨텐츠 -->
@@ -83,20 +106,21 @@
                 <div class="setting-charinfo pe-4  d-flex justify-content-center ">
                     <div>
                     <div class="setting-charname d-flex align-items-center">
-                        <img src="/sources/img/types/fire.png" class="setting-class-size">
-                        <p class="ms-1">메이링</p>
+                        <img src="/sources/img/types/fire.png" class="invisible setting-class-size">
+                        <p class="ms-1"></p>
                     </div>
                     <div class="setting-charimg mt-3" >
-                        <img src="/sources/img/characters/fire_meiling_shooter.png">
-                        <span class="lv_fire lv">70</span>
-                        <span class="onegak gak">7</span>
+                        <img src="/sources/img/characters/Chr_Error.png">
+                        <!-- <span class="lv_fire lv"></span>
+                        <span class="onegak gak"></span> -->
                     </div>
                     </div>
                 </div>
                 <div class="right-line"></div>
                 <div class="setting-form d-flex justify-content-center">
-                    <form class="">
-                        <div class="d-flex align-items-center mt-3"><p class="">레벨</p><div class="btn-shadow lv-input ms-5"><input type="input" class="btn-cut "></div></div>
+                    <p class="herosetting-placeholder">설정할 영웅을 선택하세요</p>
+                    <form class="invisible">
+                        <div class=" d-flex align-items-center mt-3"><p class="">레벨</p><div class="btn-shadow lv-input ms-5"><input type="input" class="btn-cut "></div></div>
                         <div class="d-flex mt-3">
                             <p>초월</p>
                             <label class="charSetting-ele d-flex align-self-center me-3">  
@@ -138,8 +162,8 @@
             </div>        
         </div>
         
-        <div class="bg-basicdark shadow-basic">
-            <ul class="characters-container  d-flex justify-content-center flex-wrap">
+        <div class="bg-basicdark shadow-basic ">
+            <ul class=" characters-container ">
                 <div class="havinghero-set color-white btn-cut">
                     <div class="btn-blue">보유 영웅 설정</div>
                     <!-- <div class="btn-red">OFF</div> -->
@@ -147,31 +171,31 @@
                 </div>
                 <!-- <span class="color-white havinghero-notice">• 체크된 영웅은 보유 영웅으로, 체크가 해제된 영웅은 미보유 영웅으로 저장됩니다.</span> -->
                 
-                <li class="character-list-box select-liner d-flex justify-content-center" >
-                    <div class="character-list" >
-                        <div class='char-selected'></div>
-                        <i class="havingheroset-check fa-solid fa-check"></i>
-                        <img src="/sources/img/characters/dark_zhurahan_warrior.png">
-                        <span class="lv_dark lv">70</span>
-                        <span class="nogak gak">7</span>
-                    </div>
-                </li>
+                <div class="d-flex justify-content-start flex-wrap">
+                    <li class="character-list-box select-liner d-flex justify-content-center" >
+                        <div class="character-list" >
+                            <i class="havingheroset-check fa-solid fa-check"></i>
+                            <img src="/sources/img/characters/dark_zhurahan_warrior.png">
+                            <span class="lv_dark lv">70</span>
+                            <span class="nogak gak">7</span>
+                        </div>
+                    </li>
 
-                <% for(let i=0; i<data.hero_list.length; i++){ %>
-                <li class="character-list-box select-liner d-flex justify-content-center">
-                    <div class="character-list" >
-                        <img src="/sources/img/characters/<%= data.hero_list[i].eng_type %>_<%= data.hero_list[i].eng_name %>_<%= data.hero_list[i].eng_class %>.png" 
-                        alt="" data-id="<%= data.hero_list[i]["ID"] %>" data-korname="<%= data.hero_list[i].kor_name %>" data-type="<%=data.hero_list[i].eng_type%>"
-                        onerror="this.onerror=null; this.src='/sources/img/characters/Chr_Error.png';">
+                    <% for(let i=0; i<data.hero_list.length; i++){ %>
+                    <li class="character-list-box select-liner d-flex justify-content-center">
+                        <div class="character-list" >
+                            <img src="/sources/img/characters/<%= data.hero_list[i].eng_type %>_<%= data.hero_list[i].eng_name %>_<%= data.hero_list[i].eng_class %>.png" 
+                            alt="" data-id="<%= data.hero_list[i]["ID"] %>" data-korname="<%= data.hero_list[i].kor_name %>" data-type="<%=data.hero_list[i].eng_type%>"
+                            onerror="this.onerror=null; this.src='/sources/img/characters/Chr_Error.png';">
 
-                        <% if(data.nickname){ %>
-                        <span class="lv_<%=data.hero_list[i].eng_type%> lv">70</span>
-                        <span class="nogak gak">7</span>
-                        <% } %>
-                    </div>
-                </li>
-                <% } %>
-                
+                            <% if(data.nickname){ %>
+                            <span class="lv_<%=data.hero_list[i].eng_type%> lv">70</span>
+                            <span class="nogak gak">7</span>
+                            <% } %>
+                        </div>
+                    </li>
+                    <% } %>
+                </div>
                 
             </ul>
         </div>
@@ -181,15 +205,117 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script> 
     <script src="/js/formmake/heroSetting.js"></script>
     <script>
+        $(document).on('click', function(e){
+            // 빈 곳 클릭하면 영웅 필터 올라감
+            if(!$(e.target).closest(".dropdown-contents ul").length>0
+            && !$(e.target).closest(".filter-container button").length>0
+            && !$(e.target).closest(".hero-namesearch").length>0){
+                $(".dropdown-contents ul").slideUp(200);
+                $(".filter-container .hero-class-search i").attr('class', "fa-solid fa-chevron-down");
+                $(".filter-container .hero-sort-btn i").attr('class', "fa-solid fa-chevron-down");
+            }
+        });
 
+        function dropdownIconToggle(btn){
+            const now_i = btn.children("i");
 
-        // 영웅을 클릭했을 때 선택되며 영웅 설정창에 뜨기
-        $('.character-list').on("click", function(){
-            $('.char-selected').remove();
-            $(this).prepend(`<div class='char-selected'></div>`);
-
-            selectHeroSetting($(this));
+            // console.log(now_i)
+            if(now_i.attr('class').includes("fa-chevron-down")){
+                now_i.attr('class', "fa-solid fa-chevron-up");
+            } else {
+                now_i.attr('class', "fa-solid fa-chevron-down");
+            }
+        }
+        
+        $('.class-dropdown li').on("click", function(){
+            var btn_img = $('.hero-class-search img');
+            if($(this).children('img').length > 0) {
+                btn_img.attr('src', $(this).children('img').attr('src'));
+                btn_img.removeClass('invisible');
+            }
+            else btn_img.addClass('invisible');
+            $('.hero-class-search .classnamespan').text($(this).text())
+            $('.class-dropdown').slideUp();
+            dropdownIconToggle($('.hero-class-search'));
+            hero_filter();
         })
+
+        $(document).on("click", '.character-list' ,function(){
+            // 보유영웅 설정 OFF
+            if($('.char-selected').length > 0
+            && $(this).children('img').data('id') == $('.setting-charimg img').data('id')){
+                // 영웅을 다시 클릭했을 때 선택이 해제됨
+                $('.char-selected').remove();
+
+                $('.setting-charname img').addClass("invisible")
+                $('.setting-form .herosetting-placeholder').removeClass("invisible")
+                $('.setting-form form').addClass("invisible")
+                $('.setting-btns input').prop('disabled', true);
+
+                $('.setting-charname p').text('');
+                $('.setting-charimg').empty();
+                $('.setting-charimg').append(`<img src="/sources/img/characters/Chr_Error.png">`);
+            } else{
+                // 영웅을 클릭했을 때 선택되며 영웅 설정창에 뜨기
+                $('.char-selected').remove();
+                $(this).prepend(`<div class='char-selected'></div>`);
+
+                $('.setting-charname img').removeClass("invisible")
+                $('.setting-form .herosetting-placeholder').addClass("invisible")
+                $('.setting-form form').removeClass("invisible")
+                selectHeroSetting($(this));
+                $('.setting-btns input').prop('disabled', false);
+            }
+            
+        })
+
+    /**
+     * 영웅 필터링해서 적용까지
+     **/
+    function hero_filter(){
+        // console.log("잡힘")
+        let result="";
+        let hero_list = '<%- JSON.stringify(data.hero_list) %>';
+        hero_list = JSON.parse(hero_list);
+
+        let class_name = $('.hero-class-search > span').eq(0).text();
+        // let type_name = $('.type-search input').val();
+        let hero_name = $('.hero-namesearch input').val();
+
+
+        for(let i=0; i < hero_list.length; i++){
+            if(
+            (class_name.includes(hero_list[i]["kor_class"]) || class_name.includes('전체'))
+            // && (type_name == hero_list[i]["kor_type"] || !type_name)
+            &&((hero_list[i]["kor_name"]).includes(hero_name) || !hero_name)
+            ){
+                // console.log(hero_list[i]["kor_name"] + hero_name);
+                result = result +
+                    `<li class="character-list-box select-liner d-flex justify-content-center">
+                        <div class="character-list" >
+                            <img src="/sources/img/characters/${hero_list[i].eng_type}_${hero_list[i].eng_name}_${hero_list[i].eng_class}.png" 
+                            alt="" data-id="${hero_list[i]["ID"]}" data-korname="${hero_list[i]["kor_name"]}" data-type="${hero_list[i].eng_type}"
+                            onerror="this.onerror=null; this.src='/sources/img/characters/Chr_Error.png';">
+                            <span class="lv_${hero_list[i].eng_type} lv">70</span>
+                            <span class="nogak gak">7</span>
+                        </div>
+                    </li>`
+            }
+
+        }
+
+        // console.log(result);
+        
+        $(".characters-container > .d-flex").html(result);
+    }
+
+    $('.hero-namesearch input').on('propertychange change keyup paste input', function(){
+        hero_filter();
+    })
+
+
+
+
     </script>
 </body>
 </html>

@@ -83,3 +83,10 @@
     height: 45px;
     font-size: 16px;
 }
+
+.herosetting-placeholder{
+    position: absolute;
+
+    top: 95px;
+    left: calc(50% - 90px);
+}
