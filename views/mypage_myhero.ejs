@@ -20,16 +20,16 @@
 
     <%- include('nav_and_banner.ejs', {page: '', nickname: data.nickname, notice:'2025.08.01 신규 캐릭터 [물]라플라스 추가 완료'}) %> 
 
-    <!-- <div class="havinghero-blocker"></div> -->
+    <div class="havinghero-blocker invisible"></div>
 
     <!-- 왼쪽 리모콘(?) -->
     <div class="mypage-remote ">
         <%- include('mypage_nav.ejs', {page: 'hero setting', nickname: data.nickname}) %> 
         <!-- <div class="shadow-filter-basic havinghero-zindex"> -->
-        <div class="shadow-filter-basic">
+        <div class="filter-shadow shadow-filter-basic">
             <div class="filter-container shadow-filter-basic ">
                 <div class="btn-shadow">
-                    <button class="herosetting-filterreset btn-red btn-cut color-white">
+                    <button data-btn="reset" class="herosetting-filterreset btn-red btn-cut color-white">
                         <h6>필터 초기화</h6> <i class="fa-solid fa-rotate-right"></i> 
                     </button>
                 </div>
@@ -52,9 +52,9 @@
                     <div class="typeselecter d-flex ">
                         <img src="/sources/img/types/dark.png" alt="">
                         <img src="/sources/img/types/fire.png" alt="">
-                        <img src="/sources/img/types/water.png" class="inactive" alt="">
-                        <img src="/sources/img/types/grass.png" class="inactive" alt="">
-                        <img src="/sources/img/types/light.png" class="inactive" alt="">
+                        <img src="/sources/img/types/water.png" class="" alt="">
+                        <img src="/sources/img/types/grass.png" class="" alt="">
+                        <img src="/sources/img/types/light.png" class="" alt="">
                     </div>
                 </div>
                 <div>
@@ -86,6 +86,7 @@
         <script>
             $(".filter-container button").on("click", function(){
                 let btn_name = $(this).data('btn');
+                if(btn_name == 'reset') return;
                 $(".dropdown-contents").children(`.${btn_name}`).slideToggle();
                 // console.log(btn_name)
                 dropdownIconToggle($(this));
@@ -162,24 +163,24 @@
             </div>        
         </div>
         
-        <div class="bg-basicdark shadow-basic ">
+        <div class="characters-container-bg bg-basicdark shadow-basic ">
             <ul class=" characters-container ">
                 <div class="havinghero-set color-white btn-cut">
                     <div class="btn-blue">보유 영웅 설정</div>
                     <!-- <div class="btn-red">OFF</div> -->
-                    <div class="btn-gray">ON</div>
+                    <div class="on-btn btn-gray">ON</div>
                 </div>
-                <!-- <span class="color-white havinghero-notice">• 체크된 영웅은 보유 영웅으로, 체크가 해제된 영웅은 미보유 영웅으로 저장됩니다.</span> -->
+                <span class="color-white havinghero-notice invisible">• 체크된 영웅은 보유 영웅으로, 체크가 해제된 영웅은 미보유 영웅으로 저장됩니다.</span>
                 
                 <div class="d-flex justify-content-start flex-wrap">
-                    <li class="character-list-box select-liner d-flex justify-content-center" >
+                    <!-- <li class="character-list-box select-liner d-flex justify-content-center" >
                         <div class="character-list" >
                             <i class="havingheroset-check fa-solid fa-check"></i>
                             <img src="/sources/img/characters/dark_zhurahan_warrior.png">
                             <span class="lv_dark lv">70</span>
                             <span class="nogak gak">7</span>
                         </div>
-                    </li>
+                    </li> -->
 
                     <% for(let i=0; i<data.hero_list.length; i++){ %>
                     <li class="character-list-box select-liner d-flex justify-content-center">
@@ -214,6 +215,24 @@
                 $(".filter-container .hero-class-search i").attr('class', "fa-solid fa-chevron-down");
                 $(".filter-container .hero-sort-btn i").attr('class', "fa-solid fa-chevron-down");
             }
+
+            // 보유 영웅 설정 켜져있을 때 다른 곳 클릭하면 꺼짐
+            if(!$('.havinghero-blocker').hasClass('invisible')
+            && !$(e.target).closest(".characters-container-bg").length > 0
+            && !$(e.target).closest(".characters-container").length > 0
+            && !$(e.target).closest(".character-list").length > 0
+            && !$(e.target).closest(".filter-shadow").length > 0
+            )
+            {
+                $('.havinghero-blocker').toggleClass('invisible');
+                $('.havinghero-notice').toggleClass('invisible');
+                $('.filter-shadow').toggleClass('havinghero-zindex');
+                
+                var onoff = $('.havinghero-set .on-btn');
+                onoff.text("ON");
+                onoff.addClass('btn-gray');
+                onoff.removeClass('btn-red');
+             }
         });
 
         function dropdownIconToggle(btn){
@@ -241,6 +260,20 @@
         })
 
         $(document).on("click", '.character-list' ,function(){
+            
+            // 보유영웅 설정 ON
+            if(!$('.havinghero-blocker').hasClass('invisible')){
+                if($(this).children('i').length > 0){
+                    $(this).children('i').remove();
+                } else{
+                    $(this).append(`<i class="havingheroset-check fa-solid fa-check"></i>`);
+                }
+            
+                return ;
+            }
+            
+            
+            
             // 보유영웅 설정 OFF
             if($('.char-selected').length > 0
             && $(this).children('img').data('id') == $('.setting-charimg img').data('id')){
@@ -278,15 +311,19 @@
         let hero_list = '<%- JSON.stringify(data.hero_list) %>';
         hero_list = JSON.parse(hero_list);
 
-        let class_name = $('.hero-class-search > span').eq(0).text();
-        // let type_name = $('.type-search input').val();
         let hero_name = $('.hero-namesearch input').val();
+        let type_names = $('.typeselecter img:not(.inactive)').map(function(i, e){
+            return $(e).attr('src').substr(19).split('.')[0]
+        }).get();
+        let class_name = $('.hero-class-search > span').eq(0).text();
+
+        // console.log(type_names)
 
 
         for(let i=0; i < hero_list.length; i++){
             if(
             (class_name.includes(hero_list[i]["kor_class"]) || class_name.includes('전체'))
-            // && (type_name == hero_list[i]["kor_type"] || !type_name)
+            && (type_names.includes(hero_list[i]["eng_type"]))
             &&((hero_list[i]["kor_name"]).includes(hero_name) || !hero_name)
             ){
                 // console.log(hero_list[i]["kor_name"] + hero_name);
@@ -313,8 +350,36 @@
         hero_filter();
     })
 
+    $('.typeselecter img').on('click', function(){
+        $(this).toggleClass('inactive');
+        hero_filter();
+    })
 
 
+    $('.herosetting-filterreset').on('click', function(){
+        $('.hero-namesearch input').val('');
+        $('.typeselecter img').removeClass('inactive');
+        $('.hero-class-search img').addClass('invisible');
+        $('.hero-class-search .classnamespan').text('전체 클래스');
+        hero_filter();
+    })
+
+    $('.havinghero-set').on('click', function(){
+        $('.havinghero-blocker').toggleClass('invisible');
+        $('.havinghero-notice').toggleClass('invisible');
+        $('.filter-shadow').toggleClass('havinghero-zindex');
+        
+        var onoff = $('.havinghero-set .on-btn');
+        if(onoff.text().includes("ON")){
+            onoff.text("OFF");
+            onoff.addClass('btn-red');
+            onoff.removeClass('btn-gray');
+        } else{
+            onoff.text("ON");
+            onoff.addClass('btn-gray');
+            onoff.removeClass('btn-red');
+        }
+    })
 
     </script>
 </body>

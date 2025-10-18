@@ -141,6 +141,7 @@ h6{
 
     left: 25px;
     display: none;
+    z-index: 2;
 }  
 
 .dropdown-contents li{
@@ -411,10 +412,15 @@ h6{
 
 .class-dropdown{
     position: absolute;
-    top: 744px;
+    top: 742px;
 }
 
 .hero-sort{
     position: absolute;
-    top: 840px;
+    top: 837px;
+}
+
+.characters-container-bg{
+    position: relative;
+    z-index: 2;
 }
