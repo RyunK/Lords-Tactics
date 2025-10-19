@@ -165,12 +165,27 @@
         
         <div class="characters-container-bg bg-basicdark shadow-basic ">
             <ul class=" characters-container ">
-                <div class="havinghero-set color-white btn-cut">
-                    <div class="btn-blue">보유 영웅 설정</div>
-                    <!-- <div class="btn-red">OFF</div> -->
-                    <div class="on-btn btn-gray">ON</div>
+                <div class="characters-container-top btn-shadow">
+                    <div class="havinghero-set color-white btn-cut">
+                        <div class="btn-blue">보유 영웅 설정</div>
+                        <!-- <div class="btn-red">OFF</div> -->
+                        <div class="on-btn btn-gray">ON</div>
+                    </div>
+
+                    <p class="color-white havinghero-notice invisible">• 체크된 영웅은 보유 영웅으로, 체크가 해제된 영웅은 미보유 영웅으로 저장됩니다.</p>
+
+                    <!-- <div class="havinghero-set color-white btn-cut">
+                        <div class="btn-blue">전체 선택</div>
+                        <div class="on-btn btn-gray">전체 해제</div>
+                    </div> -->
+
+                    <div class="all-btn color-white btn-cut  d-flex invisible">
+                        <div class="btn-yellow  allselect-btn">전체 선택</div>
+                        <div class="btn-red allunselect-btn">전체 해제</div>
+                    </div>
                 </div>
-                <span class="color-white havinghero-notice invisible">• 체크된 영웅은 보유 영웅으로, 체크가 해제된 영웅은 미보유 영웅으로 저장됩니다.</span>
+                    
+                
                 
                 <div class="d-flex justify-content-start flex-wrap">
                     <!-- <li class="character-list-box select-liner d-flex justify-content-center" >
@@ -204,103 +219,198 @@
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script> 
+    <script src="https://code.jquery.com/ui/1.14.1/jquery-ui.min.js" integrity="sha256-AlTido85uXPlSyyaZNsjJXeCs07eSv3r43kyCVc8ChI=" crossorigin="anonymous"></script>
     <script src="/js/formmake/heroSetting.js"></script>
+    <!-- <script src="/js/mypage/havingHeroCheck.js"></script> -->
     <script>
-        $(document).on('click', function(e){
-            // 빈 곳 클릭하면 영웅 필터 올라감
-            if(!$(e.target).closest(".dropdown-contents ul").length>0
-            && !$(e.target).closest(".filter-container button").length>0
-            && !$(e.target).closest(".hero-namesearch").length>0){
-                $(".dropdown-contents ul").slideUp(200);
-                $(".filter-container .hero-class-search i").attr('class', "fa-solid fa-chevron-down");
-                $(".filter-container .hero-sort-btn i").attr('class', "fa-solid fa-chevron-down");
-            }
 
-            // 보유 영웅 설정 켜져있을 때 다른 곳 클릭하면 꺼짐
-            if(!$('.havinghero-blocker').hasClass('invisible')
-            && !$(e.target).closest(".characters-container-bg").length > 0
-            && !$(e.target).closest(".characters-container").length > 0
-            && !$(e.target).closest(".character-list").length > 0
-            && !$(e.target).closest(".filter-shadow").length > 0
-            )
-            {
-                $('.havinghero-blocker').toggleClass('invisible');
-                $('.havinghero-notice').toggleClass('invisible');
-                $('.filter-shadow').toggleClass('havinghero-zindex');
-                
-                var onoff = $('.havinghero-set .on-btn');
-                onoff.text("ON");
-                onoff.addClass('btn-gray');
-                onoff.removeClass('btn-red');
-             }
-        });
 
-        function dropdownIconToggle(btn){
-            const now_i = btn.children("i");
+    $(document).on('click', function(e){
+        // 빈 곳 클릭하면 영웅 필터 올라감
+        if(!$(e.target).closest(".dropdown-contents ul").length>0
+        && !$(e.target).closest(".filter-container button").length>0
+        && !$(e.target).closest(".hero-namesearch").length>0){
+            $(".dropdown-contents ul").slideUp(200);
+            $(".filter-container .hero-class-search i").attr('class', "fa-solid fa-chevron-down");
+            $(".filter-container .hero-sort-btn i").attr('class', "fa-solid fa-chevron-down");
+        }
 
-            // console.log(now_i)
-            if(now_i.attr('class').includes("fa-chevron-down")){
-                now_i.attr('class', "fa-solid fa-chevron-up");
-            } else {
-                now_i.attr('class', "fa-solid fa-chevron-down");
+        // 보유 영웅 설정 켜져있을 때 다른 곳 클릭하면 꺼짐
+        if(!$('.havinghero-blocker').hasClass('invisible')
+        && !$(e.target).closest(".characters-container-bg").length > 0
+        && !$(e.target).closest(".characters-container").length > 0
+        && !$(e.target).closest(".character-list").length > 0
+        && !$(e.target).closest(".filter-shadow").length > 0
+        )
+        {
+            $('.havinghero-blocker').toggleClass('invisible');
+            $('.havinghero-notice').toggleClass('invisible');
+            $('.filter-shadow').toggleClass('havinghero-zindex');
+            
+            var onoff = $('.havinghero-set .on-btn');
+            onoff.text("ON");
+            onoff.addClass('btn-gray');
+            onoff.removeClass('btn-red');
+            $('.all-btn').addClass('invisible');
+            $('.character-list i').remove();
+
+        }
+    });
+
+
+    /**
+     * 보유 영웅 설정 - 캐릭터 선택시 호출
+     */
+
+    class HavingHeroChecker{
+        static saved_heroes = []; // DB에 보유했다고 저장된 영웅 목록
+        static checked_heroes = []; // 보유 영웅 설정에서 체크한 영웅 목록
+
+        static add_check(idx){
+            HavingHeroChecker.checked_heroes.push(idx);
+            return HavingHeroChecker.checked_heroes;
+        }
+        
+        static remove_check(idx){
+            HavingHeroChecker.checked_heroes = HavingHeroChecker.checked_heroes.filter((element) => element !== idx)
+            return HavingHeroChecker.checked_heroes;
+        }
+
+        static getter_check(){
+            return HavingHeroChecker.checked_heroes;
+        }
+
+        static reset_check(){
+            HavingHeroChecker.checked_heroes = [];
+            return HavingHeroChecker.checked_heroes;
+        }
+
+        static getter_saved(){
+            return HavingHeroChecker.saved_heroes;
+        }
+
+        static setter_saved(arr){
+            HavingHeroChecker.saved_heroes = arr;
+            return HavingHeroChecker.saved_heroes;
+        }
+
+        static remove_saved(idx){
+            HavingHeroChecker.saved_heroes = HavingHeroChecker.saved_heroes.filter((element) => element !== idx)
+            return HavingHeroChecker.saved_heroes;
+        }
+
+        static checked_heroes_recheck(){
+            let char_list = $(".character-list");
+
+            for(let i=0; i < char_list.length; i++){
+                if((HavingHeroChecker.checked_heroes.includes(char_list.eq(i).children('img').data('id'))
+                || HavingHeroChecker.saved_heroes.includes(char_list.eq(i).children('img').data('id')))
+                && char_list.eq(i).children('i').length <= 0 )
+                {
+                    char_list.eq(i).append(`<i class="havingheroset-check fa-solid fa-check"></i>`)
+                }
             }
         }
         
-        $('.class-dropdown li').on("click", function(){
-            var btn_img = $('.hero-class-search img');
-            if($(this).children('img').length > 0) {
-                btn_img.attr('src', $(this).children('img').attr('src'));
-                btn_img.removeClass('invisible');
-            }
-            else btn_img.addClass('invisible');
-            $('.hero-class-search .classnamespan').text($(this).text())
-            $('.class-dropdown').slideUp();
-            dropdownIconToggle($('.hero-class-search'));
-            hero_filter();
-        })
-
-        $(document).on("click", '.character-list' ,function(){
-            
-            // 보유영웅 설정 ON
-            if(!$('.havinghero-blocker').hasClass('invisible')){
-                if($(this).children('i').length > 0){
-                    $(this).children('i').remove();
-                } else{
-                    $(this).append(`<i class="havingheroset-check fa-solid fa-check"></i>`);
+        static checked_heroes_push(){
+            let char_list = $(".character-list:has(i)");
+            for(let i=0; i < char_list.length; i++){
+                if(!HavingHeroChecker.checked_heroes.includes(char_list.eq(i).children('img').data('id'))
+                && !HavingHeroChecker.saved_heroes.includes(char_list.eq(i).children('img').data('id'))
+                && char_list.eq(i).children('i').length > 0 )
+                {
+                    HavingHeroChecker.add_check(char_list.eq(i).children('img').data('id'))
                 }
-            
-                return ;
             }
-            
-            
-            
-            // 보유영웅 설정 OFF
-            if($('.char-selected').length > 0
-            && $(this).children('img').data('id') == $('.setting-charimg img').data('id')){
-                // 영웅을 다시 클릭했을 때 선택이 해제됨
-                $('.char-selected').remove();
+        }
 
-                $('.setting-charname img').addClass("invisible")
-                $('.setting-form .herosetting-placeholder').removeClass("invisible")
-                $('.setting-form form').addClass("invisible")
-                $('.setting-btns input').prop('disabled', true);
+        static unchecked_heroes_remove(){
+            let char_list = $(".character-list");
 
-                $('.setting-charname p').text('');
-                $('.setting-charimg').empty();
-                $('.setting-charimg').append(`<img src="/sources/img/characters/Chr_Error.png">`);
+            for(let i=0; i < char_list.length; i++){
+                if((HavingHeroChecker.checked_heroes.includes(char_list.eq(i).children('img').data('id'))
+                || HavingHeroChecker.saved_heroes.includes(char_list.eq(i).children('img').data('id')))
+                && char_list.eq(i).children('i').length <= 0 )
+                {
+                    HavingHeroChecker.remove_check(char_list.eq(i).children('img').data('id'));
+                    HavingHeroChecker.remove_saved(char_list.eq(i).children('img').data('id'));
+
+                }
+            }
+        }
+    }
+
+    function dropdownIconToggle(btn){
+        const now_i = btn.children("i");
+
+        // console.log(now_i)
+        if(now_i.attr('class').includes("fa-chevron-down")){
+            now_i.attr('class', "fa-solid fa-chevron-up");
+        } else {
+            now_i.attr('class', "fa-solid fa-chevron-down");
+        }
+    }
+    
+    $('.class-dropdown li').on("click", function(){
+        var btn_img = $('.hero-class-search img');
+        if($(this).children('img').length > 0) {
+            btn_img.attr('src', $(this).children('img').attr('src'));
+            btn_img.removeClass('invisible');
+        }
+        else btn_img.addClass('invisible');
+        $('.hero-class-search .classnamespan').text($(this).text())
+        $('.class-dropdown').slideUp();
+        dropdownIconToggle($('.hero-class-search'));
+        hero_filter();
+    })
+
+    $(document).on("click", '.character-list' ,function(){
+        
+        // 보유영웅 설정 ON
+        if(!$('.havinghero-blocker').hasClass('invisible')){
+            if($(this).children('i').length > 0){
+                $(this).children('i').remove();
+                HavingHeroChecker.unchecked_heroes_remove();
+                HavingHeroChecker.checked_heroes_push();
             } else{
-                // 영웅을 클릭했을 때 선택되며 영웅 설정창에 뜨기
-                $('.char-selected').remove();
-                $(this).prepend(`<div class='char-selected'></div>`);
-
-                $('.setting-charname img').removeClass("invisible")
-                $('.setting-form .herosetting-placeholder').addClass("invisible")
-                $('.setting-form form').removeClass("invisible")
-                selectHeroSetting($(this));
-                $('.setting-btns input').prop('disabled', false);
+                $(this).append(`<i class="havingheroset-check fa-solid fa-check"></i>`);
+                HavingHeroChecker.unchecked_heroes_remove();
+                HavingHeroChecker.checked_heroes_push();
+                console.log(HavingHeroChecker.getter_check());
             }
-            
-        })
+        
+            return ;
+        }
+        
+        
+        
+        // 보유영웅 설정 OFF
+        if($('.char-selected').length > 0
+        && $(this).children('img').data('id') == $('.setting-charimg img').data('id')){
+            // 영웅을 다시 클릭했을 때 선택이 해제됨
+            $('.char-selected').remove();
+
+            $('.setting-charname img').addClass("invisible")
+            $('.setting-form .herosetting-placeholder').removeClass("invisible")
+            $('.setting-form form').addClass("invisible")
+            $('.setting-btns input').prop('disabled', true);
+
+            $('.setting-charname p').text('');
+            $('.setting-charimg').empty();
+            $('.setting-charimg').append(`<img src="/sources/img/characters/Chr_Error.png">`);
+        } else{
+            // 영웅을 클릭했을 때 선택되며 영웅 설정창에 뜨기
+            $('.char-selected').remove();
+            $(this).prepend(`<div class='char-selected'></div>`);
+
+            $('.setting-charname img').removeClass("invisible")
+            $('.setting-form .herosetting-placeholder').addClass("invisible")
+            $('.setting-form form').removeClass("invisible")
+            selectHeroSetting($(this));
+            $('.setting-btns input').prop('disabled', false);
+        }
+        
+    })
 
     /**
      * 영웅 필터링해서 적용까지
@@ -310,6 +420,7 @@
         let result="";
         let hero_list = '<%- JSON.stringify(data.hero_list) %>';
         hero_list = JSON.parse(hero_list);
+        // let hero_list_html = $('.character-list-box');
 
         let hero_name = $('.hero-namesearch input').val();
         let type_names = $('.typeselecter img:not(.inactive)').map(function(i, e){
@@ -319,24 +430,22 @@
 
         // console.log(type_names)
 
-
         for(let i=0; i < hero_list.length; i++){
             if(
             (class_name.includes(hero_list[i]["kor_class"]) || class_name.includes('전체'))
             && (type_names.includes(hero_list[i]["eng_type"]))
             &&((hero_list[i]["kor_name"]).includes(hero_name) || !hero_name)
             ){
-                // console.log(hero_list[i]["kor_name"] + hero_name);
                 result = result +
-                    `<li class="character-list-box select-liner d-flex justify-content-center">
-                        <div class="character-list" >
-                            <img src="/sources/img/characters/${hero_list[i].eng_type}_${hero_list[i].eng_name}_${hero_list[i].eng_class}.png" 
-                            alt="" data-id="${hero_list[i]["ID"]}" data-korname="${hero_list[i]["kor_name"]}" data-type="${hero_list[i].eng_type}"
-                            onerror="this.onerror=null; this.src='/sources/img/characters/Chr_Error.png';">
-                            <span class="lv_${hero_list[i].eng_type} lv">70</span>
-                            <span class="nogak gak">7</span>
-                        </div>
-                    </li>`
+                `<li class="character-list-box select-liner d-flex justify-content-center">
+                    <div class="character-list" >
+                        <img src="/sources/img/characters/${hero_list[i].eng_type}_${hero_list[i].eng_name}_${hero_list[i].eng_class}.png" 
+                        alt="" data-id="${hero_list[i]["ID"]}" data-korname="${hero_list[i]["kor_name"]}" data-type="${hero_list[i].eng_type}"
+                        onerror="this.onerror=null; this.src='/sources/img/characters/Chr_Error.png';">
+                        <span class="lv_${hero_list[i].eng_type} lv">70</span>
+                        <span class="nogak gak">7</span>
+                    </div>
+                </li>`
             }
 
         }
@@ -344,6 +453,7 @@
         // console.log(result);
         
         $(".characters-container > .d-flex").html(result);
+        HavingHeroChecker.checked_heroes_recheck()
     }
 
     $('.hero-namesearch input').on('propertychange change keyup paste input', function(){
@@ -368,16 +478,44 @@
         $('.havinghero-blocker').toggleClass('invisible');
         $('.havinghero-notice').toggleClass('invisible');
         $('.filter-shadow').toggleClass('havinghero-zindex');
+        $('.all-btn').toggleClass('invisible');
         
         var onoff = $('.havinghero-set .on-btn');
         if(onoff.text().includes("ON")){
             onoff.text("OFF");
             onoff.addClass('btn-red');
             onoff.removeClass('btn-gray');
+            HavingHeroChecker.checked_heroes_recheck()
+
         } else{
             onoff.text("ON");
             onoff.addClass('btn-gray');
             onoff.removeClass('btn-red');
+            $('.character-list i').remove();
+        }
+    })
+
+    $('.allselect-btn').on('click', function(){
+        // 보유영웅 설정 ON?
+        if(!$('.havinghero-blocker').hasClass('invisible')){
+            let heroes = $('.character-list');
+            for(let i=0; i<heroes.length; i++){
+                if(heroes.eq(i).children('i').length <= 0){
+                    $('.character-list').append(`<i class="havingheroset-check fa-solid fa-check"></i>`);
+                }
+            }
+            HavingHeroChecker.checked_heroes_push();
+            HavingHeroChecker.unchecked_heroes_remove();
+        }
+    })
+
+    $('.allunselect-btn').on('click', function(){
+        // 보유영웅 설정 ON?
+        if(!$('.havinghero-blocker').hasClass('invisible')){
+            $('.character-list i').remove();
+            HavingHeroChecker.unchecked_heroes_remove();
+            HavingHeroChecker.checked_heroes_push();
+
         }
     })
 

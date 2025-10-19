@@ -345,14 +345,24 @@ h6{
     font-size: 15px;
 }
 
-.characters-container .havinghero-set{
+.characters-container-top{
     position: absolute;
-
-    display: flex;
-
     top: 25px;
     left: 40px;
-    
+    font-size: 1.2em;
+    width: calc(100% - 80px);
+
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.characters-container .havinghero-set{
+    display: flex;
+}
+
+.all-btn > div{
+    padding: 10px 15px;
 }
 
 .characters-container .havinghero-set div{
@@ -361,7 +371,7 @@ h6{
 
     padding: 10px 15px;
 
-    font-size: 1.2em;
+    /* font-size: 1.2em; */
     box-shadow: inset -1px 1.5px 1px 0px rgba(255, 255, 255, 0.8);
 
     
@@ -380,6 +390,8 @@ h6{
     width: 100%;
     height: 100%;
     background: rgba(0, 0, 0, 0.4);
+
+    /* transition: all 0.5s ease-in-out; */
 }
  
 .havinghero-zindex{
@@ -387,11 +399,7 @@ h6{
 }
 
 .havinghero-notice{
-    /* width: 320px; */
-    position: absolute;
 
-    top: 37px;
-    left: 280px;
 }
 
 .havingheroset-check{
@@ -423,4 +431,17 @@ h6{
 .characters-container-bg{
     position: relative;
     z-index: 2;
+}
+
+.characters-container  .all-btn{
+    display: flex;
+}
+
+.characters-container .all-btn div{
+    box-shadow: inset -1px 1.5px 1px 0px rgba(255, 255, 255, 0.8);
+
+}
+
+.characters-container .all-btn .allselect-btn{
+    box-shadow: inset 0px 1.5px 1px 0px rgba(255, 255, 255, 0.8);
 }
