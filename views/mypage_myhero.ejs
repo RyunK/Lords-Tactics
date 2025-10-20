@@ -14,6 +14,7 @@
     <link href="/css/hero_setting.css" rel="stylesheet">
     <link href="/css/lv_badges.css" rel="stylesheet">
     <link href="/css/mypage.css" rel="stylesheet">
+    <!-- <link rel="preload" href="/sources/img/characters" as="type"> -->
 </head>
 <body>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
@@ -21,6 +22,7 @@
     <%- include('nav_and_banner.ejs', {page: '', nickname: data.nickname, notice:'2025.08.01 신규 캐릭터 [물]라플라스 추가 완료'}) %> 
 
     <div class="havinghero-blocker invisible"></div>
+    
 
     <!-- 왼쪽 리모콘(?) -->
     <div class="mypage-remote ">
@@ -44,7 +46,7 @@
                 </div>
                 <div class="hero-namesearch">
                     <h6>영웅 이름 검색</h6>
-                    <input type="text" name="" id="" class="hero-name-search color-black bg-lightgray">
+                    <input type="text" name="hero_name_search" id="" class="hero-name-search color-black bg-lightgray">
                     <i class="fa-solid fa-magnifying-glass color-black"></i>
                 </div>
                 <div>
@@ -64,7 +66,7 @@
                 </div>
                 <div>
                     <h6>영웅 정렬</h6>
-                    <button data-btn="hero-sort" class="hero-sort-btn color-black">영웅순<i class="fa-solid fa-chevron-down"></i></button>
+                    <button data-btn="hero-sort" class="hero-sort-btn color-black"><span>영웅순</span><i class="fa-solid fa-chevron-down"></i></button>
                 </div>
             </div>
         </div>
@@ -120,41 +122,42 @@
                 <div class="right-line"></div>
                 <div class="setting-form d-flex justify-content-center">
                     <p class="herosetting-placeholder">설정할 영웅을 선택하세요</p>
-                    <form class="invisible">
-                        <div class=" d-flex align-items-center mt-3"><p class="">레벨</p><div class="btn-shadow lv-input ms-5"><input type="input" class="btn-cut "></div></div>
+                    <form class="invisible" method="post">
+                        <input type="hidden" name="hero">
+                        <div class=" d-flex align-items-center mt-3"><p class="">레벨</p><div class="btn-shadow lv-input ms-5"><input type="input" name="lv" class="btn-cut "></div></div>
                         <div class="d-flex mt-3">
                             <p>초월</p>
                             <label class="charSetting-ele d-flex align-self-center me-3">  
-                                <input type="radio" name="cho" class="charPublic-checkbox 5cho"><span class="checkbox-img"></span> <span class="ms-1">5</span> 
+                                <input type="radio" name="cho" value="5" class="charPublic-checkbox 5cho"><span class="checkbox-img"></span> <span class="ms-1">5</span> 
                             </label>
                             <label class="charSetting-ele d-flex align-self-center me-3">  
-                                <input type="radio" name="cho" class="charPublic-checkbox 6cho"><span class="checkbox-img"></span> <span class="ms-1">6</span> 
+                                <input type="radio" name="cho" value="6" class="charPublic-checkbox 6cho"><span class="checkbox-img"></span> <span class="ms-1">6</span> 
                             </label>
                             <label class="charSetting-ele d-flex align-self-center">  
-                                <input type="radio" name="cho" class="charPublic-checkbox 7cho"><span class="checkbox-img"></span> <span class="ms-1">7</span> 
+                                <input type="radio" name="cho" value="7" class="charPublic-checkbox 7cho"><span class="checkbox-img"></span> <span class="ms-1">7</span> 
                             </label>
                         </div>
                         
                         <div class="d-flex mt-3">
                             <p>각성</p>
                             <label class="charSetting-ele d-flex align-self-center">  
-                                <input type="radio" name="gak" class="charPublic-checkbox nogak-radio"><span class="checkbox-img"></span> <img src="../sources/img/nogak.png" class="ms-1"> 
+                                <input type="radio" name="gak" value="0" class="charPublic-checkbox nogak-radio"><span class="checkbox-img"></span> <img src="../sources/img/nogak.png" class="ms-1"> 
                             </label>
                             <label class="charSetting-ele d-flex align-self-center">  
-                                <input type="radio" name="gak" class="charPublic-checkbox onegak-radio"><span class="checkbox-img"></span> <img src="../sources/img/1gak.png" class="ms-1"> 
+                                <input type="radio" name="gak" value="1" class="charPublic-checkbox onegak-radio"><span class="checkbox-img"></span> <img src="../sources/img/1gak.png" class="ms-1"> 
                             </label>
                             <label class="charSetting-ele d-flex align-self-center"> 
-                                <input type="radio" name="gak" class="charPublic-checkbox twogak-radio"><span class="checkbox-img"></span> <img src="../sources/img/2gak.png" class="ms-1"> 
+                                <input type="radio" name="gak" value="2" class="charPublic-checkbox twogak-radio"><span class="checkbox-img"></span> <img src="../sources/img/2gak.png" class="ms-1"> 
                             </label>
                         </div>
                         
                         <!-- 하단 버튼들 -->
                         <div class="setting-btns d-flex justify-content-end">
                             <div class="btn-shadow ">
-                                <input class="btn-cut basic-btn btn-yellow color-white setting-normal-submit" type="submit" value="적용">
+                                <input class="btn-cut basic-btn btn-yellow color-white setting-normal-submit" type="submit" value="적용" formaction="/mypage/myhero/normalsave">
                             </div>
                             <div class="btn-shadow ms-2 all-submit">
-                                <input class="btn-cut basic-btn btn-blue color-white setting-all-submit" type="submit" value="모든 캐릭터 적용">
+                                <input class="btn-cut basic-btn btn-blue color-white setting-all-submit" type="submit" value="모든 캐릭터 적용" formaction="/mypage/myhero/allsave">
                             </div>
                         </div>
                         
@@ -200,13 +203,29 @@
                     <% for(let i=0; i<data.hero_list.length; i++){ %>
                     <li class="character-list-box select-liner d-flex justify-content-center">
                         <div class="character-list" >
+                            <% if(data.nickname && data.having_heroes_id.includes(data.hero_list[i]["ID"])){ %>
                             <img src="/sources/img/characters/<%= data.hero_list[i].eng_type %>_<%= data.hero_list[i].eng_name %>_<%= data.hero_list[i].eng_class %>.png" 
                             alt="" data-id="<%= data.hero_list[i]["ID"] %>" data-korname="<%= data.hero_list[i].kor_name %>" data-type="<%=data.hero_list[i].eng_type%>"
                             onerror="this.onerror=null; this.src='/sources/img/characters/Chr_Error.png';">
 
-                            <% if(data.nickname){ %>
-                            <span class="lv_<%=data.hero_list[i].eng_type%> lv">70</span>
-                            <span class="nogak gak">7</span>
+                            <span class="lv_<%=data.hero_list[i].eng_type%> lv"><%=data.having_heroes[data.having_heroes_id.indexOf(data.hero_list[i]["ID"])].lv %></span>
+                                <% if(data.having_heroes[data.having_heroes_id.indexOf(data.hero_list[i]["ID"])].gak == 0){ %>
+                                <span class="nogak gak">
+                                <% } else if(data.having_heroes[data.having_heroes_id.indexOf(data.hero_list[i]["ID"])].gak == 1){ %>
+                                <span class="onegak gak">
+                                <% } else if(data.having_heroes[data.having_heroes_id.indexOf(data.hero_list[i]["ID"])].gak == 2){ %>
+                                <span class="twogak gak">
+                                <% } %>
+
+                                    <%=data.having_heroes[data.having_heroes_id.indexOf(data.hero_list[i]["ID"])].cho %>
+                                </span>
+                            <% } else{ %>
+                            <img src="/sources/img/characters/<%= data.hero_list[i].eng_type %>_<%= data.hero_list[i].eng_name %>_<%= data.hero_list[i].eng_class %>.png" 
+                            alt="" data-id="<%= data.hero_list[i]["ID"] %>" data-korname="<%= data.hero_list[i].kor_name %>" data-type="<%=data.hero_list[i].eng_type%>"
+                            onerror="this.onerror=null; this.src='/sources/img/characters/Chr_Error.png';" class="nothave">
+
+                            <span class="lv_<%=data.hero_list[i].eng_type%> lv">0</span>
+                            <span class="nogak gak">0</span>
                             <% } %>
                         </div>
                     </li>
@@ -221,9 +240,10 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script> 
     <script src="https://code.jquery.com/ui/1.14.1/jquery-ui.min.js" integrity="sha256-AlTido85uXPlSyyaZNsjJXeCs07eSv3r43kyCVc8ChI=" crossorigin="anonymous"></script>
     <script src="/js/formmake/heroSetting.js"></script>
-    <!-- <script src="/js/mypage/havingHeroCheck.js"></script> -->
+    <script src="/js/mypage/havingHeroCheck.js"></script>
     <script>
-
+    
+    HavingHeroChecker.setter_saved(JSON.parse('<%- JSON.stringify(data.having_heroes_id) %>'));
 
     $(document).on('click', function(e){
         // 빈 곳 클릭하면 영웅 필터 올라감
@@ -241,6 +261,7 @@
         && !$(e.target).closest(".characters-container").length > 0
         && !$(e.target).closest(".character-list").length > 0
         && !$(e.target).closest(".filter-shadow").length > 0
+        && !$(e.target).closest(".dropdown-contents").length > 0
         )
         {
             $('.havinghero-blocker').toggleClass('invisible');
@@ -253,92 +274,13 @@
             onoff.removeClass('btn-red');
             $('.all-btn').addClass('invisible');
             $('.character-list i').remove();
-
+            HavingHeroChecker.reset_check();
+            HavingHeroChecker.setter_saved(JSON.parse('<%- JSON.stringify(data.having_heroes_id) %>'));
         }
     });
 
 
-    /**
-     * 보유 영웅 설정 - 캐릭터 선택시 호출
-     */
-
-    class HavingHeroChecker{
-        static saved_heroes = []; // DB에 보유했다고 저장된 영웅 목록
-        static checked_heroes = []; // 보유 영웅 설정에서 체크한 영웅 목록
-
-        static add_check(idx){
-            HavingHeroChecker.checked_heroes.push(idx);
-            return HavingHeroChecker.checked_heroes;
-        }
-        
-        static remove_check(idx){
-            HavingHeroChecker.checked_heroes = HavingHeroChecker.checked_heroes.filter((element) => element !== idx)
-            return HavingHeroChecker.checked_heroes;
-        }
-
-        static getter_check(){
-            return HavingHeroChecker.checked_heroes;
-        }
-
-        static reset_check(){
-            HavingHeroChecker.checked_heroes = [];
-            return HavingHeroChecker.checked_heroes;
-        }
-
-        static getter_saved(){
-            return HavingHeroChecker.saved_heroes;
-        }
-
-        static setter_saved(arr){
-            HavingHeroChecker.saved_heroes = arr;
-            return HavingHeroChecker.saved_heroes;
-        }
-
-        static remove_saved(idx){
-            HavingHeroChecker.saved_heroes = HavingHeroChecker.saved_heroes.filter((element) => element !== idx)
-            return HavingHeroChecker.saved_heroes;
-        }
-
-        static checked_heroes_recheck(){
-            let char_list = $(".character-list");
-
-            for(let i=0; i < char_list.length; i++){
-                if((HavingHeroChecker.checked_heroes.includes(char_list.eq(i).children('img').data('id'))
-                || HavingHeroChecker.saved_heroes.includes(char_list.eq(i).children('img').data('id')))
-                && char_list.eq(i).children('i').length <= 0 )
-                {
-                    char_list.eq(i).append(`<i class="havingheroset-check fa-solid fa-check"></i>`)
-                }
-            }
-        }
-        
-        static checked_heroes_push(){
-            let char_list = $(".character-list:has(i)");
-            for(let i=0; i < char_list.length; i++){
-                if(!HavingHeroChecker.checked_heroes.includes(char_list.eq(i).children('img').data('id'))
-                && !HavingHeroChecker.saved_heroes.includes(char_list.eq(i).children('img').data('id'))
-                && char_list.eq(i).children('i').length > 0 )
-                {
-                    HavingHeroChecker.add_check(char_list.eq(i).children('img').data('id'))
-                }
-            }
-        }
-
-        static unchecked_heroes_remove(){
-            let char_list = $(".character-list");
-
-            for(let i=0; i < char_list.length; i++){
-                if((HavingHeroChecker.checked_heroes.includes(char_list.eq(i).children('img').data('id'))
-                || HavingHeroChecker.saved_heroes.includes(char_list.eq(i).children('img').data('id')))
-                && char_list.eq(i).children('i').length <= 0 )
-                {
-                    HavingHeroChecker.remove_check(char_list.eq(i).children('img').data('id'));
-                    HavingHeroChecker.remove_saved(char_list.eq(i).children('img').data('id'));
-
-                }
-            }
-        }
-    }
+    
 
     function dropdownIconToggle(btn){
         const now_i = btn.children("i");
@@ -364,6 +306,13 @@
         hero_filter();
     })
 
+    $('.hero-sort li').on("click", function(){
+        $('.hero-sort-btn span').text($(this).text())
+        $('.hero-sort').slideUp();
+        dropdownIconToggle($('.hero-sort-btn'));
+        hero_filter();
+    })
+
     $(document).on("click", '.character-list' ,function(){
         
         // 보유영웅 설정 ON
@@ -376,9 +325,11 @@
                 $(this).append(`<i class="havingheroset-check fa-solid fa-check"></i>`);
                 HavingHeroChecker.unchecked_heroes_remove();
                 HavingHeroChecker.checked_heroes_push();
-                console.log(HavingHeroChecker.getter_check());
+                // console.log(HavingHeroChecker.getter_check());
             }
-        
+            
+            // console.log(HavingHeroChecker.getter_check())
+            // console.log(HavingHeroChecker.getter_saved())
             return ;
         }
         
@@ -420,32 +371,69 @@
         let result="";
         let hero_list = '<%- JSON.stringify(data.hero_list) %>';
         hero_list = JSON.parse(hero_list);
+        let having_heroes = '<%- JSON.stringify(data.having_heroes) %>';
+        having_heroes = JSON.parse(having_heroes);
+        let having_heroes_id = '<%- JSON.stringify(data.having_heroes_id) %>';
+        having_heroes_id = JSON.parse(having_heroes_id);
+        let gak_num2eng = {0: 'no', 1: 'one', 2: 'two'}
         // let hero_list_html = $('.character-list-box');
 
+        let having_hero_only = $('.havinghero-check .charPublic-checkbox').is(':checked')
         let hero_name = $('.hero-namesearch input').val();
         let type_names = $('.typeselecter img:not(.inactive)').map(function(i, e){
             return $(e).attr('src').substr(19).split('.')[0]
         }).get();
         let class_name = $('.hero-class-search > span').eq(0).text();
+        let sort_type = $('.hero-sort-btn').text();
 
-        // console.log(type_names)
+        if(sort_type.includes("등급순")){
+            hero_list.sort(function(a, b){
+                var a_val, b_val
+                if(having_heroes_id.indexOf(a["ID"]) < 0) a_val = 0;
+                else{
+                    a_val = parseInt(having_heroes[having_heroes_id.indexOf(a["ID"])].cho)*100 + parseInt(having_heroes[having_heroes_id.indexOf(a["ID"])].lv) + parseInt(having_heroes[having_heroes_id.indexOf(a["ID"])].gak);
+                }
+                if(having_heroes_id.indexOf(b["ID"]) < 0) b_val = 0;
+                else{
+                    b_val = parseInt(having_heroes[having_heroes_id.indexOf(b["ID"])].cho)*100 + parseInt(having_heroes[having_heroes_id.indexOf(b["ID"])].lv) + parseInt(having_heroes[having_heroes_id.indexOf(b["ID"])].gak);
+                }                
+                return b_val - a_val;
+            })
+        }
+
+        // console.log(having_heroes_id)
 
         for(let i=0; i < hero_list.length; i++){
             if(
             (class_name.includes(hero_list[i]["kor_class"]) || class_name.includes('전체'))
             && (type_names.includes(hero_list[i]["eng_type"]))
             &&((hero_list[i]["kor_name"]).includes(hero_name) || !hero_name)
+            &&(having_heroes_id.includes(hero_list[i]["ID"]) || !having_hero_only)
             ){
-                result = result +
-                `<li class="character-list-box select-liner d-flex justify-content-center">
-                    <div class="character-list" >
-                        <img src="/sources/img/characters/${hero_list[i].eng_type}_${hero_list[i].eng_name}_${hero_list[i].eng_class}.png" 
-                        alt="" data-id="${hero_list[i]["ID"]}" data-korname="${hero_list[i]["kor_name"]}" data-type="${hero_list[i].eng_type}"
-                        onerror="this.onerror=null; this.src='/sources/img/characters/Chr_Error.png';">
-                        <span class="lv_${hero_list[i].eng_type} lv">70</span>
-                        <span class="nogak gak">7</span>
-                    </div>
-                </li>`
+                if(having_heroes_id.includes(hero_list[i]["ID"])){ // 보유한 영웅
+                    result = result +
+                    `<li class="character-list-box select-liner d-flex justify-content-center">
+                        <div class="character-list" >
+                            <img src="/sources/img/characters/${hero_list[i].eng_type}_${hero_list[i].eng_name}_${hero_list[i].eng_class}.png" 
+                            alt="" data-id="${hero_list[i]["ID"]}" data-korname="${hero_list[i]["kor_name"]}" data-type="${hero_list[i].eng_type}"
+                            onerror="this.onerror=null; this.src='/sources/img/characters/Chr_Error.png';">
+                            <span class="lv_${hero_list[i].eng_type} lv">${having_heroes[having_heroes_id.indexOf(hero_list[i]["ID"])].lv}</span>
+                            <span class="${gak_num2eng[having_heroes[having_heroes_id.indexOf(hero_list[i]["ID"])].gak]}gak gak">${having_heroes[having_heroes_id.indexOf(hero_list[i]["ID"])].cho}</span>
+                        </div>
+                    </li>`
+                } else{ // 보유하지 않은 영웅
+                    result = result +
+                    `<li class="character-list-box select-liner d-flex justify-content-center">
+                        <div class="character-list" >
+                            <img src="/sources/img/characters/${hero_list[i].eng_type}_${hero_list[i].eng_name}_${hero_list[i].eng_class}.png" 
+                            alt="" data-id="${hero_list[i]["ID"]}" data-korname="${hero_list[i]["kor_name"]}" data-type="${hero_list[i].eng_type}"
+                            onerror="this.onerror=null; this.src='/sources/img/characters/Chr_Error.png';"class="nothave">
+                            <span class="lv_${hero_list[i].eng_type} lv">0</span>
+                            <span class="nogak gak">0</span>
+                        </div>
+                    </li>`
+                }
+                
             }
 
         }
@@ -453,7 +441,11 @@
         // console.log(result);
         
         $(".characters-container > .d-flex").html(result);
-        HavingHeroChecker.checked_heroes_recheck()
+
+        // 보유 영웅 설정 ON 시 체크까지
+        if(!$('.havinghero-blocker').hasClass('invisible')){
+            HavingHeroChecker.checked_heroes_recheck()    
+        }
     }
 
     $('.hero-namesearch input').on('propertychange change keyup paste input', function(){
@@ -465,6 +457,9 @@
         hero_filter();
     })
 
+    $('.havinghero-check .charPublic-checkbox').on('click', function(){
+        hero_filter();
+    })
 
     $('.herosetting-filterreset').on('click', function(){
         $('.hero-namesearch input').val('');
@@ -475,23 +470,42 @@
     })
 
     $('.havinghero-set').on('click', function(){
-        $('.havinghero-blocker').toggleClass('invisible');
-        $('.havinghero-notice').toggleClass('invisible');
-        $('.filter-shadow').toggleClass('havinghero-zindex');
-        $('.all-btn').toggleClass('invisible');
+        
         
         var onoff = $('.havinghero-set .on-btn');
-        if(onoff.text().includes("ON")){
-            onoff.text("OFF");
+        if(onoff.text().includes("ON")){ // 켜짐
+            $('.havinghero-blocker').toggleClass('invisible');
+            $('.havinghero-notice').toggleClass('invisible');
+            $('.filter-shadow').toggleClass('havinghero-zindex');
+            $('.all-btn').toggleClass('invisible');onoff.text("OFF");
             onoff.addClass('btn-red');
             onoff.removeClass('btn-gray');
             HavingHeroChecker.checked_heroes_recheck()
 
-        } else{
-            onoff.text("ON");
-            onoff.addClass('btn-gray');
-            onoff.removeClass('btn-red');
-            $('.character-list i').remove();
+        } else{ // 꺼짐
+            if(!confirm("보유 영웅을 이대로 저장할까요?")){
+                return;
+            }else{
+                $('.havinghero-blocker').toggleClass('invisible');
+                $('.havinghero-notice').toggleClass('invisible');
+                $('.filter-shadow').toggleClass('havinghero-zindex');
+                $('.all-btn').toggleClass('invisible');onoff.text("ON");
+                onoff.addClass('btn-gray');
+                onoff.removeClass('btn-red');
+                $('.character-list i').remove();
+
+                let saved_list = HavingHeroChecker.getter_saved();
+                let checked_list = HavingHeroChecker.getter_check();
+                $('body').append(`<form method="post" action="/mypage/myhero/havingherosave" class="havinghero-checked-form"></form>`)
+                for(let i=0; i<saved_list.length; i++){
+                    $(".havinghero-checked-form").append(`<input name="hero" type="hidden" value="${saved_list[i]}">`);
+                }
+                for(let i=0; i<checked_list.length; i++){
+                    $(".havinghero-checked-form").append(`<input name="hero" type="hidden" value="${checked_list[i]}">`);
+                }
+                $('.havinghero-checked-form').submit();
+            }
+            
         }
     })
 

@@ -19,11 +19,16 @@ function selectHeroSetting(hero){
     let type = hero.children('img').data('type');
     $('.setting-charname').children('img').attr('src', `../sources/img/types/${type}.png`)
     
+    let hero_id = hero.children('img').data('id');
+    $('.hero-setting .setting-form input[name="hero"]').val(hero_id);
+
     let lv = hero.children('.lv').text();
     $('.hero-setting .lv-input>input').val(lv)
 
-    let cho = hero.children('.gak').text();
-    $(`.hero-setting .${cho}cho`).prop("checked", true);
+    let cho = hero.children('.gak').text().trim();
+    if(cho.includes(5) || cho.includes(6) || cho.includes(7)) $(`.hero-setting .${cho}cho`).prop("checked", true);
+    else $('.hero-setting input[name="cho"]').prop("checked", false);
+    
 
     let gak = hero.children('.gak').attr('class');
     gak = gak.split(' ')[0];
