@@ -93,3 +93,69 @@ app.get('/', (req, res) => {
   }
 })
 
+const { mustLoggedIn, mustNotLoggedIn } = require('./routes/middlewares'); // 내가 만든 사용자 미들웨어
+const { heroSettingNormalSave, heroSettingAllSave } = require('./routes/setDatas'); // 내가 만든 사용자 미들웨어
+
+
+app.post('/herosetting/normalsave', mustLoggedIn,  async(req, res) => {
+    // console.log(req.body);
+    try{
+      await heroSettingNormalSave(req, res);
+
+      var sql = `SELECT * FROM HERO_SETTINGS
+                WHERE USER_ID = ?`;
+      var [having_heroes, fields] = await (await connection).execute(sql, [req.user[0].id]);
+      let having_heroes_id = having_heroes.map(function(e, i){
+          return e.hero_id;
+      })
+
+      // console.log(having_heroes[1]);
+
+      let result = {
+        status: '200',
+        data : {
+          having_heroes : having_heroes,
+          having_heroes_id : having_heroes_id,
+        }
+      }
+      res.json(result)
+    } catch{
+        res.json({
+          status : '500',
+          message: "오류가 발생했습니다. 다시 시도하세요."
+        });
+    }
+    
+})
+
+app.post('/herosetting/allsave', mustLoggedIn,  async(req, res) => {
+    // console.log(req.body);
+    try{
+      await heroSettingAllSave(req, res);
+
+      var sql = `SELECT * FROM HERO_SETTINGS
+                WHERE USER_ID = ?`;
+      var [having_heroes, fields] = await (await connection).execute(sql, [req.user[0].id]);
+      let having_heroes_id = having_heroes.map(function(e, i){
+          return e.hero_id;
+      })
+
+      // console.log(having_heroes[1]);
+
+      let result = {
+        status: '200',
+        data : {
+          having_heroes : having_heroes,
+          having_heroes_id : having_heroes_id,
+        }
+      }
+      res.json(result)
+    } catch{
+        res.json({
+          status : '500',
+          message: "오류가 발생했습니다. 다시 시도하세요."
+        });
+    }
+    
+})
+

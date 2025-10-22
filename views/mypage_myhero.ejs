@@ -122,7 +122,7 @@
                 <div class="right-line"></div>
                 <div class="setting-form d-flex justify-content-center">
                     <p class="herosetting-placeholder">설정할 영웅을 선택하세요</p>
-                    <form class="invisible" method="post">
+                    <form class="invisible" method="post" action="/mypage/myhero/normalsave">
                         <input type="hidden" name="hero">
                         <div class=" d-flex align-items-center mt-3"><p class="">레벨</p><div class="btn-shadow lv-input ms-5"><input type="input" name="lv" class="btn-cut "></div></div>
                         <div class="d-flex mt-3">
@@ -154,10 +154,12 @@
                         <!-- 하단 버튼들 -->
                         <div class="setting-btns d-flex justify-content-end">
                             <div class="btn-shadow ">
-                                <input class="btn-cut basic-btn btn-yellow color-white setting-normal-submit" type="submit" value="적용" formaction="/mypage/myhero/normalsave">
+                                <input class="btn-cut basic-btn btn-yellow color-white setting-normal-submit" type="submit" value="적용" >
+                                <!-- <input class="btn-cut basic-btn btn-yellow color-white setting-normal-submit" type="submit" value="적용" formaction="/mypage/myhero/normalsave"> -->
                             </div>
                             <div class="btn-shadow ms-2 all-submit">
-                                <input class="btn-cut basic-btn btn-blue color-white setting-all-submit" type="submit" value="모든 캐릭터 적용" formaction="/mypage/myhero/allsave">
+                                <input class="btn-cut basic-btn btn-blue color-white setting-all-submit" type="submit" value="모든 캐릭터 적용" >
+                                <!-- <input class="btn-cut basic-btn btn-blue color-white setting-all-submit" type="submit" value="모든 캐릭터 적용" formaction="/mypage/myhero/allsave"> -->
                             </div>
                         </div>
                         
@@ -275,7 +277,7 @@
             $('.all-btn').addClass('invisible');
             $('.character-list i').remove();
             HavingHeroChecker.reset_check();
-            HavingHeroChecker.setter_saved(JSON.parse('<%- JSON.stringify(data.having_heroes_id) %>'));
+            HavingHeroChecker.setter_saved(HavingHeroes.getter_id());
         }
     });
 
@@ -364,6 +366,39 @@
     })
 
     /**
+     * DB에서 받아온 원본을 훼손하지 않고 저장하는 클래스
+     */
+    class HavingHeroes{
+        static having_heroes;
+        static having_heroes_id;
+
+        static {
+            this.having_heroes = '<%- JSON.stringify(data.having_heroes) %>';
+            this.having_heroes = JSON.parse(this.having_heroes);
+
+            this.having_heroes_id = JSON.parse('<%- JSON.stringify(data.having_heroes_id) %>');
+        }
+
+        static setter(heroes){
+            this.having_heroes = heroes;
+            return this.having_heroes;
+        }
+
+        static getter(){
+            return this.having_heroes;
+        }
+
+        static setter_id(idxes){
+            this.having_heroes_id = idxes;
+            return this.having_heroes_id;
+        }
+
+        static getter_id(){
+            return this.having_heroes_id;
+        }
+    }
+
+    /**
      * 영웅 필터링해서 적용까지
      **/
     function hero_filter(){
@@ -371,10 +406,8 @@
         let result="";
         let hero_list = '<%- JSON.stringify(data.hero_list) %>';
         hero_list = JSON.parse(hero_list);
-        let having_heroes = '<%- JSON.stringify(data.having_heroes) %>';
-        having_heroes = JSON.parse(having_heroes);
-        let having_heroes_id = '<%- JSON.stringify(data.having_heroes_id) %>';
-        having_heroes_id = JSON.parse(having_heroes_id);
+        let having_heroes = HavingHeroes.getter();
+        let having_heroes_id = HavingHeroes.getter_id();
         let gak_num2eng = {0: 'no', 1: 'one', 2: 'two'}
         // let hero_list_html = $('.character-list-box');
 
@@ -446,6 +479,14 @@
         if(!$('.havinghero-blocker').hasClass('invisible')){
             HavingHeroChecker.checked_heroes_recheck()    
         }
+
+        // 영웅 설정 중이고 해당 영웅 있으면 찾아서 select
+        if(!$('.setting-form form').hasClass('invisible')){
+            $('.char-selected').remove();
+            let setting_hero = $('.setting-form form input[name="hero"]').val()
+            // console.log(setting_hero)
+            $(`.character-list img[data-id="${setting_hero}"]`).parent().prepend(`<div class='char-selected'></div>`);
+        }
     }
 
     $('.hero-namesearch input').on('propertychange change keyup paste input', function(){
@@ -462,10 +503,12 @@
     })
 
     $('.herosetting-filterreset').on('click', function(){
+        $('.charPublic-checkbox').prop('checked', false);
         $('.hero-namesearch input').val('');
         $('.typeselecter img').removeClass('inactive');
         $('.hero-class-search img').addClass('invisible');
         $('.hero-class-search .classnamespan').text('전체 클래스');
+        $('.hero-sort-btn span').text('영웅순')
         hero_filter();
     })
 
@@ -497,13 +540,20 @@
                 let saved_list = HavingHeroChecker.getter_saved();
                 let checked_list = HavingHeroChecker.getter_check();
                 $('body').append(`<form method="post" action="/mypage/myhero/havingherosave" class="havinghero-checked-form"></form>`)
+                var newForm = $('<form></form>');
+                //set attribute (form) 
+                newForm.attr("method","post");
+                newForm.attr("action","/mypage/myhero/havingherosave");
+                newForm.attr("class","havinghero-checked-form");
                 for(let i=0; i<saved_list.length; i++){
-                    $(".havinghero-checked-form").append(`<input name="hero" type="hidden" value="${saved_list[i]}">`);
+                    newForm.append(`<input name="hero" type="hidden" value="${saved_list[i]}">`);
                 }
                 for(let i=0; i<checked_list.length; i++){
-                    $(".havinghero-checked-form").append(`<input name="hero" type="hidden" value="${checked_list[i]}">`);
+                    newForm.append(`<input name="hero" type="hidden" value="${checked_list[i]}">`);
                 }
-                $('.havinghero-checked-form').submit();
+
+                newForm.appendTo('body');
+                newForm.submit();
             }
             
         }
@@ -532,6 +582,118 @@
 
         }
     })
+
+    $(document).ready(function(){
+        $(document).on('click', '.setting-normal-submit', function(e){
+            e.preventDefault();
+            const query = $('.setting-form form').serializeArray();
+            // console.log(query)
+
+            $.ajax({
+                    url: '/herosetting/normalsave', 
+                    method: 'POST', 
+                    contentType: 'application/json',
+                    data: JSON.stringify({ 
+                        lv : query[1].value,
+                        cho : query[2].value,
+                        gak : query[3].value,
+                        hero : query[0].value, 
+                    }),
+                    
+                    // 요청 성공 
+                    success: function(res) {
+                        if(res.status.includes('2')){
+                            // 영웅 설정 선택 해제
+                            $('.char-selected').remove();
+
+                            $('.setting-charname img').addClass("invisible")
+                            $('.setting-form .herosetting-placeholder').removeClass("invisible")
+                            $('.setting-form form').addClass("invisible")
+                            $('.setting-btns input').prop('disabled', true);
+
+                            $('.setting-charname p').text('');
+                            $('.setting-charimg').empty();
+                            $('.setting-charimg').append(`<img src="/sources/img/characters/Chr_Error.png">`);
+
+                            // 보유 영웅 리스트 다시 세팅
+                            HavingHeroes.setter(res.data.having_heroes);
+                            HavingHeroes.setter_id(res.data.having_heroes_id);
+
+                            // 필터 다시 출력
+                            hero_filter();
+                        } else{
+                            // DB 오류
+                            alert(res.message);
+                        }
+                    },                        
+                    
+                    error: function(xhr, status, error) {
+                        // 오류 
+                        alert(`오류 발생! 다시 시도하세요. ${status} - ${error}`);
+                        console.error('Error:', status, error);
+                    }
+                });
+
+        })
+
+        $(document).on('click', '.setting-all-submit', function(e){
+            e.preventDefault();
+            const query = $('.setting-form form').serializeArray();
+            // console.log(query)
+
+            $.ajax({
+                    url: '/herosetting/allsave', 
+                    method: 'POST', 
+                    contentType: 'application/json',
+                    data: JSON.stringify({ 
+                        lv : query[1].value,
+                        cho : query[2].value,
+                        gak : query[3].value,
+                    }),
+                    
+                    // 요청 성공 
+                    success: function(res) {
+                        if(res.status.includes('2')){
+                            // 영웅 설정 선택 해제
+                            $('.char-selected').remove();
+
+                            $('.setting-charname img').addClass("invisible")
+                            $('.setting-form .herosetting-placeholder').removeClass("invisible")
+                            $('.setting-form form').addClass("invisible")
+                            $('.setting-btns input').prop('disabled', true);
+
+                            $('.setting-charname p').text('');
+                            $('.setting-charimg').empty();
+                            $('.setting-charimg').append(`<img src="/sources/img/characters/Chr_Error.png">`);
+
+                            // 보유 영웅 리스트 다시 세팅
+                            HavingHeroes.setter(res.data.having_heroes);
+                            HavingHeroes.setter_id(res.data.having_heroes_id);
+
+                            // 필터 다시 출력
+                            hero_filter();
+                        } else{
+                            // DB 오류
+                            alert(res.message);
+                        }
+                    },
+                    
+                    error: function(xhr, status, error) {
+                        // 오류 
+                        alert(`오류 발생! 다시 시도하세요. ${status} - ${error}`);
+                        console.error('Error:', status, error);
+                    }
+                });
+
+        })
+
+        $('form' ).on('submit',function(e){    
+            e.preventDefault();
+
+        })
+    })
+
+    
 
     </script>
 </body>

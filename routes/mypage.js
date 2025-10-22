@@ -116,32 +116,11 @@ router.get('/myhero', mustLoggedIn, async(req, res) => {
 })
 
 
-router.post('/myhero/normalsave', mustLoggedIn,  async(req, res) => {
-    // console.log(req.body);
-    try{
-       heroSettingNormalSave(req, res);
-        res.redirect('/mypage/myhero')
-    } catch{
-        res.send("<script>alert('오류가 발생했습니다. 다시 시도하세요.'); window.location=\"../myhero\" </script>");
-    }
-    
-})
-
-router.post('/myhero/allsave', mustLoggedIn, async(req, res) => {
-    // console.log(req.body);
-    try{
-        heroSettingAllSave(req, res);
-        res.redirect('/mypage/myhero')
-    } catch{
-        res.send("<script>alert('오류가 발생했습니다. 다시 시도하세요.'); window.location=\"../myhero\" </script>");
-    }
-    
-})
-
 router.post('/myhero/havingherosave', mustLoggedIn, async(req, res) => {
     // console.log(req.body);
 
     let checked_herolist = typeof(req.body.hero) != 'string'? req.body.hero : [req.body.hero];
+    // console.log(checked_herolist);
 
     // DB에는 있는데 리스트에는 없는거 찾아서 DB 레코드 삭제
     var sql = `SELECT * FROM HERO_SETTINGS
@@ -149,7 +128,7 @@ router.post('/myhero/havingherosave', mustLoggedIn, async(req, res) => {
     var [having_heroes, fields] = await (await connection).execute(sql, [req.user[0].id]);
 
     for(let i=0; i<having_heroes.length; i++){
-        if(!checked_herolist.includes(having_heroes[i].hero_id)){
+        if(!checked_herolist.includes(`${having_heroes[i].hero_id}`)){
             var sql = `DELETE FROM HERO_SETTINGS
                 WHERE USER_ID = ? AND HERO_ID = ?`;
             var [result, fields] = await (await connection).execute(sql, [req.user[0].id, having_heroes[i].hero_id]);
