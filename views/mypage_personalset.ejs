@@ -89,7 +89,7 @@
             </div>
             <% } %>
             <div class="btn-shadow d-flex justify-content-center">
-                <button class="btn-cut btn-red color-white">회원 탈퇴</button>
+                <button class="withdraw btn-cut btn-red color-white">회원 탈퇴</button>
             </div>
         </div>
     </div>
@@ -218,6 +218,21 @@
                     return "새 비밀번호의 양식 또는 비밀번호 확인에 오류가 있습니다."
                 }
             });
+        })
+
+        $('.withdraw').on('click', function(){
+            const ans = prompt(`
+    정말 탈퇴하시겠습니까?
+    탈퇴하는 즉시 회원 정보가 모두 삭제되지만, 게시한 글과 댓글은 남습니다. 원치 않으실 경우 삭제 후 탈퇴를 진행해주세요.
+    탈퇴를 계속하시려면 아래에 '탈퇴합니다'를 입력해주세요.`)
+            if(ans == "탈퇴합니다"){
+                var newForm = $('<form></form>');
+                //set attribute (form) 
+                newForm.attr("method","post");
+                newForm.attr("action","/mypage/withdraw");
+                newForm.appendTo('body');
+                newForm.submit();
+            }
         })
 
         

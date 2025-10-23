@@ -276,30 +276,36 @@ async function nowpwCheck(req, res){
     return bcrypt.compareSync(req.body.now_pw, result[0].user_password);
 }
 
-router.post('/signout', mustLoggedIn, async(req, res) => {
+router.post('/withdraw', mustLoggedIn, async(req, res) => {
     try{
-        if(req.user[0].username == 'oauth'){
-            throw new Error("소셜로그인 이용자는 비밀번호를 변경할 수 없습니다.");
-        }else if(! await nowpwCheck(req, res)){
-            throw new Error("현재 비밀번호가 틀립니다.");
-        } else if(!pwCheck(req.body.new_pw, req.body.new_pw_conf)){
-            throw new Error("새 비밀번호의 양식 또는 비밀번호 확인에 오류가 있습니다.");
-        }
-        var sql = `UPDATE USER_PW_TABLE
-                SET USER_PASSWORD = ?
-                WHERE USER_ID = ?` ;
-        
-        await (await connection).execute(sql, [ await bcrypt.hash(req.body.new_pw, 10) , req.user[0].id]);
+        var sql = `DELETE FROM federated_credentials WHERE user_id = ?;` ;
+        await (await connection).execute(sql, [req.user[0].id]);
+        var sql = `DELETE FROM user_pw_table WHERE user_id = ?;` ;
+        await (await connection).execute(sql, [req.user[0].id]);
+        var sql = `DELETE FROM user_emails WHERE user_id = ?;` ;
+        await (await connection).execute(sql, [req.user[0].id]);
+        var sql = `DELETE FROM hero_settings WHERE user_id = ?;` ;
+        await (await connection).execute(sql, [req.user[0].id]);
 
-        let result = {
-            status: '200'
-        }
-        res.json(result)
+        var sql = `DELETE FROM user WHERE id = ?;` ;
+        await (await connection).execute(sql, [req.user[0].id]);
+
+        
+
+        // 추후, 게시되지 않은 폼들과 그 폼에 포함된 영웅 정보들 모두 삭제를 권장
+        // var sql = `DELETE FROM hero_forms WHERE user_id = ? AND NOT (form_status_id = 1);` ;
+        // await (await connection).execute(sql, [req.user[0].id]);
+
+        // 로그아웃
+        req.session.destroy(function(err){
+            if(err) res.status(500).json(err.message);
+        })
+        res.writeHead(200, { "Content-Type": "text/html; charset=utf-8" });
+        res.write("<script>alert('탈퇴가 완료되었습니다.')</script>");
+        res.write("<script>window.location=\"/\"</script>");
+
     }catch(e){
-        res.json({
-            status : '500',
-            message: "오류 : " + e.message
-        });
+        res.write("<script>alert('알 수 없는 오류로 인해 탈퇴하지 못했습니다.')</script>");
     }
     
 })
