@@ -24,8 +24,8 @@ function removeHeroQueryStringParam(key, value){
     const url = new URL(window.location.href);
     let values = url.searchParams.getAll(key);
     
-    console.log("key: " + key)
-    console.log("values: " + values)
+    // console.log("key: " + key)
+    // console.log("values: " + values)
 
     url.searchParams.delete(key);
     window.history.pushState(null, '', url.toString());

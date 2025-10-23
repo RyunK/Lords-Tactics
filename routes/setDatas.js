@@ -8,6 +8,10 @@ module.exports = {
                 WHERE USER_ID = ? AND HERO_ID = ?;`;
         var [having_heroes, fields] = await (await connection).execute(sql, [req.user[0].id, req.body.hero]);
         
+        if(!parseInt(req.body.lv) || !parseInt(req.body.cho) || !parseInt(req.body.gak) || !parseInt(req.body.hero)){
+            throw new TypeError("숫자가 아닌 데이터는 저장할 수 없습니다.")
+        }
+
         if(having_heroes.length > 0){
             var sql = `UPDATE HERO_SETTINGS
                         SET LV = ?, CHO = ?, gak = ?
@@ -26,6 +30,10 @@ module.exports = {
                 WHERE USER_ID = ?`;
         var [having_heroes, fields] = await (await connection).execute(sql, [req.user[0].id]);
             // console.log(having_heroes);
+        
+        if(!parseInt(req.body.lv) || !parseInt(req.body.cho) || !parseInt(req.body.gak)){
+            throw new TypeError("숫자가 아닌 데이터는 저장할 수 없습니다.")
+        }
         
         if(having_heroes.length > 0){
             var sql = `UPDATE HERO_SETTINGS

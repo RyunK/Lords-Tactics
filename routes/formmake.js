@@ -1,7 +1,6 @@
 const express = require('express');
 const router = express.Router();
 const connection = require('../database.js')
-const { mustLoggedIn, mustNotLoggedIn } = require('./middlewares'); // 내가 만든 사용자 미들웨어
 const getDatas = require('./getDatas.js')
 
 
@@ -40,6 +39,20 @@ router.get('/', async(req, res) => {
     var sql = `SELECT * FROM CONTENTS_NAME
               WHERE ENG_NAME = ?`;
     var [now_content, fields] = await (await connection).execute(sql, [req.query.content? req.query.content : "story"]);
+
+
+    var having_heroes, fields, having_heroes_id;
+    if (req.isAuthenticated()) {
+        var sql = `SELECT * FROM HERO_SETTINGS
+                WHERE USER_ID = ?`;
+        [having_heroes, fields] = await (await connection).execute(sql, [req.user[0].id? req.user[0].id : 0]);
+        having_heroes_id = having_heroes.map(function(e, i){
+            return e.hero_id;
+        })
+    } else {
+        
+    }
+    
     
     let data = {
             nickname: getDatas.loggedInNickname(req, res),
@@ -49,6 +62,8 @@ router.get('/', async(req, res) => {
             form_herolist_forrender : form_herolist_forrender,
             now_content : now_content[0],
             writer_memo : req.query.writer_memo? req.query.writer_memo : "", 
+            having_heroes : having_heroes,
+            having_heroes_id : having_heroes_id,
         }
 
     res.render('form_making.ejs', {data : data})

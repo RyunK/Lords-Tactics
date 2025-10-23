@@ -115,7 +115,7 @@ router.get('/myhero', mustLoggedIn, async(req, res) => {
     res.render('mypage_myhero.ejs',  {data : data})
 })
 
-
+// 보유 영웅 설정 > 체크한 거 모두 적용
 router.post('/myhero/havingherosave', mustLoggedIn, async(req, res) => {
     // console.log(req.body);
 
@@ -151,6 +151,157 @@ router.post('/myhero/havingherosave', mustLoggedIn, async(req, res) => {
     
 
     res.redirect('/mypage/myhero')
+})
+
+router.get('/setting', mustLoggedIn, async(req, res) => {
+
+    var sql = `SELECT U.ID, UE.USER_EMAIL  FROM user U
+            INNER JOIN USER_EMAILS UE ON U.ID = UE.USER_ID
+            WHERE U.ID = ?`;
+    var [email, fields] = await (await connection).execute(sql, [req.user[0].id]);
+
+    var provider;
+    if(req.user[0].username.includes("oauth")){
+        var sql = `SELECT U.ID, FC.PROVIDER FROM user U
+            INNER JOIN FEDERATED_CREDENTIALS FC ON U.ID = FC.USER_ID
+            WHERE U.ID = ?`;
+        [provider, fields] = await (await connection).execute(sql, [req.user[0].id]);
+        // console.log(provider)
+    }
+
+    
+    let data = {
+        nickname: req.user[0].nickname,
+        username: req.user[0].username,
+        email : email[0]["USER_EMAIL"],
+        provider : provider,
+    }
+    res.render('mypage_personalset.ejs',  {data : data})
+})
+
+router.post('/changenickname', mustLoggedIn, async(req, res) => {
+    if(nicknameCheck(req.body.nickname)){
+        try{
+            var sql = `UPDATE user
+                SET nickname = ?
+                WHERE id = ?` ;
+            
+            await (await connection).execute(sql, [ req.body.nickname ,req.user[0].id]);
+
+            let result = {
+                status: '200'
+            }
+            res.json(result)
+        }catch(e){
+            res.json({
+                status : '500',
+                message: "오류가 발생했습니다. 다시 시도하세요. 에러 메시지 : " + e.message
+            });
+        }
+    } else{
+        res.json({
+                status : '500',
+                message: "올바르지 않은 닉네임입니다."
+            });
+    }
+})
+
+/**
+ * 닉네임 체크
+ */
+function nicknameCheck(nickname){
+  if (nickname.length > 1 && nickname.length < 9){
+    return true;
+  } else{
+    // console.log("닉네임 오류")
+    return false;
+  }
+}
+
+const bcrypt = require('bcrypt');
+
+
+router.post('/changepassword', mustLoggedIn, async(req, res) => {
+    try{
+        if(req.user[0].username == 'oauth'){
+            throw new Error("소셜로그인 이용자는 비밀번호를 변경할 수 없습니다.");
+        }else if(! await nowpwCheck(req, res)){
+            throw new Error("현재 비밀번호가 틀립니다.");
+        } else if(!pwCheck(req.body.new_pw, req.body.new_pw_conf)){
+            throw new Error("새 비밀번호의 양식 또는 비밀번호 확인에 오류가 있습니다.");
+        }
+        var sql = `UPDATE USER_PW_TABLE
+                SET USER_PASSWORD = ?
+                WHERE USER_ID = ?` ;
+        
+        await (await connection).execute(sql, [ await bcrypt.hash(req.body.new_pw, 10) , req.user[0].id]);
+
+        let result = {
+            status: '200'
+        }
+        res.json(result)
+    }catch(e){
+        res.json({
+            status : '500',
+            message: "오류 : " + e.message
+        });
+    }
+    
+})
+
+/**
+ * 새 password 양식 체크
+ */
+function pwCheck(password, re_password){
+  const regex = /^[a-zA-Z0-9!@#$%^&*()_+-=]*$/;
+  if(re_password == password && password.length<=20 && password.length>=8 && regex.test(password)){
+    return true
+  } else{
+    return false
+  }
+}
+
+/**
+ * 기존 password 일치 체크
+ */
+async function nowpwCheck(req, res){
+    // console.log(req.user)
+    var sql = `SELECT * FROM USER
+                INNER JOIN user_pw_table ON USER.id = USER_PW_TABLE.USER_ID
+                WHERE USER.id = ?`;
+    var [result, fields] = await (await connection).execute(sql, [req.user[0].id]);
+
+
+    console.log("CompareSync : " + bcrypt.compareSync(req.body.now_pw, result[0].user_password));
+    return bcrypt.compareSync(req.body.now_pw, result[0].user_password);
+}
+
+router.post('/signout', mustLoggedIn, async(req, res) => {
+    try{
+        if(req.user[0].username == 'oauth'){
+            throw new Error("소셜로그인 이용자는 비밀번호를 변경할 수 없습니다.");
+        }else if(! await nowpwCheck(req, res)){
+            throw new Error("현재 비밀번호가 틀립니다.");
+        } else if(!pwCheck(req.body.new_pw, req.body.new_pw_conf)){
+            throw new Error("새 비밀번호의 양식 또는 비밀번호 확인에 오류가 있습니다.");
+        }
+        var sql = `UPDATE USER_PW_TABLE
+                SET USER_PASSWORD = ?
+                WHERE USER_ID = ?` ;
+        
+        await (await connection).execute(sql, [ await bcrypt.hash(req.body.new_pw, 10) , req.user[0].id]);
+
+        let result = {
+            status: '200'
+        }
+        res.json(result)
+    }catch(e){
+        res.json({
+            status : '500',
+            message: "오류 : " + e.message
+        });
+    }
+    
 })
 
 module.exports=router;

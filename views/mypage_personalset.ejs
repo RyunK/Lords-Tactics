@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>로드의 전술서:마이페이지</title>
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <link href="/css/main.css" rel="stylesheet">
+    <link href="/css/mypage.css" rel="stylesheet">
+</head>
+<body>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+
+    <%- include('nav_and_banner.ejs', {page: '', nickname: data.nickname, notice:'2025.08.01 신규 캐릭터 [물]라플라스 추가 완료'}) %> 
+
+
+    <div class="pwchange-blocker ">
+        <div class="pwchange-modal shadow-basic">
+            <div class="bg-gray content d-flex justify-content-center flex-wrap">
+                <h4 class="mb-3">비밀번호 변경하기</h4>
+                <div>
+                    <h5>현재 비밀번호</h5>
+                    <input type="text" name="now_pw" id="" placeholder="현재 비밀번호 입력">
+                </div>
+                <div>
+                    <h5>새 비밀번호</h5>
+                    <input type="text" name="new_pw" id="" placeholder="새 비밀번호 입력(영문, 숫자, 특수문자 포함 8~20자)">
+                </div>
+                <div class="mb-5">
+                    <h5>새 비밀번호 확인</h5>
+                    <input type="text" name="new_pw_conf" id="" placeholder="새 비밀번호 재입력">
+                </div>
+                <p class="msg color-red"></p>
+            </div>
+            <div class="btns bg-basicdark d-flex justify-content-center">
+                <button type="button" class="cancel btn-cut btn-white me-2">취소</button>
+                <button type="button" class="submit btn-cut btn-yellow color-white ms-2">변경</button>
+            </div>
+        </div>
+    </div>
+
+
+    <!-- 왼쪽 리모콘(?) -->
+    <div class="mypage-remote shadow-filter-basic ">
+        <%- include('mypage_nav.ejs', {page: 'personal setting', nickname: data.nickname}) %> 
+
+    </div>
+
+    <!-- 오른쪽 컨텐츠 -->
+    <div class="mypage-maincontents ">
+        <div class="personal-set bg-basicdark shadow-basic d-flex justify-content-center flex-wrap">
+            <div>
+                <h5 class=" color-white">이메일</h5>
+                <input type="text" name="email" disabled value=" &nbsp; &nbsp; &nbsp; &nbsp; <%= data.email %>">
+                <% if(data.username == 'oauth' && data.provider[0]["PROVIDER"].includes("google")) { %>
+                <img class="mail-img " src="https://www.gstatic.com/marketing-cms/assets/images/d5/dc/cfe9ce8b4425b410b49b7f2dd3f3/g.webp=s48-fcrop64=1,00000000ffffffff-rw" alt="">
+                <% } else if (data.username == 'oauth' && data.provider[0]["PROVIDER"].includes("naver")) { %>
+                <img class="mail-img " src="/sources/img/naver_login.png" alt="">
+                <% } else{ %>
+                <img class="mail-img default" src="/sources/img/mail.png" alt="">
+                <% } %>
+            </div>
+
+            <div>
+                <div class="d-flex justify-content-between">
+                    <h5 class="color-purple">닉네임</h5>
+                    <p class="color-red nickname-msg text-end"></p>
+                </div>    
+                <input type="text" name="nickname" value="<%= data.nickname %>" disabled  placeholder="닉네임 입력 (2~20자)">
+                <div class=" btn-shadow"> 
+                    <button type="button" class="nickname-save  btn-cut btn-blue color-white">편집</button>
+                </div>
+            </div>
+
+            <div>
+                <h5 class="color-white">아이디</h5>
+                <% if(data.username == 'oauth') { %>
+                <input type="text" name="username" disabled value="<%= data.email %>">
+                <% } else { %>
+                <input type="text" name="username" disabled value="<%= data.username %>">
+                <% } %>
+            </div>
+
+            <% if(data.username != 'oauth') { %>
+            <div class="btn-shadow d-flex justify-content-center">
+                <button class="change-pw btn-cut btn-blue color-white">비밀번호 변경하기</button>
+            </div>
+            <% } %>
+            <div class="btn-shadow d-flex justify-content-center">
+                <button class="btn-cut btn-red color-white">회원 탈퇴</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script> 
+    <script src="https://code.jquery.com/ui/1.14.1/jquery-ui.min.js" integrity="sha256-AlTido85uXPlSyyaZNsjJXeCs07eSv3r43kyCVc8ChI=" crossorigin="anonymous"></script>
+
+    <script>
+        
+        $(document).on('click', function(e){
+            // 빈 곳 클릭하면 비밀번호 변경 모달 꺼짐
+            if(!$(e.target).closest(".pwchange-modal").length>0
+            && !$(e.target).closest(".pwchange-modal").children().length>0
+            && !$(e.target).closest(".change-pw").length>0){
+                $(".pwchange-blocker").fadeOut();
+            }
+
+        });
+
+        $('.nickname-save').on("click", function(){
+            let btn = $(this);
+            if( btn.text().includes("편집")){ // 편집 시작
+                btn.addClass('btn-yellow').removeClass('btn-blue').text("저장");
+                btn.parent().siblings("input").prop("disabled", false);
+            } else { // 편집 종료, 저장
+                $.ajax({
+                    url: '/mypage/changenickname', 
+                    method: 'POST', 
+                    contentType: 'application/json',
+                    data: JSON.stringify({ 
+                        nickname : $('input[name="nickname"]').val()
+                    }),
+                    
+                    // 요청 성공 
+                    success: function(res) {
+                        if(res.status.includes('2')){
+                            // disabled, 버튼 바꾸기
+                            $('input[name="nickname"]').prop("disabled", true);
+                            btn.addClass('btn-blue').removeClass('btn-yellow').text("편집");
+
+                            // alert
+                            alert("닉네임 변경이 완료되었습니다.")
+                        } else{
+                            // DB 오류
+                            alert(res.message);
+                        }
+                    },                        
+                    
+                    error: function(xhr, status, error) {
+                        // 오류 
+                        alert(`오류 발생! 다시 시도하세요. ${status} - ${error}`);
+                        console.error('Error:', status, error);
+                    }
+                });
+            }
+        })
+
+        $('input[name="nickname"]').on("propertychange change keyup paste input", function(){
+            $(".nickname-msg").text(nicknameTest()[1]);
+        })
+
+        function nicknameTest(){
+            let nickname = $('input[name="nickname"]').val();
+            if(nickname.length < 2 || nickname.length > 8 ){
+                // console.log($(this).val().length)
+                return [false, "닉네임은 2자 이상 8자 이하여야 합니다."]
+            } else{
+                return [true, ""];
+            }
+        }
+        
+        $('.change-pw').on("click", function(){
+            if('<%= data.username %>' == 'oauth'){
+                alert("소셜로그인 유저는 비밀번호를 변결할 수 없습니다.");
+            } else {
+                $('.pwchange-blocker').fadeIn();
+            }
+        })
+
+        $('.pwchange-modal .btns .cancel').on("click", function(){
+            $('.pwchange-blocker').fadeOut();
+        })
+
+        $('.pwchange-modal .btns .submit').on("click", function(){
+            $.ajax({
+                url: '/mypage/changepassword', 
+                method: 'POST', 
+                contentType: 'application/json',
+                data: JSON.stringify({ 
+                    now_pw : $('input[name="now_pw"]').val(),
+                    new_pw : $('input[name="new_pw"]').val(),
+                    new_pw_conf : $('input[name="new_pw_conf"]').val(),
+                }),
+                
+                // 요청 성공 
+                success: function(res) {
+                    if(res.status.includes('2')){
+                        alert("비밀번호가 변경되었습니다. 다시 로그인하세요.")
+                        let f = document.createElement('form');
+                        f.setAttribute('method', 'post');
+                        f.setAttribute('action', '/login/logout');
+                        document.body.appendChild(f);
+                        f.submit();
+                    } else{
+                        $('.pwchange-blocker .msg').text(res.message);
+                    }
+                },                        
+                
+                error: function(xhr, status, error) {
+                    // 오류 
+                    alert(`오류 발생! 다시 시도하세요. ${status} - ${error}`);
+                    console.error('Error:', status, error);
+                }
+            });
+        })
+
+        $('input[name="new_pw"]').on("propertychange change keyup paste input", function(){
+            $('.pwchange-blocker .msg').text(function() {
+                const regex = /^[a-zA-Z0-9!@#$%^&*()_+-=]*$/;
+                var password = $('input[name="new_pw"]').val();
+                var re_password = $('input[name="new_pw_conf"]').val();
+                if(re_password == password && password.length<=20 && password.length>=8 && regex.test(password)){
+                    return ""
+                } else{
+                    return "새 비밀번호의 양식 또는 비밀번호 확인에 오류가 있습니다."
+                }
+            });
+        })
+
+        
+
+    </script>
+</body>
+</html>

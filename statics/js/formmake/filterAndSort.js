@@ -41,10 +41,99 @@ function renderCharacterList(list){
 }
 
 /**
+ * 영웅 필터링 및 정렬해서 적용까지
+ */
+function hero_filter(){
+    let result="";
+    let hero_list = HeroesData.getter_allheroes();
+    let having_heroes = HeroesData.getter_having();
+    let having_heroes_id = HeroesData.getter_id();
+    let gak_num2eng = {0: 'no', 1: 'one', 2: 'two'}
+    // let hero_list_html = $('.character-list-box');
+
+    // 이 아래는 복붙만 하고 미구현
+    // let having_hero_only = $('.havinghero-check .charPublic-checkbox').is(':checked')
+    // let type_names = $('.typeselecter img:not(.inactive)').map(function(i, e){
+    //     return $(e).attr('src').substr(19).split('.')[0]
+    // }).get();
+    // let class_name = $('.hero-class-search > span').eq(0).text();
+    // let sort_type = $('.hero-sort-btn').text();
+
+    // if(sort_type.includes("등급순")){
+    //     hero_list.sort(function(a, b){
+    //         var a_val, b_val
+    //         if(having_heroes_id.indexOf(a["ID"]) < 0) a_val = 0;
+    //         else{
+    //             a_val = parseInt(having_heroes[having_heroes_id.indexOf(a["ID"])].cho)*100 + parseInt(having_heroes[having_heroes_id.indexOf(a["ID"])].lv) + parseInt(having_heroes[having_heroes_id.indexOf(a["ID"])].gak);
+    //         }
+    //         if(having_heroes_id.indexOf(b["ID"]) < 0) b_val = 0;
+    //         else{
+    //             b_val = parseInt(having_heroes[having_heroes_id.indexOf(b["ID"])].cho)*100 + parseInt(having_heroes[having_heroes_id.indexOf(b["ID"])].lv) + parseInt(having_heroes[having_heroes_id.indexOf(b["ID"])].gak);
+    //         }                
+    //         return b_val - a_val;
+    //     })
+    // }
+
+    // // console.log(having_heroes_id)
+
+    // for(let i=0; i < hero_list.length; i++){
+    //     if(
+    //     (class_name.includes(hero_list[i]["kor_class"]) || class_name.includes('전체'))
+    //     && (type_names.includes(hero_list[i]["eng_type"]))
+    //     &&((hero_list[i]["kor_name"]).includes(hero_name) || !hero_name)
+    //     &&(having_heroes_id.includes(hero_list[i]["ID"]) || !having_hero_only)
+    //     ){
+    //         if(having_heroes_id.includes(hero_list[i]["ID"])){ // 보유한 영웅
+    //             result = result +
+    //             `<li class="character-list-box select-liner d-flex justify-content-center">
+    //                 <div class="character-list" >
+    //                     <img src="/sources/img/characters/${hero_list[i].eng_type}_${hero_list[i].eng_name}_${hero_list[i].eng_class}.png" 
+    //                     alt="" data-id="${hero_list[i]["ID"]}" data-korname="${hero_list[i]["kor_name"]}" data-type="${hero_list[i].eng_type}"
+    //                     onerror="this.onerror=null; this.src='/sources/img/characters/Chr_Error.png';">
+    //                     <span class="lv_${hero_list[i].eng_type} lv">${having_heroes[having_heroes_id.indexOf(hero_list[i]["ID"])].lv}</span>
+    //                     <span class="${gak_num2eng[having_heroes[having_heroes_id.indexOf(hero_list[i]["ID"])].gak]}gak gak">${having_heroes[having_heroes_id.indexOf(hero_list[i]["ID"])].cho}</span>
+    //                 </div>
+    //             </li>`
+    //         } else{ // 보유하지 않은 영웅
+    //             result = result +
+    //             `<li class="character-list-box select-liner d-flex justify-content-center">
+    //                 <div class="character-list" >
+    //                     <img src="/sources/img/characters/${hero_list[i].eng_type}_${hero_list[i].eng_name}_${hero_list[i].eng_class}.png" 
+    //                     alt="" data-id="${hero_list[i]["ID"]}" data-korname="${hero_list[i]["kor_name"]}" data-type="${hero_list[i].eng_type}"
+    //                     onerror="this.onerror=null; this.src='/sources/img/characters/Chr_Error.png';"class="nothave">
+    //                     <span class="lv_${hero_list[i].eng_type} lv">0</span>
+    //                     <span class="nogak gak">0</span>
+    //                 </div>
+    //             </li>`
+    //         }
+            
+    //     }
+
+    // }
+
+    // // console.log(result);
+    
+    // $(".characters-container > .d-flex").html(result);
+
+    // // 보유 영웅 설정 ON 시 체크까지
+    // if(!$('.havinghero-blocker').hasClass('invisible')){
+    //     HavingHeroChecker.checked_heroes_recheck()    
+    // }
+
+    // // 영웅 설정 중이고 해당 영웅 있으면 찾아서 select
+    // if(!$('.setting-form form').hasClass('invisible')){
+    //     $('.char-selected').remove();
+    //     let setting_hero = $('.setting-form form input[name="hero"]').val()
+    //     // console.log(setting_hero)
+    //     $(`.character-list img[data-id="${setting_hero}"]`).parent().prepend(`<div class='char-selected'></div>`);
+    // }
+}
+
+/**
  * 현재 정렬된 리스트 상태
  */
 class CurrentChr{
-    static current_herolist = hero_list;
+    static current_herolist = HeroesData.getter_allheroes();;
 
     static setter(list){
         CurrentChr.current_herolist = list;
