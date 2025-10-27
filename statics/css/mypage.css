@@ -47,8 +47,6 @@ h6{
 }
 
 .mypage-remote .tab li{
-    text-align: center;
-    padding: 16px 0;
 
     font-size: 17px;
     font-weight: 500;
@@ -79,9 +77,13 @@ h6{
 }
 
 .mypage-remote .tab a{
+    text-align: center;
+    padding: 16px 0;
     width: 100%;
     height: 100%;
     font-size: 20px;
+
+    display: block;
 }
 
 .mypage-remote .tab .left-blue-bar{
@@ -327,19 +329,19 @@ h6{
     text-align: center;
 }
 
-.character-list-box {
+/* .character-list-box {
     width: calc(100% / (100% / 150px));
     margin-bottom: 20px;
 
-}
+} */
 
-.character-list{
+/* .character-list{
     width: 85px;
-}
+} */
 
-.character-list img{
+/* .character-list img{
     width: 85px;
-}
+} */
 
 .character-list span{
     font-size: 15px;

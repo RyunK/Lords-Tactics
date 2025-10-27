@@ -1,4 +1,4 @@
-.lv_dark{
+.lv{
     width: 30%;
     height: 30%;
     display: flex;
@@ -7,143 +7,68 @@
     color: white;
     font-weight: bold;
   
-    background-image: url("../sources/img/types/lv_dark.png");
     background-size: contain;
     background-repeat: no-repeat;
   
     position: absolute;
     bottom: -4px;
     right: 0px;
+    z-index: 3;
+}
+
+.lv_dark{
+    background-image: url("../sources/img/types/lv_dark.png");
   }
 
   .lv_fire{
-    width: 30%;
-    height: 30%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: white;
-    font-weight: bold;
-  
+
     background-image: url("../sources/img/types/lv_fire.png");
-    background-size: contain;
-    background-repeat: no-repeat;
-  
-    position: absolute;
-    bottom: -4px;
-    right: 0px;
   }
 
   .lv_grass{
-    width: 30%;
-    height: 30%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: white;
-    font-weight: bold;
-  
     background-image: url("../sources/img/types/lv_grass.png");
-    background-size: contain;
-    background-repeat: no-repeat;
-  
-    position: absolute;
-    bottom: -4px;
-    right: 0px;
+
   }
 
-  .lv_light{
-    width: 30%;
-    height: 30%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: white;
-    font-weight: bold;
-  
+  .lv_light{ 
     background-image: url("../sources/img/types/lv_light.png");
-    background-size: contain;
-    background-repeat: no-repeat;
-  
-    position: absolute;
-    bottom: -4px;
-    right: 0px;
+
   }
 
   .lv_water{
-    width: 30%;
-    height: 30%;
+    background-image: url("../sources/img/types/lv_water.png");
+
+  }
+
+  .gak{
+    width: 25%;
+    height: 25%;
     display: flex;
     align-items: center;
     justify-content: center;
-    color: white;
     font-weight: bold;
   
-    background-image: url("../sources/img/types/lv_water.png");
     background-size: contain;
     background-repeat: no-repeat;
   
     position: absolute;
-    bottom: -4px;
-    right: 0px;
+    /* bottom: -8px; */
+    bottom: -8%;
+    right: 27%;
+    z-index: 3;
   }
 
   .nogak{
-    width: 25%;
-    height: 25%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
     color: black;
-    font-weight: bold;
-  
     background-image: url("../sources/img/nogak.png");
-    background-size: contain;
-    background-repeat: no-repeat;
-
-    font-size: 10px;
-  
-    position: absolute;
-    bottom: -8px;
-    right: 26%;
   }
 
   .onegak{
-    width: 25%;
-    height: 25%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
     color: white;
-    font-weight: bold;
-  
     background-image: url("../sources/img/1gak.png");
-    background-size: contain;
-    background-repeat: no-repeat;
-
-    font-size: 10px;
-  
-    position: absolute;
-    bottom: -8px;
-    right: 26%;
   }
 
   .twogak{
-    width: 25%;
-    height: 25%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
     color: white;
-    font-weight: bold;
-  
     background-image: url("../sources/img/2gak.png");
-    background-size: contain;
-    background-repeat: no-repeat;
-
-    font-size: 10px;
-  
-    position: absolute;
-    bottom: -8px;
-    right: 26%;
   }

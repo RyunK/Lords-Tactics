@@ -1,0 +1,356 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>기사단 편성 작동</title>
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">  
+    <link href="../css/main.css" rel="stylesheet">
+    <link href="../css/form_share.css" rel="stylesheet">
+    <link href="../css/lv_badges.css" rel="stylesheet">
+    <link href="../css/form_making.css" rel="stylesheet">
+</head>
+<body>
+
+    <nav class="bg-basicdark shadow-basic d-flex justify-content-between align-items-center">
+        <div class="nav-box">
+            <a href="#" class="nav-selected" >기사단 편성</a>
+            <a href="#" >조합 공유 게시판</a>
+            <a href="#">마이페이지</a>
+            <a href="#">이용안내</a>
+        </div>
+        <div class="nav-box">
+            <a href="#" class="color-white">로그인/회원가입</a>
+            <a href="#" class="color-white">검색 &nbsp; <i class="fa-solid fa-magnifying-glass" style="font-size: 15px"></i></a>
+        </div>
+    </nav>
+    <div class="top-banner shadow-basic">
+        <a href="/"><img src="../sources/img/banners/basic.jpg" alt="" width="100%"></a>
+        <!-- 공지사항 배너 -->
+        <a class="notice-banner bg-white d-flex align-items-center color-black" href="#">
+            <span  class="ms-5 ps-3 pe-3">공지사항</span>
+            <span  class="ms-5 ">2025.08.01 신규 캐릭터 [물]라플라스 추가 완료</span>
+        </a>
+    </div>
+
+    <!-- 편성 조합 -->
+    <div class="form-container shadow-basic">
+        <!-- 상단바 -->
+        <div class="form-title ">
+            <dix class="form-status ">
+                <button type="button " class="btn-blue color-white border-0 d-flex align-items-center justify-content-center">
+                    <i class="fa-solid fa-angle-down"></i><p>편성 공유</p>
+                </button>
+
+                <ul>
+                    <li class="btn-yellow color-white">편성 요청</li>
+                </ul>
+                
+            </dix>
+
+             <div class="content-name flex-fill">
+                <button type="button"  class="btn-black  color-yellow border-0 d-flex align-items-center">
+                    <i class="fa-solid fa-angle-down"></i><p>아레나</p>
+                </button>
+
+                <ul>
+                    <li class="btn-black color-white">침묵의 해협</li>
+                    <li class="btn-black color-white">재앙의 경계</li>
+                </ul>
+
+             </div>
+        </div>
+
+        <!-- 아래 컨텐츠 -->
+        <div class="d-flex contents">
+            
+            <!-- 왼쪽 -->
+            <div class="left-box">
+                <div class="d-flex align-items-end">
+                    <div class="form-author bg-basicdark color-white">
+                        작성자 <span class="color-purple">여덟글자정도어때</span>
+                    </div>
+                </div>
+                
+
+                
+                <form class="form-border-container d-flex align-items-center flex-wrap">
+                    <h5 class="w-100">1 부대</h5>
+                    <div class="form-char-container w-100 d-flex flex-wrap justify-content-center ">
+                        <div class="character-10 form_spot">
+                            <div class='spot-selected-empty'></div>                           
+                            <div class="select-liner">
+                                <div class="empty"><i class="fa-solid fa-plus color-gray"></i> </div>
+                            </div>
+                        </div>
+                        <div class="character-10 form_spot">
+                            <div class='spot-selected-full'></div>                           
+                            <div class="select-liner ">
+                                <img src="../sources/img/characters/dark_charlotte_warrior.png" >
+
+                                <span class="lv_dark lv">70</span>
+                                <span class="twogak gak">
+                                        7
+                                </span>
+                            </div>
+                        </div>
+                        <div class="character-10 form_spot">
+                            <div class="select-liner">
+                                <div class="empty"><i class="fa-solid fa-plus color-gray"></i> </div>
+                            </div>
+                        </div>
+                        <div class="character-10 form_spot">
+                            <div class="select-liner">
+                                <div class="empty"><i class="fa-solid fa-plus color-gray"></i> </div>
+                            </div>
+                        </div>
+                        <div class="character-10 form_spot">
+                            <div class="select-liner">
+                                <div class="empty"><i class="fa-solid fa-plus color-gray"></i> </div>
+                            </div>
+                        </div>
+                        
+                    </div>
+
+                    <h5 class="w-100">2 부대</h5>
+                    <div class="form-char-container w-100 d-flex flex-wrap justify-content-center ">
+                        <div class="character-10 form_spot">
+                            <div class='spot-selected-empty'></div>                           
+                            <div class="select-liner">
+                                <div class="empty"><i class="fa-solid fa-plus color-gray"></i> </div>
+                            </div>
+                        </div>
+                        <div class="character-10 form_spot">
+                            <div class='spot-selected-full'></div>                           
+                            <div class="select-liner ">
+                                <img src="../sources/img/characters/dark_charlotte_warrior.png" >
+
+                                <span class="lv_dark lv">70</span>
+                                <span class="twogak gak">
+                                        7
+                                </span>
+                            </div>
+                        </div>
+                        <div class="character-10 form_spot">
+                            <div class="select-liner">
+                                <div class="empty"><i class="fa-solid fa-plus color-gray"></i> </div>
+                            </div>
+                        </div>
+                        <div class="character-10 form_spot">
+                            <div class="select-liner">
+                                <div class="empty"><i class="fa-solid fa-plus color-gray"></i> </div>
+                            </div>
+                        </div>
+                        <div class="character-10 form_spot">
+                            <div class="select-liner">
+                                <div class="empty"><i class="fa-solid fa-plus color-gray"></i> </div>
+                            </div>
+                        </div>
+                        
+                    </div>
+
+                    <input type="hidden" name="myhero-public" value="false">
+                </form>
+                
+
+                <div class="left-box-bottom d-flex justify-content-start align-items-end">
+                    <label class="charSetting-ele d-flex align-self-end">
+                        <span class="me-2">나의 영웅들 공개하기</span>
+                        <input type="checkbox" name="character_public" class="charPublic-checkbox">
+                        <span class="checkbox-img"></span>  
+                    </label>
+                    <div class="btn-shadow">
+                        <button class="charSetting-btn  btn-cut btn-white">
+                            영웅 설정 <i class="fa-solid fa-user-gear"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 오른쪽 -->
+            <div class="right-box">
+                <h6 class="explain-title d-flex align-items-end">작성자 한마디</h6>
+                <div class="bg-white content-h color-gray">
+                    <textarea class="memo explain-content" placeholder="한마디를 적어주세요" ></textarea>
+                </div>
+
+                <!-- 좋아요 / 댓글 펼치기 -->
+                <div class="btns mg-10px ms-0 me-0 d-flex flex-fill justify-content-between">
+                    <div class="btn-shadow d-flex justify-content-between w-100">
+                        <button class="btn-cut bottom-btn btn-blue color-white">불러오기 </button>
+                        <button class="btn-cut bottom-btn btn-yellow color-white">저장/게시 </button>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+    <div class="filter-and-heroes shadow-filter-basic">
+        <!-- 영웅 필터 -->
+        <div class="hero-filter bg-basicdark ">
+            <button class="filterreset btn-red btn-cut color-white">
+                필터 초기화 <i class="fa-solid fa-rotate-right"></i> 
+            </button>
+            <h5>영웅 필터</h5>
+            <div class="hero-namesearch">
+                <h5>영웅 이름 검색</h5>
+                <input type="text" name="hero_name_search" id="" class="hero-name-search color-black bg-lightgray">
+                <i class="fa-solid fa-magnifying-glass color-black"></i>
+            </div>
+            <div class="havinghero-check">
+                <h6>
+                    <label class=" d-flex align-self-center"> 
+                        <span class="me-2 color-white">보유 영웅만 보이기</span> 
+                        <input type="checkbox" name="character_public" class="charPublic-checkbox">
+                        <span class="checkbox-img"></span>  
+                    </label>
+                </h6>
+            </div>
+            <div class="sort-container">
+                <h5>영웅 정렬</h5>
+                <div class="sort-badges d-flex justify-content-between">
+                    <div class="filter-selected">영웅 순 <i class="fa-solid fa-caret-down"></i></div>
+                    <div class="filter-unselected">등급 순 <i class="fa-solid fa-caret-down"></i></div>
+                </div>
+            </div>
+            <div class="type-container">
+                <h5>속성</h5>
+                <div class="typeselecter d-flex ">
+                    <img src="../sources/img/types/dark.png" alt="" class="inactive">
+                    <img src="../sources/img/types/fire.png" alt="" class="inactive">
+                    <img src="../sources/img/types/water.png" class="inactive" alt="" >
+                    <img src="../sources/img/types/grass.png" class="" alt="">
+                    <img src="../sources/img/types/light.png" class="" alt="">
+                </div>
+            </div>
+            <div class="class-container">
+                <h5>클래스</h5>
+                <div class="class-badges">
+                    <div class="filter-unselected">
+                        <img src="../sources/img/classes/guardian.png"><p class="flex-fill">가디언</p> 
+                    </div>
+                    <div class="filter-unselected">
+                        <img src="../sources/img/classes/shooter.png"><p class="flex-fill">슈터</p> 
+                    </div>
+                    <div class="filter-unselected">
+                        <img src="../sources/img/classes/warrior.png"><p class="flex-fill">워리어</p> 
+                    </div>
+                    <div class="filter-selected">
+                        <img src="../sources/img/classes/priest.png"><p class="flex-fill">프리스트</p> 
+                    </div>
+                    <div class="filter-selected">
+                        <img src="../sources/img/classes/striker.png"><p class="flex-fill">스트라이커</p> 
+                    </div>
+                    <div class="filter-unselected">
+                        <img src="../sources/img/classes/commander.png"><p class="flex-fill">커맨더</p> 
+                    </div>
+
+                </div>
+            </div>
+
+        </div>
+
+        <!-- 영웅들 늘어진 칸 -->
+        <div class="heroes-speread flex-fill bg-basicdark shadow-basic">
+            <div class="mypage_link btn-shadow text-end">
+                <a class=" btn-cut btn-blue color-white">마이페이지 편집</a>
+            </div>
+            <div class="d-flex flex-wrap justify-content-start w-100">
+                <div class="character-list-box select-liner">                      
+                    <div class="character-list" >
+                        <img src="../sources/img/characters/dark_charlotte_warrior.png" >
+
+                        <span class="lv_dark lv">70</span>
+                        <span class="twogak gak">
+                                7
+                        </span>
+                    </div>
+                </div>
+                <div class="character-list-box select-liner">                      
+                    <div class="character-list" >
+                        <img src="../sources/img/characters/dark_charlotte_warrior.png" >
+
+                        <span class="lv_dark lv">70</span>
+                        <span class="twogak gak">
+                                7
+                        </span>
+                    </div>
+                </div>
+                <div class="character-list-box select-liner"> 
+                    <div class="form-selected"><i class="fa-solid fa-plus color-gray"></i> </div>                     
+                    <div class="character-list " >
+                        <img src="../sources/img/characters/dark_charlotte_warrior.png" >
+
+                        <span class="lv_dark lv">70</span>
+                        <span class="twogak gak">
+                                7
+                        </span>
+                    </div>
+                </div>
+                <div class="character-list-box select-liner">                      
+                    <div class="character-list" >
+                        <img src="../sources/img/characters/dark_charlotte_warrior.png" >
+
+                        <span class="lv_dark lv">70</span>
+                        <span class="twogak gak">
+                                7
+                        </span>
+                    </div>
+                </div>
+                <div class="character-list-box select-liner">                      
+                    <div class="character-list" >
+                        <img src="../sources/img/characters/dark_charlotte_warrior.png" >
+
+                        <span class="lv_dark lv">70</span>
+                        <span class="twogak gak">
+                                7
+                        </span>
+                    </div>
+                </div>
+                <div class="character-list-box select-liner">                      
+                    <div class="character-list" >
+                        <img src="../sources/img/characters/dark_charlotte_warrior.png" >
+
+                        <span class="lv_dark lv">70</span>
+                        <span class="twogak gak">
+                                7
+                        </span>
+                    </div>
+                </div>
+                <div class="character-list-box select-liner">                      
+                    <div class="character-list" >
+                        <img src="../sources/img/characters/dark_charlotte_warrior.png" >
+
+                        <span class="lv_dark lv">70</span>
+                        <span class="twogak gak">
+                                7
+                        </span>
+                    </div>
+                </div>
+                <div class="character-list-box select-liner">                      
+                    <div class="character-list" >
+                        <img src="../sources/img/characters/dark_charlotte_warrior.png" >
+
+                        <span class="lv_dark lv">70</span>
+                        <span class="twogak gak">
+                                7
+                        </span>
+                    </div>
+                </div>
+
+            </div>
+            
+        </div>
+    </div>
+
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+    <script>
+
+    </script>
+
+</body>
+</html>
