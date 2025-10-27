@@ -22,15 +22,18 @@
                 <h4 class="mb-3">비밀번호 변경하기</h4>
                 <div>
                     <h5>현재 비밀번호</h5>
-                    <input type="text" name="now_pw" id="" placeholder="현재 비밀번호 입력">
+                    <input type="password" name="now_pw" id="" placeholder="현재 비밀번호 입력">
+                    <i class="pw-switch fa-solid fa-eye-slash"></i>
                 </div>
                 <div>
                     <h5>새 비밀번호</h5>
-                    <input type="text" name="new_pw" id="" placeholder="새 비밀번호 입력(영문, 숫자, 특수문자 포함 8~20자)">
+                    <input type="password" name="new_pw" id="" placeholder="새 비밀번호 입력(영문, 숫자, 특수문자 포함 8~20자)">
+                    <i class="pw-switch fa-solid fa-eye-slash"></i>
                 </div>
                 <div class="mb-5">
                     <h5>새 비밀번호 확인</h5>
-                    <input type="text" name="new_pw_conf" id="" placeholder="새 비밀번호 재입력">
+                    <input type="password" name="new_pw_conf" id="" placeholder="새 비밀번호 재입력">
+                    <i class="pw-switch fa-solid fa-eye-slash"></i>
                 </div>
                 <p class="msg color-red"></p>
             </div>
@@ -205,6 +208,19 @@
                     console.error('Error:', status, error);
                 }
             });
+        })
+
+        $(".pw-switch").on('click', function(e){
+            if($(this).hasClass('fa-eye')){
+                $(this).removeClass('fa-eye');
+                $(this).addClass('fa-eye-slash');
+                $(this).siblings('input').attr('type', 'password');
+
+            } else {
+                $(this).removeClass('fa-eye-slash');
+                $(this).addClass('fa-eye');
+                $(this).siblings('input').attr('type', 'text');
+            }
         })
 
         $('input[name="new_pw"]').on("propertychange change keyup paste input", function(){

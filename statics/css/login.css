@@ -85,25 +85,47 @@
     cursor: pointer;
 }
 
-.id-input{
+.signup-form > div{
     position: relative;
 }
 
-.id-check{
+.signup-form .check{
     position: absolute;
 
     top:33px;
     right: 10px;
 }
 
-.id-check button{
-    padding: 6px 20px;
+.signup-form .check button,
+.signup-form .email-check-input button{
+    /* padding: 6px 20px; */
+    height: 33px;
+    width: 96px;
 }
 
+.email-check-div{
+    position: relative;
+}
 
-/* .btn-green{
-    background-color: #77cb33;
-} */
+.signup-form .email-check-input{
+    position: absolute;
+
+    top:2px;
+    right: calc(30% + 10px);
+    display: none;
+}
+
+.signup-form input[name="email-check"]{
+    width: 70%;
+    border: none;
+    padding: 8px 15px;
+    display: block;
+    font-size: 15px;
+}
+
+.email-check-div{
+    display: none;
+}
 
 .naverlogin-bg{
     background-color: rgb(3, 199, 90);
@@ -117,7 +139,7 @@
     height: 45px;
     position: absolute;
 
-    left: 76px;
+    left: 70px;
     top: 4px;
 }
 

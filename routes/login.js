@@ -1,6 +1,10 @@
 const router = require('express').Router();
 
 const nodemailer = require('nodemailer');
+const ejs = require('ejs');
+const path = require('path');
+var appDir = path.dirname(require.main.filename);
+
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const connection = require('../database.js')
@@ -85,6 +89,8 @@ router.post('/register', mustNotLoggedIn, async (req, res) => {
   let nickname = req.body.nickname;
   let email = req.body.email;
 
+  console.log(req.body);
+
   // console.log(username, password, nickname, email);
 
   if(!usernameCheck(username) || !pwCheck(password, re_password || !nicknameCheck(nickname) || !emailCheck(email))){
@@ -99,14 +105,14 @@ router.post('/register', mustNotLoggedIn, async (req, res) => {
       var [result, fields] = await (await connection).execute(sql, [username, nickname]);
 
       let user_id = result.insertId;
-      var sql = `INSERT INTO user_emails (user_id, user_email) VALUES(?, ?)`;
+      var sql = `INSERT INTO user_emails (user_id, user_email, is_certificated) VALUES(?, ?, 1)`;
       var [result, fields] = await (await connection).execute(sql, [user_id, email]);
 
       var sql = `INSERT user_pw_table (user_id, user_password) VALUES( ? , ?)`;
       var [result, fields] = await (await connection).execute(sql, [user_id, password]);
 
       res.send("<script>alert('회원가입에 성공했습니다. 해당 아이디로 로그인하세요.'); location.href='/login';</script>");
-    } catch{
+    } catch(err) {
       console.log(err);
       res.statusMessage = "DB ERROR";
       res.status(500).end();
@@ -243,6 +249,107 @@ function emailCheck(email){
   }
 }
 
+/**
+ * 이메일 인증 요청 시 이메일 전송해줌
+ */
+router.post('/mailcheck/sendemail', async(req, res) => {
+    try{
+        let authNum = Math.random().toString().substr(2,6);
+
+        // 이메일 보내기 전에 DB에 이메일 정보와 AuthNum 저장
+        var sql = `INSERT INTO email_certificating (email, cert_num) VALUES(?, ?)`;
+        var [result, fields] = await (await connection).execute(sql, [req.body.email, authNum]);
+        // console.log(result);
+
+        let emailTemplete;
+        ejs.renderFile(appDir+'/templates/authMail.ejs', {authCode : authNum}, function (err, data) {
+            if(err){console.log(err)}
+            emailTemplete = data;
+        });
+
+        let transporter = nodemailer.createTransport({
+            service: 'Gmail',
+            host: 'smtp.gmail.com',
+            port: 465,
+            secure: false,
+            auth: {
+                user: process.env.NODEMAILER_USER,
+                pass: process.env.NODEMAILER_PASS,
+            },
+        });
+
+        let mailOptions = {
+            to: req.body.email,
+            subject: '[로드의 전술서] 이메일 인증',
+            html: emailTemplete,
+        };
+
+
+        transporter.sendMail(mailOptions, function (error, info) {
+            if (error) {
+                console.log(error);
+                return  res.json({
+                    status: '500',
+                })
+            }
+            // console.log("Finish sending email : " + info.response);
+            return res.json({
+                status: '200',
+                data : {
+                insertId : result.insertId,
+                }
+            })
+        });
+
+        
+    }catch(err){
+        res.json({
+            status: '500',
+            message: err.message,
+        })
+    }
+
+    
+});
+
+/**
+ * id, 이메일 주소, 넘버 비교해서 맞으면 true, 아니면 false 반환
+ */
+router.get('/mailcheck/numbercheck', async(req, res) => {
+  try{
+    
+    // console.log(req.query);
+    var sql = `SELECT * FROM email_certificating
+            WHERE id = ? AND email = ? AND cert_num = ?`;
+    var [result, fields] = await (await connection).execute(sql, [req.query.insertId, req.query.email, req.query.authNum]);
+    
+
+    if(!result){
+      return res.json({
+                status: '200',
+                data : {
+                result: false,
+                }
+            })
+    } else{
+      return res.json({
+                status: '200',
+                data : {
+                result: true,
+                }
+            })
+    }
+
+      
+  }catch(err){
+      res.json({
+          status: '500',
+          message: err.message,
+      })
+  }
+
+    
+});
 
 
 module.exports = router;

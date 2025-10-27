@@ -23,7 +23,7 @@
                     <p class="color-red fault-msg text-end"></p>
                 </div>
                 <input type="text" name="username" autocomplete="username" oninput="onlyAlphaNum(this)" data-submitable="false" data-checkable="false" class="input-box lowercase mt-1 mb-3" placeholder="아이디 입력 (영문, 숫자, _포함 6~20자)">
-                <div class="id-check btn-shadow"> 
+                <div class="check id-check btn-shadow"> 
                     <button type="button" onclick="idcheck()" class="basic-btn btn-cut btn-blue color-white">중복 확인</button>
                 </div>
             </div>
@@ -63,7 +63,17 @@
                     <h6 class="fw-bold text-start">이메일</h6>
                     <p class="color-red fault-msg text-end"></p>
                 </div>
-                <input type="email" name="email" autocomplete="email" data-submitable="false" class="input-box mt-1 mb-3" placeholder="이메일 주소 입력">
+                <input type="email" name="email" autocomplete="email" data-submitable="false" class="input-box mt-1 mb-1" placeholder="이메일 주소 입력">
+                <div class="check email-check-req btn-shadow"> 
+                    <button type="button" class="basic-btn btn-cut btn-blue color-white">인증</button>
+                </div>
+                <div class="email-check-div">
+                    <input type="text" name="email-check" data-submitable="false" class=" mt-1 mb-3" placeholder="문자 입력">
+                    <div class="email-check-input btn-shadow"> 
+                        <button type="button" class="basic-btn btn-cut btn-yellow color-white">확인</button>
+                    </div>
+                </div>
+                
             </div>
             
             <label class="checkbox-container mt-4 mb-4 d-flex align-self-center">
@@ -161,6 +171,7 @@
             for(let i=0; i<input_objects.length; i++){
                 if(input_objects.eq(i).data("submitable") == false){
                     alert("입력창을 다시 확인하세요.");
+                    console.log($('input[type="text"]').eq(i));
                     $('input[type="text"]').eq(i).focus();
                     return false;
                 }
@@ -177,7 +188,7 @@
         }
 
 
-        $('input[name="username"]').on('change', function(e){
+        $('input[name="username"]').on('propertychange change keyup paste input', function(e){
             $('input[name="username"]').data('submitable', 'false');
             $('.id-input .fault-msg').text("");
             const regex = /^[A-Za-z0-9_]*$/gi;
@@ -196,7 +207,7 @@
             }
         })
 
-        $('input[name="password"]').on('change', function(e){
+        $('input[name="password"]').on('propertychange change keyup paste input', function(e){
             const regex = /^[a-zA-Z0-9!@#$%^&*()_+-=]*$/; // 영문, 숫자, 특수문자 허용하는 정규 표현식
             let msg = $('.pw-input .fault-msg');
             if($(this).val().length < 8 || $(this).val().length > 20 ){
@@ -217,7 +228,7 @@
             }
         })
 
-        $('input[name="re_password"]').on('change', function(e){
+        $('input[name="re_password"]').on('propertychange change keyup paste input', function(e){
             // console.log(checkpw());
             if(checkpw()){
                 $('.pw-check .fault-msg').text("");
@@ -228,7 +239,7 @@
             }
         })
 
-        $('input[name="nickname"]').on('change', function(e){
+        $('input[name="nickname"]').on('propertychange change keyup paste input', function(e){
             let msg = $('.nickname-input .fault-msg');
             if($(this).val().length < 2 || $(this).val().length > 8 ){
                 // console.log($(this).val().length)
@@ -243,21 +254,133 @@
             }
         })
 
-        $('input[name="email"]').on('change', function(e){
+        $('input[name="email"]').on('propertychange change keyup paste input', function(e){
+            emailCheck();
+        })
+
+        class EmailCheckNum{
+            static id;
+            static email;
+            
+            static id_getter () {
+                return this.id;
+            }
+
+            static id_setter(num){
+                this.id = num;
+                return this.id;
+            }
+
+            static email_getter(){
+                return this.email;
+            }
+
+            static email_setter(email){
+                this.email = email;
+                return this.email;
+            }
+        }
+
+        $('.email-check-req button').on('click', function(){
+            if(emailCheck()){
+                $('.email-check-div').slideDown(300)
+                $('.email-check-input').slideDown(300);
+                $('.email-check-req button').text("다시 요청")
+                $('.email-input .fault-msg').text("입력하신 이메일 주소로 전송된 문자를 입력하세요.")
+
+                $.ajax({
+                    url: '/login/mailcheck/sendemail', 
+                    method: 'POST', 
+                    contentType: 'application/json',
+                    data: JSON.stringify({ 
+                        email : $('input[name="email"]').val(),
+                    }),
+                    
+                    // 요청 성공 
+                    success: function(res) {
+                        if(res.status.includes('2')){
+                            EmailCheckNum.id_setter(res.data.insertId);
+                            EmailCheckNum.email_setter($('input[name="email"]').val());
+                        } else{
+                            // DB 오류
+                            alert(res.message);
+                            $('.email-input .fault-msg').text("이메일 인증을 다시 요청하세요.")
+                        }
+                    },                        
+                    
+                    error: function(xhr, status, error) {
+                        // 오류 
+                        alert(`오류 발생! 다시 시도하세요. ${status} - ${error}`);
+                        console.error('Error:', status, error);
+                        $('.email-input .fault-msg').text("이메일 인증을 다시 요청하세요.")
+                    }
+                })
+            }
+            
+        })
+
+        function emailCheck(){
             const regex = /^[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*@[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*\.[a-zA-Z]{2,3}$/i
             let msg = $('.email-input .fault-msg');
-            if (!regex.test(($(this).val()))) {
+            if (!regex.test(($('input[name="email"]').val()))) {
                 // 입력된 값이 정규 표현식과 맞지 않음
                 msg.text("알맞은 이메일을 입력하세요.");
                 msg.removeClass('color-black');
                 msg.addClass('color-red');
-                $(this).data("submitable", "false");
+                $('input[name="email"]').data("submitable", "false");
+                return false;
             } else{
                 msg.text("");
-                $(this).data("submitable", "true");
+                return true;
             }
-        })
+        }
 
+        $('.email-check-input button').on('click', function(){
+            $(this).text("인증 중...");
+            $.ajax({
+                    url: `/login/mailcheck/numbercheck/?insertId=${EmailCheckNum.id_getter()}&email=${$('input[name="email"]').val()}&authNum=${$('input[name="email-check"]').val()}`, 
+                    method: 'GET', 
+                    data: {},
+                    
+                    // 요청 성공 
+                    success: function(res) {
+                        if(res.status.includes('2') && res.data.result){
+                            $('.email-input .fault-msg').text("이메일 인증이 완료되었습니다.")
+
+                            $('input[name="email"]').prop("readonly", true);
+                            $('input[name="email-check"]').prop("readonly", true);
+
+                            $('.email-check-input button').text("완료됨");
+                            $('.email-check-req button').text("인증 완료");
+
+                            $('.email-check-input button').addClass("bg-deepgray").removeClass("btn-yellow");
+                            $('.email-check-req button').addClass("bg-deepgray").removeClass("btn-blue");
+
+                            $('.email-check-input button').prop("disabled", true);
+                            $(".email-check-req button").prop("disabled", true);
+
+                            $('input[name="email"]').data("submitable", "true");
+                            $('input[name="email-check"]').data("submitable", "true");
+                            
+                        } else if(res.status.includes('2') && !res.data.result){
+                            $('.email-input .fault-msg').text("인증 문자가 틀렸거나 만료되었습니다.")
+                            $('input[name="email"]').data("submitable", "false");
+                            
+                        } else{
+                            // DB 오류
+                            alert(res.message);
+                            $('.email-input .fault-msg').text("이메일 인증을 다시 요청하세요.")
+                        }
+                    },                        
+                    
+                    error: function(xhr, status, error) {
+                        // 오류 
+                        alert(`오류 발생! 다시 시도하세요. ${status} - ${error}`);
+                        console.error('Error:', status, error);
+                        $('.email-input .fault-msg').text("이메일 인증을 다시 요청하세요.")
+                    }
+                })
+        })
 
         $(".pw-switch").on('click', function(e){
             if($(this).hasClass('fa-eye')){
@@ -271,6 +394,8 @@
                 $(this).siblings('input').attr('type', 'text');
             }
         })
+
+        
     </script>
 </body>
 </html>

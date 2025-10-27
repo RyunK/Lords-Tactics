@@ -14,7 +14,8 @@ router.get('/', mustLoggedIn, (req, res) => {
 
 
 router.get('/formsave', mustLoggedIn, async(req, res) => { 
-    var sql = `SELECT * FROM FORM_STATUS`;
+    var sql = `SELECT * FROM FORM_STATUS
+            ORDER BY status_name`;
     var [form_status_list, fields] = await (await connection).execute(sql);
     
     var sql = `SELECT * FROM CONTENTS_NAME

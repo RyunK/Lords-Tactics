@@ -75,7 +75,6 @@ app.use((req, res, next) => {
 });
 
 app.use('/login', require('./routes/login.js'));
-app.use('/mailcheck', require('./routes/mailCheck.js'));
 app.use('/forum', require('./routes/forum.js'));
 app.use('/formmake', require('./routes/formmake.js'));
 app.use('/mypage', require('./routes/mypage.js'));
