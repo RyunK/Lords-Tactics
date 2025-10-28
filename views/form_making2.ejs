@@ -7,33 +7,15 @@
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">  
-    <link href="../css/main.css" rel="stylesheet">
-    <link href="../css/lv_badges.css" rel="stylesheet">
-    <link href="../css/form_making.css" rel="stylesheet">
-    <link href="../css/hero_setting.css" rel="stylesheet">
+    <link href="/css/main.css" rel="stylesheet">
+    <link href="/css/lv_badges.css" rel="stylesheet">
+    <link href="/css/form_making.css" rel="stylesheet">
+    <link href="/css/hero_setting.css" rel="stylesheet">
 </head>
 <body>
 
-    <nav class="bg-basicdark shadow-basic d-flex justify-content-between align-items-center">
-        <div class="nav-box">
-            <a href="#" class="nav-selected" >기사단 편성</a>
-            <a href="#" >조합 공유 게시판</a>
-            <a href="#">마이페이지</a>
-            <a href="#">이용안내</a>
-        </div>
-        <div class="nav-box">
-            <a href="#" class="color-white">로그인/회원가입</a>
-            <a href="#" class="color-white">검색 &nbsp; <i class="fa-solid fa-magnifying-glass" style="font-size: 15px"></i></a>
-        </div>
-    </nav>
-    <div class="top-banner shadow-basic">
-        <a href="/"><img src="../sources/img/banners/basic.jpg" alt="" width="100%"></a>
-        <!-- 공지사항 배너 -->
-        <a class="notice-banner bg-white d-flex align-items-center color-black" href="#">
-            <span  class="ms-5 ps-3 pe-3">공지사항</span>
-            <span  class="ms-5 ">2025.08.01 신규 캐릭터 [물]라플라스 추가 완료</span>
-        </a>
-    </div>
+    <%- include('nav_and_banner.ejs', {page: 'formmake', nickname: data.nickname, notice:'2025.08.01 신규 캐릭터 [물]라플라스 추가 완료'}) %> 
+    
 
     <!-- 영웅 설정 모달 -->
     <div class="hero-setting-container">
@@ -139,12 +121,17 @@
 
                 <div class="content-name flex-fill">
                     <button type="button"  class="btn-black  color-yellow border-0 d-flex align-items-center">
-                        <i class="fa-solid fa-angle-down"></i><p>아레나</p>
+                        <i class="fa-solid fa-angle-down"></i><p><%= data.now_content.kor_name %></p>
                     </button>
 
                     <ul>
-                        <li class="btn-black color-white">침묵의 해협</li>
-                        <li class="btn-black color-white">재앙의 경계</li>
+                        <% for(let i=0; i<data.contents_list.length; i++){ %>
+                            <% if(data.contents_list[i]['eng_name'] == "all"){ continue; } %>
+                            <li class="btn-black color-white" 
+                            data-engname="<%= data.contents_list[i]['eng_name']%>" data-heronum="<%= data.contents_list[i]['num_of_heroes']%>">
+                                <%= data.contents_list[i]['kor_name']%>
+                            </li>
+                        <% } %>
                     </ul>
 
                 </div>
@@ -161,18 +148,22 @@
                         </div>
                     </div>
                     
- 
+
                     
                     <form class="form-border-container d-flex align-items-center flex-wrap">
+                        <input type="hidden" name="form_status" id="" value="">
+                        <input type="hidden" name="content_name" id="" value="">
                         <h5 class="w-100">1 부대</h5>
                         <div class="form-char-container w-100 d-flex flex-wrap justify-content-center ">
+                            <% for(let i=0; i<5; i++){ %>
                             <div class="character-10 form_spot">
-                                <div class='spot-selected-empty'></div>                           
                                 <div class="select-liner">
                                     <div class="empty"><i class="fa-solid fa-plus color-gray"></i> </div>
+                                    <input value="0"  name="hero" type="hidden"> 
                                 </div>
                             </div>
-                            <div class="character-10 form_spot">
+                            <% } %>
+                            <!-- <div class="character-10 form_spot">
                                 <div class='spot-selected-full'></div>
                                 <img src="../sources/img/out_char.png" alt="" class="out">                           
                                 <div class="select-liner ">
@@ -183,60 +174,19 @@
                                             7
                                     </span>
                                 </div>
-                            </div>
-                            <div class="character-10 form_spot">
-                                <div class="select-liner">
-                                    <div class="empty"><i class="fa-solid fa-plus color-gray"></i> </div>
-                                </div>
-                            </div>
-                            <div class="character-10 form_spot">
-                                <div class="select-liner">
-                                    <div class="empty"><i class="fa-solid fa-plus color-gray"></i> </div>
-                                </div>
-                            </div>
-                            <div class="character-10 form_spot">
-                                <div class="select-liner">
-                                    <div class="empty"><i class="fa-solid fa-plus color-gray"></i> </div>
-                                </div>
-                            </div>
-                            
+                            </div> -->
                         </div>
 
                         <h5 class="w-100">2 부대</h5>
                         <div class="form-char-container w-100 d-flex flex-wrap justify-content-center ">
-                            <div class="character-10 form_spot">
-                                <div class='spot-selected-empty'></div>                           
-                                <div class="select-liner">
-                                    <div class="empty"><i class="fa-solid fa-plus color-gray"></i> </div>
-                                </div>
-                            </div>
-                            <div class="character-10 form_spot">
-                                <div class='spot-selected-full'></div>                           
-                                <img src="../sources/img/out_char.png" alt="" class="out">                           
-                                <div class="select-liner ">
-                                    <img src="../sources/img/characters/dark_charlotte_warrior.png" >
-
-                                    <span class="lv_dark lv">70</span>
-                                    <span class="twogak gak">
-                                            7
-                                    </span>
-                                </div>
-                            </div>
+                            <% for(let i=0; i<5; i++){ %>
                             <div class="character-10 form_spot">
                                 <div class="select-liner">
                                     <div class="empty"><i class="fa-solid fa-plus color-gray"></i> </div>
+                                    <input value="0"  name="hero" type="hidden"> 
                                 </div>
                             </div>
-                            <div class="character-10 form_spot">
-                                <div class="select-liner">
-                                    <div class="empty"><i class="fa-solid fa-plus color-gray"></i> </div>
-                                </div>
-                            </div>
-                            <div class="character-10 form_spot">
-                                <div class="select-liner">
-                                    <div class="empty"><i class="fa-solid fa-plus color-gray"></i> </div>
-                                </div>
-                            </div>
+                            <% } %>
                             
                         </div>
 
@@ -351,11 +301,45 @@
         <!-- 영웅들 늘어진 칸 -->
         <div class="heroes-speread flex-fill bg-basicdark shadow-basic">
             <div class="mypage_link btn-shadow text-start">
-                <a class=" btn-cut btn-blue color-white">마이페이지 편집</a>
+                <a href="/mypage/myhero" class=" btn-cut btn-blue color-white">마이페이지 편집</a>
             </div>
             <div class="heroes-spread-container  w-100">
             <!-- <div class="hero-spread-container d-flex flex-wrap justify-content-start w-100"> -->
-                <div class="character-list-box select-liner">                      
+                <% for(let i=0; i<data.hero_list.length; i++){ %>
+                    <div class="character-list-box select-liner ">
+                        <div class="character-list" >
+                            <% if(data.nickname && data.having_heroes_id.includes(data.hero_list[i]["ID"])){ %>
+                            <img src="/sources/img/characters/<%= data.hero_list[i].eng_type %>_<%= data.hero_list[i].eng_name %>_<%= data.hero_list[i].eng_class %>.png" 
+                            alt="" data-id="<%= data.hero_list[i]["ID"] %>" data-korname="<%= data.hero_list[i].kor_name %>" data-type="<%=data.hero_list[i].eng_type%>"
+                            onerror="this.onerror=null; this.src='/sources/img/characters/Chr_Error.png';">
+
+                            <span class="lv_<%=data.hero_list[i].eng_type%> lv"><%=data.having_heroes[data.having_heroes_id.indexOf(data.hero_list[i]["ID"])].lv %></span>
+                                <% if(data.having_heroes[data.having_heroes_id.indexOf(data.hero_list[i]["ID"])].gak == 0){ %>
+                                <span class="nogak gak">
+                                <% } else if(data.having_heroes[data.having_heroes_id.indexOf(data.hero_list[i]["ID"])].gak == 1){ %>
+                                <span class="onegak gak">
+                                <% } else if(data.having_heroes[data.having_heroes_id.indexOf(data.hero_list[i]["ID"])].gak == 2){ %>
+                                <span class="twogak gak">
+                                <% } %>
+
+                                    <%=data.having_heroes[data.having_heroes_id.indexOf(data.hero_list[i]["ID"])].cho %>
+                                </span>
+                            <% } else if (data.nickname){ %>
+                            <img src="/sources/img/characters/<%= data.hero_list[i].eng_type %>_<%= data.hero_list[i].eng_name %>_<%= data.hero_list[i].eng_class %>.png" 
+                            alt="" data-id="<%= data.hero_list[i]["ID"] %>" data-korname="<%= data.hero_list[i].kor_name %>" data-type="<%=data.hero_list[i].eng_type%>"
+                            onerror="this.onerror=null; this.src='/sources/img/characters/Chr_Error.png';" class="nothave">
+
+                            <span class="lv_<%=data.hero_list[i].eng_type%> lv">0</span>
+                            <span class="nogak gak">0</span>
+                            <% } else { %>
+                            <img src="/sources/img/characters/<%= data.hero_list[i].eng_type %>_<%= data.hero_list[i].eng_name %>_<%= data.hero_list[i].eng_class %>.png" 
+                            alt="" data-id="<%= data.hero_list[i]["ID"] %>" data-korname="<%= data.hero_list[i].kor_name %>" data-type="<%=data.hero_list[i].eng_type%>"
+                            onerror="this.onerror=null; this.src='/sources/img/characters/Chr_Error.png';" class="">
+                            <% } %>
+                        </div>
+                    </div>
+                <% } %>
+                <!-- <div class="character-list-box select-liner">                      
                     <div class="character-list" >
                         <img src="../sources/img/characters/dark_charlotte_warrior.png" >
 
@@ -364,108 +348,8 @@
                                 7
                         </span>
                     </div>
-                </div>
-                <div class="character-list-box select-liner">                      
-                    <div class="character-list" >
-                        <img src="../sources/img/characters/dark_charlotte_warrior.png" >
-
-                        <span class="lv_dark lv">70</span>
-                        <span class="twogak gak">
-                                7
-                        </span>
-                    </div>
-                </div>
-                <div class="character-list-box select-liner"> 
-                    <div class="form-selected"><i class="fa-solid fa-plus color-gray"></i> </div>                     
-                    <div class="character-list " >
-                        <img src="../sources/img/characters/dark_charlotte_warrior.png" >
-
-                        <span class="lv_dark lv">70</span>
-                        <span class="twogak gak">
-                                7
-                        </span>
-                    </div>
-                </div>
-                <div class="character-list-box select-liner">                      
-                    <div class="character-list" >
-                        <img src="../sources/img/characters/dark_charlotte_warrior.png" >
-
-                        <span class="lv_dark lv">70</span>
-                        <span class="twogak gak">
-                                7
-                        </span>
-                    </div>
-                </div>
-                <div class="character-list-box select-liner">                      
-                    <div class="character-list" >
-                        <img src="../sources/img/characters/dark_charlotte_warrior.png" >
-
-                        <span class="lv_dark lv">70</span>
-                        <span class="twogak gak">
-                                7
-                        </span>
-                    </div>
-                </div>
-                <div class="character-list-box select-liner">                      
-                    <div class="character-list" >
-                        <img src="../sources/img/characters/dark_charlotte_warrior.png" >
-
-                        <span class="lv_dark lv">70</span>
-                        <span class="twogak gak">
-                                7
-                        </span>
-                    </div>
-                </div>
-                <div class="character-list-box select-liner">                      
-                    <div class="character-list" >
-                        <img src="../sources/img/characters/dark_charlotte_warrior.png" >
-
-                        <span class="lv_dark lv">70</span>
-                        <span class="twogak gak">
-                                7
-                        </span>
-                    </div>
-                </div>
-                <div class="character-list-box select-liner">                      
-                    <div class="character-list" >
-                        <img src="../sources/img/characters/dark_charlotte_warrior.png" >
-
-                        <span class="lv_dark lv">70</span>
-                        <span class="twogak gak">
-                                7
-                        </span>
-                    </div>
-                </div>
-                <div class="character-list-box select-liner">                      
-                    <div class="character-list" >
-                        <img src="../sources/img/characters/dark_charlotte_warrior.png" >
-
-                        <span class="lv_dark lv">70</span>
-                        <span class="twogak gak">
-                                7
-                        </span>
-                    </div>
-                </div>
-                <div class="character-list-box select-liner">                      
-                    <div class="character-list" >
-                        <img src="../sources/img/characters/dark_charlotte_warrior.png" >
-
-                        <span class="lv_dark lv">70</span>
-                        <span class="twogak gak">
-                                7
-                        </span>
-                    </div>
-                </div>
-                <div class="character-list-box select-liner">                      
-                    <div class="character-list" >
-                        <img src="../sources/img/characters/dark_charlotte_warrior.png" >
-
-                        <span class="lv_dark lv">70</span>
-                        <span class="twogak gak">
-                                7
-                        </span>
-                    </div>
-                </div>
+                </div> -->
+                
 
             </div>
             
@@ -475,6 +359,118 @@
 
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
     <script>
+
+        window.onload = function(){
+            let spot = $('.form_spot').eq(0)
+            if(spot.find(".empty").length>0){
+                spot.prepend("<div class='spot-selected-empty'></div>");
+            }else {
+                spot.prepend('<img src="../sources/img/out_char.png" class="out">');
+                spot.prepend("<div class='spot-selected-full'></div>");                   
+            }
+        }
+
+        class NowFormHeroes{
+            static heroes_arr = new Array(10).fill(0);
+
+            static setter(arr){
+                this.heroes_arr = arr;
+                return this.heroes_arr;
+            }
+            
+            static getter(arr){
+                return this.heroes_arr;
+            }
+
+            static oneHeroSet(idx, hero_id){
+                hero_id = parseInt(hero_id);
+                this.heroes_arr[idx] = hero_id;
+                return this.heroes_arr;
+            }
+            
+            static removeByHeroId(hero_id){
+                if(hero_id == 0) return Hthis.heroes_arr;
+                hero_id = parseInt(hero_id);
+                this.heroes_arr[this.heroes_arr.indexOf(hero_id)] = 0;
+                return this.heroes_arr;
+            }
+
+            static init(num_of_heroes){
+                this.heroes_arr = new Array(parseInt(num_of_heroes)).fill(0);
+                return this.heroes_arr;
+            }
+
+            // 지금 선택되어 있는 게 몇 번째인지 반환
+            static indexOfFormSpot(){
+                let now_selected 
+                if($(".spot-selected-full").length > 0) now_selected = $(".spot-selected-full").parent();
+                else now_selected = $(".spot-selected-empty").parent();
+
+                let idx = $('.form_spot').index(now_selected);
+                return idx;
+            }
+
+            /**
+             * 편성에 들어있는 영웅들에 선택된 이펙트 추가해줌.
+             **/ 
+            static addSelectedEffect(){
+                $('.character-list-box .form-selected').remove();
+                for(let i=0; i<this.heroes_arr.length; i++){
+                    $(`.character-list img[data-id = "${this.heroes_arr[i]}"]`).parent().before(`<div class="form-selected"><i class="fa-solid fa-plus color-gray"></i> </div> `);
+                }
+            }
+
+            /**
+             * heroes_arr에 저장된대로 편성 ui에 넣어줌
+             **/
+            static addHeroesInForm(){
+                for(let i=0; i<$('.form_spot .select-liner').length; i++){
+                    let spot = $('.form_spot .select-liner').eq(i)
+                    spot.empty();
+                    if(this.heroes_arr[i] == 0 || i > this.heroes_arr.length - 1){
+                        spot.append(`<div class="empty"><i class="fa-solid fa-plus color-gray"></i> </div>
+                                    <input value="0"  name="hero" type="hidden"> `);
+                    } else {
+                        let img = $(`.character-list img[data-id="${this.heroes_arr[i]}"]`).parent().children().clone().appendTo(spot);
+                        spot.append(`<input value="${img.data('id')}"  name="hero" type="hidden">`)
+                    }
+                }
+            }
+
+            /**
+             * 편성 ui에 있는 영웅들을 hero_arr에 담음
+             **/ 
+            static addHeroesInArr(){
+                for(let i=0; i<this.heroes_arr.length; i++){
+                    if(i > $('.form_spot input').length - 1)
+                        this.oneHeroSet(i, 0);
+                    else 
+                        this.oneHeroSet(i, $('.form_spot input').eq(i).val());
+                    
+                }
+            }
+            
+        }
+
+    </script>
+    <script src="/js/formmake/dropdownSet.js"></script>
+    <script src="/js/formmake/pickHeroes.js"></script>
+    <script>
+
+
+        /**
+         * 영웅 설정 부분
+         **/
+        $(".charSetting-btn").on('click', function(){
+            $('.hero-setting-container').fadeIn();
+        })
+
+        $('.hero-setting-container .close').on('click', function(){
+            $('.hero-setting-container').fadeOut();
+        })
+
+        
+        
 
     </script>
 

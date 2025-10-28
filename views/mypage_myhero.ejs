@@ -100,15 +100,15 @@
     <div class="mypage-maincontents ">
         <div class="hero-setting shadow-basic bg-gray ">
             <!-- 상단바 -->
-            <div class="post-title title-size d-flex">
-                <div class="bg-basicdark color-yellow title-sizing flex-fill d-flex align-items-center"><h6>영웅 설정</h6></div>
+            <div class="post-title  d-flex">
+                <div class="bg-basicdark color-yellow  flex-fill d-flex align-items-center"><h6>영웅 설정</h6></div>
             </div>
 
             <!-- 컨텐츠 -->
             <div class="setting-content bg-gray d-flex justify-content-center">
                 <div class="setting-charinfo pe-4  d-flex justify-content-center ">
                     <div>
-                    <div class="setting-charname d-flex align-items-center">
+                    <div class="setting-charname d-flex align-items-center mt-3">
                         <img src="/sources/img/types/fire.png" class="invisible setting-class-size">
                         <p class="ms-1"></p>
                     </div>
@@ -124,18 +124,23 @@
                     <p class="herosetting-placeholder">설정할 영웅을 선택하세요</p>
                     <form class="invisible" method="post" action="/mypage/myhero/normalsave">
                         <input type="hidden" name="hero">
-                        <div class=" d-flex align-items-center mt-3"><p class="">레벨</p><div class="btn-shadow lv-input ms-5"><input type="input" name="lv" class="btn-cut "></div></div>
+                        <div class=" d-flex align-items-center mt-3">
+                            <p class="me-5">레벨</p>
+                            <div class="btn-shadow lv-input input-w">
+                                <input type="input" name="lv" class="btn-cut ">
+                            </div>
+                        </div>
                         <div class="d-flex  mt-3">
                             <p class="me-5">초월</p>
-                            <div class="d-flex flex-fill justify-content-around">
+                            <div class="d-flex flex-fill justify-content-between input-w">
                                 <label class="charSetting-ele d-flex align-self-center me-3">  
-                                    <input type="radio" name="cho" value="5" class="charPublic-checkbox 5cho"><span class="checkbox-img"></span> <span class="ms-1">5</span> 
+                                    <input type="radio" name="cho" value="5" class="charPublic-checkbox 5cho"><span class="checkbox-img"></span> <span class="ms-2">5</span> 
                                 </label>
                                 <label class="charSetting-ele d-flex align-self-center me-3">  
-                                    <input type="radio" name="cho" value="6" class="charPublic-checkbox 6cho"><span class="checkbox-img"></span> <span class="ms-1">6</span> 
+                                    <input type="radio" name="cho" value="6" class="charPublic-checkbox 6cho"><span class="checkbox-img"></span> <span class="ms-2">6</span> 
                                 </label>
                                 <label class="charSetting-ele d-flex align-self-center">  
-                                    <input type="radio" name="cho" value="7" class="charPublic-checkbox 7cho"><span class="checkbox-img"></span> <span class="ms-1">7</span> 
+                                    <input type="radio" name="cho" value="7" class="charPublic-checkbox 7cho"><span class="checkbox-img"></span> <span class="ms-2">7</span> 
                                 </label>
                             </div>
                             
@@ -143,7 +148,7 @@
                         
                         <div class="d-flex mt-3">
                             <p class="me-5">각성</p>
-                            <div class="d-flex justify-content-around">
+                            <div class="d-flex justify-content-between input-w">
                             
                                 <label class="charSetting-ele d-flex align-self-center">  
                                     <input type="radio" name="gak" value="0" class="charPublic-checkbox nogak-radio"><span class="checkbox-img"></span> <img src="../sources/img/nogak.png" class="ms-1"> 
@@ -176,7 +181,7 @@
         </div>
         
         <div class="characters-container-bg bg-basicdark shadow-basic ">
-            <ul class=" characters-container ">
+            <ul class=" characters-container">
                 <div class="characters-container-top btn-shadow">
                     <div class="havinghero-set color-white btn-cut">
                         <div class="btn-blue">보유 영웅 설정</div>
@@ -199,7 +204,8 @@
                     
                 
                 
-                <div class="d-flex justify-content-start flex-wrap">
+                <div class=" heroes-spread-container">
+                <!-- <div class="d-flex justify-content-start flex-wrap"> -->
                     <!-- <li class="character-list-box select-liner d-flex justify-content-center" >
                         <div class="character-list" >
                             <i class="havingheroset-check fa-solid fa-check"></i>
@@ -210,7 +216,8 @@
                     </li> -->
 
                     <% for(let i=0; i<data.hero_list.length; i++){ %>
-                    <li class="character-list-box select-liner d-flex justify-content-center">
+                    <li class="character-list-box select-liner ">
+                    <!-- <li class="character-list-box select-liner d-flex justify-content-center"> -->
                         <div class="character-list" >
                             <% if(data.nickname && data.having_heroes_id.includes(data.hero_list[i]["ID"])){ %>
                             <img src="/sources/img/characters/<%= data.hero_list[i].eng_type %>_<%= data.hero_list[i].eng_name %>_<%= data.hero_list[i].eng_class %>.png" 

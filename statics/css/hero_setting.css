@@ -1,18 +1,52 @@
 .hero-setting{
-    width: 500px;
-    height: 280px;
+    width: 780px;
+    height: 337px;
 
     position: fixed;
-    left: 50px;
-    top: 50px;
-    display: none;
+    left: calc((100% - 780px) / 2);
+    top: calc((100% - 337px) / 2 - 100px) ;
+    display: block;
+}
+
+.post-title{
+    height: 54px;
+}
+
+.post-title div {
+    padding: 15px 20px;
+}
+
+.post-title .close{
+    border: none;
+    height: 100%;
+    aspect-ratio: 1/1;
+
+    font-size: 28px;
 }
 
 .setting-content{
     width: 100%;
-    height: calc(100% - 35px);
+    /* height: calc(100% - 35px); */
+    height: calc(100% - 57px);
 
     padding: 15px 20px;
+}
+
+.setting-content p,
+.setting-content input,
+.setting-content label
+{
+    font-size: 1.2em;
+    font-weight: 600;
+}
+
+.hero-setting .charSetting-ele{
+    width: 40px;
+    margin: 0;
+}
+
+.hero-setting .input-w{
+    width: 150px;
 }
 
 .setting-charname{
@@ -25,7 +59,14 @@
     height: 25px;
 }
 
+.setting-charinfo{
+    width: 34%;
+    max-width: 300px;
+}
+
+
 .setting-charimg{
+    /* width: 150px; */
     width: 130px;
     position: relative;
 
@@ -43,12 +84,20 @@
 }
 
 .setting-form{
+    width: 60%;
+    max-width: 700px;
     font-size: 16px;
     position: relative;
 }
 
+
+
 .setting-form img{
     width: 20px;
+}
+
+.setting-btns .all-submit{
+    width: 180px;
 }
 
 .lv-input{
@@ -73,9 +122,12 @@
 
 .setting-btns{
     position: absolute;
+    right: 0px;
     bottom: 0;
 
-    width: 100%;
+    width: 85%;
+
+    /* justify-self: start; */
 }
 
 .setting-all-submit{
@@ -94,3 +146,4 @@
 .nothave{
     filter: grayscale(1);
 }
+

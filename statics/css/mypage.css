@@ -277,11 +277,11 @@ h6{
     padding: 15px 20px;
 }
 
-.setting-content{
+/* .setting-content{
     height: calc(100% - 57px);
-}
+} */
 
-.setting-content p,
+/* .setting-content p,
 .setting-content input,
 .setting-content label
 {
@@ -292,20 +292,20 @@ h6{
 .setting-charinfo{
     width: 34%;
     max-width: 300px;
-}
+} */
 
-.setting-charimg{
+/* .setting-charimg{
     width: 150px;
 
-}
+} */
 
-.setting-charimg span{
+/* .setting-charimg span{
     font-size: 18px;
-}
+} */
 
-.setting-form{
+/* .setting-form{
     width: 60%;
-    /* padding-left: 8%; */
+    padding-left: 8%;
     max-width: 700px;
 
 }
@@ -316,7 +316,7 @@ h6{
 
 .setting-btns .all-submit{
     width: 180px;
-}
+} */
 
 .characters-container{
     margin-top: 30px;
@@ -351,7 +351,7 @@ h6{
     position: absolute;
     top: 25px;
     left: 40px;
-    font-size: 1.2em;
+    /* font-size: 1.2em; */
     width: calc(100% - 80px);
 
     display: flex;
@@ -415,7 +415,7 @@ h6{
 }
 
 .char-selected{
-    width: 93px;
+    width: 103px;
 }
 
 .class-dropdown{

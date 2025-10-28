@@ -66,7 +66,7 @@ router.get('/', async(req, res) => {
             having_heroes_id : having_heroes_id,
         }
 
-    res.render('form_making.ejs', {data : data})
+    res.render('form_making2.ejs', {data : data})
 
 })
 
