@@ -105,6 +105,9 @@ function to5layout(){
     NowFormHeroes.init(5);
     NowFormHeroes.addHeroesInArr();
 
+    // 쿼리스트링 리셋
+    NowFormHeroes.makeQueryString();
+
     // 제일 앞 칸 선택
     let spot = $('.form_spot').eq(0)
     if(spot.find(".empty").length>0){
@@ -148,6 +151,9 @@ function to10layout(){
     NowFormHeroes.init(10);
     NowFormHeroes.addHeroesInArr();
 
+    // 쿼리스트링 리셋
+    NowFormHeroes.makeQueryString();
+
     // 제일 앞 칸 선택
     let spot = $('.form_spot').eq(0)
     if(spot.find(".empty").length>0){
@@ -190,6 +196,9 @@ function to7layout(){
     // 캐릭터 array 길이를 7로
     NowFormHeroes.init(7);
     NowFormHeroes.addHeroesInArr();
+
+    // 쿼리스트링 리셋
+    NowFormHeroes.makeQueryString();
 
     // 제일 앞 칸 선택
     let spot = $('.form_spot').eq(0)

@@ -103,6 +103,11 @@
         </div>
     </div>
 
+    <div class="spinner-container d-flex justify-content-center align-items-center flex-column">
+        <div class="spinner-blue"></div>
+        <p class="">영웅들을 편성하는 중입니다... 잠시만 기다려주세요.</p>
+    </div>
+
     <div class="formmake-topcontainer d-flex flex-wrap">
     <!-- 편성 조합 -->
         <div class="form-container shadow-basic">
@@ -121,7 +126,7 @@
 
                 <div class="content-name flex-fill">
                     <button type="button"  class="btn-black  color-yellow border-0 d-flex align-items-center">
-                        <i class="fa-solid fa-angle-down"></i><p><%= data.now_content.kor_name %></p>
+                        <i class="fa-solid fa-angle-down"></i><p data-heronum="<%= data.now_content['num_of_heroes']%>"><%= data.now_content.kor_name %></p>
                     </button>
 
                     <ul>
@@ -212,8 +217,8 @@
                 <div class="right-box">
                     <h6 class="explain-title d-flex align-items-end">작성자 한마디</h6>
                     <div class="bg-white memo-container color-gray">
-                        <p class="cnt-text"><span>0</span> / 1000</p>
-                        <textarea class="memo explain-content" placeholder="한마디를 적어주세요" ></textarea>
+                        <p class="cnt-text"><span><%=data.writer_memo.length %></span> / 1000</p>
+                        <textarea class="memo explain-content" placeholder="한마디를 적어주세요"  maxlength="1000" ><%=data.writer_memo %></textarea>
                     </div>
 
                     <!-- 좋아요 / 댓글 펼치기 -->
@@ -363,6 +368,16 @@
     <script>
 
         window.onload = function(){
+            
+            NowFormHeroes.setter(JSON.parse('<%- JSON.stringify(data.form_herolist) %>').map((e) => {return parseInt(e)}));
+
+            if($(".content-name button p").data("heronum") == 5) to5layout();
+            else if ($(".content-name button p").data("heronum") == 10) to10layout();
+            else to7layout();
+
+            NowFormHeroes.addSelectedEffect();
+            NowFormHeroes.addHeroesInForm();
+
             let spot = $('.form_spot').eq(0)
             if(spot.find(".empty").length>0){
                 spot.prepend("<div class='spot-selected-empty'></div>");
@@ -370,6 +385,9 @@
                 spot.prepend('<img src="../sources/img/out_char.png" class="out">');
                 spot.prepend("<div class='spot-selected-full'></div>");                   
             }
+
+            $('.spinner-container').remove();
+
         }
 
         class NowFormHeroes{
@@ -451,6 +469,18 @@
                     
                 }
             }
+
+            /**
+             * 현재 편성 상태로 영웅 쿼리스트링 만들어서 주소창에 적어주기
+             **/
+            static makeQueryString(){
+                const url = new URL(window.location.href);
+                url.searchParams.delete("hero");
+                for(let i=0; i<this.heroes_arr.length; i++){
+                    url.searchParams.append("hero", this.heroes_arr[i]);
+                }
+                window.history.pushState(null, '', url.toString())
+            }
             
         }
 
@@ -508,6 +538,28 @@
                 $(".hero-setting-container").fadeOut();
             }
         });
+
+        $(".memo").on('propertychange change keyup paste input', function(){
+            let content = $(this).val();
+            
+            // 주소창에 업데이트하고
+            const url = new URL(window.location.href);
+            url.searchParams.set("writer_memo", content);
+            window.history.pushState(null, '', url.toString());
+
+            // 글자수 세기
+            if (content.length == 0 || content == '') {
+                $('.memo-container .cnt-text span').text('0');
+            } else {
+                $('.memo-container .cnt-text span').text(content.length);
+            }
+            
+            // 글자수 제한
+            if (content.length > 1000) {
+                // 200자 부터는 타이핑 되지 않도록
+                $(this).val($(this).val().substring(0, 1000));
+            };
+        })
 
 
         /**

@@ -37,7 +37,7 @@
     justify-content: center;
     align-items: center;
 
-    font-size: 16px;
+    font-size: 20px;
     font-weight: 500;
 
     border: 0;
@@ -252,9 +252,8 @@
 }
 
 .hero-search-container{
-    display: grid;
-    /* visibility: hidden; */
-    grid-template-rows: 60px 1fr;
+    /* display: grid;
+    grid-template-rows: 60px 1fr; */
 
     width: 850px;
     height: 400px;
@@ -277,7 +276,15 @@
 
     box-shadow: 0px 10px 8px 7px rgba(0, 0, 0, 0.5);
 
+    display: none;
+
 }
+
+
+.hero-search-top{
+    height: 60px;
+}
+
 
 .hero-search-top input{
     /* display: inline-block; */

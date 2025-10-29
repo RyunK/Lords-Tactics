@@ -23,18 +23,8 @@ router.get('/', async(req, res) => {
     if(typeof(form_herolist) == "string"){
         form_herolist = [form_herolist];
     }
-    let form_herolist_forrender = []
-    for(let i=0; i<form_herolist.length; i++){
-        var sql = `SELECT LH.ID, types.ENG_NAME AS 'eng_type', types.KOR_NAME AS 'kor_type', 
-                names.ENG_NAME AS 'eng_name', names.KOR_NAME AS 'kor_name', 
-                classes.ENG_NAME AS 'eng_class', classes.KOR_NAME AS 'kor_class'  FROM LAUNCHED_HEROES AS LH
-                INNER JOIN HERO_NAMES  names ON names.IDX = NAME_ID
-                INNER JOIN HERO_CLASSES  classes ON classes.IDX = CLASS_ID
-                INNER JOIN HERO_TYPES  types ON types.IDX = TYPE_ID
-                WHERE LH.ID = ?`;
-        var [form_hero, fields] = await (await connection).execute(sql, [form_herolist[i]]);
-        form_herolist_forrender.push(form_hero[0]);
-    }
+
+    console.log(form_herolist);
 
     var sql = `SELECT * FROM CONTENTS_NAME
               WHERE ENG_NAME = ?`;
@@ -59,7 +49,6 @@ router.get('/', async(req, res) => {
             contents_list : contents_list,
             hero_list : hero_list,
             form_herolist : form_herolist,
-            form_herolist_forrender : form_herolist_forrender,
             now_content : now_content[0],
             writer_memo : req.query.writer_memo? req.query.writer_memo : "", 
             having_heroes : having_heroes,

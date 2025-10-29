@@ -542,6 +542,26 @@ nav>div> a:hover{
     font-size: 2em;
 }
 
+.spinner-blue{
+    /* margin: 0 auto; */
+    width: 40px;
+    height: 40px;
+    box-sizing: border-box;
+  
+    border: 3px solid rgba(255, 255, 255, 0.667);  
+    border-top-color: #3b8fff;
+
+    border-radius: 100%;
+    animation: spin 1s ease-in-out infinite;
+}
+
+@keyframes spin {
+  100%
+  {
+    transform: rotate(360deg);
+  }
+}
+
 .blue-scroll::-webkit-scrollbar{
     display: block;
     width: 8px;

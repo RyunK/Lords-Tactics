@@ -4,6 +4,7 @@
  **/
 $(document).on('click', ".character-list-box", function(e){
     let hero_id = $(this).children('.character-list').children('img').data('id');
+    if(!hero_id) return;
     // console.log(typeof(hero_id))
 
     // 누른 영웅이 현재 편성에 들어있고 현재 선택한 자리에 아무도 없으면 옮기기
@@ -36,6 +37,9 @@ $(document).on('click', ".character-list-box", function(e){
 
     // 편성에 있는 캐릭터 위에 X 표시
     NowFormHeroes.addSelectedEffect();
+
+    // 쿼리스트링 추가
+    NowFormHeroes.makeQueryString();
     
 })
 
@@ -49,6 +53,9 @@ $(document).on("click", '.form_spot .out', function(){
 
     // 편성에 있는 캐릭터 위에 X 표시
     NowFormHeroes.addSelectedEffect();
+
+    // 쿼리스트링 추가
+    NowFormHeroes.makeQueryString();
 })
 
 /***

@@ -819,7 +819,27 @@ body{
     }
 }
 
+.spinner-container{
+    width: 1000px;
+    height: 600px;
+    background-color: #BFC3D4;
 
+    position: absolute;
+    z-index: 5;
+    left : calc(50% - 500px);
+    top: 528px;
+}
+
+.spinner-container p{
+    width: 100%;
+    text-align: center;
+    
+    margin-top: 35px;
+    margin-bottom: 10px;
+
+    font-size: 19px;
+    font-weight: 600;
+}
 
 /* .filter-sort-btn{
     display: flex;

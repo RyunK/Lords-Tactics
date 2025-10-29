@@ -34,9 +34,9 @@
                         <!-- 영웅 얼굴 디스플레이 -->
                         <% for(let i=0; i<data.filtered_heroes.length; i++){ %>
                             <div class="search-hero-img d-inline-block">
-                                <img src="/sources/img/characters/<%= data.filtered_heroes[i].eng_type %>_<%= data.filtered_heroes[i].eng_name %>_<%= data.filtered_heroes[i].eng_class %>.png" alt="">
+                                <img src="/sources/img/characters/<%= data.filtered_heroes_forrender[i].eng_type %>_<%= data.filtered_heroes_forrender[i].eng_name %>_<%= data.filtered_heroes_forrender[i].eng_class %>.png" alt="">
                                 <span></span>
-                                <input type="hidden" name="hero" value="<%= data.filtered_heroes[i]['ID']%>" >
+                                <input type="hidden" name="hero" value="<%= data.filtered_heroes_forrender[i]['ID']%>" >
                             </div>    
                         <% } %>
                     </div>
@@ -273,7 +273,6 @@
         
 
     window.onload = function() {
-        $(".hero-search-container").hide(10); // 영웅 필터창 숨기기
         
         // 필터된 영웅들 선택하기
         let filtered_hero_list = '<%- JSON.stringify(data.filtered_heroes) %>'; 
