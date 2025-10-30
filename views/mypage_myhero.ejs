@@ -204,7 +204,7 @@
                     
                 
                 
-                <div class=" heroes-spread-container">
+                <div class=" heroes-spread-container blue-scroll ">
                 <!-- <div class="d-flex justify-content-start flex-wrap"> -->
                     <!-- <li class="character-list-box select-liner d-flex justify-content-center" >
                         <div class="character-list" >
@@ -431,7 +431,7 @@
         }).get();
         let class_name = $('.hero-class-search > span').eq(0).text();
         let sort_type = $('.hero-sort-btn').text();
-
+        // console.log(type_names)
         if(sort_type.includes("등급순")){
             hero_list.sort(function(a, b){
                 var a_val, b_val
@@ -456,6 +456,7 @@
             &&((hero_list[i]["kor_name"]).includes(hero_name) || !hero_name)
             &&(having_heroes_id.includes(hero_list[i]["ID"]) || !having_hero_only)
             ){
+                // console.log(hero_list[i]["eng_type"])
                 if(having_heroes_id.includes(hero_list[i]["ID"])){ // 보유한 영웅
                     result = result +
                     `<li class="character-list-box select-liner d-flex justify-content-center">
@@ -486,7 +487,7 @@
 
         // console.log(result);
         
-        $(".characters-container > .d-flex").html(result);
+        $(".characters-container > .heroes-spread-container").html(result);
 
         // 보유 영웅 설정 ON 시 체크까지
         if(!$('.havinghero-blocker').hasClass('invisible')){

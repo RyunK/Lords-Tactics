@@ -3,6 +3,7 @@ const router = express.Router();
 const connection = require('../database.js')
 const getDatas = require('./getDatas.js')
 
+const { mustLoggedIn, mustNotLoggedIn } = require('./middlewares'); 
 
 
 router.get('/', async(req, res) => {
@@ -24,7 +25,7 @@ router.get('/', async(req, res) => {
         form_herolist = [form_herolist];
     }
 
-    console.log(form_herolist);
+    // console.log(form_herolist);
 
     var sql = `SELECT * FROM CONTENTS_NAME
               WHERE ENG_NAME = ?`;
@@ -58,5 +59,45 @@ router.get('/', async(req, res) => {
     res.render('form_making2.ejs', {data : data})
 
 })
+
+router.post('/postform', mustLoggedIn ,async(req, res) => {
+    
+    console.log(req.body);
+    try{
+        // contents_id select
+        let content_name = req.body.content_name.trim();
+        var sql = `SELECT * FROM CONTENTS_NAME
+              WHERE KOR_NAME = ?`;
+        var [content, fields] = await (await connection).execute(sql, [content_name]);
+
+        // form_status_id select
+        var sql = `SELECT * FROM FORM_STATUS
+              WHERE STATUS_NAME = ?`;
+        var [form_status, fields] = await (await connection).execute(sql, [req.body.form_status]);
+
+        // form_access_status_id select
+        var sql = `SELECT * FROM FORM_ACCESS_STATUS
+              WHERE ENG_NAME = ?`;
+        var [form_access_status, fields] = await (await connection).execute(sql, [req.body.form_access]);
+        
+
+        var sql = `INSERT hero_forms (user_id, contents_id, form_status_id, form_access_status_id ,myhero_access, writer_memo, last_datetime) 
+                    VALUES( ?, ?, ?, ?, ?, ?, ?)`;
+        var execute_list = [
+            req.user[0].id, content[0].id, form_status[0].id, form_access_status[0].id, 
+            req.body.myhero_access =='true', req.body.writer_memo, req.body.last_datetime];
+        var [result, fields] = await (await connection).execute(sql, execute_list);
+
+        // 추후에 올라간 해당 게시글로 이동하도록 수정
+        res.redirect('/mypage/formsave');
+    }catch(e){
+        console.log(e);
+        res.redirect(`/?error=${e.message}`);
+    }
+
+
+})
+
+
 
 module.exports=router;

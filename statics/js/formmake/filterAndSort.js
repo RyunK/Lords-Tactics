@@ -28,7 +28,7 @@ $(".class-badges div").on("click", function(){
     // 영웅들 다시 표현하는 함수
     hero_filter();
     
-})
+}) 
 
 $('.hero-namesearch input').on('propertychange change keyup paste input', function(){
     // 영웅들 다시 표현하는 함수
@@ -58,7 +58,9 @@ $('.hero-filter .filterreset').on('click', function(){
 function hero_filter(){
     // console.log("잡힘")
     let result="";
-    let hero_list = sortHerolist(HavingHeroes.hero_list_getter().slice());
+    // console.log(NowFormHeroes.getter);
+    let copy_herolist = HavingHeroes.hero_list_getter().slice()
+    let hero_list = sortHerolist(copy_herolist);
 
     let having_hero_only = $('.havinghero-check .charPublic-checkbox').is(':checked')
     let hero_name = $('.hero-namesearch input').val();

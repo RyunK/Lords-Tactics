@@ -58,7 +58,7 @@ router.get('/:forumtab', async(req, res) => {
     let data = {
         nickname: getDatas.loggedInNickname(req, res),
         forumtab: req.params.forumtab,
-        sort : req.query.sort? req.query.sort : 'tu',
+        sort : req.query.sort? req.query.sort : 'saved_cnt',
         filtered_heroes : filtered_heroes_list,
         filtered_heroes_forrender : filtered_heroes_list_forrender,
         content : {

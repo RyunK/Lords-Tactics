@@ -11,6 +11,7 @@ $(document).on('click', ".character-list-box", function(e){
     if(NowFormHeroes.getter().includes(hero_id) && $(".spot-selected-empty").length > 0){
         NowFormHeroes.removeByHeroId(hero_id);
         NowFormHeroes.oneHeroSet(NowFormHeroes.indexOfFormSpot(), hero_id);
+        NowFormHeroes.addHeroesInForm();
     }
     // 누른 영웅이 현재 편성에 들어있고 현재 선택한 자리에 누군가 있으며 스스로가 아니면 자리 바꾸기
     else if(NowFormHeroes.getter().includes(hero_id) && $(".spot-selected-full").length > 0 && NowFormHeroes.getter()[NowFormHeroes.indexOfFormSpot()] != hero_id){
@@ -18,18 +19,20 @@ $(document).on('click', ".character-list-box", function(e){
         let existed_hero = NowFormHeroes.getter()[NowFormHeroes.indexOfFormSpot()]
         NowFormHeroes.oneHeroSet(NowFormHeroes.indexOfFormSpot(), hero_id);
         NowFormHeroes.oneHeroSet(hero_idx, existed_hero);
+        NowFormHeroes.addHeroesInForm();
     }
     // 누른 영웅이 현재 편성에 들어있고 현재 선택한 자리에 누군가 있으며 스스로라면 삭제하기
     else if(NowFormHeroes.getter().includes(hero_id) && $(".spot-selected-full").length > 0 && NowFormHeroes.getter()[NowFormHeroes.indexOfFormSpot()] == hero_id){
         NowFormHeroes.removeByHeroId(hero_id);
+        NowFormHeroes.reloadOnlySelected();
     }
     // 누른 영웅이 현재 편성에 없으면 그냥 자리 채우고 나열된 캐릭터에 선택된 표시
     else if(!NowFormHeroes.getter().includes(hero_id)){
         NowFormHeroes.oneHeroSet(NowFormHeroes.indexOfFormSpot(), hero_id);
+        NowFormHeroes.reloadOnlySelected();
     }
 
-    // 저장된대로 편성 UI 다시 표시
-    NowFormHeroes.addHeroesInForm();
+    // 자리 선택 UI 표시
     let now_selected 
     if($(".spot-selected-full").length > 0) now_selected = $(".spot-selected-full").parent();
     else now_selected = $(".spot-selected-empty").parent();
@@ -48,7 +51,8 @@ $(document).on("click", '.form_spot .out', function(){
     NowFormHeroes.removeByHeroId(hero_id);
     
     // 저장된대로 편성 UI 다시 표시
-    NowFormHeroes.addHeroesInForm();
+    NowFormHeroes.reloadOnlySelected();
+    // NowFormHeroes.addHeroesInForm();
     selectTargetForm($(this).parent())
 
     // 편성에 있는 캐릭터 위에 X 표시

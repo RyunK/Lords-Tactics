@@ -62,11 +62,34 @@ router.get('/formsave', mustLoggedIn, async(req, res) => {
         filtered_heroes_list_forrender.push(filtered_hero[0]);
     }
 
+    // 로그인한 사용자의 편성 찾아서 보내기
+    // 정렬, 영웅 필터, 컨텐츠 query에서 읽어서
+
+    // contents_id select
+    let content_name = req.query.content? req.query.content : 'all';
+    var sql = `SELECT * FROM CONTENTS_NAME
+            WHERE ENG_NAME = ?`;
+    var [content, fields] = await (await connection).execute(sql, [content_name]);
+
+    // form_status_id select
+    // var sql = `SELECT * FROM FORM_STATUS
+    //         WHERE id = ?`;
+    // var [form_status, fields] = await (await connection).execute(sql, [req.query.form_status? req.body.form_status : 8]);
+
+    // form_access_status_id select
+    var sql = `SELECT * FROM FORM_ACCESS_STATUS
+            WHERE ENG_NAME = ?`;
+    var [form_access_status, fields] = await (await connection).execute(sql, [req.query.form_access? req.body.form_access : 'all']);
+
+    var sql = `SELECT * FROM HERO_FORMS
+            WHERE USER_ID = ?`;
+    var [form_list, fields] = await (await connection).execute(sql,[req.user[0].id]);
+
     let data = {
         nickname: getDatas.loggedInNickname(req, res),
         form_status_list : form_status_list,
         contents_list : contents_list,
-        sort : req.query.sort? req.query.sort : 'tu',
+        sort : req.query.sort? req.query.sort : 'saved_cnt',
         filtered_heroes : filtered_heroes_list,
         filtered_heroes_forrender : filtered_heroes_list_forrender,
         content : {
@@ -75,6 +98,7 @@ router.get('/formsave', mustLoggedIn, async(req, res) => {
             },
         form_status : now_formstatus[0],
         hero_list : hero_list,
+        form_list : form_list,
     }
 
     res.render('mypage_formsave.ejs',  {data : data})

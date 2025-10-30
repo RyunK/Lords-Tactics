@@ -92,8 +92,8 @@ app.get('/', (req, res) => {
   }
 })
 
-const { mustLoggedIn, mustNotLoggedIn } = require('./routes/middlewares'); // 내가 만든 사용자 미들웨어
-const { heroSettingNormalSave, heroSettingAllSave } = require('./routes/setDatas'); // 내가 만든 사용자 미들웨어
+const { mustLoggedIn, mustNotLoggedIn } = require('./routes/middlewares'); 
+const { heroSettingNormalSave, heroSettingAllSave } = require('./routes/setDatas'); 
 
 
 app.post('/herosetting/normalsave', mustLoggedIn,  async(req, res) => {

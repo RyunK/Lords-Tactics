@@ -61,6 +61,14 @@
             f.submit();
         }
 
+        $(document).on('click', function(e){
+            // 빈 곳 클릭하면 마이페지이 들어가는 칸 올라감
+            if(!$(e.target).closest(".nickname-container").length>0
+            ){
+                $(".logout-container").slideUp();
+            }
+        });
+
 
     </script>
     

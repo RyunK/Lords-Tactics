@@ -31,10 +31,10 @@
         </div>
 
         <div class="forum-sort-container color-black">
-            <% if(data.sort == "tu"){ %>
-                <a href="?sort=tu" class="active">• 좋아요 수</a>
+            <% if(data.sort == "saved_cnt"){ %>
+                <a href="?sort=saved_cnt" class="active">• 좋아요 수</a>
             <% } else { %>
-                <a href="?sort=tu" class="color-black">• 좋아요 수</a>
+                <a href="?sort=saved_cnt" class="color-black">• 좋아요 수</a>
             <% }  %>
 
             <% if(data.sort == "view"){ %>
@@ -400,7 +400,7 @@
             const currentparams = new URLSearchParams(window.location.search);
             const newparams = new URLSearchParams();
 
-            newparams.append('sort', currentparams.get('sort')? currentparams.get('sort'):'tu');
+            newparams.append('sort', currentparams.get('sort')? currentparams.get('sort'):'saved_cnt');
             for(let i=0; i<query.length; i++){
                 newparams.append(query[i]['name'], query[i]['value']);
             }

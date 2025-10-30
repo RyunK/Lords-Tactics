@@ -143,10 +143,10 @@
             <div class="forum-preview bg-basicdark">
                 <!-- <h6 class="forum-search-result-title color-yellow"><i class="fa-solid fa-feather-pointed"></i> 검색 결과 124건</h5> -->
                 <ul class="mypage-sort d-flex justify-content-end color-white mb-0 me-1">
-                    <li> <% if(data.sort == "tu"){ %>
-                        <a href="?sort=tu" class="active">• 좋아요 수</a>
+                    <li> <% if(data.sort == "saved_cnt"){ %>
+                        <a href="?sort=saved_cnt" class="active">• 좋아요 수</a>
                     <% } else { %>
-                        <a href="?sort=tu" class="color-black">• 좋아요 수</a>
+                        <a href="?sort=saved_cnt" class="color-black">• 좋아요 수</a>
                     <% }  %></li>
                     <li><% if(data.sort == "view"){ %>
                         <a href="?sort=view" class="active">• 조회수</a>
@@ -162,7 +162,7 @@
                 </ul>
                 <div class="d-flex justify-content-evenly flex-wrap"> 
 
-                    <% for(let i=0; i<18; i++) { %>
+                    <% for(let i=0; i<data.form_list.length; i++) { %>
                     <!-- 공유 게시글 하나 -->
                     <a href="#" class="color-black flex-fill">
                         <div class="post-preview-container shadow-basic mt-4">
@@ -365,7 +365,7 @@
 
             console.log(query);
 
-            newparams.append('sort', currentparams.get('sort')? currentparams.get('sort'):'tu');
+            newparams.append('sort', currentparams.get('sort')? currentparams.get('sort'):'saved_cnt');
             // let i=0;
             // newparams.append('form_status',  query[0]['value']);
             // i++;
