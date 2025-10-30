@@ -144,9 +144,9 @@
                 <!-- <h6 class="forum-search-result-title color-yellow"><i class="fa-solid fa-feather-pointed"></i> 검색 결과 124건</h5> -->
                 <ul class="mypage-sort d-flex justify-content-end color-white mb-0 me-1">
                     <li> <% if(data.sort == "saved_cnt"){ %>
-                        <a href="?sort=saved_cnt" class="active">• 좋아요 수</a>
+                        <a href="?sort=saved_cnt" class="active">• 저장 수</a>
                     <% } else { %>
-                        <a href="?sort=saved_cnt" class="color-black">• 좋아요 수</a>
+                        <a href="?sort=saved_cnt" class="color-black">• 저장 수</a>
                     <% }  %></li>
                     <li><% if(data.sort == "view"){ %>
                         <a href="?sort=view" class="active">• 조회수</a>
@@ -168,39 +168,44 @@
                         <div class="post-preview-container shadow-basic mt-4">
                             <div class="post-preview-top-container d-flex">
                                 <div class="preview-form-share bg-orange color-white">
-                                    <h6>편성 도움</h6>
+                                    <h6><%=data.form_list[i].STATUS_NAME %></h6>
                                 </div>
                                 <div class="preview-contentname bg-basicdark color-yellow ">
-                                    <h6>아레나</h6>
+                                    <h6><%=data.form_list[i].CONTENT_NAME %></h6>
                                 </div>
                             </div>
                             <div class="post-preview-bottom-container bg-gray">
                                 <div class="preview-face-container d-flex">
-                                    <img src="../sources/img/characters/water_helga_striker.png" alt="">
-                                    <img src="../sources/img/characters/fire_meiling_shooter.png" alt="">
-                                    <div class="empty"><i class="fa-solid fa-plus color-gray"></i></div>
-                                    <div class="empty"><i class="fa-solid fa-plus color-gray"></i></div>
-                                    <div class="empty"><i class="fa-solid fa-plus color-gray"></i></div>
-                                    <!-- <img class="dots" src="../sources/img/ellipsis-solid-full.svg" alt=""> -->
+                                    <% let formid_idx = data.members.findIndex(item => item['form_id'] == data.form_list[i].ID) %>
+                                    <% for(let j=0; j<5; j++){ %>
+                                        <% if(data.members[formid_idx + j].type != 'empty'){%>
+                                        <img src="/sources/img/characters/<%=data.members[formid_idx + j].type %>_<%=data.members[formid_idx + j].name %>_<%=data.members[formid_idx + j].class %>.png" alt="">
+                                        <% } else {%>
+                                        <div class="empty"><i class="fa-solid fa-plus color-gray"></i></div>
+                                        <% } %>
+                                    <% } %>
+                                    <% if(data.members[formid_idx + 5] && data.members[formid_idx + 5].form_id == data.form_list[i].ID) {%>
+                                        <img class="dots" src="../sources/img/ellipsis-solid-full.svg" alt="">                                
+                                    <% } %>
                                 </div>
                                 <div class="mt-3">
                                     <div class="bg-basicdark p-2">
                                         <h6><span class="color-white me-2">작성자</span>
-                                            <span class="color-purple">여덟글자정도어때</span></h6>
+                                            <span class="color-purple"><%=data.form_list[i].NICKNAME %></span></h6>
                                     </div>
                                     <div class="preview-paragraph bg-lightgray">
-                                        <p>라떼는 말이야 얘네 둘만 있어도 아주그냥
+                                        <p><%=data.form_list[i].WRITER_MEMO %>
                                         </p>
                                     </div>
                                 </div>
                                 <div class="d-flex justify-content-between mt-3">
                                     <div>
-                                        <span>2025-11-06</span>
+                                        <span><%=data.form_list[i].LAST_DATETIME.getFullYear()+"-"+("0"+(data.form_list[i].LAST_DATETIME.getMonth()+1)).slice(-2) + "-" + ("0"+(data.form_list[i].LAST_DATETIME.getDate())).slice(-2) %></span>
                                     </div>
                                     <div class="text-end">
-                                        <span>조회수 35</span>
+                                        <span>조회수 <%=data.form_list[i].VIEW %></span>
                                         <span>&nbsp;</span>
-                                        <span><i class="fa-solid fa-thumbs-up"></i> 3</span>
+                                        <span><i class="fa-solid fa-thumbs-up"></i> <%=data.form_list[i].SAVED_CNT %></span>
                                     </div>
                                 </div>
                             </div>

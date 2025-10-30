@@ -31,6 +31,7 @@ router.get('/:forumtab', async(req, res) => {
                 INNER JOIN HERO_NAMES  names ON names.IDX = NAME_ID
                 INNER JOIN HERO_CLASSES  classes ON classes.IDX = CLASS_ID
                 INNER JOIN HERO_TYPES  types ON types.IDX = TYPE_ID
+                WHERE NOT LH.ID = '0'
                 ORDER BY names.KOR_NAME, types.KOR_NAME`;
     var [hero_list, fields] = await (await connection).execute(sql);
 

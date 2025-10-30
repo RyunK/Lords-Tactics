@@ -29,7 +29,7 @@ router.get('/formsave', mustLoggedIn, async(req, res) => {
 
     var sql = `SELECT * FROM FORM_STATUS
                 WHERE ID= ?`;
-    var [now_formstatus, fields] = await (await connection).execute(sql, [req.query.form_status ? req.query.form_status : '1']);
+    var [now_formstatus, fields] = await (await connection).execute(sql, [req.query.form_status ? req.query.form_status : '8']);
 
     // console.log(now_formstatus)
 
@@ -39,7 +39,9 @@ router.get('/formsave', mustLoggedIn, async(req, res) => {
                 INNER JOIN HERO_NAMES  names ON names.IDX = NAME_ID
                 INNER JOIN HERO_CLASSES  classes ON classes.IDX = CLASS_ID
                 INNER JOIN HERO_TYPES  types ON types.IDX = TYPE_ID
-                ORDER BY names.KOR_NAME, types.KOR_NAME`;
+                WHERE NOT LH.ID = '0'
+                ORDER BY names.KOR_NAME, types.KOR_NAME
+                `;
     var [hero_list, fields] = await (await connection).execute(sql);
 
     let filtered_heroes_list = req.query.hero? req.query.hero : [];
@@ -71,20 +73,91 @@ router.get('/formsave', mustLoggedIn, async(req, res) => {
             WHERE ENG_NAME = ?`;
     var [content, fields] = await (await connection).execute(sql, [content_name]);
 
-    // form_status_id select
-    // var sql = `SELECT * FROM FORM_STATUS
-    //         WHERE id = ?`;
-    // var [form_status, fields] = await (await connection).execute(sql, [req.query.form_status? req.body.form_status : 8]);
-
     // form_access_status_id select
     var sql = `SELECT * FROM FORM_ACCESS_STATUS
             WHERE ENG_NAME = ?`;
     var [form_access_status, fields] = await (await connection).execute(sql, [req.query.form_access? req.body.form_access : 'all']);
 
-    var sql = `SELECT * FROM HERO_FORMS
-            WHERE USER_ID = ?`;
-    var [form_list, fields] = await (await connection).execute(sql,[req.user[0].id]);
+    // userid는 필수. contents id 없거나 9면 true, form_status_id 없거나 8이면 true, form_access_status_id 없거나 3이면 true
+    // sort saved_cnt면 저장횟수순, view면 조회수, new면 최신순
+    
+    var where = `HF.USER_ID = ? `, order = '';
+    let q_list = [req.user[0].id]
+    if(content[0].id == '9') where += `AND TRUE `;
+    else{
+        where += `AND HF.CONTENTS_ID = ? `;
+        q_list.push(content[0].id)
+    } 
 
+    if(!req.query.form_status || req.query.form_status == 8) where += `AND TRUE `;
+    else{
+        where += `AND HF.FORM_STATUS_ID = ? `;
+        q_list.push(req.query.form_status)
+    } 
+
+    if(form_access_status[0].id == '3') where += `AND TRUE `;
+    else{
+        where += `AND HF.FORM_ACCESS_STATUS_ID = ? `;
+        q_list.push(form_access_status[0].id)
+    } 
+
+    if(!req.query.hero) where += `AND TRUE `;
+    else{
+        let sql_heroes = '(';
+        for(let i=0; i<filtered_heroes_list.length; i++){
+            sql_heroes += ` fM.HERO_ID = ? `
+            q_list.push(filtered_heroes_list[i]);
+            if(i < filtered_heroes_list.length - 1) sql_heroes += 'OR'
+        }
+        sql_heroes += ')';
+        where += 'AND' + sql_heroes;
+    }
+
+    if(!req.query.sort || req.query.sort =='saved_cnt'){
+        order += 'ORDER BY SAVED_CNT;'
+    } else if(req.query.sort =='view'){
+        order += 'ORDER BY VIEW;'
+    } else if(req.query.sort == 'new'){
+        order += 'ORDER BY LAST_DATETIME;'
+    }
+
+    var sql = `SELECT T.* FROM (
+                SELECT HF.ID, HF.WRITER_MEMO, HF.LAST_DATETIME, HF.VIEW, HF.SAVED_CNT,
+                FM.HERO_ID, CN.KOR_NAME as CONTENT_NAME, FS.STATUS_NAME, USER.NICKNAME,
+                    ROW_NUMBER() OVER (
+                        PARTITION BY HF.id 
+                        ORDER BY HF.last_datetime DESC
+                    ) AS rn
+                FROM HERO_FORMS HF
+                INNER JOIN FORM_MEMBERS FM ON HF.ID = fM.FORM_ID
+                INNER JOIN CONTENTS_NAME CN ON HF.CONTENTS_ID = CN.ID
+                INNER JOIN FORM_STATUS FS ON HF.FORM_STATUS_ID = FS.ID
+                INNER JOIN USER ON HF.USER_ID = USER.ID
+                WHERE ${where}
+            ) AS T
+            WHERE T.rn = 1
+            ${order} `;
+    
+    // console.log(sql);
+    // console.log(q_list);
+    var [form_list, fields] = await (await connection).execute(sql, q_list );
+    // console.log(form_list);
+
+    var form_ids = form_list.map(function(e){
+        return e.ID;
+    })
+    form_ids = form_ids.join();
+    // 미리보기를 위한 form_hero와 launched_hero inner join
+    var sql = `SELECT form_id, types.ENG_NAME AS type, names.ENG_NAME AS name, hc.ENG_NAME AS class  FROM FORM_MEMBERS FM
+            INNER JOIN LAUNCHED_HEROES LH ON FM.HERO_ID = lh.ID 
+            INNER JOIN HERO_CLASSES HC ON lh.CLASS_ID = hc.IDX 
+            INNER JOIN HERO_NAMES  names ON names.IDX = NAME_ID
+            INNER JOIN HERO_TYPES  types ON types.IDX = TYPE_ID
+            WHERE form_id IN (${form_ids})
+            ORDER BY form_id;`;
+    var [members, fields] = await (await connection).execute(sql);
+    // console.log(members); 
+ 
     let data = {
         nickname: getDatas.loggedInNickname(req, res),
         form_status_list : form_status_list,
@@ -99,11 +172,13 @@ router.get('/formsave', mustLoggedIn, async(req, res) => {
         form_status : now_formstatus[0],
         hero_list : hero_list,
         form_list : form_list,
+        members : members,
     }
 
     res.render('mypage_formsave.ejs',  {data : data})
 
 })
+
 
 router.get('/myhero', mustLoggedIn, async(req, res) => {
 
@@ -113,6 +188,7 @@ router.get('/myhero', mustLoggedIn, async(req, res) => {
                 INNER JOIN HERO_NAMES  names ON names.IDX = NAME_ID
                 INNER JOIN HERO_CLASSES  classes ON classes.IDX = CLASS_ID
                 INNER JOIN HERO_TYPES  types ON types.IDX = TYPE_ID
+                WHERE NOT LH.ID = '0'
                 ORDER BY names.KOR_NAME, types.KOR_NAME`;
     var [hero_list, fields] = await (await connection).execute(sql);
 
