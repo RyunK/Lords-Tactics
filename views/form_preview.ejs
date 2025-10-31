@@ -1,0 +1,71 @@
+<!-- 게시판 미리보기 카드 ejs -->
+
+<a href="#" class="color-black flex-fill">
+    <div class="post-preview-container shadow-basic mt-4">
+        <div class="post-preview-top-container d-flex">
+            <% switch(data.form_list[i].STATUS_NAME ) {
+                case("편성 공유") : %>
+                    <div class="preview-form-share status-share ">
+                <% break;
+                case("편성 요청") : %>
+                    <div class="preview-form-share status-request ">
+                <% break;
+                case("편성 저장") : %>
+                    <div class="preview-form-share status-save ">
+                <% break;
+                case("편성 도움") : %>
+                    <div class="preview-form-share status-help ">
+                <% break;
+                case("편성 완료") : %>
+                    <div class="preview-form-share status-end ">
+                <% break;
+                default : %>
+                    <div class="preview-form-share status-share ">
+                <% } %>        
+                <h6><%=data.form_list[i].STATUS_NAME %></h6>
+            </div>
+            <div class="preview-contentname bg-basicdark color-yellow ">
+                <h6><%=data.form_list[i].CONTENT_NAME %></h6>
+            </div>
+        </div>
+        <div class="post-preview-bottom-container bg-gray">
+            <div class="preview-face-container d-flex">
+                <% let formid_idx = data.members.findIndex(item => item['form_id'] == data.form_list[i].ID) %>
+                <% for(let j=0; j<5; j++){ %>
+                    <% if(data.members[formid_idx + j].type != 'empty'){%>
+                    <img src="/sources/img/characters/<%=data.members[formid_idx + j].type %>_<%=data.members[formid_idx + j].name %>_<%=data.members[formid_idx + j].class %>.png" alt="">
+                    <% } else {%>
+                    <div class="empty"><i class="fa-solid fa-plus color-gray"></i></div>
+                    <% } %>
+                <% } %>
+                <% if(data.members[formid_idx + 5] && data.members[formid_idx + 5].form_id == data.form_list[i].ID) {%>
+                    <div class="dots_div">ㆍㆍㆍ </div>
+                <% } %>
+            </div>
+            <div class="mt-3">
+                <div class="bg-basicdark p-2">
+                    <h6><span class="color-white me-2">작성자</span>
+                        <span class="color-purple"><%=data.form_list[i].NICKNAME %></span></h6>
+                </div>
+                <div class="preview-paragraph bg-lightgray">
+                    <p><%if(data.form_list[i].WRITER_MEMO.length > 63){ %>
+                        <%= data.form_list[i].WRITER_MEMO.substring(0, 63)%>… 
+                    <% } else { %>
+                        <%=data.form_list[i].WRITER_MEMO %>
+                    <% }%>
+                        
+                    </p>
+                </div>
+            </div>
+            <div class="d-flex justify-content-between mt-3">
+                <div>
+                    <span><%=data.form_list[i].LAST_DATETIME.getFullYear()+"-"+("0"+(data.form_list[i].LAST_DATETIME.getMonth()+1)).slice(-2) + "-" + ("0"+(data.form_list[i].LAST_DATETIME.getDate())).slice(-2) %></span>
+                </div>
+                <div class="text-end">
+                    <span class="me-3">조회수 <%=data.form_list[i].VIEW %></span>
+                    <span class="me-1"><i class="fa-solid fa-bookmark"></i> <%=data.form_list[i].SAVED_CNT %></span>
+                </div>
+            </div>
+        </div>
+    </div>
+</a>

@@ -45,9 +45,9 @@
 }
 
 .forum-preview a{
-    max-width: 650px;
-    width: 400px;
-    margin: 0px 10px;
+    /* max-width: 650px; */
+    width: 100%;
+    /* margin: 0px 10px; */
 }
 
 
@@ -73,9 +73,7 @@
 
     transition-duration: 0.3s;
 
-    /* max-width: 100%;
-    width: 550px; */
-    min-width: 400px;
+    width: 100%;
     font-size: 0.9rem;
     font-weight: 500;
 
@@ -121,6 +119,36 @@
     padding: 15px 30px;
 }
 
+.forum-preview .status-request{
+    background-color: #ff940c;
+    color: white;
+
+}
+
+.forum-preview .status-share{
+    background-color: #3b8fff;
+    color: white;
+
+}
+
+.forum-preview .status-save{
+    background-color: #ce6dfb;
+    color: white;
+
+}
+
+.forum-preview .status-end{
+    background-color: #92e64e;
+    color: white;
+
+}
+
+.forum-preview .status-help{
+    background-color: #92e64e;
+    color: white;
+
+}
+
 .preview-contentname{
     padding: 15px 25px;
 }
@@ -136,9 +164,14 @@
     margin-right: calc(100% / 45);
 }
 
-.dots{
 
-    filter: invert(24%) sepia(4%) saturate(2522%) hue-rotate(202deg) brightness(92%) contrast(88%);
+.dots_div{
+    font-size: 50px;
+    letter-spacing: -27px;
+    position: relative;
+    left: -7px;
+    top: -2px;
+    height: 10px;
 }
 
 .preview-face-container .empty{

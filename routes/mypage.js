@@ -73,10 +73,11 @@ router.get('/formsave', mustLoggedIn, async(req, res) => {
             WHERE ENG_NAME = ?`;
     var [content, fields] = await (await connection).execute(sql, [content_name]);
 
+    // console.log(req.query.form_access)
     // form_access_status_id select
     var sql = `SELECT * FROM FORM_ACCESS_STATUS
             WHERE ENG_NAME = ?`;
-    var [form_access_status, fields] = await (await connection).execute(sql, [req.query.form_access? req.body.form_access : 'all']);
+    var [form_access_status, fields] = await (await connection).execute(sql, [req.query.form_access? req.query.form_access : 'all']);
 
     // userid는 필수. contents id 없거나 9면 true, form_status_id 없거나 8이면 true, form_access_status_id 없거나 3이면 true
     // sort saved_cnt면 저장횟수순, view면 조회수, new면 최신순
@@ -114,11 +115,11 @@ router.get('/formsave', mustLoggedIn, async(req, res) => {
     }
 
     if(!req.query.sort || req.query.sort =='saved_cnt'){
-        order += 'ORDER BY SAVED_CNT;'
+        order += 'ORDER BY SAVED_CNT DESC;'
     } else if(req.query.sort =='view'){
-        order += 'ORDER BY VIEW;'
+        order += 'ORDER BY VIEW DESC;'
     } else if(req.query.sort == 'new'){
-        order += 'ORDER BY LAST_DATETIME;'
+        order += 'ORDER BY LAST_DATETIME DESC;'
     }
 
     var sql = `SELECT T.* FROM (
@@ -148,15 +149,21 @@ router.get('/formsave', mustLoggedIn, async(req, res) => {
     })
     form_ids = form_ids.join();
     // 미리보기를 위한 form_hero와 launched_hero inner join
-    var sql = `SELECT form_id, types.ENG_NAME AS type, names.ENG_NAME AS name, hc.ENG_NAME AS class  FROM FORM_MEMBERS FM
+
+    var members
+    if(form_ids == ''){
+        members = []
+    }else{
+        var sql = `SELECT form_id, types.ENG_NAME AS type, names.ENG_NAME AS name, hc.ENG_NAME AS class  FROM FORM_MEMBERS FM
             INNER JOIN LAUNCHED_HEROES LH ON FM.HERO_ID = lh.ID 
             INNER JOIN HERO_CLASSES HC ON lh.CLASS_ID = hc.IDX 
             INNER JOIN HERO_NAMES  names ON names.IDX = NAME_ID
             INNER JOIN HERO_TYPES  types ON types.IDX = TYPE_ID
             WHERE form_id IN (${form_ids})
             ORDER BY form_id;`;
-    var [members, fields] = await (await connection).execute(sql);
-    // console.log(members); 
+        [members, fields] = await (await connection).execute(sql);
+    }
+    
  
     let data = {
         nickname: getDatas.loggedInNickname(req, res),
@@ -169,6 +176,7 @@ router.get('/formsave', mustLoggedIn, async(req, res) => {
              kor_name : result? result[0].kor_name : '전체 컨텐츠',
              eng_name : req.query.content? req.query.content : 'all',
             },
+        query_form_access : req.query.form_access? req.query.form_access : 'all',
         form_status : now_formstatus[0],
         hero_list : hero_list,
         form_list : form_list,

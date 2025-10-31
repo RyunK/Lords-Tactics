@@ -9,7 +9,7 @@ require('dotenv').config() // .env 파일 사용
 
 var fs = require('fs');
 app.listen(process.env.PORT, () => {
-    console.log('http://localhost:8080 에서 서버 실행중')
+    console.log(`http://localhost:${process.env.PORT} 에서 서버 실행중`)
 })
 
 const cookieParser = require("cookie-parser");
@@ -78,6 +78,7 @@ app.use('/login', require('./routes/login.js'));
 app.use('/forum', require('./routes/forum.js'));
 app.use('/formmake', require('./routes/formmake.js'));
 app.use('/mypage', require('./routes/mypage.js'));
+app.use('/main',  require('./routes/main.js'))
 
 const getDatas = require('./routes/getDatas.js')
 
@@ -88,7 +89,7 @@ app.get('/', (req, res) => {
     res.render('error_alret.ejs', {data: {err: req.query.error}})
 
   } else{
-    res.render('index.ejs',  {data : {nickname: getDatas.loggedInNickname(req, res)}})
+    res.redirect('/main')
   }
 })
 

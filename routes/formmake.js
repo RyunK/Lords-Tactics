@@ -75,7 +75,7 @@ router.get('/', async(req, res) => {
 
 router.post('/postform', mustLoggedIn ,async(req, res) => {
     
-    console.log(req.body);
+    // console.log(req.body);
     try{
         // contents_id select
         let content_name = req.body.content_name.trim();

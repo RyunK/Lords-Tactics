@@ -231,7 +231,7 @@
     display: none;
 
     position: absolute;
-    left: calc(50% + 174px);
+    left: calc(50% + 170px);
     top: -29px;
     z-index: 1;
 }
@@ -452,6 +452,22 @@ input[name="hero-name"]{
     /* height: 2.5em;  */
     width: 39.4px;
     margin-left: 3px;
+}
+
+.forum-preview-posts{
+    margin-top: 30px;
+
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(480px, 1fr));
+    /* grid-template-rows: repeat(auto-fill, minmax(370px, 1fr)); */
+    place-items: center;
+
+    column-gap: 20px;
+    row-gap: 20px;
+}
+
+.searchAndPosts-container .dots_div{
+    top : 5px;
 }
 
 
