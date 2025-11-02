@@ -132,7 +132,8 @@ h6{
 }
 
 .mypage-remote .filter-container button,
-.mypage-remote .filter-container input[type="text"]
+.mypage-remote .filter-container input[type="text"],
+.mypage-remote .filter-container .disable-div
 {
     width: 100%;
     padding: 10px 13px;
@@ -148,6 +149,40 @@ h6{
     font-weight: 500;
     
 }
+
+.mypage-remote .filter-container .disable-div{
+    background-color: #666666;
+    color: white;
+    height: 44px;
+}
+
+.mypage-remote .disable-notice{
+    font-size: 16px;
+}
+
+.mypage-remote .access-disabled label:hover {
+    cursor: inherit;
+    color : inherit;
+}
+
+.mypage-remote .go-back{
+    padding: 10px 25px;
+    color: white;
+    font-size: 17px;
+    font-weight: 600;
+
+    display: flex;
+    width: 60%;
+    justify-content: space-between;
+    align-items: center;
+
+    
+}
+
+.mypage-remote .go-back i{
+    font-size: 32px;
+}
+
 
 .dropdown-contents ul{
     position: absolute;

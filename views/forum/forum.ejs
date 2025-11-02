@@ -13,7 +13,7 @@
 </head>
 <body>
 
-    <%- include('nav_and_banner.ejs', {page: 'forum', nickname: data.nickname, notice:'2025.08.01 신규 캐릭터 [물]라플라스 추가 완료'}) %> 
+    <%- include('../nav_and_banner.ejs', {page: 'forum', nickname: data.nickname, notice:'2025.08.01 신규 캐릭터 [물]라플라스 추가 완료'}) %> 
 
 
     <div class=" forum-container">
@@ -76,9 +76,9 @@
                         <span>컨텐츠</span>
                         <div class="dropdown-group d-inline-block">
                             <button type="button" class="content-search bg-lightgray d-flex justify-content-between align-items-center">
-                                <span><%= data.content.kor_name %></span> <i class="fa-solid fa-chevron-down"></i>
+                                <span><%= data.content[0].kor_name %></span> <i class="fa-solid fa-chevron-down"></i>
                             </button>
-                            <input type="hidden" name="content" value="<%= data.content.eng_name %>" >
+                            <input type="hidden" name="content" value="<%= data.content[0].eng_name %>" >
                             
                         </div>
                     </div>
@@ -163,7 +163,7 @@
                     <!-- <div class="forum-preview-posts d-flex justify-content-evenly flex-wrap"> -->
                         <% for(let i=0; i<data.form_list.length; i++){ %>
                             <!-- 공유 게시글 하나 -->
-                                <%- include('form_preview.ejs', {i: i, data : {
+                                <%- include('../components/form_preview.ejs', {i: i, data : {
                                     form_list : data.form_list,
                                     members : data.members,
                                 }}) %> 

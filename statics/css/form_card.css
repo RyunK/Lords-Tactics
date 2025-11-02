@@ -106,44 +106,51 @@
 }
 
 .preview-paragraph {
+    display: -webkit-box;
+    -webkit-line-clamp: 2 ;
+    -webkit-box-orient: vertical;
     width: 100%;
-    padding: 8px;
+    padding: 5px;
 
-    height: 65px;
+    height: 55px;
 
     overflow: hidden;
+    text-overflow: ellipsis;
     padding-left: 15px;
+
+    line-height: 1.6;
+    text-align: left;
 }
 
 .preview-form-share{
     padding: 15px 30px;
 }
 
-.forum-preview .status-request{
+.status-request{
     background-color: #ff940c;
     color: white;
 
 }
 
-.forum-preview .status-share{
+.status-share{
     background-color: #3b8fff;
     color: white;
 
 }
 
-.forum-preview .status-save{
+.status-save{
     background-color: #ce6dfb;
     color: white;
 
 }
 
-.forum-preview .status-end{
+.status-end{
     background-color: #92e64e;
     color: white;
 
 }
 
-.forum-preview .status-help{
+.status-help{
     background-color: #92e64e;
     color: white;
 

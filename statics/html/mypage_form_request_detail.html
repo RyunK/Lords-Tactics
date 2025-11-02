@@ -1,0 +1,354 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>로드의 전술서:마이페이지</title>
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <link href="../css/main.css" rel="stylesheet">
+    <link href="../css/mypage.css" rel="stylesheet">
+    <link href="../css/lv_badges.css" rel="stylesheet">
+    <link href="../css/form_making.css" rel="stylesheet">
+    <!-- <link href="../css/form_card.css" rel="stylesheet"> -->
+    <link href="../css/form_detail.css" rel="stylesheet">
+</head>
+<body>
+
+    <nav class="bg-basicdark shadow-basic d-flex justify-content-between align-items-center">
+        <div class="nav-box ">
+            <a href="#" >기사단 편성</a>
+            <a href="#">조합 공유 게시판</a>
+            <a href="#">마이페이지</a>
+            <a href="#">이용안내</a>
+        </div>
+        <div class="nav-box">
+            <a href="#" class="color-white nav-selected">로그인/회원가입</a>
+            <a href="#" class="color-white">검색 &nbsp; <i class="fa-solid fa-magnifying-glass" style="font-size: 15px"></i></a>
+        </div>
+    </nav>
+    
+    <div class="top-banner shadow-basic">
+        <img src="../sources/img/banners/basic.jpg" alt="" width="100%">
+        <!-- 공지사항 배너 -->
+        <div class="notice-banner bg-white d-flex align-items-center">
+            <div class="ms-5 ps-3 pe-3">공지사항</div>
+            <div class="ms-5 ">2025.03.04 신규 캐릭터 뫄뫄 추가 완료</div>
+        </div>
+    </div>
+
+    <!-- 왼쪽 리모콘(?) -->
+    <div class="mypage-remote ">
+        <div class="btn-shadow mb-3 d-flex justify-content-end">
+            <a class="btn-blue btn-cut go-back">
+                <i class="fa-solid fa-chevron-left"></i> <span class="flex-fill text-center">뒤로 가기</span>
+            </a>
+        </div>
+
+        <div class="shadow-filter-basic">
+            <a class="formmake-link btn-cut btn-blue border-0">
+                <h6 class="color-white w-100">편성 만들러 가기</h6>
+            </a>
+        </div>
+        <div class="tab shadow-basic">
+            <div class="name-container bg-basicdark">
+                <h6 class="color-lightgray">닉네임 | <span class="color-purple">여덟글자정도어때</span></h6>
+            </div>
+            <ul class="left-blue-bar width-100">
+                <li class="border-top-0 active"><a href="#" class=" color-black">저장한 편성</a></li>
+                <li class=""><a href="#" class="color-black">내 영웅설정</a></li>
+                <li class="border-bottom-0"><a href="#" class="color-black">개인정보 편집</a></li>
+            </ul>
+        </div>
+        <div class="shadow-filter-basic"> 
+            <div class="filter-container">
+                <div>
+                    <h6>편성 공개 여부</h6>
+                    <div class="access-container access-disabled d-flex flex-fill justify-content-between ">
+                        <label class="charSetting-ele d-flex align-self-center me-3">  
+                            <span class="me-2">전체 </span>
+                            <input type="radio" name="form_access" value="all" class="charPublic-checkbox " onclick="return false;" checked  >
+                            <span class="checkbox-img"></span> 
+                        </label>
+                        <label class="charSetting-ele d-flex align-self-center me-3">  
+                            <span class="me-2">공개 </span> 
+                            <input type="radio" name="form_access" value="public" class="charPublic-checkbox " onclick="return false;" >
+                            <span class="checkbox-img"></span> 
+                        </label>
+                        <label class="charSetting-ele d-flex align-self-center me-3">  
+                            <span class="me-2">비공개 </span> 
+                            <input type="radio" name="form_access" value="private" class="charPublic-checkbox " onclick="return false;">
+                            <span class="checkbox-img"></span> 
+                        </label>
+                        
+                    </div>
+                    
+                </div>
+                <div>
+                    <h6>편성 상태</h6>
+                    <div class="disable-div color-black">편성 공유 </i></div>
+                </div>
+                <div>
+                    <h6>영웅 필터</h6>
+                    <div class="disable-div color-gray"> </i></div>
+                    <div class="search-hero-container d-inline-block mt-3">
+                        <img src="../sources/img/characters/dark_rosanna_guardian.png" alt="">
+                        <img src="../sources/img/characters/grass_charlotte_priest.png" alt="">
+                        <img src="../sources/img/characters/fire_mikhail_striker.png" alt="">
+
+                        <input type="hidden" name="hero" value="dark_rosanna_guardian" >
+                        <input type="hidden" name="hero" value="grass_charlotte_priest" >
+                        <input type="hidden" name="hero" value="fire_mikhail_striker" >
+                    </div>
+                </div>
+                <div>
+                    <h6>컨텐츠</h6>
+                    <div class="disable-div color-black">전체 컨텐츠 </div>
+                </div>
+                <p class="color-red disable-notice">* 편성 전체 보기에서는 <br> 필터 조작이 불가능합니다.</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- 오른쪽 컨텐츠 -->
+    <div class="mypage-maincontents" >
+        <!-- 편성 글. 조합 -->
+        <div class="form-container mypage-form-detail-sizing shadow-basic">
+            <!-- 상단바 -->
+            <div class="form-title ">
+                <dix class="form-status ">
+                    <button type="button " class="status-request border-0 d-flex align-items-center justify-content-center">
+                        <p>편성 요청</p>
+                    </button>
+                </dix>
+
+                <div class="content-name flex-fill">
+                    <button type="button"  class="bg-basicdark  color-yellow border-0 d-flex align-items-center justify-content-between">
+                        <p>아레나</p>
+                        <i class="ms-3 fa-solid fa-lock"></i>
+                        <div class="private-hover-box color-black shadow-basic">
+                            <span class="">비공개</span> 편성
+                        </div>
+                    </button>
+
+                </div>
+                
+            </div>
+
+            <!-- 아래 컨텐츠 -->
+            <div class="d-flex contents">
+                
+                <!-- 왼쪽 -->
+                <div class="left-box">
+                    <div class="d-flex align-items-end">
+                        <div class="form-author bg-basicdark color-white">
+                            작성자 <span class="color-purple">여덟글자정도어때</span>
+                        </div>
+                        <div class="form-detail-date">
+                             2025.03.01 04:23
+                        </div>
+                    </div>
+                    
+ 
+                    
+                    <form class="form-border-container d-flex align-items-center flex-wrap">
+                        <h5 class="w-100">1 부대</h5>
+                        <div class="form-char-container w-100 d-flex flex-wrap justify-content-center ">
+                            <div class="character-10 form_spot">
+                                <div class="select-liner">
+                                    <div class="empty"><i class="fa-solid fa-plus color-gray"></i> </div>
+                                </div>
+                            </div>
+                            <div class="character-10 form_spot">
+                                <div class="select-liner ">
+                                    <img src="../sources/img/characters/dark_charlotte_warrior.png" >
+
+                                    <span class="lv_dark lv">70</span>
+                                    <span class="twogak gak">
+                                            7
+                                    </span>
+                                </div>
+                            </div>
+                            <div class="character-10 form_spot">
+                                <div class="select-liner">
+                                    <div class="empty"><i class="fa-solid fa-plus color-gray"></i> </div>
+                                </div>
+                            </div>
+                            <div class="character-10 form_spot">
+                                <div class="select-liner">
+                                    <div class="empty"><i class="fa-solid fa-plus color-gray"></i> </div>
+                                </div>
+                            </div>
+                            <div class="character-10 form_spot">
+                                <div class="select-liner">
+                                    <div class="empty"><i class="fa-solid fa-plus color-gray"></i> </div>
+                                </div>
+                            </div>
+                            
+                        </div>
+
+                        <h5 class="w-100">2 부대</h5>
+                        <div class="form-char-container w-100 d-flex flex-wrap justify-content-center ">
+                            <div class="character-10 form_spot">
+                                <div class="select-liner">
+                                    <div class="empty"><i class="fa-solid fa-plus color-gray"></i> </div>
+                                </div>
+                            </div>
+                            <div class="character-10 form_spot">
+                                <div class="select-liner ">
+                                    <img src="../sources/img/characters/dark_charlotte_warrior.png" >
+
+                                    <span class="lv_dark lv">70</span>
+                                    <span class="twogak gak">
+                                            7
+                                    </span>
+                                </div>
+                            </div>
+                            <div class="character-10 form_spot">
+                                <div class="select-liner">
+                                    <div class="empty"><i class="fa-solid fa-plus color-gray"></i> </div>
+                                </div>
+                            </div>
+                            <div class="character-10 form_spot">
+                                <div class="select-liner">
+                                    <div class="empty"><i class="fa-solid fa-plus color-gray"></i> </div>
+                                </div>
+                            </div>
+                            <div class="character-10 form_spot">
+                                <div class="select-liner">
+                                    <div class="empty"><i class="fa-solid fa-plus color-gray"></i> </div>
+                                </div>
+                            </div>
+                            
+                        </div>
+
+                    </form>
+                    
+
+                    <div class="left-box-bottom d-flex justify-content-start align-items-center">
+                        <span class="view">조회수 <span>3215</span></span>
+                        <span class="mine"><i class="fa-solid fa-bookmark"></i> 25</span>
+                        <span class="share"><i class="fa-solid fa-share"></i></span>
+                    </div>
+                </div>
+
+                <!-- 오른쪽 -->
+                <div class="right-box">
+                    <h6 class="explain-title d-flex align-items-end">작성자 한마디</h6>
+                    <div class="bg-white memo-container color-gray">
+                        <div class="memo explain-content"  > 한때 애용했던 친구들 덱 </div>
+                    </div>
+
+                    <!-- 좋아요 / 댓글 펼치기 -->
+                    <div class="btns mg-10px ms-0 me-0 d-flex flex-fill justify-content-between">
+                        <div class="btn-shadow d-flex justify-content-between w-100">
+                            <button class="btn-cut bottom-btn btn-blue color-white">수정 </button>
+                            <button class="btn-cut bottom-btn btn-red color-white">삭제 </button>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+        <!-- 댓글 -->
+        <div class="comments-container shadow-basic mypage-form-detail-sizing bg-gray">
+            <div class="comment-header btn-black color-white">
+                <span> 댓글 <span class="ms-2">5</span> </span><i class="fa-solid fa-chevron-up"></i>
+            </div>
+            <div class="comments blue-scroll">
+                <!-- 댓글 하나 -->
+                <div class="comment">
+                    <div class="comment-author bg-basicdark color-white">
+                        <span class="color-purple">댓글단사람덱공유</span>
+                    </div>
+                    <div class="comment-form-preview bg-basicdark">
+                        <div class="writer-save-badge">작성자 저장!</div>
+                        <div class="preview-face-container">
+                                <img src="../sources/img/characters/dark_charlotte_warrior.png" alt="">
+                                <img src="../sources/img/characters/dark_charlotte_warrior.png" alt="">
+                                <img src="../sources/img/characters/dark_charlotte_warrior.png" alt="">
+                                <div class="empty"><i class="fa-solid fa-plus color-gray"></i></div>
+                                <div class="empty"><i class="fa-solid fa-plus color-gray"></i></div>
+                                <div class="dots_div color-white">ㆍㆍㆍ </div>
+                        </div>
+                        <div class="btns btn-shadow">
+                            <button class="me-3 btn-blue btn-cut border-0 color-white">자세히 보기</button>
+                            <button class="btn-purple btn-cut border-0 color-white">저장 취소</button>
+                        </div>
+                    </div>
+                    <p>이 조합 추천합니다. 뫄뫄가 면역이 있어서 사기입니다. 꼭 해보세요! ^^</p>
+                    <div class="comment-bottom d-flex">
+                        <span class="date">2025.03.04 03:22</span>
+                        <span>답글쓰기</span>
+                        <div >
+                            <span class="color-red">신고</span>
+                        </div>
+                    </div>
+                </div>
+                <!-- 댓글 하나 끝 -->
+                <div class="reply">
+                    <div class="comment-author bg-basicdark color-white">
+                        <span>작성자</span> <span class="color-purple">여덟글자정도어때</span>
+                    </div>
+                    <p>감사합니다.</p>
+                    <div class="comment-bottom d-flex">
+                        <span class="date">2025.03.04 03:25</span>
+                        <span>답글쓰기</span>
+                        <div>
+                            <span class="color-red me-1">삭제</span>
+                            <span>수정</span>
+                        </div>
+                    </div>
+                </div>
+                <!-- 댓글 하나 끝 -->
+            </div>
+            <form class="write-comment bg-white">
+                <div class="comment-author  bg-basicdark color-white">
+                    <span class="color-purple">댓글단사람덱공유</span> <span>답글</span> 
+                </div>
+                <!-- 여기다 답하는 댓글 아이디 value로 저장 -->
+                <input type="hidden" value="">
+                <textarea name="comment" class="flex-fill blue-scroll" rows="1" id="comment" onkeyup="resize(this)" onkeydown="resize(this)" placeholder="내용을 입력하세요." ></textarea>
+                <div class="btn-shadow align-self-end">
+                    <button type="submit" class="btn-cut btn-blue color-white border-0">전송</button>
+                </div>
+            </form>
+
+        </div>
+
+        <div class="near-link-container">
+            <a class="d-flex near-link color-white shadow-basic mypage-form-detail-sizing bg-basicdark">
+                <div class="status status-share">편성 공유</div>
+                <div class="link-title flex-fill d-flex  align-items-center">
+                    <span class="color-yellow flex-fill">아레나</span>
+                    <span class="me-5">이전 편성</span>
+                    <i class="fa-solid fa-chevron-up"></i>
+                </div>
+            </a>
+
+            <a class="d-flex near-link color-white shadow-basic mypage-form-detail-sizing bg-basicdark">
+                <div class="status status-request">편성 요청</div>
+                <div class="link-title flex-fill d-flex  align-items-center">
+                    <span class="color-yellow flex-fill">침묵의 해협</span>
+                    <span class="me-5">다음 편성</span>
+                    <i class="fa-solid fa-chevron-down"></i>
+                </div>
+            </a>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script> 
+    <script>
+
+        function resize(obj) {
+
+                obj.style.height = 'auto';
+                obj.style.height = obj.scrollHeight + 'px';
+            
+        }
+    </script>
+</body>
+</html>

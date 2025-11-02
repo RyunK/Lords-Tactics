@@ -179,7 +179,9 @@ body{
    
     width: 1000px;
     min-width: 1000px;
-    height: 600px;
+    /* height: 600px; */
+    aspect-ratio: 5/3;
+
     background-color: #BFC3D4;
 
     /* margin-left: auto;

@@ -14,7 +14,7 @@
 </head>
 <body>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
-    <%- include('nav_and_banner.ejs', {page: '', nickname: data.nickname, notice:'2025.08.01 신규 캐릭터 [물]라플라스 추가 완료'}) %> 
+    <%- include('../nav_and_banner.ejs', {page: '', nickname: data.nickname, notice:'2025.08.01 신규 캐릭터 [물]라플라스 추가 완료'}) %> 
 
 
     <!-- 왼쪽 리모콘(?) -->
@@ -65,8 +65,8 @@
                 </div>
                 <div>
                     <h6>컨텐츠</h6>
-                    <button type="button" data-btn="content" class="color-black"><span><%= data.content.kor_name %></span><i class="fa-solid fa-chevron-down"></i></button>   
-                    <input type="hidden" name="content" value="<%= data.content.eng_name %>" >
+                    <button type="button" data-btn="content" class="color-black"><span><%= data.content[0].kor_name %></span><i class="fa-solid fa-chevron-down"></i></button>   
+                    <input type="hidden" name="content" value="<%= data.content[0].eng_name %>" >
                     
                 </div>
             </form>
@@ -187,7 +187,7 @@
                 <div class="forum-preview-posts">
                     <% for(let i=0; i<data.form_list.length; i++) { %>
                     <!-- 공유 게시글 하나 -->
-                        <%- include('form_preview.ejs', {i: i, data : {
+                        <%- include('../components/form_preview.ejs', {i: i, data : {
                             form_list : data.form_list,
                             members : data.members,
                         }}) %> 

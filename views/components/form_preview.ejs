@@ -48,11 +48,8 @@
                         <span class="color-purple"><%=data.form_list[i].NICKNAME %></span></h6>
                 </div>
                 <div class="preview-paragraph bg-lightgray">
-                    <p><%if(data.form_list[i].WRITER_MEMO.length > 63){ %>
-                        <%= data.form_list[i].WRITER_MEMO.substring(0, 63)%>… 
-                    <% } else { %>
+                    <p >
                         <%=data.form_list[i].WRITER_MEMO %>
-                    <% }%>
                         
                     </p>
                 </div>
