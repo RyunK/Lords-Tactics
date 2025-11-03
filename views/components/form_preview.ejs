@@ -1,6 +1,5 @@
 <!-- 게시판 미리보기 카드 ejs -->
-
-<a href="#" class="color-black flex-fill">
+<a href="./detail/<%=data.form_list[i].ID%>" data-id="<%=data.form_list[i].ID%>" data-rn="<%=data.form_list[i].ORDER_NUM%>" class="todetail-link color-black flex-fill">
     <div class="post-preview-container shadow-basic mt-4">
         <div class="post-preview-top-container d-flex">
             <% switch(data.form_list[i].STATUS_NAME ) {
@@ -26,6 +25,9 @@
             </div>
             <div class="preview-contentname bg-basicdark color-yellow ">
                 <h6><%=data.form_list[i].CONTENT_NAME %></h6>
+                <% if(data.form_list[i].ACCESS == 'private') {%>
+                    <i class="ms-3 fa-solid fa-lock"></i>
+                <% }%>
             </div>
         </div>
         <div class="post-preview-bottom-container bg-gray">
@@ -66,3 +68,4 @@
         </div>
     </div>
 </a>
+

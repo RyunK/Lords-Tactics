@@ -174,7 +174,7 @@
 
 .comment-form-preview .writer-save-badge{
     position: absolute;
-    
+
 }
 
 .preview-face-container{
@@ -281,7 +281,7 @@
 
 .near-link:hover{
     cursor: pointer;
-    opacity: 0.9;
+    filter: brightness(110%)
 }
 
 .near-link > div{
@@ -296,4 +296,8 @@
 
 .near-link .link-title > i {
     font-size: 1.5em;
+}
+
+.nothave {
+    filter: grayscale(1);
 }

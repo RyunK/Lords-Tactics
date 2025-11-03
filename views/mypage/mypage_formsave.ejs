@@ -208,6 +208,17 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script> 
     <script>
+    $(".todetail-link").on("click", function(e){
+        e.preventDefault();
+
+        let url = new URL(window.location.href);
+        url.searchParams.set("n", $(this).data('rn'));
+
+        let id = $(this).data('id');
+        let new_url = `${location.pathname}/detail/${id}?${url.searchParams.toString()}`
+        window.location.href = new_url;
+    })
+
     $(document).on('click', function(e){
         // 빈 곳 클릭하면 영웅 필터 올라감
         if(!$(e.target).closest(".hero-search-container").length>0
@@ -320,7 +331,7 @@
         // 얼굴에 -버튼 누르면 해제
         $(document).on("click", ".search-hero-img ", function(e){
             // 그냥 - 누르고 적용한거랑 똑같이 동작하면 될듯
-
+            // console.log("들어옴")
             let selected_num = parseInt($(".selected-num span").text(), 10);
             if(selected_num <= 0){
                 return;

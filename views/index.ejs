@@ -72,7 +72,7 @@
                  
                 <% for(let i=0; i<data.best_form_list.length; i++){ %>
                     <!-- 공유 게시글 하나 -->
-                        <%- include('form_preview.ejs', {i: i, data : {
+                        <%- include('./components/form_preview.ejs', {i: i, data : {
                             form_list : data.best_form_list,
                             members : data.best_members,
                         }}) %> 
@@ -88,7 +88,7 @@
                 
                 <% for(let i=0; i<data.today_ask_form_list.length; i++){ %>
                     <!-- 공유 게시글 하나 -->
-                        <%- include('form_preview.ejs', {i: i, data : {
+                        <%- include('./components/form_preview.ejs', {i: i, data : {
                             form_list : data.today_ask_form_list,
                             members : data.today_ask_members,
                         }}) %> 

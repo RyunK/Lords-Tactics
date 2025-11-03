@@ -56,10 +56,14 @@ module.exports = {
       return [filtered_heroes_list, filtered_heroes_list_forrender];
    },
 
-   getFormlistNMembers: async function (where, order, q_list, connection){
-      var sql = `SELECT T.* FROM (
+   getFormlistNMembers: async function (req, res, where, order, q_list, connection){
+      let rn = 1;
+      if(req.query.hero && Array.isArray(req.query.hero)) rn = req.query.hero.length;
+      // console.log(rn)
+
+      var sql = `SELECT T.*, ROW_NUMBER() OVER(${order}) AS ORDER_NUM FROM (
                 SELECT HF.ID, HF.WRITER_MEMO, HF.LAST_DATETIME, HF.VIEW, HF.SAVED_CNT,
-                FM.HERO_ID, CN.KOR_NAME as CONTENT_NAME, FS.STATUS_NAME, USER.NICKNAME,
+                FM.HERO_ID, CN.KOR_NAME as CONTENT_NAME, FS.STATUS_NAME, FAS.ENG_NAME AS ACCESS, USER.NICKNAME,
                     ROW_NUMBER() OVER (
                         PARTITION BY HF.id 
                         ORDER BY HF.last_datetime DESC
@@ -69,11 +73,13 @@ module.exports = {
                 INNER JOIN CONTENTS_NAME CN ON HF.CONTENTS_ID = CN.ID
                 INNER JOIN FORM_STATUS FS ON HF.FORM_STATUS_ID = FS.ID
                 INNER JOIN USER ON HF.USER_ID = USER.ID
+                INNER JOIN FORM_ACCESS_STATUS FAS ON HF.FORM_ACCESS_STATUS_ID = FAS.ID 
                 WHERE ${where}
             ) AS T
-            WHERE T.rn = 1
+            WHERE T.rn = ${rn}
             ${order} `;
-    
+      
+      // console.log(sql);
       var [form_list, fields] = await (await connection).execute(sql, q_list );
 
       var form_ids = form_list.map(function(e){
@@ -102,13 +108,41 @@ module.exports = {
    formOrderGetter: function(req, res){
       let order = ''
       if(!req.query.sort || req.query.sort =='saved_cnt'){
-         order += 'ORDER BY SAVED_CNT DESC;'
+         order += 'ORDER BY SAVED_CNT DESC'
       } else if(req.query.sort =='view'){
-         order += 'ORDER BY VIEW DESC;'
+         order += 'ORDER BY VIEW DESC'
       } else if(req.query.sort == 'new'){
-         order += 'ORDER BY LAST_DATETIME DESC;'
+         order += 'ORDER BY LAST_DATETIME DESC'
       }
 
       return order;
    },
+
+   /**
+    * 편성 자세히보기에서 편성 구성에 필요한 데이터들
+    * @param {*} req 
+    * @param {*} res 
+    */
+   getFormInfoNMembers: async function(req, res, connection){
+      // id로 inner join 싹 해서 form검색
+      var sql = `SELECT HF.ID, HF.WRITER_MEMO, HF.LAST_DATETIME, HF.VIEW, HF.SAVED_CNT, HF.USER_ID,
+               CN.KOR_NAME as CONTENT_NAME  ,FS.STATUS_NAME, FAS.ENG_NAME AS ACCESS ,USER.NICKNAME FROM HERO_FORMS HF
+               INNER JOIN CONTENTS_NAME CN ON HF.CONTENTS_ID = CN.ID
+               INNER JOIN FORM_STATUS FS ON HF.FORM_STATUS_ID = FS.ID
+               INNER JOIN USER ON HF.USER_ID = USER.ID
+               INNER JOIN FORM_ACCESS_STATUS FAS ON HF.FORM_ACCESS_STATUS_ID = FAS.ID 
+               WHERE HF.ID = ?;`
+      var [form_info ,fields] = await (await connection).execute(sql, [req.params.id]);
+
+      // 편성 멤버 조회
+      var sql = `SELECT FM.HERO_LV, FM.HERO_CHO, FM.HERO_GAK, TYPES.ENG_NAME AS TYPE, NAMES.ENG_NAME AS NAME, classes.ENG_NAME AS CLASS  FROM FORM_MEMBERS FM 
+               INNER JOIN LAUNCHED_HEROES LH  ON FM.HERO_ID = LH.ID 
+               INNER JOIN HERO_NAMES  names ON names.IDX = NAME_ID
+               INNER JOIN HERO_CLASSES  classes ON classes.IDX = CLASS_ID
+               INNER JOIN HERO_TYPES  types ON types.IDX = TYPE_ID
+               WHERE FM.FORM_ID = ?;`
+      var [members ,fields] = await (await connection).execute(sql, [req.params.id]);
+
+      return [form_info, members];
+   }
 }

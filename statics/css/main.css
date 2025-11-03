@@ -585,3 +585,20 @@ nav>div> a:hover{
     background: rgba(255, 255, 255, 0.1);  /* 스크롤바 뒷 배경 색상 */
 }
 
+.toast-black{
+    background-color: #31313ec8;
+    border-radius: 8px;
+    color: white;
+
+    padding: 10px 15px;
+
+    position: fixed;
+
+    left: 50%;
+    transform: translateX(-50%);
+    top: 50px;
+
+    z-index: 5;
+
+    display: none;
+}

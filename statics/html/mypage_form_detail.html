@@ -254,7 +254,7 @@
         <!-- 댓글 -->
         <div class="comments-container shadow-basic mypage-form-detail-sizing bg-gray">
             <div class="comment-header btn-black color-white">
-                <span> 댓글 5 </span><i class="fa-solid fa-chevron-up"></i>
+                <span> 댓글 <span class="ms-4">5</span></span><i class="fa-solid fa-chevron-up"></i>
             </div>
             <div class="comments blue-scroll">
                 <!-- 댓글 하나 -->
@@ -386,11 +386,16 @@
     <script>
 
         function resize(obj) {
-
-                obj.style.height = 'auto';
-                obj.style.height = obj.scrollHeight + 'px';
-            
+            obj.style.height = 'auto';
+            obj.style.height = obj.scrollHeight + 'px';
         }
+
+        $(".comment-header").on("click", function(){
+            console.log("잡힘")
+            $(this).children("i").toggleClass("fa-chevron-up");
+            $(this).children("i").toggleClass("fa-chevron-down");
+            $(this).siblings("comments").slideToggle();
+        })
     </script>
 </body>
 </html>

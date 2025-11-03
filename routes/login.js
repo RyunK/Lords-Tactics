@@ -192,7 +192,7 @@ async function usernameCheck(username){
   let [result, fields] = await (await connection).execute(sql, [username])
   // console.log(result[0].username);
   
-  if(result.length > 0 || username.length >20 || username.length <6){
+  if(result.length > 0 || username.length >20 || username.length <6 || username.indexOf(' ') > -1){
     console.log("id 오류")
     return false;
   } else {
@@ -227,7 +227,7 @@ function pwCheck(password, re_password){
  * 회원가입 - 닉네임 체크
  */
 function nicknameCheck(nickname){
-  if (nickname.length > 1 && nickname.length < 9){
+  if (nickname.length > 1 && nickname.length < 9 || nickname.indexOf(' ') > -1){
     return true;
   } else{
     console.log("닉네임 오류")
