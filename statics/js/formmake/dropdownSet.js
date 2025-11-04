@@ -113,7 +113,7 @@ function to5layout(){
     if(spot.find(".empty").length>0){
         spot.prepend("<div class='spot-selected-empty'></div>");
     }else {
-        spot.prepend('<img src="../sources/img/out_char.png" class="out">');
+        spot.prepend('<img src="/sources/img/out_char.png" class="out">');
         spot.prepend("<div class='spot-selected-full'></div>");                   
     }
 }
@@ -159,7 +159,7 @@ function to10layout(){
     if(spot.find(".empty").length>0){
         spot.prepend("<div class='spot-selected-empty'></div>");
     }else {
-        spot.prepend('<img src="../sources/img/out_char.png" class="out">');
+        spot.prepend('<img src="/sources/img/out_char.png" class="out">');
         spot.prepend("<div class='spot-selected-full'></div>");                   
     }
 }
@@ -205,7 +205,7 @@ function to7layout(){
     if(spot.find(".empty").length>0){
         spot.prepend("<div class='spot-selected-empty'></div>");
     }else {
-        spot.prepend('<img src="../sources/img/out_char.png" class="out">');
+        spot.prepend('<img src="/sources/img/out_char.png" class="out">');
         spot.prepend("<div class='spot-selected-full'></div>");                   
     }
 }

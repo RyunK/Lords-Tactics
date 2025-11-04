@@ -305,7 +305,26 @@ router.post('/delete/comment/:form_id', mustLoggedIn, async (req, res) => {
     
 })
 
+// 게시판 삭제
+// 그냥 post 요청 받아가지고 form 삭제하면 될듯
+router.post('/delete/form/:form_id', mustLoggedIn, async(req, res) => {
+    
+    try{
 
+        var sql = `select * from hero_forms where id = ?`
+        var [result, fields] = await(await connection).execute(sql, [req.params.form_id]);
+        if(result[0].user_id != req.user[0].id) throw new Error("편성을 삭제할 권한이 없습니다.");
+        
+        var sql = `delete from hero_forms where id = ?`
+        var [result, fields] = await(await connection).execute(sql, [req.params.form_id]);
 
+        res.send(`<script> alert("삭제가 완료되었습니다."); window.location.href='/${req.body.page}'  </script>`)
+
+    }catch(e){
+        console.log(e);
+        res.redirect(`/?error=${e.message}`)
+    }
+
+})
 
 module.exports=router;

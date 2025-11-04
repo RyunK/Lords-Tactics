@@ -14,8 +14,11 @@
 </head>
 <body>
 
+    <% if(data.form_status){ %>
+    <%- include('nav_and_banner.ejs', {page: ' ', nickname: data.nickname, notice:'2025.08.01 신규 캐릭터 [물]라플라스 추가 완료'}) %> 
+    <% }else{ %>
     <%- include('nav_and_banner.ejs', {page: 'formmake', nickname: data.nickname, notice:'2025.08.01 신규 캐릭터 [물]라플라스 추가 완료'}) %> 
-    
+    <% } %>
 
     <!-- 영웅 설정 모달 -->
     <div class="hero-setting-container">
@@ -33,11 +36,11 @@
                 <div class="setting-charinfo pe-4  d-flex justify-content-center ">
                     <div>
                     <div class="setting-charname d-flex align-items-center mt-3">
-                        <img src="../sources/img/types/fire.png" class=" setting-class-size">
+                        <img src="/sources/img/types/fire.png" class=" setting-class-size">
                         <p class="ms-1">메이링</p>
                     </div>
                     <div class="setting-charimg mt-3" >
-                        <img src="../sources/img/characters/fire_meiling_shooter.png">
+                        <img src="/sources/img/characters/fire_meiling_shooter.png">
                         <span class="lv_fire lv">70</span>
                         <span class="onegak gak">7</span>
                     </div>
@@ -75,13 +78,13 @@
                             <div class="d-flex justify-content-between input-w">
                             
                                 <label class="charSetting-ele d-flex align-self-center">  
-                                    <input type="radio" name="gak" value="0" class="charPublic-checkbox nogak-radio"><span class="checkbox-img"></span> <img src="../sources/img/nogak.png" class="ms-1"> 
+                                    <input type="radio" name="gak" value="0" class="charPublic-checkbox nogak-radio"><span class="checkbox-img"></span> <img src="/sources/img/nogak.png" class="ms-1"> 
                                 </label>
                                 <label class="charSetting-ele d-flex align-self-center">  
-                                    <input type="radio" name="gak" value="1" class="charPublic-checkbox onegak-radio"><span class="checkbox-img"></span> <img src="../sources/img/1gak.png" class="ms-1"> 
+                                    <input type="radio" name="gak" value="1" class="charPublic-checkbox onegak-radio"><span class="checkbox-img"></span> <img src="/sources/img/1gak.png" class="ms-1"> 
                                 </label>
                                 <label class="charSetting-ele d-flex align-self-center"> 
-                                    <input type="radio" name="gak" value="2" class="charPublic-checkbox twogak-radio"><span class="checkbox-img"></span> <img src="../sources/img/2gak.png" class="ms-1"> 
+                                    <input type="radio" name="gak" value="2" class="charPublic-checkbox twogak-radio"><span class="checkbox-img"></span> <img src="/sources/img/2gak.png" class="ms-1"> 
                                 </label>
                             </div>
                             
@@ -109,8 +112,8 @@
             <div class="form-status">
                 <h5>편성 상태</h5>
                 <p class="form-status-txt">편성 공유</p>
-                <label>공개 <input type="radio" name="access" value="public" id=""></label>
-                <label>비공개 <input type="radio" name="access" value="private" id="" checked></label>
+                <label>공개 <input type="radio" name="access" value="public" <% if(data.form_access_status && data.form_access_status.eng_name == 'public') {%> checked <% }%> id=""></label>
+                <label>비공개 <input type="radio" name="access" value="private" id="" <% if(!data.form_access_status || data.form_access_status.eng_name != 'public') {%> checked <% }%>></label>
                 <p class="msg">현재 편성이 마이페이지에 저장됩니다. 편성을 저장한 현재 작성자가 아니면 아무도 편성을 볼 수 없습니다.</p>
             </div>
             
@@ -156,6 +159,7 @@
             <!-- 상단바 -->
             <div class="form-title ">
                 <dix class="form-status ">
+                    <% if(!data.form_status || data.form_status.status_name == "편성 공유") {%>
                     <button type="button " class="btn-blue color-white border-0 d-flex align-items-center justify-content-center">
                         <i class="fa-solid fa-angle-down"></i><p>편성 공유</p>
                     </button>
@@ -163,7 +167,15 @@
                     <ul>
                         <li class="btn-yellow color-white">편성 요청</li>
                     </ul>
-                    
+                    <% } else{ %>
+                        <button type="button " class="btn-yellow color-white border-0 d-flex align-items-center justify-content-center">
+                            <i class="fa-solid fa-angle-down"></i><p>편성 요청</p>
+                        </button>
+
+                        <ul>
+                            <li class="btn-blue color-white">편성 공유</li>
+                        </ul>
+                    <% }  %>
                 </dix>
 
                 <div class="content-name flex-fill">
@@ -249,7 +261,7 @@
                     <div class="left-box-bottom d-flex justify-content-start align-items-center">
                         <label class="charSetting-ele d-flex ">
                             <span class="me-2">나의 영웅들 공개하기</span>
-                            <input type="checkbox" name="character_public" checked class="charPublic-checkbox">
+                            <input type="checkbox" name="character_public" <% if(data.myhero_access == 0){%> <% }else{%> checked <% }%>class="charPublic-checkbox">
                             <span class="checkbox-img"></span>  
                         </label>
                         <div class="btn-shadow">
@@ -270,10 +282,16 @@
 
                     <!-- 좋아요 / 댓글 펼치기 -->
                     <div class="btns mg-10px ms-0 me-0 d-flex flex-fill justify-content-between">
+                        <% if(data.form_status){ %>
+                        <div class="form-btns btn-shadow d-flex justify-content-between w-100">
+                            <button class="save-btn w-100 btn-cut bottom-btn btn-yellow color-white">수정/게시 </button>
+                        </div>
+                        <% } else { %>
                         <div class="form-btns btn-shadow d-flex justify-content-between w-100">
                             <button class="load-btn btn-cut bottom-btn btn-blue color-white">불러오기 </button>
                             <button class="save-btn btn-cut bottom-btn btn-yellow color-white">저장/게시 </button>
                         </div>
+                        <% }  %>
                     </div>
                 </div>
 
@@ -592,7 +610,7 @@
             if(spot.find(".empty").length>0){
                 spot.prepend("<div class='spot-selected-empty'></div>");
             }else {
-                spot.prepend('<img src="../sources/img/out_char.png" class="out">');
+                spot.prepend('<img src="/sources/img/out_char.png" class="out">');
                 spot.prepend("<div class='spot-selected-full'></div>");                   
             }
 
@@ -670,7 +688,7 @@
             
             var newForm = $('<form></form>');
             newForm.attr("method","post");
-            newForm.attr("action","/formmake/postform");
+            newForm.attr("action",`${window.location.pathname}/postform`);
             
             
             // 편성 상태 (공유,요청 / 공개,비공개)

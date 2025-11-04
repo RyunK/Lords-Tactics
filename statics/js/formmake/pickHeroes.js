@@ -88,7 +88,7 @@ function selectTargetForm(t){
     if(t.find(".empty").length>0){
         t.prepend("<div class='spot-selected-empty'></div>");
     }else {
-        t.prepend('<img src="../sources/img/out_char.png" class="out">');
+        t.prepend('<img src="/sources/img/out_char.png" class="out">');
         t.prepend("<div class='spot-selected-full'></div>");                   
     }
 }

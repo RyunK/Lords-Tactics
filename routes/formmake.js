@@ -46,6 +46,74 @@ router.get('/', async(req, res) => {
 
 })
 
+router.get('/edit/:form_id', mustLoggedIn, async(req, res) => {
+
+    try{
+        // author_id 같은지 권한 확인
+        var sql = `select * from hero_forms where id = ?`
+        var [result, fields] = await(await connection).execute(sql, [req.params.form_id]);
+        if(result[0].user_id != req.user[0].id) throw new Error("편성을 수정할 권한이 없습니다.");
+
+        let contents_list = await getDatas.getContentsName(req, res, connection);
+        let hero_list = await getDatas.getHeroList(req, res, connection);
+
+        var sql = `select * from form_members
+                where form_id = ?`
+        var [form_heroes, fields] = await(await connection).execute(sql, [req.params.form_id]);
+        let form_herolist = form_heroes.map(function(val){ return val.hero_id });
+
+        var sql = `SELECT * FROM CONTENTS_NAME
+                WHERE id = (SELECT hf.CONTENTS_ID  FROM HERO_FORMS HF WHERE hf.id = ?)`;
+        var [now_content, fields] = await (await connection).execute(sql, [req.params.form_id]);
+
+        var having_heroes, fields, having_heroes_id;
+        if (req.isAuthenticated()) {
+            var sql = `SELECT * FROM HERO_SETTINGS
+                    WHERE USER_ID = ?`;
+            [having_heroes, fields] = await (await connection).execute(sql, [req.user[0].id? req.user[0].id : 0]);
+            having_heroes_id = having_heroes.map(function(e, i){
+                return e.hero_id;
+            })
+        }
+
+        var sql = `SELECT * FROM form_status
+                WHERE id = (SELECT hf.form_status_id  FROM HERO_FORMS HF WHERE hf.id = ?)`;
+        var [form_status, fields] = await (await connection).execute(sql, [req.params.form_id]);
+
+        var sql = `SELECT * FROM form_access_status
+                WHERE id = (SELECT hf.form_access_status_id  FROM HERO_FORMS HF WHERE hf.id = ?)`;
+        var [form_access_status, fields] = await (await connection).execute(sql, [req.params.form_id]);
+
+        var sql = `SELECT myhero_access, writer_memo FROM HERO_FORMS
+                WHERE id = ?`;
+        var [form, fields] = await (await connection).execute(sql, [req.params.form_id]);
+
+        
+        
+        let data = {
+                nickname: getDatas.loggedInNickname(req, res),
+                contents_list : contents_list,
+                hero_list : hero_list,
+                form_herolist : form_herolist,
+                now_content : now_content[0],
+                form_status : form_status[0],
+                form_access_status : form_access_status[0],
+                myhero_access : form[0].myhero_access,
+                writer_memo : form[0].writer_memo? form[0].writer_memo : "", 
+                having_heroes : having_heroes,
+                having_heroes_id : having_heroes_id,
+            }
+
+        res.render('form_making2.ejs', {data : data})
+    }catch(e){
+        console.log(e);
+        res.redirect(`/?error=${e.message}`)
+    }
+    
+
+})
+
+
 /**
  * {
   form_status: '편성 공유',
