@@ -125,7 +125,7 @@ module.exports = {
     */
    getFormInfoNMembers: async function(req, res, connection){
       // id로 inner join 싹 해서 form검색
-      var sql = `SELECT HF.ID, HF.WRITER_MEMO, HF.LAST_DATETIME, HF.VIEW, HF.SAVED_CNT, HF.USER_ID,
+      var sql = `SELECT HF.ID, HF.WRITER_MEMO, HF.LAST_DATETIME, HF.VIEW, HF.SAVED_CNT,
                CN.KOR_NAME as CONTENT_NAME  ,FS.STATUS_NAME, FAS.ENG_NAME AS ACCESS ,USER.NICKNAME FROM HERO_FORMS HF
                INNER JOIN CONTENTS_NAME CN ON HF.CONTENTS_ID = CN.ID
                INNER JOIN FORM_STATUS FS ON HF.FORM_STATUS_ID = FS.ID
@@ -144,5 +144,40 @@ module.exports = {
       var [members ,fields] = await (await connection).execute(sql, [req.params.id]);
 
       return [form_info, members];
+   },
+
+   /**
+    * form_id를 이용해서 댓글 및 답글들을 모두 select해서 반환
+    * @param {*} req 
+    * @param {*} res 
+    * @param {*} connection 
+    * @param {int} form_id 
+    * @returns 
+    */
+   getCommentsNReplys: async function(req, res, connection, form_id){
+      // 게시글 id로 comment 및 reply 검색
+      var sql = `SELECT FC.id id, fc.help_form_id , fc.comment_body, fc.last_datetime, (U.ID = ?) AS is_author, 
+               U.nickname, (U.ID = U2.ID) AS is_formauthor FROM FORM_COMMENTS FC 
+               INNER JOIN user U ON U.ID = FC.AUTHOR_ID 
+               INNER JOIN HERO_FORMS HF ON HF.ID = fc.FORM_ID
+               INNER JOIN user U2 ON u2.id = hf.USER_ID 
+               WHERE FC.FORM_ID = ?`
+      var [comments, fields] = await (await connection).execute(sql,  [req.user[0].id, form_id]);
+
+      var sql = `SELECT FR.id id, FR.comment_id, FR.reply_id , fc.help_form_id , FR.reply_body, FR.last_datetime, U.nickname, 
+            (U.ID = ?) AS is_author ,U2.NICKNAME AS reply_nickanme , (U.ID = U3.ID) AS is_formauthor
+            FROM FORM_REPLYS FR 
+            INNER JOIN user U ON U.ID = FR.AUTHOR_ID
+            INNER JOIN FORM_COMMENTS FC ON FC.ID = FR.COMMENT_ID 
+            INNER JOIN HERO_FORMS HF ON HF.ID = fc.FORM_ID
+            INNER JOIN user U3 ON u3.id = hf.USER_ID 
+            LEFT JOIN FORM_REPLYS FR2 ON FR.REPLY_ID = fr2.ID 
+            LEFT JOIN user U2 ON fr2.AUTHOR_ID = U2.ID  
+            WHERE FC.FORM_ID = ? 
+            ORDER BY comment_id ASC , FR.id ASC`
+      var [replys, fields] = await (await connection).execute(sql,  [ req.user[0].id, form_id]);
+
+
+      return [comments, replys];
    }
 }

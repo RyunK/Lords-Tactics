@@ -17,8 +17,8 @@
 
     <%- include('../nav_and_banner.ejs', {page: '', nickname: data.nickname, notice:'2025.08.01 신규 캐릭터 [물]라플라스 추가 완료'}) %> 
 
-    <div class="copy-toast toast-black">
-        공유 링크가 클립보드에 복사되었습니다.
+    <div class="toast-black">
+        
     </div>
 
     <!-- 왼쪽 리모콘(?) -->
@@ -271,72 +271,95 @@
         <!-- 댓글 -->
         <div class="comments-container shadow-basic mypage-form-detail-sizing bg-gray">
             <div class="comment-header btn-black color-white">
-                <span> 댓글 <span class="ms-2"><%= data.comments.length + data.replys.length %></span> </span><i class="fa-solid fa-chevron-up"></i>
+                <span> 댓글 <span class="length ms-2"><%= data.comments.length + data.replys.length %></span> </span><i class="fa-solid fa-chevron-up"></i>
             </div>
             <div class="comment-body-container">
                 <div class="comments blue-scroll">
-
+                    <% let cnt=0 %>
                     <% for(let i=0; i<data.comments.length; i++){ %>
                     <!-- 댓글 하나 -->
                     <div class="comment" data-commentid="<%=data.comments[i].id %>">
                         <div class="comment-author bg-basicdark color-white">
-                        <% if(data.comments[i].author_id == data.form_info[i].USER_ID) {%>
+                        <% if(data.comments[i].is_formauthor == 1) {%>
                             <span>작성자</span>
+                        <% }%>
+                        <% if(data.comments[i].nickname.includes("알 수 없음")){ %>
+                            <span><%=data.comments[i].nickname %></span>
+                        </div>
+                        <% } else { %>    
+                            <span class="color-purple"><%=data.comments[i].nickname %></span>
+                        </div>
                         <% } %>    
-                        <span class="color-purple"><%=data.comments[i].nickname %></span>
+
+                        <div class="comment-body w-100 d-flex">
+                            <p><%=data.comments[i].comment_body %></p>
                         </div>
-                        <p><%=data.comments[i].comment_body %></p>
-                        <div class="comment-bottom d-flex">
-                            <span class="date">
-                                <%=data.comments[i].last_datetime.getFullYear()+"-"+("0"+(data.comments[i].last_datetime.getMonth()+1)).slice(-2) + "-" + ("0"+(data.comments[i].last_datetime.getDate())).slice(-2) + " " +  ("0"+(data.comments[i].last_datetime.getHours())).slice(-2) + ":" +  ("0"+(data.comments[i].last_datetime.getMinutes())).slice(-2) %>
-                            </span>
-                            <span class="reply-btn">답글쓰기</span>
-                            <% if(data.comments[i].author_id == data.now_user) {%>
-                                <div>
-                                    <span>수정</span>
-                                    <span class="color-red me-1">삭제</span>
-                                </div>
-                            <% } else {%> 
-                                <div >
-                                    <span class="color-red">신고</span>
-                                </div>
-                            <% } %> 
-                        </div>
-                    </div>
-                    <!-- 댓글 하나 끝 -->
-                    <% let cnt=0 %>
-                    <% while(cnt < data.replys.length && data.replys[cnt].comment_id == data.comments[i].id){ %>
-                        <!-- 답글 하나 -->
-                        <div class="reply" data-commentid="<%=data.replys[cnt].id %>">
-                            <div class="comment-author bg-basicdark color-white">
-                                <% if(data.replys[cnt].author_id == data.form_info[i].USER_ID) {%>
-                                    <span>작성자</span>
-                                <% } %> 
-                                <span class="color-purple"><%=data.replys[cnt].nickname %></span>
-                            </div>
-                            <p>
-                                <% if(data.replys[cnt].reply_id != 0){ %>
-                                    <span class="me-3 color-purple">@<%=data.replys[cnt].reply_nickanme %></span>
-                                <% } %>
-                                <%=data.replys[cnt].reply_body %>
-                            </p>
+
+                        <% if(!data.comments[i].nickname.includes("알 수 없음")){ %>
                             <div class="comment-bottom d-flex">
                                 <span class="date">
-                                    <%=data.replys[cnt].last_datetime.getFullYear()+"-"+("0"+(data.replys[cnt].last_datetime.getMonth()+1)).slice(-2) + "-" + ("0"+(data.replys[cnt].last_datetime.getDate())).slice(-2) + " " +  ("0"+(data.replys[cnt].last_datetime.getHours())).slice(-2) + ":" +  ("0"+(data.replys[cnt].last_datetime.getMinutes())).slice(-2) %>
+                                    <%=data.comments[i].last_datetime.getFullYear()+"-"+("0"+(data.comments[i].last_datetime.getMonth()+1)).slice(-2) + "-" + ("0"+(data.comments[i].last_datetime.getDate())).slice(-2) + " " +  ("0"+(data.comments[i].last_datetime.getHours())).slice(-2) + ":" +  ("0"+(data.comments[i].last_datetime.getMinutes())).slice(-2) %>
                                 </span>
-                                
                                 <span class="reply-btn">답글쓰기</span>
-                                <% if(data.replys[cnt].author_id == data.now_user) {%>
-                                    <div>
-                                        <span>수정</span>
-                                        <span class="color-red me-1">삭제</span>
-                                    </div>
+                                <% if(data.comments[i].is_author == 1) {%>
+                                <div>
+                                    <span class="edit">수정</span>
+                                    <span class="delete color-red ms-1">삭제</span>
+                                </div>
                                 <% } else {%> 
                                     <div >
                                         <span class="color-red">신고</span>
                                     </div>
                                 <% } %> 
                             </div>
+                        <% } %>    
+  
+                        
+                    </div>
+                    <!-- 댓글 하나 끝 -->
+                    <% while(cnt < data.replys.length && data.replys[cnt].comment_id == data.comments[i].id){ %>
+                        <!-- 답글 하나 -->
+                        <div class="reply" data-commentid="<%=data.replys[cnt].id %>">
+                            <div class="comment-author bg-basicdark color-white">
+                            <% if(data.replys[cnt].is_formauthor == 1) {%>
+                                <span>작성자</span>
+                            <% } %> 
+                            <% if(data.replys[cnt].nickname.includes("알 수 없음")){ %>
+                                <span><%=data.replys[cnt].nickname %></span>
+                            </div>
+                            <% } else { %>    
+                                <span class="color-purple"><%=data.replys[cnt].nickname %></span>
+                            </div>
+                            <% } %>    
+                            <div class="comment-body w-100 d-flex align-items-baseline">
+                                <% if(data.replys[cnt].reply_id){ %>
+                                    <span class="me-3 color-purple">@<%=data.replys[cnt].reply_nickanme %></span>
+                                <% } %>
+                                <p><%=data.replys[cnt].reply_body %> </p>
+                                
+                            </div>
+                            
+                            <% if(!data.replys[cnt].nickname.includes("알 수 없음")){ %>
+                                <div class="comment-bottom d-flex">
+                                    <span class="date">
+                                        <%=data.replys[cnt].last_datetime.getFullYear()+"-"+("0"+(data.replys[cnt].last_datetime.getMonth()+1)).slice(-2) + "-" + ("0"+(data.replys[cnt].last_datetime.getDate())).slice(-2) + " " +  ("0"+(data.replys[cnt].last_datetime.getHours())).slice(-2) + ":" +  ("0"+(data.replys[cnt].last_datetime.getMinutes())).slice(-2) %>
+                                    </span>
+                                    
+                                    <span class="reply-btn">답글쓰기</span>
+                                    <% if(data.replys[cnt].is_author == 1) {%>
+                                    <div>
+                                        <span class="edit">수정</span>
+                                        <span class="delete color-red ms-1">삭제</span>
+                                    </div>
+                                    <% } else {%> 
+                                        <div >
+                                            <span class="report color-red">신고</span>
+                                        </div>
+                                    <% } %> 
+                                </div>
+                            <% } %>    
+
+                            
                         </div>
                         <!-- 답글 하나 끝 -->
                         <% cnt += 1 %>
@@ -475,7 +498,7 @@
             var success = document.execCommand("copy");
             urlinput.remove();
             if(success){
-                $('.copy-toast').fadeIn(600).delay(1500).fadeOut(600);
+                $('.toast-black').text("공유 링크가 클립보드에 복사되었습니다.").fadeIn(600).delay(1500).fadeOut(600);
             }
         })
 
@@ -487,6 +510,7 @@
                 $(".write-comment input[name='reply_id']").val($(this).parent().parent().data("commentid"));
                 $(".write-comment input[name='kind']").val('comment');
                 $(this).text("답글취소").addClass("color-red");
+                $(".write-comment textarea").focus();
             }else if($(this).text() == "답글쓰기" && $(this).parent().parent().hasClass("reply")){
                 $(".write-comment").prepend(`<div class="comment-author  bg-basicdark color-white">
                                             <span class="color-purple">${$(this).parent().siblings(".comment-author").children(".color-purple").text()}</span> <span>답글</span> 
@@ -494,6 +518,7 @@
                 $(".write-comment input[name='reply_id']").val($(this).parent().parent().data("commentid"));
                 $(".write-comment input[name='kind']").val('reply');
                 $(this).text("답글취소").addClass("color-red");
+                $(".write-comment textarea").focus();
             }else{
                 $(".write-comment .comment-author").remove();
                 $(".write-comment input[name='reply_id']").val('0');
@@ -502,6 +527,135 @@
             }
         })
 
+        class Comments{
+            constructor(){
+                this._comments = null;
+                this._replys=null;
+            }
+
+            set Comments(comments){
+                if(!comments) return false;
+                this._comments = comments;
+            }
+            
+            set Replys(replys){
+                if(!replys) return false;
+                this._replys = replys;
+            }
+
+            toString(){
+                // console.log(this._comments)
+                // console.log(this._replys)
+                let str = ''
+                let cnt = 0;
+                for(let i=0; i<this._comments.length; i++){
+                    var date = new Date(this._comments[i].last_datetime);
+                    date = date.getFullYear()+"-"+("0"+(date.getMonth()+1)).slice(-2) + "-" + ("0"+(date.getDate())).slice(-2) + " " 
+                    +  ("0"+(date.getHours())).slice(-2) + ":" +  ("0"+(date.getMinutes())).slice(-2)
+                    str += `<div class="comment" data-commentid="${this._comments[i].id}">
+                                <div class="comment-author bg-basicdark color-white">`
+                    if(this._comments[i].is_formauthor == 1) str += `<span>작성자</span>`
+                    if(this._comments[i].nickname.includes("알 수 없음")){
+                        str += `
+                            <span class="color-purple">${this._comments[i].nickname}</span>
+                        </div>
+                        <div class="comment-body w-100 d-flex">
+
+                            <p>${this._comments[i].comment_body}</p>
+                        </div>
+                        </div>
+                        `
+                    } else{
+                        str += `
+                        <span class="color-purple">${this._comments[i].nickname}</span>
+                            </div>
+                            <div class="comment-body w-100 d-flex">
+
+                                <p>${this._comments[i].comment_body}</p>
+                            </div>
+                            <div class="comment-bottom d-flex">
+                                <span class="date">
+                                    ${date}
+                                </span>
+                                <span class="reply-btn">답글쓰기</span>
+                        `
+                        if(this._comments[i].is_author == 1){
+                            str += `<div>
+                                        <span class="edit">수정</span>
+                                        <span class="delete color-red me-1">삭제</span>
+                                    </div>`
+                        } else {
+                            str += `<div >
+                                        <span class="color-red">신고</span>
+                                    </div>`
+                        }
+                        str += `</div>
+                        </div>`
+                    }
+                    
+
+                    while(cnt < this._replys.length && this._replys[cnt].comment_id == this._comments[i].id){
+                        var date = new Date(this._replys[cnt].last_datetime);
+                        date = date.getFullYear()+"-"+("0"+(date.getMonth()+1)).slice(-2) + "-" + ("0"+(date.getDate())).slice(-2) + " " 
+                        +  ("0"+(date.getHours())).slice(-2) + ":" +  ("0"+(date.getMinutes())).slice(-2)
+                        str += `<div class="reply" data-commentid="${this._replys[cnt].id }">
+                            <div class="comment-author bg-basicdark color-white">`
+                        if(this._replys[cnt].is_formauthor == 1) str += `<span>작성자</span>`;
+                        if(this._replys[cnt].nickname.includes("알 수 없음")){
+                            str += `  <span>${this._replys[cnt].nickname }</span>
+                            </div>
+                            <div class="comment-body w-100 d-flex align-items-baseline">`
+                            if(this._replys[cnt].reply_id ) str += `<span class="me-3 color-purple">@${this._replys[cnt].reply_nickanme }</span>`
+                            str += `<p>${this._replys[cnt].reply_body }</p>
+                            </div>
+                            </div>`
+                        } else{
+                             str += `  <span class="color-purple">${this._replys[cnt].nickname }</span>
+                            </div>
+                            <div class="comment-body w-100 d-flex align-items-baseline">`
+                                if(this._replys[cnt].reply_id) str += `<span class="me-3 color-purple">@${this._replys[cnt].reply_nickanme }</span>`
+                                str += `<p>${this._replys[cnt].reply_body }</p>
+                            </div>
+                            <div class="comment-bottom d-flex">
+                                <span class="date">
+                                    ${date}
+                                </span>
+                                <span class="reply-btn">답글쓰기</span>`
+                                if(this._replys[cnt].is_author == 1){
+                                    str += `<div>
+                                                <span class="edit">수정</span>
+                                                <span class="delete color-red me-1">삭제</span>
+                                            </div>`
+                                } else{
+                                    str += `<div >
+                                                <span class="report color-red">신고</span>
+                                            </div>`
+                                }
+                                str += `</div>
+                                </div>`
+                                }
+                       
+                        cnt += 1;
+                    }
+
+                }
+                return str;
+            }
+         
+        }
+
+        function commentsReload(comments, replys){
+            let comment_container = $(".comment-body-container .comments");
+            comment_container.empty();
+            let comment_object = new Comments;
+            comment_object.Comments = comments;
+            comment_object.Replys = replys;
+            let comment_html = comment_object.toString();
+            comment_container.html(comment_html);
+
+            $(".comment-header .length").text(comments.length + replys.length);
+        }
+
         $(document).ready(function(){
             $(".write-comment").on("submit", function(e){
                 e.preventDefault();
@@ -509,20 +663,26 @@
                 const query = $('.write-comment').serializeArray();
 
                 $.ajax({
-                        url: '/forum/submit/comment', 
+                        url: `/forum/submit/comment/${window.location.pathname.split("/").pop()}`, 
                         method: 'POST', 
                         contentType: 'application/json',
                         data: JSON.stringify({ 
                             reply_id : query[0].value,
                             kind : query[1].value,
                             comment : query[2].value,
-                            form_id : window.location.pathname.split("/").pop(),
                         }),
                         
                         // 요청 성공 
                         success: function(res) {
                             if(res.status.includes('2')){
                                 // 댓글 다시 출력
+                                commentsReload(res.data.comments, res.data.replys)
+                                $("textarea").val("");
+                                $(".write-comment .comment-author").remove();
+
+                                // hidden input value 초기화
+                                $(".write-comment input[name='reply_id']").val("0");
+                                $(".write-comment input[name='kind']").val("none");
                             } else{
                                 // DB 오류
                                 alert(res.message);
@@ -535,6 +695,99 @@
                             console.error('Error:', status, error);
                         }
                     })
+            })
+
+            $(document).on("click", ".comment-bottom .edit", function(e){
+                if($(this).text() == "수정"){
+                    let txt = $(this).parent().parent().siblings(".comment-body").children('p').text();
+                    $(this).parent().parent().siblings(".comment-body").children('p').css("display", "none");
+                    $(this).parent().parent().siblings(".comment-body").append(`
+                    <textarea  name="comment" class="bg-white flex-fill blue-scroll" rows="1" >${txt}</textarea>
+                    <button type="button" class="update-btn btn-cut btn-blue color-white border-0">수정</button>
+                    `)
+                    $(".comment-body textarea").focus();
+                    $(this).text("수정취소").addClass("color-red").removeClass("color-black");
+                } else{
+                    let txt = $(this).parent().parent().siblings(".comment-body").children('textarea').val();
+                    $(this).parent().parent().siblings(".comment-body").children('textarea').remove();
+                    $(this).parent().parent().siblings(".comment-body").children('button').remove();
+                    $(this).parent().parent().siblings(".comment-body").children('p').css("display", "block");
+                    $(this).text("수정").addClass("color-black").removeClass("color-red");
+                }
+
+            })
+
+            $(document).on("click", ".comment-body .update-btn", function(e){
+                e.preventDefault();
+                
+                $.ajax({
+                        url: `/forum/edit/comment/${window.location.pathname.split("/").pop()}`, 
+                        method: 'POST', 
+                        contentType: 'application/json',
+                        data: JSON.stringify({ 
+                            id : $(this).parent().parent().data("commentid"),
+                            kind : $(this).parent().parent().attr("class"),
+                            comment : $(this).siblings("textarea").val(),
+                        }),
+                        
+                        // 요청 성공 
+                        success: function(res) {
+                            if(res.status.includes('2')){
+                                // 댓글 다시 출력
+                                commentsReload(res.data.comments, res.data.replys)
+                                let txt = $(this).parent().parent().siblings(".comment-body").children('textarea').val();
+                                $(this).siblings('p').css("display", "block");
+                                $(this).siblings('textarea').remove();
+                                $(".comment-bottom .edit").text("수정").addClass("color-black").removeClass("color-red");
+                                $(this).remove();
+                                $('.toast-black').text("댓글 수정이 완료되었습니다.").fadeIn(600).delay(1500).fadeOut(600);
+                            } else{
+                                // DB 오류
+                                alert(res.message);
+                            }
+                        },                        
+                        
+                        error: function(xhr, status, error) {
+                            // 오류 
+                            alert(`오류 발생! 다시 시도하세요. ${status} - ${error}`);
+                            console.error('Error:', status, error);
+                        }
+                    })
+            })
+
+            $(document).on("click", ".comment-bottom .delete", function(e){
+                var ans = confirm("정말 삭제하시겠습니까? 삭제한 댓글은 되돌릴 수 없습니다.");
+
+                if(ans){
+                    $.ajax({
+                        url: `/forum/delete/comment/${window.location.pathname.split("/").pop()}`, 
+                        method: 'POST', 
+                        contentType: 'application/json',
+                        data: JSON.stringify({ 
+                            id : $(this).parent().parent().parent().data("commentid"),
+                            kind : $(this).parent().parent().parent().attr("class"),
+                        }),
+                        
+                        // 요청 성공 
+                        success: function(res) {
+                            if(res.status.includes('2')){
+                                // 댓글 다시 출력
+                                commentsReload(res.data.comments, res.data.replys)
+                                $('.toast-black').text("댓글 삭제가 완료되었습니다.").fadeIn(600).delay(1500).fadeOut(600);
+                            } else{
+                                // DB 오류
+                                alert(res.message);
+                            }
+                        },                        
+                        
+                        error: function(xhr, status, error) {
+                            // 오류 
+                            alert(`오류 발생! 다시 시도하세요. ${status} - ${error}`);
+                            console.error('Error:', status, error);
+                        }
+                    })
+                }
+
             })
         })
 

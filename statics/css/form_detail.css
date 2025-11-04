@@ -156,6 +156,7 @@
     padding: 8px 0;
 }
 
+
 .comments-container .comments > .comment {
     margin-top: 30px;
     margin-bottom: 20px;
@@ -263,6 +264,25 @@
 
     max-height: 150px;
 }
+
+.comments-container .comment-body textarea[name="comment"]{
+    font-weight: 400;
+    color : #3f3f50;
+    padding: 8px 10px;
+    height: auto;
+}
+
+.comments-container .comment-body textarea[name="comment"]:focus{
+    /* width: 100%; */
+    outline:  auto;
+    
+}
+
+.comments-container .update-btn{
+    padding: 12px 35px;
+    margin-left: 8px;
+}
+
 
 .comments-container .write-comment button[type="submit"]{
     padding: 12px 35px;

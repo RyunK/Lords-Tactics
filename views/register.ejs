@@ -55,7 +55,7 @@
                     <h6 class="fw-bold text-start">닉네임</h6>
                     <p class="color-red fault-msg text-end"></p>
                 </div>
-                <input type="text" data-submitable="false" name="nickname" autocomplete="name" class="input-box mt-1 mb-3" placeholder="닉네임 입력 (2~8자)">
+                <input type="text" data-submitable="false" name="nickname" autocomplete="name" class="input-box mt-1 mb-3" placeholder="닉네임 입력 (2~8자), 띄어쓰기 불가">
             </div>
 
             <div class="email-input">
@@ -244,6 +244,11 @@
             if($(this).val().length < 2 || $(this).val().length > 8 ){
                 // console.log($(this).val().length)
                 msg.text("닉네임은 2자 이상 8자 이하여야 합니다.");
+                msg.removeClass('color-black');
+                msg.addClass('color-red');
+                $(this).data("submitable", "false");
+            } else if($(this).val().indexOf(" ") > -1){
+                msg.text("닉네임에 공백이 포함될 수 없습니다.");
                 msg.removeClass('color-black');
                 msg.addClass('color-red');
                 $(this).data("submitable", "false");

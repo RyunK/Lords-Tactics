@@ -207,25 +207,11 @@ router.get('/formsave/detail/:id', mustLoggedIn, async(req, res) => {
 
 
     // 게시글 id로 comment 및 reply 검색
-    var sql = `SELECT FC.id id, fc.help_form_id , fc.comment_body, fc.last_datetime,FC.author_id, U.nickname FROM FORM_COMMENTS FC 
-            INNER JOIN user U ON U.ID = FC.AUTHOR_ID 
-            WHERE FC.FORM_ID = ?`
-    var [comments, fields] = await (await connection).execute(sql,  [req.params.id]);
+    var [comments, replys] = await getDatas.getCommentsNReplys(req, res, connection, req.params.id)
 
-    var sql = `SELECT FR.id id, FR.comment_id, FR.reply_id , fc.help_form_id , FR.reply_body, FR.last_datetime, FR.author_id, U.nickname, U2.NICKNAME AS reply_nickanme 
-            FROM FORM_REPLYS FR 
-            INNER JOIN user U ON U.ID = FR.AUTHOR_ID
-            INNER JOIN FORM_COMMENTS FC ON FC.ID = FR.COMMENT_ID 
-            LEFT JOIN FORM_REPLYS FR2 ON FR.REPLY_ID = fr2.ID 
-            LEFT JOIN user U2 ON fr2.AUTHOR_ID = U2.ID  
-            WHERE FC.FORM_ID = ?
-            ORDER BY comment_id ASC , FR.LAST_DATETIME ASC`
-    var [replys, fields] = await (await connection).execute(sql,  [req.params.id]);
-
-    console.log( req.user[0].id)
+    // console.log( req.user[0].id)
 
     let data = {
-        now_user : req.user[0].id,
         nickname: getDatas.loggedInNickname(req, res),
         content: q_content,
         now_formstatus : now_formstatus,

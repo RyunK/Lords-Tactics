@@ -87,7 +87,7 @@ router.get('/:forumtab', async(req, res) => {
 
 })
 
-router.post('/submit/comment', mustLoggedIn, async (req, res) => {
+router.post('/submit/comment/:form_id', mustLoggedIn, async (req, res) => {
 
     try{
 
@@ -103,13 +103,13 @@ router.post('/submit/comment', mustLoggedIn, async (req, res) => {
         if(req.body.kind == "none"){
             var sql = `INSERT INTO FORM_COMMENTS (FORM_ID , AUTHOR_ID , COMMENT_BODY, LAST_DATETIME)
                     VALUES (?, ?, ?, ?)`;
-            var [rst, fields] = await (await connection).execute(sql, [req.body.form_id, req.user[0].id, req.body.comment, now_date]);
+            var [rst, fields] = await (await connection).execute(sql, [req.params.form_id, req.user[0].id, req.body.comment, now_date]);
         } 
-        // kind == commnet 면 reply 테이블에 reply_id = 0으로 저장
+        // kind == commnet 면 reply 테이블에 reply_id = null으로 저장
         else if(req.body.kind == "comment"){
-            var sql = `INSERT INTO FORM_REPLYS (COMMENT_ID , REPLY_ID , AUTHOR_ID, REPLY_BODY, LAST_DATETIME)
+            var sql = `INSERT INTO FORM_REPLYS (COMMENT_ID , REPLY_ID ,AUTHOR_ID, REPLY_BODY, LAST_DATETIME)
                     VALUES (?, ?, ?, ?, ?)`;
-            var [rst, fields] = await (await connection).execute(sql, [req.body.reply_id, 0, req.user[0].id, req.body.comment, now_date]);
+            var [rst, fields] = await (await connection).execute(sql, [req.body.reply_id, null,req.user[0].id, req.body.comment, now_date]);
         }
         // kind == reply 면 reply 테이블에 reply_id에 id 넣어서 저장
         else if(req.body.kind == "reply"){
@@ -124,12 +124,14 @@ router.post('/submit/comment', mustLoggedIn, async (req, res) => {
         // kind == form 이면 comment 테이블에 help_form_id에 form id 넣어서 저장 > 근데 이건 여기서 안하게 될듯
         
 
-
         // comment 및 reply 다시 select 해서 반환
+        var [comments, replys] = await getDatas.getCommentsNReplys(req, res, connection, req.params.form_id);
 
         let result = {
             status: '200',
             data : {
+                comments : comments,
+                replys : replys,
             }
         }
         res.json(result)
@@ -142,5 +144,168 @@ router.post('/submit/comment', mustLoggedIn, async (req, res) => {
     }
     
 })
+
+router.post('/edit/comment/:form_id', mustLoggedIn, async (req, res) => {
+
+    try{
+
+        if(!req.body.comment || req.body.comment.length > 1000){
+            throw new Error("댓글의 길이는 1자 이상 1000자 이하여야 합니다.");
+        }
+
+        var sql;
+        if(req.body.kind == "comment")
+            sql = `SELECT * FROM FORM_COMMENTS FC
+                WHERE id = ?`
+        else
+            sql = `SELECT * FROM FORM_REPLYS FR
+                INNER JOIN FORM_COMMENTS FC ON FC.ID = FR.COMMENT_ID
+                WHERE FR.id = ?`
+        var [rst, fields] = await(await connection).execute(sql, [req.body.id]);
+        if(rst[0].form_id != req.params.form_id || rst[0].author_id != req.user[0].id){
+            throw new Error("댓글을 수정할 권한이 없습니다.");
+        }
+
+        let now_date = new Date();
+        now_date = now_date.getFullYear()+"-"+("0"+(now_date.getMonth()+1)).slice(-2) + 
+        "-" + ("0"+(now_date.getDate())).slice(-2) + " " + ("0"+(now_date.getHours())).slice(-2) + ":" +  ("0"+(now_date.getMinutes())).slice(-2) 
+
+        // kind == comment 면 comment 테이블에서 id 찾아서 내용 업데이트
+        if(req.body.kind == "comment"){
+            var sql = `UPDATE FORM_COMMENTS 
+                    SET COMMENT_BODY = ?, LAST_DATETIME = ?
+                    WHERE ID = ?`
+            var [rst, fields] = await(await connection).execute(sql, [req.body.comment , now_date ,req.body.id]);
+        } 
+        // kind == reply면 reply 테이블에서 id 찾아서 내용 업데이트
+        else{
+            var sql = `UPDATE FORM_REPLYS 
+                    SET REPLY_BODY = ?, LAST_DATETIME = ?
+                    WHERE ID = ?`
+            var [rst, fields] = await(await connection).execute(sql, [req.body.comment , now_date ,req.body.id]);
+        }
+
+        
+
+        // comment 및 reply 다시 select 해서 반환
+        var [comments, replys] = await getDatas.getCommentsNReplys(req, res, connection, req.params.form_id);
+
+        let result = {
+            status: '200',
+            data : {
+                comments : comments,
+                replys : replys,
+            }
+        }
+        res.json(result)
+    } catch(e){
+        console.log(e)
+        res.json({
+          status : '500',
+          message: "오류가 발생했습니다. 다시 시도하세요."
+        });
+    }
+    
+})
+
+router.post('/delete/comment/:form_id', mustLoggedIn, async (req, res) => {
+
+    try{
+        var sql;
+        if(req.body.kind == "comment")
+            sql = `SELECT * FROM FORM_COMMENTS FC
+                WHERE id = ?`
+        else
+            sql = `SELECT fc.form_id, fr.author_id FROM FORM_REPLYS FR
+                INNER JOIN FORM_COMMENTS FC ON FC.ID = FR.COMMENT_ID
+                WHERE FR.id = ?`
+        var [rst, fields] = await(await connection).execute(sql, [req.body.id]);
+        if(rst[0].form_id != req.params.form_id || rst[0].author_id != req.user[0].id){
+            throw new Error("댓글을 삭제할 권한이 없습니다.");
+        }
+
+        // kind == comment 면 comment_id 컬럼 중에서 찾아보기 
+        let finds =[]
+        if(req.body.kind == "comment"){
+            var sql = `SELECT SUM(FR.AUTHOR_ID ) AS s FROM FORM_REPLYS FR
+                WHERE comment_id = ?`;
+            [finds, fields] = await(await connection).execute(sql, [req.body.id]);
+        } 
+        // kind == reply면 reply_id 컬럼 중에서 찾아보기
+        else{
+            var sql = `SELECT SUM(FR.AUTHOR_ID ) AS s FROM FORM_REPLYS FR
+                WHERE reply_id = ?`;
+            [finds, fields] = await(await connection).execute(sql, [req.body.id]);
+        }
+
+        // 답댓이 있으면 유저 id 0, 내용 "삭제된 댓글입니다." 로 변경
+        if(finds[0].s > 0 && req.body.kind == "comment"){
+            var sql = `UPDATE FORM_COMMENTS 
+                    SET COMMENT_BODY = "삭제된 댓글입니다.", AUTHOR_ID = 0
+                    WHERE ID = ?`;
+            [rst, fields] = await(await connection).execute(sql, [req.body.id]);
+        }else if(finds[0].s > 0 && req.body.kind == "reply"){
+            var sql = `UPDATE FORM_REPLYS 
+                    SET REPLY_BODY = "삭제된 댓글입니다.", AUTHOR_ID = 0
+                    WHERE ID = ?`;
+            [rst, fields] = await(await connection).execute(sql, [req.body.id]);
+        }
+        // 답댓이 없으면(답글들의 author_id가 전부 0이면) 답댓까지 전부 레코드 삭제 + 내가 참조하고 있던 애도 이미 삭제됐으면 같이 삭제
+        else if(req.body.kind == "comment"){
+            var sql = `DELETE FROM FORM_COMMENTS FC
+                    WHERE FC.ID = ?`;
+            [rst, fields] = await(await connection).execute(sql, [req.body.id]);
+        } else{ // 내가 참조하고 있던 애를 참조하고 있으며 살아있는 애가 없는지 먼저 확인
+            var sql = `SELECT comment_id, reply_id
+                    FROM FORM_REPLYS
+                    WHERE (comment_id = (
+                        SELECT comment_id
+                        FROM FORM_REPLYS
+                        WHERE id = ?
+                    ) OR
+                    REPLY_ID = (
+                        SELECT reply_id
+                        FROM FORM_REPLYS
+                        WHERE id = ?
+                    )) AND NOT id = ? AND NOT AUTHOR_ID = 0`
+            var [ref, fields] = await(await connection).execute(sql, [req.body.id, req.body.id, req.body.id]);
+            if(ref.length > 0){
+                sql = `DELETE FROM FORM_REPLYS FR
+                    WHERE FR.ID = ?`;
+            }else{
+                sql = `DELETE  FC, FR, FR2 FROM FORM_REPLYS FR
+                    LEFT JOIN FORM_REPLYS  FR2 ON FR.REPLY_ID = FR2.ID AND fr2.AUTHOR_ID = 0
+                    LEFT JOIN FORM_COMMENTS  FC ON FR.COMMENT_ID = FC.ID AND fc.AUTHOR_ID = 0
+                    WHERE FR.ID = ?`;
+            }
+            
+            
+            [rst, fields] = await(await connection).execute(sql, [req.body.id]);
+        }
+        
+
+        // comment 및 reply 다시 select 해서 반환
+        var [comments, replys] = await getDatas.getCommentsNReplys(req, res, connection, req.params.form_id);
+
+        let result = {
+            status: '200',
+            data : {
+                comments : comments,
+                replys : replys,
+            }
+        }
+        res.json(result)
+    } catch(e){
+        console.log(e)
+        res.json({
+          status : '500',
+          message: "오류가 발생했습니다. 다시 시도하세요."
+        });
+    }
+    
+})
+
+
+
 
 module.exports=router;
