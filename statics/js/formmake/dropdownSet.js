@@ -26,7 +26,7 @@ function dropdownIconToggle(btn){
 function setContentQueryStringParam(value){
     const url = new URL(window.location.href);
     url.searchParams.set("content", value);
-    window.history.pushState(null, '', url.toString());
+    window.history.replaceState(null, '', url.toString());
 }
 
 $('.form-status button').on('click', function(){

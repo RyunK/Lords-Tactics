@@ -534,7 +534,7 @@
                 for(let i=0; i<this.heroes_arr.length; i++){
                     url.searchParams.append("hero", this.heroes_arr[i]);
                 }
-                window.history.pushState(null, '', url.toString())
+                window.history.replaceState(null, '', url.toString())
             }
             
         }
@@ -739,7 +739,7 @@
             // 주소창에 업데이트하고
             const url = new URL(window.location.href);
             url.searchParams.set("writer_memo", content);
-            window.history.pushState(null, '', url.toString());
+            window.history.replaceState(null, '', url.toString());
 
             // 글자수 세기
             if (content.length == 0 || content == '') {

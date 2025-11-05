@@ -1,0 +1,92 @@
+<!-- 댓글 및 답글 출력 -->
+
+<% let cnt=0 %>
+<% for(let i=0; i<data.comments.length; i++){ %>
+<!-- 댓글 하나 -->
+<div class="comment" data-commentid="<%=data.comments[i].id %>">
+    <div class="comment-author bg-basicdark color-white">
+    <% if(data.comments[i].is_formauthor == 1) {%>
+        <span>작성자</span>
+    <% }%>
+    <% if(data.comments[i].nickname.includes("알 수 없음")){ %>
+        <span><%=data.comments[i].nickname %></span>
+    </div>
+    <% } else { %>    
+        <span class="color-purple"><%=data.comments[i].nickname %></span>
+    </div>
+    <% } %>    
+
+    <div class="comment-body w-100 d-flex">
+        <p><%=data.comments[i].comment_body %></p>
+    </div>
+
+    <% if(!data.comments[i].nickname.includes("알 수 없음")){ %>
+        <div class="comment-bottom d-flex">
+            <span class="date">
+                <%=data.comments[i].last_datetime.getFullYear()+"-"+("0"+(data.comments[i].last_datetime.getMonth()+1)).slice(-2) + "-" + ("0"+(data.comments[i].last_datetime.getDate())).slice(-2) + " " +  ("0"+(data.comments[i].last_datetime.getHours())).slice(-2) + ":" +  ("0"+(data.comments[i].last_datetime.getMinutes())).slice(-2) %>
+            </span>
+            <span class="reply-btn">답글쓰기</span>
+            <% if(data.comments[i].is_author == 1) {%>
+            <div>
+                <span class="edit">수정</span>
+                <span class="delete color-red ms-1">삭제</span>
+            </div>
+            <% } else {%> 
+                <div >
+                    <span class="color-red">신고</span>
+                </div>
+            <% } %> 
+        </div>
+    <% } %>    
+
+    
+</div>
+<!-- 댓글 하나 끝 -->
+<% while(cnt < data.replys.length && data.replys[cnt].comment_id == data.comments[i].id){ %>
+    <!-- 답글 하나 -->
+    <div class="reply" data-commentid="<%=data.replys[cnt].id %>">
+        <div class="comment-author bg-basicdark color-white">
+        <% if(data.replys[cnt].is_formauthor == 1) {%>
+            <span>작성자</span>
+        <% } %> 
+        <% if(data.replys[cnt].nickname.includes("알 수 없음")){ %>
+            <span><%=data.replys[cnt].nickname %></span>
+        </div>
+        <% } else { %>    
+            <span class="color-purple"><%=data.replys[cnt].nickname %></span>
+        </div>
+        <% } %>    
+        <div class="comment-body w-100 d-flex align-items-baseline">
+            <% if(data.replys[cnt].reply_id){ %>
+                <span class="me-3 color-purple">@<%=data.replys[cnt].reply_nickanme %></span>
+            <% } %>
+            <p><%=data.replys[cnt].reply_body %> </p>
+            
+        </div>
+        
+        <% if(!data.replys[cnt].nickname.includes("알 수 없음")){ %>
+            <div class="comment-bottom d-flex">
+                <span class="date">
+                    <%=data.replys[cnt].last_datetime.getFullYear()+"-"+("0"+(data.replys[cnt].last_datetime.getMonth()+1)).slice(-2) + "-" + ("0"+(data.replys[cnt].last_datetime.getDate())).slice(-2) + " " +  ("0"+(data.replys[cnt].last_datetime.getHours())).slice(-2) + ":" +  ("0"+(data.replys[cnt].last_datetime.getMinutes())).slice(-2) %>
+                </span>
+                
+                <span class="reply-btn">답글쓰기</span>
+                <% if(data.replys[cnt].is_author == 1) {%>
+                <div>
+                    <span class="edit">수정</span>
+                    <span class="delete color-red ms-1">삭제</span>
+                </div>
+                <% } else {%> 
+                    <div >
+                        <span class="report color-red">신고</span>
+                    </div>
+                <% } %> 
+            </div>
+        <% } %>    
+
+        
+    </div>
+    <!-- 답글 하나 끝 -->
+    <% cnt += 1 %>
+<% } %>
+<% } %>

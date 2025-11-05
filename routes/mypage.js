@@ -86,6 +86,7 @@ router.get('/formsave', mustLoggedIn, async(req, res) => {
     
  
     let data = {
+        from: 'mypage',
         nickname: getDatas.loggedInNickname(req, res),
         form_status_list : form_status_list,
         contents_list : contents_list,
@@ -104,7 +105,7 @@ router.get('/formsave', mustLoggedIn, async(req, res) => {
 
 
 router.get('/formsave/detail/:id', mustLoggedIn, async(req, res) => {     
-    if(!req.query.n) redirect('/formsave');
+    // if(!req.query.n) res.redirect('/formsave');
 
 
     var sql = `SELECT * FROM CONTENTS_NAME
@@ -124,12 +125,14 @@ router.get('/formsave/detail/:id', mustLoggedIn, async(req, res) => {
     }
 
     // id로 form검색
-    let [form_info, this_members] = await getDatas.getFormInfoNMembers(req, res, connection);
+    let [form_info, this_members] = await getDatas.getFormInfoNMembers(req, res, connection); 
+
+    // console.log(this_members)
 
     // 쿼리로 앞뒤 레코드 검색 * 앞뒤는 아이디/status/content만 필요
     // where 절 생성
     var where = `HF.USER_ID = ? `;
-    let q_list = [req.user[0].id]
+    let q_list = [req.user[0].id, req.user[0].id]
 
     if(req.query.content && req.query.content!='all'){
         where += `AND CN.ENG_NAME = ? `;
@@ -166,7 +169,7 @@ router.get('/formsave/detail/:id', mustLoggedIn, async(req, res) => {
     var sql = `SELECT  T2.* 
             FROM (SELECT T.*, ROW_NUMBER() OVER(${order}) AS ORDER_NUM
                     FROM (
-                        SELECT HF.ID, HF.WRITER_MEMO, HF.LAST_DATETIME, HF.VIEW, HF.SAVED_CNT,
+                        SELECT HF.ID, HF.WRITER_MEMO, HF.LAST_DATETIME, HF.VIEW, HF.SAVED_CNT, hf.USER_ID = ? AS IS_WRITER,
                         FM.HERO_ID, CN.KOR_NAME as CONTENT_NAME, FS.STATUS_NAME, FAS.ENG_NAME AS ACCESS, USER.NICKNAME,
                             ROW_NUMBER() OVER (
                                 PARTITION BY HF.id 
@@ -181,13 +184,13 @@ router.get('/formsave/detail/:id', mustLoggedIn, async(req, res) => {
                         WHERE ${where}
                     ) AS T
                 WHERE T.rn = ${rn}) AS T2
-            WHERE T2.ORDER_NUM = ${parseInt(req.query.n) - 1} `;
+            WHERE T2.ORDER_NUM = ${parseInt(req.query.n? req.query.n : -2) - 1} `;
     var [previous, fields] = await (await connection).execute(sql, q_list );
 
     var sql = `SELECT  T2.* 
             FROM (SELECT T.*, ROW_NUMBER() OVER(${order}) AS ORDER_NUM
                     FROM (
-                        SELECT HF.ID, HF.WRITER_MEMO, HF.LAST_DATETIME, HF.VIEW, HF.SAVED_CNT,
+                        SELECT HF.ID, HF.WRITER_MEMO, HF.LAST_DATETIME, HF.VIEW, HF.SAVED_CNT, hf.USER_ID = ? AS IS_WRITER,
                         FM.HERO_ID, CN.KOR_NAME as CONTENT_NAME, FS.STATUS_NAME, FAS.ENG_NAME AS ACCESS, USER.NICKNAME,
                             ROW_NUMBER() OVER (
                                 PARTITION BY HF.id 
@@ -202,7 +205,7 @@ router.get('/formsave/detail/:id', mustLoggedIn, async(req, res) => {
                         WHERE ${where}
                     ) AS T
                 WHERE T.rn = ${rn}) AS T2
-            WHERE T2.ORDER_NUM = ${parseInt(req.query.n) + 1} `;
+            WHERE T2.ORDER_NUM = ${parseInt(req.query.n? req.query.n : -2) + 1} `;
     var [next, fields] = await (await connection).execute(sql, q_list );
 
 

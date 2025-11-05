@@ -114,6 +114,18 @@
     
 }
 
+.form-container .report{
+    margin-left: 10px;
+    text-decoration: underline solid red;
+    text-decoration-thickness: 1px;
+    text-underline-offset : 2px;
+}
+
+.form-container .report:hover{
+    cursor: pointer;
+    filter: brightness(1.8);
+}
+
 .comments-container .comment-header{
     width: 100%;
 

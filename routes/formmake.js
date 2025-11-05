@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 const connection = require('../database.js')
 const getDatas = require('./getDatas.js')
+const setDatas = require('./setDatas.js')
 
 const { mustLoggedIn, mustNotLoggedIn } = require('./middlewares'); 
 
@@ -114,65 +115,15 @@ router.get('/edit/:form_id', mustLoggedIn, async(req, res) => {
 })
 
 
-/**
- * {
-  form_status: '편성 공유',
-  form_access: 'private',
-  content_name: '아레나',
-  hero: [ '27', '28', '29', '26', '30' ],
-  myhero_access: 'true',
-  writer_memo: '로잔나를 좋아하는 세팅\r\n통령님 너무 좋아!!!',
-  last_datetime: '2025-10-30 18:22:28'
-}
- */
+
 
 router.post('/postform', mustLoggedIn ,async(req, res) => {
     
     // console.log(req.body);
     try{
-        // contents_id select
-        let content_name = req.body.content_name.trim();
-        var sql = `SELECT * FROM CONTENTS_NAME
-              WHERE KOR_NAME = ?`;
-        var [content, fields] = await (await connection).execute(sql, [content_name]);
-
-        // form_status_id select
-        var sql = `SELECT * FROM FORM_STATUS
-              WHERE STATUS_NAME = ?`;
-        var [form_status, fields] = await (await connection).execute(sql, [req.body.form_status]);
-
-        // form_access_status_id select
-        var sql = `SELECT * FROM FORM_ACCESS_STATUS
-              WHERE ENG_NAME = ?`;
-        var [form_access_status, fields] = await (await connection).execute(sql, [req.body.form_access]);
         
-
-        var sql = `INSERT hero_forms (user_id, contents_id, form_status_id, form_access_status_id ,myhero_access, writer_memo, last_datetime) 
-                    VALUES( ?, ?, ?, ?, ?, ?, ?)`;
-        var execute_list = [
-            req.user[0].id, content[0].id, form_status[0].id, form_access_status[0].id, 
-            req.body.myhero_access =='true', req.body.writer_memo, req.body.last_datetime];
-        var [result, fields] = await (await connection).execute(sql, execute_list);
-        
-        let form_id = result.insertId;
-        for(let i=0; i<req.body.hero.length; i++){
-            var sql = `SELECT * FROM HERO_SETTINGS
-                WHERE USER_ID = ? AND HERO_ID = ?`;
-            var [hero_info, fields] = await (await connection).execute(sql, [req.user[0].id, req.body.hero[i]]);
-            let lv, cho, gak;
-            // console.log(hero_info + typeof(hero_info))
-            lv = hero_info.length > 0 ? hero_info[0].lv : 0;
-            cho = hero_info.length > 0  ? hero_info[0].cho : 5;
-            gak = hero_info.length > 0  ? hero_info[0].gak : 0;
-            
-            var sql = `INSERT FORM_MEMBERS (form_id, hero_id, hero_lv, hero_cho, hero_gak)
-                VALUES(?, ?, ?, ?, ?)`;
-            var [hero_info, fields] = await (await connection).execute(sql, [form_id, req.body.hero[i], lv, cho, gak]);
-        }
-        
-
-        // 추후에 올라간 해당 게시글로 이동하도록 수정
-        res.redirect('/mypage/formsave');
+        let form_id = await setDatas.insertNewForm(req, res);
+        res.redirect('/mypage/formsave/detail/' + form_id);
     }catch(e){
         console.log(e);
         res.redirect(`/?error=${e.message}`);
@@ -181,6 +132,34 @@ router.post('/postform', mustLoggedIn ,async(req, res) => {
 
 })
 
+// 수정 후 게시
+router.post('/edit/:form_id/postform', mustLoggedIn ,async(req, res) => {
+    
+    try{
+        // author_id 같거나 저장했는지(해야 함) 권한 확인
+        var sql = `select * from hero_forms where id = ?`
+        var [result, fields] = await(await connection).execute(sql, [req.params.form_id]);
+        if(result[0].user_id != req.user[0].id) throw new Error("편성을 수정할 권한이 없습니다.");
+
+        let form_id;
+        
+        // author id 다르면 create / 같으면 update
+        if(result[0].user_id != req.user[0].id){
+            form_id = await setDatas.insertNewForm(req, res);
+        }else {
+            await setDatas.updateForm(req, res);
+            form_id = req.params.form_id;
+        }
+        
+        
+        res.redirect('/mypage/formsave/detail/' + form_id);
+    }catch(e){
+        console.log(e);
+        res.redirect(`/?error=${e.message}`);
+    }
+
+
+})
 
 
 module.exports=router;

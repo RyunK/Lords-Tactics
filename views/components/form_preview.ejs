@@ -2,26 +2,25 @@
 <a href="./detail/<%=data.form_list[i].ID%>" data-id="<%=data.form_list[i].ID%>" data-rn="<%=data.form_list[i].ORDER_NUM%>" class="todetail-link color-black flex-fill">
     <div class="post-preview-container shadow-basic mt-4">
         <div class="post-preview-top-container d-flex">
-            <% switch(data.form_list[i].STATUS_NAME ) {
-                case("편성 공유") : %>
-                    <div class="preview-form-share status-share ">
-                <% break;
-                case("편성 요청") : %>
-                    <div class="preview-form-share status-request ">
-                <% break;
-                case("편성 저장") : %>
-                    <div class="preview-form-share status-save ">
-                <% break;
-                case("편성 도움") : %>
-                    <div class="preview-form-share status-help ">
-                <% break;
-                case("편성 완료") : %>
-                    <div class="preview-form-share status-end ">
-                <% break;
-                default : %>
-                    <div class="preview-form-share status-share ">
-                <% } %>        
+            <% if(data.from == "mypage" && data.form_list[i].IS_WRITER == 0 ) {  %>
+                <div class="preview-form-share status-save ">
+                <h6>편성 저장</h6>
+            <%} else if( data.form_list[i].STATUS_NAME == "편성 공유" ) { %>
+                <div class="preview-form-share status-share ">
                 <h6><%=data.form_list[i].STATUS_NAME %></h6>
+            <% } else if(data.form_list[i].STATUS_NAME == "편성 요청" ) {  %>
+                <div class="preview-form-share status-request ">
+                <h6><%=data.form_list[i].STATUS_NAME %></h6>
+            <% } else if(data.form_list[i].STATUS_NAME == "편성 도움" ) {  %>
+                <div class="preview-form-share status-help ">
+                <h6><%=data.form_list[i].STATUS_NAME %></h6>
+            <% } else if(data.form_list[i].STATUS_NAME == "편성 완료" ) {  %>
+                <div class="preview-form-share status-end ">
+                <h6><%=data.form_list[i].STATUS_NAME %></h6>
+            <% } else { %>
+                <div class="preview-form-share status-share ">
+                <h6><%=data.form_list[i].STATUS_NAME %></h6>
+            <% } %>        
             </div>
             <div class="preview-contentname bg-basicdark color-yellow ">
                 <h6><%=data.form_list[i].CONTENT_NAME %></h6>

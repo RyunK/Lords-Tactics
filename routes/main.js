@@ -9,7 +9,9 @@ const getDatas = require('./getDatas.js')
 
 router.get('/', async(req, res) => {
     var sql = `SELECT HF.ID, HF.WRITER_MEMO, HF.LAST_DATETIME, HF.VIEW, HF.SAVED_CNT,
-                CN.KOR_NAME as CONTENT_NAME, FS.STATUS_NAME, USER.NICKNAME, ROW_NUMBER() OVER(ORDER BY FLOOR(UNIX_TIMESTAMP(HF.LAST_DATETIME) / 60 / 60 / 24 / 7) + HF.VIEW*10 + HF.saved_cnt * 100 desc) AS rnk FROM HERO_FORMS HF 
+                CN.KOR_NAME as CONTENT_NAME, FS.STATUS_NAME, USER.NICKNAME, 
+                ROW_NUMBER() OVER(ORDER BY FLOOR(UNIX_TIMESTAMP(HF.LAST_DATETIME) / 60 / 60 / 24 / 7) + HF.VIEW*10 + HF.saved_cnt * 100 desc,  HF.last_datetime desc) AS rnk
+                FROM HERO_FORMS HF 
                 INNER JOIN CONTENTS_NAME CN ON HF.CONTENTS_ID = CN.ID
                 INNER JOIN FORM_STATUS FS ON HF.FORM_STATUS_ID = FS.ID
                 INNER JOIN USER ON HF.USER_ID = USER.ID
@@ -28,7 +30,8 @@ router.get('/', async(req, res) => {
     if(best_form_ids == ''){
         best_members = []
     }else{
-        var sql = `SELECT form_id, types.ENG_NAME AS type, names.ENG_NAME AS name, hc.ENG_NAME AS class  FROM FORM_MEMBERS FM
+        var sql = `SELECT form_id, types.ENG_NAME AS type, names.ENG_NAME AS name, hc.ENG_NAME AS class  
+            FROM FORM_MEMBERS FM
             INNER JOIN LAUNCHED_HEROES LH ON FM.HERO_ID = lh.ID 
             INNER JOIN HERO_CLASSES HC ON lh.CLASS_ID = hc.IDX 
             INNER JOIN HERO_NAMES  names ON names.IDX = NAME_ID
@@ -70,6 +73,7 @@ router.get('/', async(req, res) => {
 
     
     let data = {
+        from : 'main',
         nickname: getDatas.loggedInNickname(req, res),
         best_form_list : best_form_list,
         best_members : best_members,

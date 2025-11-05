@@ -188,6 +188,7 @@
                     <% for(let i=0; i<data.form_list.length; i++) { %>
                     <!-- 공유 게시글 하나 -->
                         <%- include('../components/form_preview.ejs', {i: i, data : {
+                            from : data.from,
                             form_list : data.form_list,
                             members : data.members,
                         }}) %> 

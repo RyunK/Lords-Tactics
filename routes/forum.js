@@ -70,6 +70,7 @@ router.get('/:forumtab', async(req, res) => {
 
     
     let data = {
+        from : 'forum',
         nickname: getDatas.loggedInNickname(req, res),
         forumtab: req.params.forumtab,
         sort : req.query.sort? req.query.sort : 'saved_cnt',
@@ -87,6 +88,7 @@ router.get('/:forumtab', async(req, res) => {
 
 })
 
+// 댓글 게시
 router.post('/submit/comment/:form_id', mustLoggedIn, async (req, res) => {
 
     try{
@@ -145,6 +147,8 @@ router.post('/submit/comment/:form_id', mustLoggedIn, async (req, res) => {
     
 })
 
+
+// 댓글 수정
 router.post('/edit/comment/:form_id', mustLoggedIn, async (req, res) => {
 
     try{
@@ -208,6 +212,7 @@ router.post('/edit/comment/:form_id', mustLoggedIn, async (req, res) => {
     
 })
 
+// 댓글 삭제 
 router.post('/delete/comment/:form_id', mustLoggedIn, async (req, res) => {
 
     try{
