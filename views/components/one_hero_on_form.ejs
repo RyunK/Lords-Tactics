@@ -1,0 +1,17 @@
+<div class="select-liner">
+    <% if(data.members[i].NAME == 'empty'){ %>
+        <div class="empty"><i class="fa-solid fa-plus color-gray"></i> </div>
+    <% } else if(data.myheroaccess == 0){ %>
+        <img src="/sources/img/characters/<%= data.members[i].TYPE%>_<%= data.members[i].NAME%>_<%= data.members[i].CLASS%>.png" onerror="this.onerror=null; this.src='/sources/img/characters/Chr_Error.png';" >
+    <% } else if(data.members[i].HERO_LV == 0){ %>
+        <% let gak2eng = {1: "one", 2: "two", 0:"no"} %>
+        <img src="/sources/img/characters/<%= data.members[i].TYPE%>_<%= data.members[i].NAME%>_<%= data.members[i].CLASS%>.png" class="nothave" onerror="this.onerror=null; this.src='/sources/img/characters/Chr_Error.png';" >
+        <span class="lv_<%= data.members[i].TYPE%> lv"><%= data.members[i].HERO_LV%></span>
+        <span class="<%= gak2eng[data.members[i].HERO_GAK]%>gak gak"><%= data.members[i].HERO_CHO%></span>
+    <% } else{  %>
+        <% let gak2eng = {1: "one", 2: "two", 0:"no"} %>
+        <img src="/sources/img/characters/<%= data.members[i].TYPE%>_<%= data.members[i].NAME%>_<%= data.members[i].CLASS%>.png" onerror="this.onerror=null; this.src='/sources/img/characters/Chr_Error.png';" >
+        <span class="lv_<%= data.members[i].TYPE%> lv"><%= data.members[i].HERO_LV%></span>
+        <span class="<%= gak2eng[data.members[i].HERO_GAK]%>gak gak"><%= data.members[i].HERO_CHO%></span>
+    <% } %>
+</div>

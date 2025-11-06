@@ -127,7 +127,15 @@ function makeHeroHtml(login, hero){
     let having_heroes_id = HavingHeroes.getter_id();
     let gak_num2eng = {0: 'no', 1: 'one', 2: 'two'}
     let have = having_heroes_id.includes(hero["ID"])
-    if(login && have){
+    let ask_myhero_access;
+    if($(".askform-container").length > 0 && $(".askform-container").data("myheroaccess") == 1){
+        ask_myhero_access = true;
+    } else if($(".askform-container").length > 0 && $(".askform-container").data("myheroaccess") == 0){
+        ask_myhero_access = false;
+    } else{
+        ask_myhero_access = true;
+    }
+    if(login && ask_myhero_access && have){
         return  `<div class="character-list-box select-liner">
                     <div class="character-list" >
                         <img src="/sources/img/characters/${hero.eng_type}_${hero.eng_name}_${hero.eng_class}.png" 
@@ -137,7 +145,7 @@ function makeHeroHtml(login, hero){
                         <span class="${gak_num2eng[having_heroes[having_heroes_id.indexOf(hero["ID"])].gak]}gak gak">${having_heroes[having_heroes_id.indexOf(hero["ID"])].cho}</span>
                     </div>
                 </div>`
-    } else if(login && !have) {
+    } else if(login && ask_myhero_access && !have) {
         return `<div class="character-list-box select-liner">
                     <div class="character-list" >
                         <img src="/sources/img/characters/${hero.eng_type}_${hero.eng_name}_${hero.eng_class}.png" 

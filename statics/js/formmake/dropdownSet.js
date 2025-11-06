@@ -77,7 +77,7 @@ $('.content-name li').on('click', function(){
 
 function to5layout(){
     // 다 삭제
-    let border_container = $('.form-border-container')
+    let border_container = $('.form-container .form-border-container')
     border_container.children('div').remove();
     border_container.children('h5').remove();
 
@@ -109,7 +109,7 @@ function to5layout(){
     NowFormHeroes.makeQueryString();
 
     // 제일 앞 칸 선택
-    let spot = $('.form_spot').eq(0)
+    let spot = $('.form-container .form_spot').eq(0)
     if(spot.find(".empty").length>0){
         spot.prepend("<div class='spot-selected-empty'></div>");
     }else {
@@ -120,7 +120,8 @@ function to5layout(){
 
 function to10layout(){
     // 다 삭제
-    let border_container = $('.form-border-container')
+    let border_container = $('.form-container .form-border-container')
+    console.log(border_container)
     border_container.children('div').remove();
     border_container.children('h5').remove();
 
@@ -155,7 +156,7 @@ function to10layout(){
     NowFormHeroes.makeQueryString();
 
     // 제일 앞 칸 선택
-    let spot = $('.form_spot').eq(0)
+    let spot = $('.form-container .form_spot').eq(0)
     if(spot.find(".empty").length>0){
         spot.prepend("<div class='spot-selected-empty'></div>");
     }else {
@@ -166,7 +167,7 @@ function to10layout(){
 
 function to7layout(){
     // 다 삭제
-    let border_container = $('.form-border-container')
+    let border_container = $('.form-container .form-border-container')
     border_container.children('div').remove();
     border_container.children('h5').remove();
 
@@ -201,7 +202,7 @@ function to7layout(){
     NowFormHeroes.makeQueryString();
 
     // 제일 앞 칸 선택
-    let spot = $('.form_spot').eq(0)
+    let spot = $('.form-container .form_spot').eq(0)
     if(spot.find(".empty").length>0){
         spot.prepend("<div class='spot-selected-empty'></div>");
     }else {

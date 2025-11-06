@@ -324,6 +324,7 @@
     color : #3f3f50;
     padding: 8px 10px;
     height: auto;
+    width: 80%;
 }
 
 .comments-container .comment-body textarea[name="comment"]:focus{

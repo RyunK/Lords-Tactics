@@ -206,8 +206,10 @@ router.get('/:forumtab/detail/:id', async(req, res) => {
 
 
         // 게시글 id로 comment 및 reply 검색
-        var [comments, replys] = await getDatas.getCommentsNReplys(req, res, connection, req.params.id)
+        var [comments, replys, help_members] = await getDatas.getCommentsNReplys(req, res, connection, req.params.id)
 
+
+        // 조회수 +1
         var sql = `UPDATE HERO_FORMS HF 
                     SET HF.VIEW = (
                     SELECT T.VIEW FROM (SELECT HF.VIEW FROM HERO_FORMS HF 
@@ -219,7 +221,7 @@ router.get('/:forumtab/detail/:id', async(req, res) => {
         let data = {
             nickname: getDatas.loggedInNickname(req, res),
             content: q_content,
-            now_formstatus : req.params.forumtab = "share"? "편성 공유":"편성 도움",
+            now_formstatus : req.params.forumtab = "share"? "편성 공유":"편성 완료",
             filtered_heroes_list_forrender : filtered_heroes_list_forrender,
             form_id : req.params.id,
             form_info : form_info,
@@ -229,6 +231,7 @@ router.get('/:forumtab/detail/:id', async(req, res) => {
             next : next,
             comments : comments,
             replys : replys,
+            help_members : help_members,
         }
         res.render('./forum/forum_formdetail.ejs',  {data : data})
     }catch(e){
@@ -335,16 +338,44 @@ router.post('/submit/comment/:form_id', mustLoggedIn, async (req, res) => {
         
 
         // comment 및 reply 다시 select 해서 반환
-        var [comments, replys] = await getDatas.getCommentsNReplys(req, res, connection, req.params.form_id);
+        var [comments, replys, help_members] = await getDatas.getCommentsNReplys(req, res, connection, req.params.form_id);
+        
+        var sql = `select cn.num_of_heroes from hero_forms hf
+                inner join contents_name cn on hf.contents_id = cn.id
+                where hf.id = ?`
+        var [member_num, fields] = await(await connection).execute(sql, [req.params.form_id]);
+        let member_length = member_num[0].num_of_heroes;
 
-        let result = {
-            status: '200',
-            data : {
+        let data = {
                 comments : comments,
                 replys : replys,
+                help_members : help_members,
+                member_length : member_length,
             }
-        }
-        res.json(result)
+
+        res.render('./components/comments_and_replys.ejs', {data: data}, (err, html) =>{
+            if (err) {
+                console.log(err);
+                return res.status(500).send(err);
+            }
+            let result = {
+                status: '200',
+                data : {
+                    html : html,
+                }
+            }
+            res.json(result)
+        })
+
+        // let result = {
+        //     status: '200',
+        //     data : {
+        //         comments : comments,
+        //         replys : replys,
+        //         help_members : help_members
+        //     }
+        // }
+        // res.json(result)
     } catch(e){
         console.log(e)
         res.json({
@@ -377,6 +408,11 @@ router.post('/edit/comment/:form_id', mustLoggedIn, async (req, res) => {
         if(rst[0].form_id != req.params.form_id || rst[0].author_id != req.user[0].id){
             throw new Error("댓글을 수정할 권한이 없습니다.");
         }
+        
+        let help_form ;
+        if(req.body.kind == "comment" && rst[0].help_form_id){
+            help_form = rst[0].help_form_id;         
+        } 
 
         let now_date = new Date();
         now_date = now_date.getFullYear()+"-"+("0"+(now_date.getMonth()+1)).slice(-2) + 
@@ -397,19 +433,54 @@ router.post('/edit/comment/:form_id', mustLoggedIn, async (req, res) => {
             var [rst, fields] = await(await connection).execute(sql, [req.body.comment , now_date ,req.body.id]);
         }
 
+        // 도움 편성 댓글을 수정했다면 편성까지 수정
+        if(help_form){
+            var sql = `update hero_forms set writer_memo = ?, last_datetime = ? where id = ?`
+            var [rst, fields] = await(await connection).execute(sql, [req.body.comment , now_date, help_form]);
+        }
         
 
         // comment 및 reply 다시 select 해서 반환
-        var [comments, replys] = await getDatas.getCommentsNReplys(req, res, connection, req.params.form_id);
+        var [comments, replys, help_members] = await getDatas.getCommentsNReplys(req, res, connection, req.params.form_id);
 
-        let result = {
-            status: '200',
-            data : {
+        var sql = `select cn.num_of_heroes from hero_forms hf
+                inner join contents_name cn on hf.contents_id = cn.id
+                where hf.id = ?`
+        var [member_num, fields] = await(await connection).execute(sql, [req.params.form_id]);
+        let member_length = member_num[0].num_of_heroes;
+
+        
+        let data = {
                 comments : comments,
                 replys : replys,
+                help_members : help_members,
+                member_length : member_length,
             }
-        }
-        res.json(result)
+
+        res.render('./components/comments_and_replys.ejs', {data: data}, (err, html) =>{
+            if (err) {
+                console.log(err);
+                return res.status(500).send(err);
+            }
+            let result = {
+                status: '200',
+                data : {
+                    html : html,
+                }
+            }
+            res.json(result)
+        })
+
+        // let result = {
+        //     status: '200',
+        //     data : {
+        //         comments : comments,
+        //         replys : replys,
+        //         help_members : help_members,
+        //         member_length : member_length,
+        //     }
+        // }
+        // res.json(result)
     } catch(e){
         console.log(e)
         res.json({
@@ -437,6 +508,9 @@ router.post('/delete/comment/:form_id', mustLoggedIn, async (req, res) => {
             throw new Error("댓글을 삭제할 권한이 없습니다.");
         }
 
+        let help_form;
+        if(req.body.kind == "comment" && rst[0].help_form_id) help_form = rst[0].help_form_id;
+
         // kind == comment 면 comment_id 컬럼 중에서 찾아보기 
         let finds =[]
         if(req.body.kind == "comment"){
@@ -454,7 +528,7 @@ router.post('/delete/comment/:form_id', mustLoggedIn, async (req, res) => {
         // 답댓이 있으면 유저 id 0, 내용 "삭제된 댓글입니다." 로 변경
         if(finds[0].s > 0 && req.body.kind == "comment"){
             var sql = `UPDATE FORM_COMMENTS 
-                    SET COMMENT_BODY = "삭제된 댓글입니다.", AUTHOR_ID = 0
+                    SET COMMENT_BODY = "삭제된 댓글입니다.", AUTHOR_ID = 0, help_form_id = null
                     WHERE ID = ?`;
             [rst, fields] = await(await connection).execute(sql, [req.body.id]);
         }else if(finds[0].s > 0 && req.body.kind == "reply"){
@@ -496,18 +570,51 @@ router.post('/delete/comment/:form_id', mustLoggedIn, async (req, res) => {
             [rst, fields] = await(await connection).execute(sql, [req.body.id]);
         }
         
+        // 도움 편성 댓글을 삭제했다면 편성까지 삭제
+        if(help_form){
+            var sql = `delete from hero_forms where id = ?`
+            var [rst, fields] = await(await connection).execute(sql, [help_form]);
+        }
 
         // comment 및 reply 다시 select 해서 반환
-        var [comments, replys] = await getDatas.getCommentsNReplys(req, res, connection, req.params.form_id);
+        var [comments, replys, help_members] = await getDatas.getCommentsNReplys(req, res, connection, req.params.form_id);
 
-        let result = {
-            status: '200',
-            data : {
+        var sql = `select cn.num_of_heroes from hero_forms hf
+                inner join contents_name cn on hf.contents_id = cn.id
+                where hf.id = ?`
+        var [member_num, fields] = await(await connection).execute(sql, [req.params.form_id]);
+        let member_length = member_num[0].num_of_heroes;
+
+        let data = {
                 comments : comments,
                 replys : replys,
+                help_members : help_members,
+                member_length : member_length,
             }
-        }
-        res.json(result)
+
+        res.render('./components/comments_and_replys.ejs', {data: data}, (err, html) =>{
+            if (err) {
+                console.log(err);
+                return res.status(500).send(err);
+            }
+            let result = {
+                status: '200',
+                data : {
+                    html : html,
+                }
+            }
+            res.json(result)
+        })
+
+        // let result = {
+        //     status: '200',
+        //     data : {
+        //         comments : comments,
+        //         replys : replys,
+        //         help_members : help_members,
+        //     }
+        // }
+        // res.json(result)
     } catch(e){
         console.log(e)
         res.json({
@@ -518,8 +625,7 @@ router.post('/delete/comment/:form_id', mustLoggedIn, async (req, res) => {
     
 })
 
-// 게시판 삭제
-// 그냥 post 요청 받아가지고 form 삭제하면 될듯
+// 편성 삭제
 router.post('/delete/form/:form_id', mustLoggedIn, async(req, res) => {
     
     try{
@@ -528,11 +634,44 @@ router.post('/delete/form/:form_id', mustLoggedIn, async(req, res) => {
         var [result, fields] = await(await connection).execute(sql, [req.params.form_id]);
         if(result[0].user_id != req.user[0].id) throw new Error("편성을 삭제할 권한이 없습니다.");
         
+        let comments_for = result[0].comments_for_id;
+
+
         var sql = `delete from hero_forms where id = ?`
         var [result, fields] = await(await connection).execute(sql, [req.params.form_id]);
 
-        res.send(`<script> alert("삭제가 완료되었습니다."); window.location.href='/${req.body.page}'  </script>`)
 
+        // 삭제한 게 편성 도움이면 댓글까지 찾아서 삭제
+        if(comments_for){
+
+            var sql = `select * from form_comments where form_id = ? and help_form_id = ?`
+            var [fc, fields] = await(await connection).execute(sql, [comments_for, req.params.form_id]);
+
+
+            let finds =[]
+            // 답댓 있는지 확인
+            var sql = `SELECT SUM(FR.AUTHOR_ID ) AS s FROM FORM_REPLYS FR
+                WHERE comment_id = ?`;
+            [finds, fields] = await(await connection).execute(sql, [fc[0].id]);
+
+            // 답댓이 있으면 유저 id 0, 내용 "삭제된 댓글입니다." 로 변경
+            if(finds[0].s > 0 ){
+                var sql = `UPDATE FORM_COMMENTS 
+                        SET COMMENT_BODY = "삭제된 댓글입니다.", AUTHOR_ID = 0, help_form_id = null
+                        WHERE ID = ?`;
+                [rst, fields] = await(await connection).execute(sql, [fc[0].id]);
+            }
+            // 답댓이 없으면(답글들의 author_id가 전부 0이면) 답댓까지 전부 레코드 삭제 + 내가 참조하고 있던 애도 이미 삭제됐으면 같이 삭제
+            else {
+                var sql = `DELETE FROM FORM_COMMENTS FC
+                        WHERE FC.ID = ?`;
+                [rst, fields] = await(await connection).execute(sql, [fc[0].id]);
+            } 
+
+            
+        }
+
+        res.send(`<script> alert("삭제가 완료되었습니다."); window.location.href='/${req.body.page}'  </script>`)
     }catch(e){
         console.log(e);
         res.redirect(`/?error=${e.message}`)

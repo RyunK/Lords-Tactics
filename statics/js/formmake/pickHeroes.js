@@ -46,7 +46,7 @@ $(document).on('click', ".character-list-box", function(e){
     
 })
 
-$(document).on("click", '.form_spot .out', function(){
+$(document).on("click", '.form-container  .form_spot .out', function(){
     let hero_id = $(this).siblings('.select-liner').children('input').val();
     NowFormHeroes.removeByHeroId(hero_id);
     
@@ -65,7 +65,7 @@ $(document).on("click", '.form_spot .out', function(){
 /***
  * 칸 클릭하면 다른 칸 선택 지워지고 클릭한 칸 선택됨
  ***/
-$(document).on('click',".form_spot", function(e){
+$(document).on('click',".form-container  .form_spot", function(e){
 
     if ($(e.target).hasClass("spot-selected-empty") || $(e.target).hasClass("spot-selected-full")) return;
 

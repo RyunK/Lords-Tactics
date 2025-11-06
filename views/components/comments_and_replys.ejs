@@ -1,6 +1,7 @@
 <!-- 댓글 및 답글 출력 -->
 
 <% let cnt=0 %>
+<% let ans_form_cnt=0 %>
 <% for(let i=0; i<data.comments.length; i++){ %>
 <!-- 댓글 하나 -->
 <div class="comment" data-commentid="<%=data.comments[i].id %>">
@@ -16,8 +17,33 @@
     </div>
     <% } %>    
 
-    <div class="comment-body w-100 d-flex">
-        <p><%=data.comments[i].comment_body %></p>
+    <div class="comment-body w-100 d-flex flex-wrap">
+        <% if(data.comments[i].help_form_id) {%>
+        <div class="comment-form-preview bg-basicdark">
+            <!-- <div class="writer-save-badge">작성자 저장!</div> -->
+            <div class="preview-face-container">
+                <%for(let j=0; j<5; j++){ %>
+                    <%if(data.help_members[ans_form_cnt*5 + j] && data.help_members[ans_form_cnt*5 + j].NAME == "empty"){%>
+                    <div class="empty"><i class="fa-solid fa-plus color-gray"></i></div>
+                    <%} else if (data.help_members[ans_form_cnt*5 + j] && data.help_members[ans_form_cnt*5 + j].NAME != "empty"){%>
+                    <img src="/sources/img/characters/<%=data.help_members[ans_form_cnt*5 + j].TYPE %>_<%=data.help_members[ans_form_cnt*5 + j].NAME %>_<%=data.help_members[ans_form_cnt*5 + j].CLASS %>.png" alt="">
+                    <%}%>
+                <% } %>
+                <%if(data.member_length > 5){%>
+                    <div class="dots_div color-white">ㆍㆍㆍ </div>
+                <%}   %>
+                <% ans_form_cnt += 1 %>
+            </div>
+            <div class="btns btn-shadow">
+                <button class="me-3 btn-blue btn-cut border-0 color-white">자세히 보기</button>
+                <% if(data.comments[i].is_author == 1) {%>
+                <% } else { %> 
+                <button class="btn-yellow btn-cut border-0 color-white">바로 저장</button>
+                <% } %> 
+            </div>
+        </div>
+        <% } %>
+        <p class="w-100"><%=data.comments[i].comment_body %></p>
     </div>
 
     <% if(!data.comments[i].nickname.includes("알 수 없음")){ %>

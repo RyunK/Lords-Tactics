@@ -146,21 +146,12 @@
                             <div class="form-char-container w-100 d-flex flex-wrap justify-content-center ">
                                 <% for(let i=0; i<data.members.length; i++){ %>
                                     <div class="character-5 form_spot">
-                                        <div class="select-liner">
-                                            <% if(data.members[i].NAME == 'empty'){ %>
-                                                <div class="empty"><i class="fa-solid fa-plus color-gray"></i> </div>
-                                            <% } else if(data.members[i].HERO_LV == 0){ %>
-                                                <% let gak2eng = {1: "one", 2: "two", 0:"no"} %>
-                                                <img src="/sources/img/characters/<%= data.members[i].TYPE%>_<%= data.members[i].NAME%>_<%= data.members[i].CLASS%>.png" class="nothave" onerror="this.onerror=null; this.src='/sources/img/characters/Chr_Error.png';" >
-                                                <span class="lv_<%= data.members[i].TYPE%> lv"><%= data.members[i].HERO_LV%></span>
-                                                <span class="<%= gak2eng[data.members[i].HERO_GAK]%>gak gak"><%= data.members[i].HERO_CHO%></span>
-                                            <% } else{  %>
-                                                <% let gak2eng = {1: "one", 2: "two", 0:"no"} %>
-                                                <img src="/sources/img/characters/<%= data.members[i].TYPE%>_<%= data.members[i].NAME%>_<%= data.members[i].CLASS%>.png" onerror="this.onerror=null; this.src='/sources/img/characters/Chr_Error.png';" >
-                                                <span class="lv_<%= data.members[i].TYPE%> lv"><%= data.members[i].HERO_LV%></span>
-                                                <span class="<%= gak2eng[data.members[i].HERO_GAK]%>gak gak"><%= data.members[i].HERO_CHO%></span>
-                                            <% } %>
-                                        </div>
+                                        <%- include('../components/one_hero_on_form.ejs', {
+                                            i : i,
+                                            data : {
+                                            members : data.members,
+                                            myheroaccess: data.form_info[0].MYHERO_ACCESS
+                                        }}) %> 
                                     </div>
                                 <% } %>
                             </div>
@@ -169,44 +160,26 @@
                         <div class="form-char-container w-100 d-flex flex-wrap justify-content-center ">
                             <% for(let i=0; i<5; i++){ %>
                                 <div class="character-10 form_spot">
-                                    <div class="select-liner">
-                                        <% if(data.members[i].NAME == 'empty'){ %>
-                                            <div class="empty"><i class="fa-solid fa-plus color-gray"></i> </div>
-                                        <% } else if(data.members[i].HERO_LV == 0){ %>
-                                            <% let gak2eng = {1: "one", 2: "two", 0:"no"} %>
-                                            <img src="/sources/img/characters/<%= data.members[i].TYPE%>_<%= data.members[i].NAME%>_<%= data.members[i].CLASS%>.png" class="nothave" onerror="this.onerror=null; this.src='/sources/img/characters/Chr_Error.png';" >
-                                            <span class="lv_<%= data.members[i].TYPE%> lv"><%= data.members[i].HERO_LV%></span>
-                                            <span class="<%= gak2eng[data.members[i].HERO_GAK]%>gak gak"><%= data.members[i].HERO_CHO%></span>
-                                        <% } else{  %>
-                                            <% let gak2eng = {1: "one", 2: "two", 0:"no"} %>
-                                            <img src="/sources/img/characters/<%= data.members[i].TYPE%>_<%= data.members[i].NAME%>_<%= data.members[i].CLASS%>.png" onerror="this.onerror=null; this.src='/sources/img/characters/Chr_Error.png';" >
-                                            <span class="lv_<%= data.members[i].TYPE%> lv"><%= data.members[i].HERO_LV%></span>
-                                            <span class="<%= gak2eng[data.members[i].HERO_GAK]%>gak gak"><%= data.members[i].HERO_CHO%></span>
-                                        <% } %>
-                                    </div>
+                                    <%- include('../components/one_hero_on_form.ejs', {
+                                        i : i,
+                                        data : {
+                                        members : data.members,
+                                        myheroaccess: data.form_info[0].MYHERO_ACCESS
+                                    }}) %> 
                                 </div>
                             <% } %>
                         </div>
                         <h5 class="w-100">2 부대</h5>
                         <div class="form-char-container w-100 d-flex flex-wrap justify-content-center ">
                             <% for(let i=5; i<data.members.length; i++){ %>
-                                <div class="character-10 form_spot">
-                                    <div class="select-liner">
-                                        <% if(data.members[i].NAME == 'empty'){ %>
-                                            <div class="empty"><i class="fa-solid fa-plus color-gray"></i> </div>
-                                        <% } else if(data.members[i].HERO_LV == 0){ %>
-                                            <% let gak2eng = {1: "one", 2: "two", 0:"no"} %>
-                                            <img src="/sources/img/characters/<%= data.members[i].TYPE%>_<%= data.members[i].NAME%>_<%= data.members[i].CLASS%>.png" class="nothave" onerror="this.onerror=null; this.src='/sources/img/characters/Chr_Error.png';" >
-                                            <span class="lv_<%= data.members[i].TYPE%> lv"><%= data.members[i].HERO_LV%></span>
-                                            <span class="<%= gak2eng[data.members[i].HERO_GAK]%>gak gak"><%= data.members[i].HERO_CHO%></span>
-                                        <% } else{  %>
-                                            <% let gak2eng = {1: "one", 2: "two", 0:"no"} %>
-                                            <img src="/sources/img/characters/<%= data.members[i].TYPE%>_<%= data.members[i].NAME%>_<%= data.members[i].CLASS%>.png" onerror="this.onerror=null; this.src='/sources/img/characters/Chr_Error.png';" >
-                                            <span class="lv_<%= data.members[i].TYPE%> lv"><%= data.members[i].HERO_LV%></span>
-                                            <span class="<%= gak2eng[data.members[i].HERO_GAK]%>gak gak"><%= data.members[i].HERO_CHO%></span>
-                                        <% } %>
-                                    </div>
-                                </div>
+                            <div class="character-10 form_spot">
+                                <%- include('../components/one_hero_on_form.ejs', {
+                                    i : i,
+                                    data : {
+                                    members : data.members,
+                                    myheroaccess: data.form_info[0].MYHERO_ACCESS
+                                }}) %> 
+                            </div>
                             <% } %>
                             
                         </div>
@@ -214,21 +187,12 @@
                             <div class="form-char-container w-100 d-flex flex-wrap justify-content-center ">
                             <% for(let i=0; i<data.members.length; i++){ %>
                                 <div class="character-7 form_spot">
-                                    <div class="select-liner">
-                                        <% if(data.members[i].NAME == 'empty'){ %>
-                                            <div class="empty"><i class="fa-solid fa-plus color-gray"></i> </div>
-                                        <% } else if(data.members[i].HERO_LV == 0){ %>
-                                            <% let gak2eng = {1: "one", 2: "two", 0:"no"} %>
-                                            <img src="/sources/img/characters/<%= data.members[i].TYPE%>_<%= data.members[i].NAME%>_<%= data.members[i].CLASS%>.png" class="nothave" onerror="this.onerror=null; this.src='/sources/img/characters/Chr_Error.png';" >
-                                            <span class="lv_<%= data.members[i].TYPE%> lv"><%= data.members[i].HERO_LV%></span>
-                                            <span class="<%= gak2eng[data.members[i].HERO_GAK]%>gak gak"><%= data.members[i].HERO_CHO%></span>
-                                        <% } else{  %>
-                                            <% let gak2eng = {1: "one", 2: "two", 0:"no"} %>
-                                            <img src="/sources/img/characters/<%= data.members[i].TYPE%>_<%= data.members[i].NAME%>_<%= data.members[i].CLASS%>.png" onerror="this.onerror=null; this.src='/sources/img/characters/Chr_Error.png';" >
-                                            <span class="lv_<%= data.members[i].TYPE%> lv"><%= data.members[i].HERO_LV%></span>
-                                            <span class="<%= gak2eng[data.members[i].HERO_GAK]%>gak gak"><%= data.members[i].HERO_CHO%></span>
-                                        <% } %>
-                                    </div>
+                                    <%- include('../components/one_hero_on_form.ejs', {
+                                        i : i,
+                                        data : {
+                                        members : data.members,
+                                        myheroaccess: data.form_info[0].MYHERO_ACCESS
+                                    }}) %> 
                                 </div>
                                 <% if(i == 2){ %>
                                 <div class="change-line"></div>
@@ -288,6 +252,8 @@
                     <%- include('../components/comments_and_replys.ejs', {data : {
                         comments : data.comments,
                         replys : data.replys,
+                        help_members : data.help_members,
+                        member_length: data.members.length,
                     }}) %> 
                 </div>
                 <form class="write-comment bg-white">
@@ -367,7 +333,6 @@
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script> 
-    <script src="/js/Comments.js"></script>
     <script>
 
         function resize(obj) {
@@ -434,10 +399,6 @@
 
         $(".right-box .edit").on("click", function(e){
             e.preventDefault();
-            if($(".form-status p").text() == "편성 저장"){
-                if(!confirm("[편성 저장]은 수정하면 자신의 [편성 공유] 상태로 저장됩니다. 계속하시겠습니까?"))
-                    return;
-            }
             
             window.location.href = `/formmake/edit/${window.location.pathname.split("/").pop()}`
             
@@ -535,7 +496,7 @@
                         success: function(res) {
                             if(res.status.includes('2')){
                                 // 댓글 다시 출력
-                                commentsReload(res.data.comments, res.data.replys)
+                                $(".comment-body-container .comments").html(res.data.html);
                                 $("textarea").val("");
                                 $(".write-comment .comment-author").remove();
 
@@ -593,7 +554,7 @@
                         success: function(res) {
                             if(res.status.includes('2')){
                                 // 댓글 다시 출력
-                                commentsReload(res.data.comments, res.data.replys)
+                                $(".comment-body-container .comments").html(res.data.html);
                                 let txt = $(this).parent().parent().siblings(".comment-body").children('textarea').val();
                                 $(this).siblings('p').css("display", "block");
                                 $(this).siblings('textarea').remove();
@@ -631,7 +592,7 @@
                         success: function(res) {
                             if(res.status.includes('2')){
                                 // 댓글 다시 출력
-                                commentsReload(res.data.comments, res.data.replys)
+                                $(".comment-body-container .comments").html(res.data.html);
                                 $('.toast-black').text("댓글 삭제가 완료되었습니다.").fadeIn(600).delay(1500).fadeOut(600);
                             } else{
                                 // DB 오류

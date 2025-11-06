@@ -168,7 +168,8 @@ module.exports = {
                INNER JOIN user U ON U.ID = FC.AUTHOR_ID 
                INNER JOIN HERO_FORMS HF ON HF.ID = fc.FORM_ID
                INNER JOIN user U2 ON u2.id = hf.USER_ID 
-               WHERE FC.FORM_ID = ?`
+               WHERE FC.FORM_ID = ?
+               ORDER BY fc.id asc`
       var [comments, fields] = await (await connection).execute(sql,  [req.isAuthenticated()?req.user[0].id:-1, form_id]);
 
       var sql = `SELECT FR.id id, FR.comment_id, FR.reply_id , fc.help_form_id , FR.reply_body, FR.last_datetime, U.nickname, 
@@ -184,7 +185,22 @@ module.exports = {
             ORDER BY comment_id ASC , FR.id ASC`
       var [replys, fields] = await (await connection).execute(sql,  [ req.isAuthenticated()?req.user[0].id:-1, form_id]);
 
+      var sql = `SELECT * from(
+            SELECT FC.id id, fc.help_form_id,
+            FM.HERO_LV, FM.HERO_CHO, FM.HERO_GAK, TYPES.ENG_NAME AS TYPE, NAMES.ENG_NAME AS NAME, classes.ENG_NAME AS CLASS, 
+            row_number() over(PARTITION BY fc.HELP_FORM_ID ORDER BY fc.id ASC) AS rn
+            FROM FORM_COMMENTS FC
+            INNER JOIN FORM_MEMBERS FM ON fm.FORM_ID = fc.HELP_FORM_ID 
+            INNER JOIN LAUNCHED_HEROES LH  ON FM.HERO_ID = LH.ID 
+            INNER JOIN HERO_NAMES  names ON names.IDX = NAME_ID
+            INNER JOIN HERO_CLASSES  classes ON classes.IDX = CLASS_ID
+            INNER JOIN HERO_TYPES  types ON types.IDX = TYPE_ID
+            WHERE FC.FORM_ID = ?
+            ) as datas
+            WHERE rn <= 5;`
+      var [help_members, fields] = await (await connection).execute(sql,  [form_id]);
 
-      return [comments, replys];
+
+      return [comments, replys, help_members];
    }
 }

@@ -13,98 +13,11 @@
     <link href="/css/hero_setting.css" rel="stylesheet">
 </head>
 <body>
+    <%- include('../nav_and_banner.ejs', {page: ' ', nickname: data.nickname, notice:'2025.08.01 신규 캐릭터 [물]라플라스 추가 완료'}) %> 
 
-    <% if(data.form_status){ %>
-    <%- include('nav_and_banner.ejs', {page: ' ', nickname: data.nickname, notice:'2025.08.01 신규 캐릭터 [물]라플라스 추가 완료'}) %> 
-    <% }else{ %>
-    <%- include('nav_and_banner.ejs', {page: 'formmake', nickname: data.nickname, notice:'2025.08.01 신규 캐릭터 [물]라플라스 추가 완료'}) %> 
-    <% } %>
 
     <!-- 영웅 설정 모달 -->
-    <div class="hero-setting-container">
-        <div class="hero-setting shadow-basic bg-gray ">
-            <!-- 상단바 -->
-            <div class="post-title d-flex">
-                <div class="bg-basicdark color-yellow flex-fill d-flex align-items-center">
-                    <h5>영웅 설정</h5>
-                </div>
-                <button type="button" class="close btn-red color-white" ><i class="fa-solid fa-xmark"></i></button>
-            </div>
-
-            <!-- 컨텐츠 -->
-            <div class="setting-content bg-gray d-flex justify-content-center">
-                <div class="setting-charinfo pe-4  d-flex justify-content-center ">
-                    <div>
-                    <div class="setting-charname d-flex align-items-center mt-3">
-                        <img src="/sources/img/types/fire.png" class=" setting-class-size">
-                        <p class="ms-1">메이링</p>
-                    </div>
-                    <div class="setting-charimg mt-3" >
-                        <img src="/sources/img/characters/fire_meiling_shooter.png">
-                        <span class="lv_fire lv">70</span>
-                        <span class="onegak gak">7</span>
-                    </div>
-                    </div>
-                </div>
-                <div class="right-line"></div>
-                <div class="setting-form d-flex justify-content-center">
-                    <!-- <p class="herosetting-placeholder">설정할 영웅을 선택하세요</p> -->
-                    <form class="hero-setting-form" method="post" action="/mypage/myhero/normalsave">
-                        <input type="hidden" name="hero">
-                        <div class=" d-flex align-items-center mt-3">
-                            <p class="me-5">레벨</p>
-                            <div class="btn-shadow  lv-input input-w">
-                                <input type="input" name="lv" class="btn-cut ">
-                            </div>
-                        </div>
-                        <div class="d-flex  mt-3">
-                            <p class="me-5">초월</p>
-                            <div class="d-flex flex-fill justify-content-between input-w">
-                                <label class="charSetting-ele d-flex align-self-center ">  
-                                    <input type="radio" name="cho" value="5" class="charPublic-checkbox 5cho"><span class="checkbox-img"></span> <span class="ms-2">5</span> 
-                                </label>
-                                <label class="charSetting-ele d-flex align-self-center ">  
-                                    <input type="radio" name="cho" value="6" class="charPublic-checkbox 6cho"><span class="checkbox-img"></span> <span class="ms-2">6</span> 
-                                </label>
-                                <label class="charSetting-ele d-flex align-self-center">  
-                                    <input type="radio" name="cho" value="7" class="charPublic-checkbox 7cho"><span class="checkbox-img"></span> <span class="ms-2">7</span> 
-                                </label>
-                            </div>
-                            
-                        </div>
-                        
-                        <div class="d-flex mt-3">
-                            <p class="me-5">각성</p>
-                            <div class="d-flex justify-content-between input-w">
-                            
-                                <label class="charSetting-ele d-flex align-self-center">  
-                                    <input type="radio" name="gak" value="0" class="charPublic-checkbox nogak-radio"><span class="checkbox-img"></span> <img src="/sources/img/nogak.png" class="ms-1"> 
-                                </label>
-                                <label class="charSetting-ele d-flex align-self-center">  
-                                    <input type="radio" name="gak" value="1" class="charPublic-checkbox onegak-radio"><span class="checkbox-img"></span> <img src="/sources/img/1gak.png" class="ms-1"> 
-                                </label>
-                                <label class="charSetting-ele d-flex align-self-center"> 
-                                    <input type="radio" name="gak" value="2" class="charPublic-checkbox twogak-radio"><span class="checkbox-img"></span> <img src="/sources/img/2gak.png" class="ms-1"> 
-                                </label>
-                            </div>
-                            
-                        </div>
-                        
-                        <!-- 하단 버튼들 -->
-                        <div class="setting-btns d-flex justify-content-end">
-                            <div class="btn-shadow ">
-                                <input class="btn-cut basic-btn btn-yellow color-white setting-normal-submit" type="submit" value="적용" >
-                            </div>
-                            <div class="btn-shadow ms-2 all-submit">
-                                <input class="btn-cut basic-btn btn-blue color-white setting-all-submit" type="submit" value="모든 영웅 적용" >
-                            </div>
-                        </div>
-                        
-                    </form>
-                </div>
-            </div>        
-        </div>
-    </div>
+   
 
     <!-- 저장/게시 누르고 확인 -->
     <div class="madal-background">
@@ -112,8 +25,8 @@
             <div class="form-status">
                 <h5>편성 상태</h5>
                 <p class="form-status-txt">편성 공유</p>
-                <label>공개 <input type="radio" name="access" value="public" <% if(data.form_access_status && data.form_access_status.eng_name == 'public') {%> checked <% }%> id=""></label>
-                <label>비공개 <input type="radio" name="access" value="private" id="" <% if(!data.form_access_status || data.form_access_status.eng_name != 'public') {%> checked <% }%>></label>
+                <label>공개 <input type="radio" name="access" value="public" checked id=""></label>
+                <label>비공개 <input type="radio" name="access" value="private" id="" ></label>
                 <p class="msg">현재 편성이 마이페이지에 저장됩니다. 편성을 저장한 현재 작성자가 아니면 아무도 편성을 볼 수 없습니다.</p>
             </div>
             
@@ -123,14 +36,6 @@
                 <p class="content-text">아레나</p>
             </div>
 
-            <div class="myhero-access">
-                <label class="charSetting-ele d-flex ">
-                    <span class="me-2">나의 영웅들 공개하기</span>
-                    <input type="checkbox" name="character_public" class="charPublic-checkbox" onclick="return false;">
-                    <span class="checkbox-img"></span>  
-                </label>
-                <p class="msg">현재 작성자의 영웅 육성 상황이 공개됩니다.</p>
-            </div>
 
             <div class="last-datetime">
                 <p>저장 일시</p>
@@ -149,6 +54,98 @@
 
 
     <div class="formmake-topcontainer d-flex flex-wrap">
+        <!-- 편성 요청 글 -->
+        <div class="askform-container shadow-basic" data-myheroaccess = "<%= data.myhero_access %>">
+            <!-- 상단바 -->
+            <div class="form-title ">
+                <dix class="form-status ">
+                    <div class="bg-orange color-white border-0 d-flex align-items-center justify-content-center">
+                        <p>편성 요청</p>
+                    </div>   
+                </dix>
+
+                <div class="content-name flex-fill">
+                    <div  class="bg-basicdark  color-yellow border-0 d-flex align-items-center">
+                        <p><%= data.now_content.kor_name %></p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="contents">
+                <div class="d-flex align-items-end">
+                    <div class="form-author bg-basicdark color-white">
+                        작성자 <span class="color-purple"><%= data.writer %></span>
+                    </div>
+                </div>
+                <form class="form-border-container d-flex align-items-center flex-wrap">
+                    <% if (data.members.length == 5){ %>
+                        <div class="form-char-container w-100 d-flex flex-wrap justify-content-center ">
+                            <% for(let i=0; i<data.members.length; i++){ %>
+                                <div class="character-5 form_spot">
+                                    <%- include('../components/one_hero_on_form.ejs', {
+                                        i : i,
+                                        data : {
+                                        members : data.members,
+                                        myheroaccess: data.myhero_access
+                                    }}) %> 
+                                </div>
+                            <% } %>
+                        </div>
+                    <% } else if  (data.members.length == 10){  %>
+                    <h5 class="w-100">1 부대</h5>
+                    <div class="form-char-container w-100 d-flex flex-wrap justify-content-center ">
+                        <% for(let i=0; i<5; i++){ %>
+                            <div class="character-10 form_spot">
+                                <%- include('../components/one_hero_on_form.ejs', {
+                                    i : i,
+                                    data : {
+                                    members : data.members,
+                                    myheroaccess: data.myhero_access
+                                }}) %> 
+                            </div>
+                        <% } %>
+                    </div>
+                    <h5 class="w-100">2 부대</h5>
+                    <div class="form-char-container w-100 d-flex flex-wrap justify-content-center ">
+                        <% for(let i=5; i<data.members.length; i++){ %>
+                        <div class="character-10 form_spot">
+                            <%- include('../components/one_hero_on_form.ejs', {
+                                i : i,
+                                data : {
+                                members : data.members,
+                                myheroaccess: data.myhero_access
+                            }}) %> 
+                        </div>
+                        <% } %>
+                        
+                    </div>
+                    <% } else if  (data.members.length == 7){  %>
+                        <div class="form-char-container w-100 d-flex flex-wrap justify-content-center ">
+                        <% for(let i=0; i<data.members.length; i++){ %>
+                            <div class="character-7 form_spot">
+                                <%- include('../components/one_hero_on_form.ejs', {
+                                    i : i,
+                                    data : {
+                                    members : data.members,
+                                    myheroaccess: data.myhero_access
+                                }}) %> 
+                            </div>
+                            <% if(i == 2){ %>
+                            <div class="change-line"></div>
+                            <% } %>
+                        <% } %>
+                        
+                        </div>
+                    <% }%>
+                </form>
+
+                    
+                <div class="bg-white memo-container color-gray">
+                    <div class="memo explain-content" ><%=data.writer_memo %></div>
+                </div>
+            </div>    
+
+        </div>
 
         <div class="form-container shadow-basic">
             <div class="spinner-container d-flex justify-content-center align-items-center flex-column">
@@ -159,40 +156,15 @@
             <!-- 상단바 -->
             <div class="form-title ">
                 <dix class="form-status ">
-                    <% if(!data.form_status || data.form_status.status_name == "편성 공유") {%>
-                    <button type="button " class="btn-blue color-white border-0 d-flex align-items-center justify-content-center">
-                        <i class="fa-solid fa-angle-down"></i><p>편성 공유</p>
+                    <button type="button " class="btn-green color-white border-0 d-flex align-items-center justify-content-center">
+                        <p>편성 도움</p>
                     </button>
-
-                    <ul>
-                        <li class="btn-yellow color-white">편성 요청</li>
-                    </ul>
-                    <% } else{ %>
-                        <button type="button " class="btn-yellow color-white border-0 d-flex align-items-center justify-content-center">
-                            <i class="fa-solid fa-angle-down"></i><p>편성 요청</p>
-                        </button>
-
-                        <ul>
-                            <li class="btn-blue color-white">편성 공유</li>
-                        </ul>
-                    <% }  %>
                 </dix>
 
                 <div class="content-name flex-fill">
                     <button type="button"  class="btn-black  color-yellow border-0 d-flex align-items-center">
-                        <i class="fa-solid fa-angle-down"></i><p data-heronum="<%= data.now_content['num_of_heroes']%>"><%= data.now_content.kor_name %></p>
+                        <p data-heronum="<%= data.now_content['num_of_heroes']%>"><%= data.now_content.kor_name %></p>
                     </button>
-
-                    <ul>
-                        <% for(let i=0; i<data.contents_list.length; i++){ %>
-                            <% if(data.contents_list[i]['eng_name'] == "all"){ continue; } %>
-                            <li class="btn-black color-white" 
-                            data-engname="<%= data.contents_list[i]['eng_name']%>" data-heronum="<%= data.contents_list[i]['num_of_heroes']%>">
-                                <%= data.contents_list[i]['kor_name']%>
-                            </li>
-                        <% } %>
-                    </ul>
-
                 </div>
             </div>
 
@@ -259,16 +231,7 @@
                     
 
                     <div class="left-box-bottom d-flex justify-content-start align-items-center">
-                        <label class="charSetting-ele d-flex ">
-                            <span class="me-2">나의 영웅들 공개하기</span>
-                            <input type="checkbox" name="character_public" <% if(data.myhero_access == 0){%> <% }else{%> checked <% }%>class="charPublic-checkbox">
-                            <span class="checkbox-img"></span>  
-                        </label>
-                        <div class="btn-shadow">
-                            <button class="charSetting-btn  btn-cut btn-white">
-                                영웅 설정 <i class="fa-solid fa-user-gear"></i>
-                            </button>
-                        </div>
+                        
                     </div>
                 </div>
 
@@ -276,22 +239,16 @@
                 <div class="right-box">
                     <h6 class="explain-title d-flex align-items-end">작성자 한마디</h6>
                     <div class="bg-white memo-container color-gray">
-                        <p class="cnt-text"><span><%=data.writer_memo.length %></span> / 1000</p>
-                        <textarea class="memo explain-content" placeholder="한마디를 적어주세요"  maxlength="1000" ><%=data.writer_memo %></textarea>
+                        <p class="cnt-text"><span>0</span> / 1000</p>
+                        <textarea class="memo explain-content" placeholder="한마디를 작성하세요. 편성도움에서는 한마디가 댓글 본문이 됩니다."  maxlength="1000" ><%=data.helper_memo %></textarea>
                     </div>
 
                     <!-- 좋아요 / 댓글 펼치기 -->
                     <div class="btns mg-10px ms-0 me-0 d-flex flex-fill justify-content-between">
-                        <% if(data.form_status){ %>
-                        <div class="form-btns btn-shadow d-flex justify-content-between w-100">
-                            <button class="save-btn w-100 btn-cut bottom-btn btn-yellow color-white">수정/게시 </button>
-                        </div>
-                        <% } else { %>
                         <div class="form-btns btn-shadow d-flex justify-content-between w-100">
                             <button class="load-btn btn-cut bottom-btn btn-blue color-white">불러오기 </button>
                             <button class="save-btn btn-cut bottom-btn btn-yellow color-white">저장/게시 </button>
                         </div>
-                        <% }  %>
                     </div>
                 </div>
 
@@ -373,14 +330,12 @@
 
         <!-- 영웅들 늘어진 칸 -->
         <div class="heroes-speread flex-fill bg-basicdark shadow-basic">
-            <div class="mypage_link btn-shadow text-start">
-                <a href="/mypage/myhero" class=" btn-cut btn-blue color-white">마이페이지 편집</a>
-            </div>
+
             <div class="heroes-spread-container blue-scroll w-100">
                 <% for(let i=0; i<data.hero_list.length; i++){ %>
                     <div class="character-list-box select-liner ">
                         <div class="character-list" >
-                            <% if(data.nickname && data.having_heroes_id.includes(data.hero_list[i]["ID"])){ %>
+                            <% if(data.having_heroes_id && data.having_heroes_id.includes(data.hero_list[i]["ID"])){ %>
                             <img src="/sources/img/characters/<%= data.hero_list[i].eng_type %>_<%= data.hero_list[i].eng_name %>_<%= data.hero_list[i].eng_class %>.png" 
                             alt="" data-id="<%= data.hero_list[i]["ID"] %>" data-korname="<%= data.hero_list[i].kor_name %>" data-type="<%=data.hero_list[i].eng_type%>"
                             onerror="this.onerror=null; this.src='/sources/img/characters/Chr_Error.png';">
@@ -396,7 +351,7 @@
 
                                     <%=data.having_heroes[data.having_heroes_id.indexOf(data.hero_list[i]["ID"])].cho %>
                                 </span>
-                            <% } else if (data.nickname){ %>
+                            <% } else if (data.having_heroes_id){ %>
                             <img src="/sources/img/characters/<%= data.hero_list[i].eng_type %>_<%= data.hero_list[i].eng_name %>_<%= data.hero_list[i].eng_class %>.png" 
                             alt="" data-id="<%= data.hero_list[i]["ID"] %>" data-korname="<%= data.hero_list[i].kor_name %>" data-type="<%=data.hero_list[i].eng_type%>"
                             onerror="this.onerror=null; this.src='/sources/img/characters/Chr_Error.png';" class="nothave">
@@ -465,7 +420,7 @@
                 if($(".spot-selected-full").length > 0) now_selected = $(".spot-selected-full").parent();
                 else now_selected = $(".spot-selected-empty").parent();
 
-                let idx = $('.form_spot').index(now_selected);
+                let idx = $('.form-container .form_spot').index(now_selected);
                 return idx;
             }
 
@@ -484,7 +439,7 @@
              **/
             static reloadOnlySelected(){
                 let i = this.indexOfFormSpot();
-                let spot = $('.form_spot .select-liner').eq(i)
+                let spot = $('.form-container .form_spot .select-liner').eq(i)
                 // spot.empty();
                 if(this.heroes_arr[i] == 0 || i > this.heroes_arr.length - 1){
                     spot.html(`<div class="empty"><i class="fa-solid fa-plus color-gray"></i> </div>
@@ -499,8 +454,8 @@
              * heroes_arr에 저장된대로 편성 ui에 넣어줌
              **/
             static addHeroesInForm(){
-                for(let i=0; i<$('.form_spot .select-liner').length; i++){
-                    let spot = $('.form_spot .select-liner').eq(i)
+                for(let i=0; i<$('.form-container .form_spot .select-liner').length; i++){
+                    let spot = $('.form-container .form_spot .select-liner').eq(i)
                     spot.empty();
                     if(this.heroes_arr[i] == 0 || i > this.heroes_arr.length - 1){
                         spot.append(`<div class="empty"><i class="fa-solid fa-plus color-gray"></i> </div>
@@ -517,10 +472,10 @@
              **/ 
             static addHeroesInArr(){
                 for(let i=0; i<this.heroes_arr.length; i++){
-                    if(i > $('.form_spot input').length - 1)
+                    if(i > $('.form-container .form_spot input').length - 1)
                         this.oneHeroSet(i, 0);
                     else 
-                        this.oneHeroSet(i, $('.form_spot input').eq(i).val());
+                        this.oneHeroSet(i, $('.form-container .form_spot input').eq(i).val());
                     
                 }
             }
@@ -596,7 +551,6 @@
     <script>
 
         window.onload = function(){
-            
             NowFormHeroes.setter(JSON.parse('<%- JSON.stringify(data.form_herolist) %>').map((e) => {return parseInt(e)}));
 
             if($(".content-name button p").data("heronum") == 5) to5layout();
@@ -606,7 +560,7 @@
             NowFormHeroes.addSelectedEffect();
             NowFormHeroes.addHeroesInForm();
 
-            let spot = $('.form_spot').eq(0)
+            let spot = $('.form-container .form_spot').eq(0)
             if(spot.find(".empty").length>0){
                 spot.prepend("<div class='spot-selected-empty'></div>");
             }else {
@@ -637,22 +591,13 @@
             // 편성 상태
             let form_status = $(".form-title .form-status button p").text();
             $(".save-check .form-status-txt").text(form_status);
-            if(form_status.includes("요청") ){
-                $(".save-check .form-status .msg").text("현재 편성이 편성 요청 전용 게시판에 올라갑니다. 공개 여부를 선택할 수 없습니다.")
-                $(".save-check .form-status input[value='public']").prop("checked", true);
-                $(".save-check .form-status input[name='access']").prop("disabled", true);
-            }
-                // $(".save-check .form-status .msg").text("현재 편성이 저장됩니다. 공개 여부를 선택하세요.")
+            $(".save-check .form-status .msg").text("현재 편성이 편성 요청 게시물의 댓글로 게시됩니다. 공개 여부를 선택할 수 없습니다.")
+            $(".save-check .form-status input[value='public']").prop("checked", true);
+            $(".save-check .form-status input[name='access']").prop("disabled", true);
+            // $(".save-check .form-status .msg").text("현재 편성이 저장됩니다. 공개 여부를 선택하세요.")
             
             // 컨텐츠
             $(".save-check .content-text").text($(".form-title .content-name button p").text())
-
-            // 나의 영웅들 공개하기
-            let myhero_access = $(".form-container .left-box-bottom .charPublic-checkbox").is(":checked");
-            $(".save-check .myhero-access .charPublic-checkbox").prop("checked", myhero_access);
-            // $(".save-check .myhero-access .charPublic-checkbox").prop("disabled", true);
-
-            if(!myhero_access) $(".myhero-access .msg").text("현재 작성자의 영웅 육성 상황이 공개되지 않습니다.")
 
             // 저장 일시
             LastDatetime.init()
@@ -692,21 +637,21 @@
             
             
             // 편성 상태 (공유,요청 / 공개,비공개)
-            newForm.append(`<input name="form_status" type="hidden" value="${$(".form-title .form-status button p").text()}">`);
-            newForm.append(`<input name="form_access" type="hidden" value="${$(".save-check .form-status input[name='access']:checked").val()}">`);
+            newForm.append(`<input name="form_status" type="hidden" value="편성 도움">`);
+            newForm.append(`<input name="form_access" type="hidden" value="public">`);
 
             // 컨텐츠 이름
-            newForm.append(`<input name="content_name" type="hidden" value="${$(".form-title .content-name button p").text()}">`);
+            newForm.append(`<input name="content_name" type="hidden" value="${$(".askform-container .form-title .content-name div p").text()}">`);
 
             // 편성 칸 정보
             for(let i=0; i<NowFormHeroes.getter().length; i++){
                 newForm.append(`<input name="hero" type="hidden" value="${NowFormHeroes.getter()[i]}">`);
             }
             // 나의 영웅들 공개하기 여부
-            newForm.append(`<input name="myhero_access" type="hidden" value="${$(".form-container .left-box-bottom .charPublic-checkbox").is(":checked")}">`);
+            newForm.append(`<input name="myhero_access" type="hidden" value="${$(".askform-container").data("myheroaccess") == 1}">`);
 
             // 작성자 한마디
-            newForm.append(`<input name="writer_memo" type="hidden" value="${$(".memo-container .memo").val()}">`);
+            newForm.append(`<input name="writer_memo" type="hidden" value="${$(".form-container  .memo-container .memo").val()}">`);
 
 
             // 저장 일시
