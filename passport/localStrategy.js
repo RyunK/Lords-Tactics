@@ -7,6 +7,9 @@ module.exports = () => {
   passport.use(new LocalStrategy(async (inputid, inputpw, done) => {
     try {
         // console.log(`id: ${inputid}`)
+        if(!inputid || inputid.length <= 0){
+          return done(null, false, { message: 'ID를 입력하세요.' })
+        }
 
         var sql = `SELECT * FROM USER
                 INNER JOIN user_pw_table ON USER.id = USER_PW_TABLE.USER_ID

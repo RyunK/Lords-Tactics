@@ -428,7 +428,7 @@ router.post('/withdraw', mustLoggedIn, async(req, res) => {
         var sql = `DELETE FROM hero_settings WHERE user_id = ?;` ;
         await (await connection).execute(sql, [req.user[0].id]);
 
-        var sql = `DELETE FROM user WHERE id = ?;` ;
+        var sql = `UPDATE USER SET USERNAME = '', NICKNAME="(탈퇴한 유저)" WHERE ID = ?`
         await (await connection).execute(sql, [req.user[0].id]);
 
         
