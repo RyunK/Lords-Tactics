@@ -13,6 +13,48 @@ router.get('/', mustLoggedIn, (req, res) => {
 }) 
 
 
+function mypageFormWhereMaker(req, q_content, filtered_heroes_list){
+    var where = `(HF.USER_ID = ? OR (HF.ID = (select form_id from form_save where user_id = ?) and HF.form_access_status_id = 1) )`;
+    let q_list = [req.user[0].id, req.user[0].id]
+
+    if(req.query.form_status && req.query.form_status != 8 && req.query.form_status != 3){
+        where += `AND ( HF.FORM_STATUS_ID = ? and HF.USER_ID = ?) `;
+        q_list.push(req.query.form_status)
+        q_list.push(req.user[0].id)
+    } else if (req.query.form_status == 3){
+        where = `(not HF.USER_ID = ? and (HF.ID = (select form_id from form_save where user_id = ?) and HF.form_access_status_id = 1) )
+                and (hf.form_status_id = 1 or hf.form_status_id = 7)`;
+    }
+
+    if(q_content[0].id != '9'){
+        where += `AND HF.CONTENTS_ID = ? `;
+        q_list.push(q_content[0].id)
+    }
+
+    // '편성 저장' 했으면 무조건 비공개로만 출력되게
+    if(req.query.form_access && req.query.form_access == 'public') {
+        // where += `AND HF.FORM_ACCESS_STATUS_ID = ? `;
+        where += `AND HF.FORM_ACCESS_STATUS_ID = if(HF.USER_ID = ?, 1, 2)`;
+        q_list.push( req.user[0].id)
+    } else if(req.query.form_access && req.query.form_access == 'private') {
+        // where += `AND HF.FORM_ACCESS_STATUS_ID = ? `;
+        where += `AND HF.FORM_ACCESS_STATUS_ID = if(HF.USER_ID = ?, 2, 1)`;
+        q_list.push( req.user[0].id)
+    }
+
+    if(req.query.hero){
+        let sql_heroes = '(';
+        for(let i=0; i<filtered_heroes_list.length; i++){
+            sql_heroes += ` fM.HERO_ID = ? `
+            if(i < filtered_heroes_list.length - 1) sql_heroes += 'or'
+            q_list.push(filtered_heroes_list[i]);
+        }
+        where += 'AND' + sql_heroes + ')';
+    }
+
+    return [where, q_list];
+}
+
 router.get('/formsave', mustLoggedIn, async(req, res) => { 
     var sql = `SELECT * FROM FORM_STATUS
             ORDER BY status_name`;
@@ -38,39 +80,8 @@ router.get('/formsave', mustLoggedIn, async(req, res) => {
     }
 
     // 쿼리에 맞는 폼만 출력하기
-    // 편성 공개 여부 id select
-    var sql = `SELECT * FROM FORM_ACCESS_STATUS
-            WHERE ENG_NAME = ?`;
-    var [form_access_status, fields] = await (await connection).execute(sql, [req.query.form_access? req.query.form_access : 'all']);
-    
     // where 절 생성
-    var where = `HF.USER_ID = ? `;
-    let q_list = [req.user[0].id]
-
-    if(q_content[0].id != '9'){
-        where += `AND HF.CONTENTS_ID = ? `;
-        q_list.push(q_content[0].id)
-    }
-
-    if(req.query.form_status && req.query.form_status != 8){
-        where += `AND HF.FORM_STATUS_ID = ? `;
-        q_list.push(req.query.form_status)
-    }
-
-    if(form_access_status[0].id != '3') {
-        where += `AND HF.FORM_ACCESS_STATUS_ID = ? `;
-        q_list.push(form_access_status[0].id)
-    }
-
-    if(req.query.hero){
-        let sql_heroes = '(';
-        for(let i=0; i<filtered_heroes_list.length; i++){
-            sql_heroes += ` fM.HERO_ID = ? `
-            if(i < filtered_heroes_list.length - 1) sql_heroes += 'or'
-            q_list.push(filtered_heroes_list[i]);
-        }
-        where += 'AND' + sql_heroes + ')';
-    }
+    let [where, q_list] = mypageFormWhereMaker(req, q_content, filtered_heroes_list);
 
     let order = getDatas.formOrderGetter(req, res);
     
@@ -83,7 +94,13 @@ router.get('/formsave', mustLoggedIn, async(req, res) => {
         members =[];
     }
     
-    
+    // 내가 저장한 form 리스트 보내주기
+    let saved_forms = []
+    if(req.isAuthenticated()){
+        var sql = `select * from form_save where user_id = ?`
+        var [mysave, fields] = await(await connection).execute(sql, [req.user[0].id]);
+        saved_forms = mysave.map((e) => e.form_id);
+    }
  
     let data = {
         from: 'mypage',
@@ -99,6 +116,7 @@ router.get('/formsave', mustLoggedIn, async(req, res) => {
         hero_list : hero_list,
         form_list : form_list,
         members : members,
+        saved_forms : saved_forms,
     }
     res.render('./mypage/mypage_formsave.ejs',  {data : data})
 })
@@ -106,129 +124,108 @@ router.get('/formsave', mustLoggedIn, async(req, res) => {
 
 router.get('/formsave/detail/:id', mustLoggedIn, async(req, res) => {     
     // if(!req.query.n) res.redirect('/formsave');
-
-
-    var sql = `SELECT * FROM CONTENTS_NAME
-                WHERE ENG_NAME= ?`;
-    var [q_content, fields] = await (await connection).execute(sql, [req.query.content ? req.query.content : 'all']);
-
-    var sql = `SELECT * FROM FORM_STATUS
-                WHERE ID= ?`;
-    var [now_formstatus, fields] = await (await connection).execute(sql, [req.query.form_status ? req.query.form_status : '8']);
-
-    let filtered_heroes_list, filtered_heroes_list_forrender;
     try{
-        [filtered_heroes_list, filtered_heroes_list_forrender] = await getDatas.get_filtered_herolist(req, res, connection);
-    }catch(e){
-        filtered_heroes_list = [];
-        filtered_heroes_list_forrender =[];
-    }
+        // 권한 체크 해야함
+        var sql = `select * from hero_forms HF where id = ? and (HF.USER_ID = ? OR (HF.ID = (select form_id from form_save where user_id = ?) and HF.form_access_status_id = 1) )`
+        var [result, fields] = await(await connection).execute(sql, [req.params.id, req.user[0].id, req.user[0].id]);
+        if(result.length <= 0) throw new Error("편성을 열람할 권한이 없습니다.");
 
-    // id로 form검색
-    let [form_info, this_members] = await getDatas.getFormInfoNMembers(req, res, connection); 
+        var sql = `SELECT * FROM CONTENTS_NAME
+                    WHERE ENG_NAME= ?`;
+        var [q_content, fields] = await (await connection).execute(sql, [req.query.content ? req.query.content : 'all']);
 
-    // console.log(this_members)
+        var sql = `SELECT * FROM FORM_STATUS
+                    WHERE ID= ?`;
+        var [now_formstatus, fields] = await (await connection).execute(sql, [req.query.form_status ? req.query.form_status : '8']);
 
-    // 쿼리로 앞뒤 레코드 검색 * 앞뒤는 아이디/status/content만 필요
-    // where 절 생성
-    var where = `HF.USER_ID = ? `;
-    let q_list = [req.user[0].id, req.user[0].id]
-
-    if(req.query.content && req.query.content!='all'){
-        where += `AND CN.ENG_NAME = ? `;
-        q_list.push(req.query.content)
-    }
-
-    if(req.query.form_status && req.query.form_status != 8){
-        where += `AND HF.FORM_STATUS_ID = ? `;
-        q_list.push(req.query.form_status)
-    }
-
-    if(req.query.form_access && req.query.form_access != 'all') {
-        where += `AND FAS.ENG_NAME = ? `;
-        q_list.push(req.query.form_access)
-    }
-
-    if(req.query.hero && Array.isArray(req.query.hero)){
-        let sql_heroes = '(';
-        for(let i=0; i<req.query.hero.length; i++){
-            where += ` fM.HERO_ID = ? `
-            if(i < req.query.hero.length - 1) sql_heroes += 'or'
-            q_list.push(req.query.hero[i]);
+        let filtered_heroes_list, filtered_heroes_list_forrender;
+        try{
+            [filtered_heroes_list, filtered_heroes_list_forrender] = await getDatas.get_filtered_herolist(req, res, connection);
+        }catch(e){
+            filtered_heroes_list = [];
+            filtered_heroes_list_forrender =[];
         }
-        where += 'AND' + sql_heroes + ')';
-    } else if(req.query.hero && !Array.isArray(req.query.hero)){
-        where += `AND fM.HERO_ID = ? `
-        q_list.push(req.query.hero);
+
+        // id로 form검색
+        let [form_info, this_members] = await getDatas.getFormInfoNMembers(req, res, connection); 
+
+        //where절 생성 
+        let [where, q_list] = mypageFormWhereMaker(req, q_content, filtered_heroes_list);
+        q_list.unshift(req.user[0].id);
+        let order = getDatas.formOrderGetter(req, res);
+
+        // 앞뒤 글 검색
+        let rn = 1;
+        if(req.query.hero && Array.isArray(req.query.hero)) rn = req.query.hero.length;
+        var sql = `SELECT  T2.* 
+                FROM (SELECT T.*, ROW_NUMBER() OVER(${order}) AS ORDER_NUM
+                        FROM (
+                            SELECT HF.ID, HF.WRITER_MEMO, HF.LAST_DATETIME, HF.VIEW, HF.SAVED_CNT, hf.USER_ID = ? AS IS_WRITER,
+                            FM.HERO_ID, CN.KOR_NAME as CONTENT_NAME, FS.STATUS_NAME, FAS.ENG_NAME AS ACCESS, USER.NICKNAME,
+                                ROW_NUMBER() OVER (
+                                    PARTITION BY HF.id 
+                                    ORDER BY HF.last_datetime DESC
+                                ) AS rn
+                            FROM HERO_FORMS HF
+                            INNER JOIN FORM_MEMBERS FM ON HF.ID = fM.FORM_ID
+                            INNER JOIN CONTENTS_NAME CN ON HF.CONTENTS_ID = CN.ID
+                            INNER JOIN FORM_STATUS FS ON HF.FORM_STATUS_ID = FS.ID
+                            INNER JOIN USER ON HF.USER_ID = USER.ID
+                            INNER JOIN FORM_ACCESS_STATUS FAS ON HF.FORM_ACCESS_STATUS_ID = FAS.ID 
+                            WHERE ${where}
+                        ) AS T
+                    WHERE T.rn = ${rn}) AS T2
+                WHERE T2.ORDER_NUM = ${parseInt(req.query.n? req.query.n : -2) - 1} `;
+        var [previous, fields] = await (await connection).execute(sql, q_list );
+
+        var sql = `SELECT  T2.* 
+                FROM (SELECT T.*, ROW_NUMBER() OVER(${order}) AS ORDER_NUM
+                        FROM (
+                            SELECT HF.ID, HF.WRITER_MEMO, HF.LAST_DATETIME, HF.VIEW, HF.SAVED_CNT, hf.USER_ID = ? AS IS_WRITER,
+                            FM.HERO_ID, CN.KOR_NAME as CONTENT_NAME, FS.STATUS_NAME, FAS.ENG_NAME AS ACCESS, USER.NICKNAME,
+                                ROW_NUMBER() OVER (
+                                    PARTITION BY HF.id 
+                                    ORDER BY HF.last_datetime DESC
+                                ) AS rn
+                            FROM HERO_FORMS HF
+                            INNER JOIN FORM_MEMBERS FM ON HF.ID = fM.FORM_ID
+                            INNER JOIN CONTENTS_NAME CN ON HF.CONTENTS_ID = CN.ID
+                            INNER JOIN FORM_STATUS FS ON HF.FORM_STATUS_ID = FS.ID
+                            INNER JOIN USER ON HF.USER_ID = USER.ID
+                            INNER JOIN FORM_ACCESS_STATUS FAS ON HF.FORM_ACCESS_STATUS_ID = FAS.ID 
+                            WHERE ${where}
+                        ) AS T
+                    WHERE T.rn = ${rn}) AS T2
+                WHERE T2.ORDER_NUM = ${parseInt(req.query.n? req.query.n : -2) + 1} `;
+        var [next, fields] = await (await connection).execute(sql, q_list );
+
+
+        // 게시글 id로 comment 및 reply 검색
+        var [comments, replys] = await getDatas.getCommentsNReplys(req, res, connection, req.params.id)
+
+
+        let data = {
+            nickname: getDatas.loggedInNickname(req, res),
+            content: q_content,
+            now_formstatus : now_formstatus,
+            form_access : req.query.form_access? req.query.form_access : 'all',
+            filtered_heroes_list_forrender : filtered_heroes_list_forrender,
+            form_id : req.params.id,
+            form_info : form_info,
+            members : this_members,
+            previous : previous,
+            next : next,
+            comments : comments,
+            replys : replys,
+        }
+        res.render('./mypage/mypage_formdetail.ejs',  {data : data})
+
+    }catch(e){
+        console.log(e);
+        res.redirect("/?error="+e.message);
     }
 
-    let order = getDatas.formOrderGetter(req, res);
-
-    let rn = 1;
-    if(req.query.hero && Array.isArray(req.query.hero)) rn = req.query.hero.length;
-    var sql = `SELECT  T2.* 
-            FROM (SELECT T.*, ROW_NUMBER() OVER(${order}) AS ORDER_NUM
-                    FROM (
-                        SELECT HF.ID, HF.WRITER_MEMO, HF.LAST_DATETIME, HF.VIEW, HF.SAVED_CNT, hf.USER_ID = ? AS IS_WRITER,
-                        FM.HERO_ID, CN.KOR_NAME as CONTENT_NAME, FS.STATUS_NAME, FAS.ENG_NAME AS ACCESS, USER.NICKNAME,
-                            ROW_NUMBER() OVER (
-                                PARTITION BY HF.id 
-                                ORDER BY HF.last_datetime DESC
-                            ) AS rn
-                        FROM HERO_FORMS HF
-                        INNER JOIN FORM_MEMBERS FM ON HF.ID = fM.FORM_ID
-                        INNER JOIN CONTENTS_NAME CN ON HF.CONTENTS_ID = CN.ID
-                        INNER JOIN FORM_STATUS FS ON HF.FORM_STATUS_ID = FS.ID
-                        INNER JOIN USER ON HF.USER_ID = USER.ID
-                        INNER JOIN FORM_ACCESS_STATUS FAS ON HF.FORM_ACCESS_STATUS_ID = FAS.ID 
-                        WHERE ${where}
-                    ) AS T
-                WHERE T.rn = ${rn}) AS T2
-            WHERE T2.ORDER_NUM = ${parseInt(req.query.n? req.query.n : -2) - 1} `;
-    var [previous, fields] = await (await connection).execute(sql, q_list );
-
-    var sql = `SELECT  T2.* 
-            FROM (SELECT T.*, ROW_NUMBER() OVER(${order}) AS ORDER_NUM
-                    FROM (
-                        SELECT HF.ID, HF.WRITER_MEMO, HF.LAST_DATETIME, HF.VIEW, HF.SAVED_CNT, hf.USER_ID = ? AS IS_WRITER,
-                        FM.HERO_ID, CN.KOR_NAME as CONTENT_NAME, FS.STATUS_NAME, FAS.ENG_NAME AS ACCESS, USER.NICKNAME,
-                            ROW_NUMBER() OVER (
-                                PARTITION BY HF.id 
-                                ORDER BY HF.last_datetime DESC
-                            ) AS rn
-                        FROM HERO_FORMS HF
-                        INNER JOIN FORM_MEMBERS FM ON HF.ID = fM.FORM_ID
-                        INNER JOIN CONTENTS_NAME CN ON HF.CONTENTS_ID = CN.ID
-                        INNER JOIN FORM_STATUS FS ON HF.FORM_STATUS_ID = FS.ID
-                        INNER JOIN USER ON HF.USER_ID = USER.ID
-                        INNER JOIN FORM_ACCESS_STATUS FAS ON HF.FORM_ACCESS_STATUS_ID = FAS.ID 
-                        WHERE ${where}
-                    ) AS T
-                WHERE T.rn = ${rn}) AS T2
-            WHERE T2.ORDER_NUM = ${parseInt(req.query.n? req.query.n : -2) + 1} `;
-    var [next, fields] = await (await connection).execute(sql, q_list );
-
-
-    // 게시글 id로 comment 및 reply 검색
-    var [comments, replys] = await getDatas.getCommentsNReplys(req, res, connection, req.params.id)
-
-    // console.log( req.user[0].id)
-
-    let data = {
-        nickname: getDatas.loggedInNickname(req, res),
-        content: q_content,
-        now_formstatus : now_formstatus,
-        form_access : req.query.form_access? req.query.form_access : 'all',
-        filtered_heroes_list_forrender : filtered_heroes_list_forrender,
-        form_id : req.params.id,
-        form_info : form_info,
-        members : this_members,
-        previous : previous,
-        next : next,
-        comments : comments,
-        replys : replys,
-    }
-    res.render('./mypage/mypage_formdetail.ejs',  {data : data})
+    
 })
 
 router.get('/myhero', mustLoggedIn, async(req, res) => {

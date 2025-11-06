@@ -93,6 +93,18 @@ app.get('/', (req, res) => {
   }
 })
 
+app.get('/detail/:id', async(req, res) => {
+  var sql = `select form_status_id from hero_forms where id=?`
+  var[result, fields] = await(await connection).execute(sql, [req.params.id]);
+
+  if(result[0].form_status_id == 1){
+    res.redirect('/forum/share/detail/'+req.params.id);
+    return;
+  } else{
+    res.redirect('/forum/help/detail/'+req.params.id);
+    return;
+  }
+})
 const { mustLoggedIn, mustNotLoggedIn } = require('./routes/middlewares'); 
 const { heroSettingNormalSave, heroSettingAllSave } = require('./routes/setDatas'); 
 

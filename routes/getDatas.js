@@ -60,9 +60,15 @@ module.exports = {
       let rn = 1;
       if(req.query.hero && Array.isArray(req.query.hero)) rn = req.query.hero.length;
       // console.log(rn)
+      let user_id;
+      if (req.isAuthenticated()){
+         user_id = req.user[0].id;
+      }else {
+         user_id = -1;
+      }
 
       var sql = `SELECT T.*, ROW_NUMBER() OVER(${order}) AS ORDER_NUM FROM (
-                SELECT HF.ID, HF.WRITER_MEMO, HF.LAST_DATETIME, HF.VIEW, HF.SAVED_CNT, hf.USER_ID = ${req.user[0].id} AS IS_WRITER,
+                SELECT HF.ID, HF.WRITER_MEMO, HF.LAST_DATETIME, HF.VIEW, HF.SAVED_CNT, hf.USER_ID = ${user_id} AS IS_WRITER,
                 FM.HERO_ID, CN.KOR_NAME as CONTENT_NAME, FS.STATUS_NAME, FAS.ENG_NAME AS ACCESS, USER.NICKNAME,
                     ROW_NUMBER() OVER (
                         PARTITION BY HF.id 
@@ -124,15 +130,16 @@ module.exports = {
     * @param {*} res 
     */
    getFormInfoNMembers: async function(req, res, connection){
+      
       // id로 inner join 싹 해서 form검색
-      var sql = `SELECT HF.ID, HF.WRITER_MEMO, HF.LAST_DATETIME, HF.VIEW, HF.SAVED_CNT, hf.USER_ID = ? AS IS_WRITER,
+      var sql = `SELECT HF.ID, HF.WRITER_MEMO, HF.LAST_DATETIME, HF.VIEW, HF.SAVED_CNT, hf.USER_ID = ? AS IS_WRITER, HF.MYHERO_ACCESS, HF.FORM_ACCESS_STATUS_ID,
                CN.KOR_NAME as CONTENT_NAME  ,FS.STATUS_NAME, FAS.ENG_NAME AS ACCESS ,USER.NICKNAME FROM HERO_FORMS HF
                INNER JOIN CONTENTS_NAME CN ON HF.CONTENTS_ID = CN.ID
                INNER JOIN FORM_STATUS FS ON HF.FORM_STATUS_ID = FS.ID
                INNER JOIN USER ON HF.USER_ID = USER.ID
                INNER JOIN FORM_ACCESS_STATUS FAS ON HF.FORM_ACCESS_STATUS_ID = FAS.ID 
                WHERE HF.ID = ?;`
-      var [form_info ,fields] = await (await connection).execute(sql, [req.user[0].id , req.params.id]);
+      var [form_info ,fields] = await (await connection).execute(sql, [req.isAuthenticated()?req.user[0].id:-1 , req.params.id]);
 
       // 편성 멤버 조회
       var sql = `SELECT FM.HERO_LV, FM.HERO_CHO, FM.HERO_GAK, TYPES.ENG_NAME AS TYPE, NAMES.ENG_NAME AS NAME, classes.ENG_NAME AS CLASS  FROM FORM_MEMBERS FM 
@@ -162,7 +169,7 @@ module.exports = {
                INNER JOIN HERO_FORMS HF ON HF.ID = fc.FORM_ID
                INNER JOIN user U2 ON u2.id = hf.USER_ID 
                WHERE FC.FORM_ID = ?`
-      var [comments, fields] = await (await connection).execute(sql,  [req.user[0].id, form_id]);
+      var [comments, fields] = await (await connection).execute(sql,  [req.isAuthenticated()?req.user[0].id:-1, form_id]);
 
       var sql = `SELECT FR.id id, FR.comment_id, FR.reply_id , fc.help_form_id , FR.reply_body, FR.last_datetime, U.nickname, 
             (U.ID = ?) AS is_author ,U2.NICKNAME AS reply_nickanme , (U.ID = U3.ID) AS is_formauthor
@@ -175,7 +182,7 @@ module.exports = {
             LEFT JOIN user U2 ON fr2.AUTHOR_ID = U2.ID  
             WHERE FC.FORM_ID = ? 
             ORDER BY comment_id ASC , FR.id ASC`
-      var [replys, fields] = await (await connection).execute(sql,  [ req.user[0].id, form_id]);
+      var [replys, fields] = await (await connection).execute(sql,  [ req.isAuthenticated()?req.user[0].id:-1, form_id]);
 
 
       return [comments, replys];

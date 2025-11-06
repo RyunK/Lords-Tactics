@@ -71,6 +71,13 @@ router.get('/', async(req, res) => {
         [today_ask_members, fields] = await (await connection).execute(sql);
     }
 
+    // 내가 저장한 form 리스트 보내주기
+    let saved_forms = []
+    if(req.isAuthenticated()){
+        var sql = `select * from form_save where user_id = ?`
+        var [mysave, fields] = await(await connection).execute(sql, [req.user[0].id]);
+        saved_forms = mysave.map((e) => e.form_id);
+    }
     
     let data = {
         from : 'main',
@@ -79,6 +86,7 @@ router.get('/', async(req, res) => {
         best_members : best_members,
         today_ask_form_list : today_ask_form_list,
         today_ask_members : today_ask_members,
+        saved_forms : saved_forms,
     }
     // console.log("filtered_heroes : " + filtered_heroes_list)
 

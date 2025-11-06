@@ -28,35 +28,13 @@
                 <i class="fa-solid fa-chevron-left"></i> <span class="flex-fill text-center">뒤로 가기</span>
             </a>
         </div>
-        <%- include('mypage_nav.ejs', {page: 'form save', nickname: data.nickname}) %> 
 
         <div class="shadow-filter-basic"> 
             <div class="filter-container">
-                <div>
-                    <h6>편성 공개 여부</h6>
-                    <div class="access-container access-disabled d-flex flex-fill justify-content-between ">
-                        <label class="charSetting-ele d-flex align-self-center me-3">  
-                            <span class="me-2">전체 </span>
-                            <input type="radio" name="form_access" value="all" class="charPublic-checkbox " onclick="return false;" <% if(data.form_access == 'all') {%> checked <%}%>  >
-                            <span class="checkbox-img"></span> 
-                        </label>
-                        <label class="charSetting-ele d-flex align-self-center me-3">  
-                            <span class="me-2">공개 </span> 
-                            <input type="radio" name="form_access" value="public" class="charPublic-checkbox " onclick="return false;" <% if(data.form_access == 'public') {%> checked <%}%> >
-                            <span class="checkbox-img"></span> 
-                        </label>
-                        <label class="charSetting-ele d-flex align-self-center me-3">  
-                            <span class="me-2">비공개 </span> 
-                            <input type="radio" name="form_access" value="private" class="charPublic-checkbox " onclick="return false;" <% if(data.form_access == 'private') {%> checked <%}%>>
-                            <span class="checkbox-img"></span> 
-                        </label>
-                        
-                    </div>
-                    
-                </div>
+                
                 <div>
                     <h6>편성 상태</h6>
-                    <div class="disable-div color-black"><%=data.now_formstatus[0].status_name %> </i></div>
+                    <div class="disable-div color-black"><%=data.now_formstatus %> </i></div>
                 </div>
                 <div>
                     <h6>영웅 필터</h6>
@@ -87,18 +65,11 @@
             <!-- 상단바 -->
             <div class="form-title ">
                 <dix class="form-status ">
-                    <%  if(data.form_info[0].IS_WRITER == 0 ) {  %>
-                        <button type="button " class="status-save border-0 d-flex align-items-center justify-content-center">
-                        <p>편성 저장</p>
-                    <% } else if(data.form_info[0].STATUS_NAME == "편성 공유" ) { %>
+                    <% if(data.form_info[0].STATUS_NAME == "편성 공유" ) { %>
                         <button type="button " class="status-share border-0 d-flex align-items-center justify-content-center">
                         <p><%=data.form_info[0].STATUS_NAME %></p>
                     <% } else if(data.form_info[0].STATUS_NAME == "편성 요청" ) {  %>
                         <button type="button " class="status-request border-0 d-flex align-items-center justify-content-center">
-                        <p><%=data.form_info[0].STATUS_NAME %></p>
-                    
-                    <% } else if(data.form_info[0].STATUS_NAME == "편성 도움" ) {  %>
-                        <button type="button " class="status-help border-0 d-flex align-items-center justify-content-center">
                         <p><%=data.form_info[0].STATUS_NAME %></p>
                     <% } else if(data.form_info[0].STATUS_NAME == "편성 완료" ) {  %>
                         <button type="button " class="status-end border-0 d-flex align-items-center justify-content-center">
@@ -113,12 +84,7 @@
                 <div class="content-name flex-fill">
                     <button type="button"  class="bg-basicdark  color-yellow border-0 d-flex align-items-center justify-content-between">
                         <p><%=data.form_info[0].CONTENT_NAME %></p>
-                        <% if(data.form_info[0].ACCESS == 'private') {%>
-                            <i class="ms-3 fa-solid fa-lock"></i>
-                            <div class="private-hover-box color-black shadow-basic">
-                                <span class="">비공개</span> 편성
-                            </div>
-                        <% }%>
+                        
                     </button>
 
                 </div>
@@ -243,7 +209,7 @@
 
                     <div class="left-box-bottom d-flex justify-content-start align-items-center">
                         <span class="view">조회수 <span><%=data.form_info[0].VIEW %></span></span>
-                        <span <%if(data.form_info[0].IS_WRITER != 0 ){ %> class="mine" <% } else {%> class="saved" <% }%>><i class="fa-solid fa-bookmark"></i> <%=data.form_info[0].SAVED_CNT %></span>
+                        <span <%if(data.form_info[0].IS_WRITER != 0 ){ %> class="mine" <% } %>><i class="fa-solid fa-bookmark <% if(data.saved == 1){%> color-purple <% } %>"></i> <%=data.form_info[0].SAVED_CNT %></span>
                         <!-- 공유 링크 복사 버튼 -->
                         <%if(data.form_info[0].IS_WRITER == 0 ){ %>
                         <span class="report color-red ">신고</span>
@@ -261,13 +227,22 @@
 
                     <!-- 좋아요 / 댓글 펼치기 -->
                     <div class="btns mg-10px ms-0 me-0 d-flex flex-fill justify-content-between">
-                        <div class="btn-shadow d-flex justify-content-between w-100">
+                        <div class="btn-shadow d-flex justify-content-between w-100 position-relative">
                         <%  if(data.form_info[0].IS_WRITER == 1 ){ %>
                             <button class="edit btn-cut bottom-btn btn-blue color-white">수정 </button>
                             <button class="delete btn-cut bottom-btn btn-red color-white">삭제 </button>
-                        <% } else{ %>
-                            <button class="edit btn-cut bottom-btn btn-blue color-white">사본 생성</button>
-                            <button class="form-save-btn btn-cut bottom-btn btn-purple color-white"><i class="fa-solid fa-bookmark me-2"></i>편성 저장 취소 </button>
+                        <% } else if(data.form_info[0].STATUS_NAME == "편성 공유" && data.saved < 1){ %>
+                            <button class="form-save-btn btn-cut bottom-btn btn-yellow color-white w-100"><i class="fa-solid fa-bookmark me-2"></i> 편성 저장</button>
+                        <% } else if(data.form_info[0].STATUS_NAME == "편성 공유" && data.saved >= 1){ %>
+                            <button class="form-save-btn btn-cut bottom-btn btn-purple color-white w-100"><i class="fa-solid fa-bookmark me-2"></i> 편성 저장 취소</button>
+                        <% } else if(data.form_info[0].STATUS_NAME == "편성 요청" || data.form_info[0].STATUS_NAME == "편성 완료"){ %>
+                            <button class="form-help-btn bottom-btn btn-yellow color-white w-100">도움 주기</button>
+                            <div class="help-option-container btn-shadow w-100">
+                                <ul class="help-option">
+                                    <li class="" >마이페이지에서 편성 공유</li>
+                                    <li lass="border-bottom-0">새로운 편성 공유</li>
+                                </ul>
+                            </div>
                         <% }%>
                             
                         </div>
@@ -278,7 +253,7 @@
 
         </div>
         <!-- 댓글 -->
-        <% if(data.form_info[0].STATUS_NAME != "편성 도움" && data.form_info[0].IS_WRITER != 0 ) {%>
+        <% if(data.form_info[0].STATUS_NAME != "편성 도움" ) {%>
         <div class="comments-container shadow-basic mypage-form-detail-sizing bg-gray">
             <div class="comment-header btn-black color-white">
                 <span> 댓글 <span class="length ms-2"><%= data.comments.length + data.replys.length %></span> </span><i class="fa-solid fa-chevron-up"></i>
@@ -303,10 +278,6 @@
             </div>
             
 
-        </div>
-        <% }  else if(data.form_info[0].IS_WRITER == 0){%>
-        <div class="go-origin-container mypage-form-detail-sizing btn-shadow">
-            <a href="/forum/share/detail/<%=data.form_info[0].ID %>" class="go-origin btn-cut btn-blue color-white border-0"><span class="text-center flex-fill">원본 글 보러가기</span><i class="ms-2  fa-solid fa-chevron-right"></i></a>
         </div>
         <% } %>
         <div class="near-link-container">
@@ -380,10 +351,23 @@
         $(".mypage-remote .go-back").on("click", function(e){
             e.preventDefault();
 
+            // console.log('<%= data.now_formstatus %>');
 
-            let id = $(this).data('id');
-            let new_url = `/mypage/formsave${location.search}`
-            window.location.href = new_url;
+            // 뒤로가기 누르면 편성 상태 따라서 다른 곳으로 가도록
+            if('<%= data.now_formstatus %>' == "편성 공유"){
+                let new_url = `/forum/share${location.search}`
+                window.location.href = new_url;
+                return;
+            } else{
+                let new_url = `/forum/help${location.search}`
+                window.location.href = new_url;
+                return;
+            }
+            
+        })
+
+        $(".right-box .btns .form-help-btn").on("click", function(e){
+            $(".help-option-container .help-option").slideToggle();
         })
 
         $(".comment-header").on("click", function(){
@@ -419,7 +403,6 @@
         // 폼 삭제
         $(".right-box .delete").on("click", function(e){
             e.preventDefault();
-            if($(".login").text().includes("로그인")) alert("편성을 삭제하려면 로그인해야 합니다.")
             let ans = confirm("편성을 삭제하시겠습니까? 이 동작은 되돌릴 수 없습니다.")
             if(ans){
                 let form = $("<form> </form>");
@@ -443,8 +426,13 @@
             
         })
 
+        
+
         $(document).on("click", ".comment-bottom .reply-btn", function(e){
-            if($(".login").text().includes("로그인")) alert("답글을 작성하려면 로그인해야 합니다.")
+            if($(".login").text().includes("로그인")){
+                    alert("답글을 작성하려면 로그인해야 합니다.")
+                    return false;                
+                } 
             if($(this).text() == "답글쓰기" && $(this).parent().parent().hasClass("comment")){
                 $(".write-comment").prepend(`<div class="comment-author  bg-basicdark color-white">
                                             <span class="color-purple">${$(this).parent().siblings(".comment-author").children(".color-purple").text()}</span> <span>답글</span> 
@@ -472,52 +460,13 @@
         
 
         $(document).ready(function(){
-            $(".right-box .form-save-btn").on("click", function(e){
-                e.preventDefault();
-                if($(".login").text().includes("로그인")){
-                    alert("편성을 저장하려면 로그인해야 합니다.")
-                    return false;                
-                } 
-                $.ajax({
-                    url: `/forum/formsave/change/${window.location.pathname.split("/").pop()}`, 
-                    method: 'POST', 
-                    contentType: 'application/json',
-                    data: JSON.stringify({ 
-                    }),
-                    
-                    // 요청 성공 
-                    success: function(res) {
-                        if(res.status.includes('2')){
-                            // 저장 상태 표시 전환
-                            if(res.data.change == 'delete'){
-                                $(".right-box .form-save-btn").addClass('btn-yellow').removeClass('btn-purple').html(`<i class="fa-solid fa-bookmark me-2"></i> 편성 저장`)
-                                $(".left-box-bottom .fa-bookmark").removeClass("color-purple")
-                                $('.toast-black').text("편성 저장이 취소되었습니다.").fadeIn(600).delay(1500).fadeOut(600);
-                                $(".left-box-bottom .fa-bookmark").parent().html(`<i class="fa-solid fa-bookmark"></i> ${res.data.saved_cnt}`)
-                            } else{
-                                $(".right-box .form-save-btn").addClass('btn-purple').removeClass('btn-yellow').html(`<i class="fa-solid fa-bookmark me-2"></i> 편성 저장 취소`)
-                                $('.toast-black').text("편성이 저장되었습니다.").fadeIn(600).delay(1500).fadeOut(600);
-                                $(".left-box-bottom .fa-bookmark").parent().html(`<i class="fa-solid fa-bookmark"></i> ${res.data.saved_cnt}`)
-                                $(".left-box-bottom .fa-bookmark").addClass("color-purple")
-                            }
-                        } else{
-                            // DB 오류
-                            alert(res.message);
-                        }
-                    },                        
-                    
-                    error: function(xhr, status, error) {
-                        // 오류 
-                        alert(`오류 발생! 다시 시도하세요. ${status} - ${error}`);
-                        console.error('Error:', status, error);
-                    }
-                })
-
-            })
-
-
             $(".write-comment").on("submit", function(e){
                 e.preventDefault();
+                if($(".login").text().includes("로그인")){
+                    alert("댓글을 작성하려면 로그인해야 합니다.")
+                    return false;                
+                } 
+
 
                 const query = $('.write-comment').serializeArray();
 
@@ -578,6 +527,10 @@
 
             $(document).on("click", ".comment-body .update-btn", function(e){
                 e.preventDefault();
+                if($(".login").text().includes("로그인")){
+                    alert("댓글을 수정하려면 로그인해야 합니다.")
+                    return false;                
+                } 
                 
                 $.ajax({
                         url: `/forum/edit/comment/${window.location.pathname.split("/").pop()}`, 
@@ -615,8 +568,14 @@
             })
 
             $(document).on("click", ".comment-bottom .delete", function(e){
+                if($(".login").text().includes("로그인")){
+                    alert("삭제하려면 로그인해야 합니다.")
+                    return false;                
+                } 
+                
+                
                 var ans = confirm("정말 삭제하시겠습니까? 삭제한 댓글은 되돌릴 수 없습니다.");
-
+                
                 if(ans){
                     $.ajax({
                         url: `/forum/delete/comment/${window.location.pathname.split("/").pop()}`, 
@@ -646,6 +605,49 @@
                         }
                     })
                 }
+
+            })
+
+            $(".right-box .form-save-btn").on("click", function(e){
+                e.preventDefault();
+                if($(".login").text().includes("로그인")){
+                    alert("편성을 저장하려면 로그인해야 합니다.")
+                    return false;                
+                } 
+                $.ajax({
+                    url: `/forum/formsave/change/${window.location.pathname.split("/").pop()}`, 
+                    method: 'POST', 
+                    contentType: 'application/json',
+                    data: JSON.stringify({ 
+                    }),
+                    
+                    // 요청 성공 
+                    success: function(res) {
+                        if(res.status.includes('2')){
+                            // 저장 상태 표시 전환
+                            if(res.data.change == 'delete'){
+                                $(".right-box .form-save-btn").addClass('btn-yellow').removeClass('btn-purple').html(`<i class="fa-solid fa-bookmark me-2"></i> 편성 저장`)
+                                $(".left-box-bottom .fa-bookmark").removeClass("color-purple")
+                                $('.toast-black').text("편성 저장이 취소되었습니다.").fadeIn(600).delay(1500).fadeOut(600);
+                                $(".left-box-bottom .fa-bookmark").parent().html(`<i class="fa-solid fa-bookmark"></i> ${res.data.saved_cnt}`)
+                            } else{
+                                $(".right-box .form-save-btn").addClass('btn-purple').removeClass('btn-yellow').html(`<i class="fa-solid fa-bookmark me-2"></i> 편성 저장 취소`)
+                                $('.toast-black').text("편성이 저장되었습니다.").fadeIn(600).delay(1500).fadeOut(600);
+                                $(".left-box-bottom .fa-bookmark").parent().html(`<i class="fa-solid fa-bookmark"></i> ${res.data.saved_cnt}`)
+                                $(".left-box-bottom .fa-bookmark").addClass("color-purple")
+                            }
+                        } else{
+                            // DB 오류
+                            alert(res.message);
+                        }
+                    },                        
+                    
+                    error: function(xhr, status, error) {
+                        // 오류 
+                        alert(`오류 발생! 다시 시도하세요. ${status} - ${error}`);
+                        console.error('Error:', status, error);
+                    }
+                })
 
             })
         })

@@ -50,10 +50,10 @@ router.get('/', async(req, res) => {
 router.get('/edit/:form_id', mustLoggedIn, async(req, res) => {
 
     try{
-        // author_id 같은지 권한 확인
-        var sql = `select * from hero_forms where id = ?`
-        var [result, fields] = await(await connection).execute(sql, [req.params.form_id]);
-        if(result[0].user_id != req.user[0].id) throw new Error("편성을 수정할 권한이 없습니다.");
+        // author_id 같거나 저장했고 공개 편성인지 권한 확인
+        var sql = `select * from hero_forms HF where id = ? and (HF.USER_ID = ? OR (HF.ID = (select form_id from form_save where user_id = ?) and HF.form_access_status_id = 1) )`
+        var [result, fields] = await(await connection).execute(sql, [req.params.form_id, req.user[0].id, req.user[0].id]);
+        if(result.length <= 0) throw new Error("편성을 수정할 권한이 없습니다.");
 
         let contents_list = await getDatas.getContentsName(req, res, connection);
         let hero_list = await getDatas.getHeroList(req, res, connection);
@@ -137,9 +137,10 @@ router.post('/edit/:form_id/postform', mustLoggedIn ,async(req, res) => {
     
     try{
         // author_id 같거나 저장했는지(해야 함) 권한 확인
-        var sql = `select * from hero_forms where id = ?`
-        var [result, fields] = await(await connection).execute(sql, [req.params.form_id]);
-        if(result[0].user_id != req.user[0].id) throw new Error("편성을 수정할 권한이 없습니다.");
+        // 권한 체크 해야함
+        var sql = `select * from hero_forms HF where id = ? and (HF.USER_ID = ? OR (HF.ID = (select form_id from form_save where user_id = ?) and HF.form_access_status_id = 1) )`
+        var [result, fields] = await(await connection).execute(sql, [req.params.form_id, req.user[0].id, req.user[0].id]);
+        if(result.length <= 0) throw new Error("편성을 수정할 권한이 없습니다.");
 
         let form_id;
         

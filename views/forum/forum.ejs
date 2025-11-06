@@ -165,6 +165,7 @@
                             <!-- 공유 게시글 하나 -->
                                 <%- include('../components/form_preview.ejs', {i: i, data : {
                                     from : data.from,
+                                    saved_forms : data.saved_forms,
                                     form_list : data.form_list,
                                     members : data.members,
                                 }}) %> 
@@ -200,6 +201,17 @@
         }
     });
 
+
+    $(".todetail-link").on("click", function(e){
+        e.preventDefault();
+
+        let url = new URL(window.location.href);
+        url.searchParams.set("n", $(this).data('rn'));
+
+        let id = $(this).data('id');
+        let new_url = `${location.pathname}/detail/${id}?${url.searchParams.toString()}`
+        window.location.href = new_url;
+    })
 
     /**
      * 캐릭터 선택시 호출

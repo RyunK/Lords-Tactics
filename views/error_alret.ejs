@@ -19,9 +19,10 @@
                 location.href = "/login";
             } else if (error) {
                 console.log(error)
-                alert(decodeURIComponent(error));
+                alert(decodeURIComponent(error))
+                // console.log();
                 // history.replaceState(null, "", location.pathname);
-                window.href = "/";
+                window.history.go(-1);
             }
     </script>
 
