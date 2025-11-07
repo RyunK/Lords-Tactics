@@ -82,6 +82,138 @@
 
     <!-- 오른쪽 컨텐츠 -->
     <div class="mypage-maincontents" >
+        <%  if(data.form_info[0].STATUS_NAME == "편성 도움" ) {  %>
+            <!-- 원본 편성 요청 -->
+            <div class="detail-req-form-container mypage-form-detail-sizing shadow-basic">
+                <!-- 상단바 -->
+                <div class="form-title ">
+                    <dix class="form-status ">
+                        <button type="button " class="status-request border-0 d-flex align-items-center justify-content-center">
+                            <p>편성 요청</p>
+                        </button>
+                    </dix>
+
+                    <div class="content-name flex-fill">
+                        <button type="button"  class="bg-basicdark  color-yellow border-0 d-flex align-items-center justify-content-between">
+                            <p><%=data.form_info[0].CONTENT_NAME %></p>
+                        </button>
+                    </div>
+                    
+                </div>
+
+                <!-- 아래 컨텐츠 -->
+                <div class="d-flex contents">
+                    <% if(!data.req_form_info){ %>
+                        <h5>편성을 찾을 수 없습니다.</h5>
+                    <%} else{%>
+
+                    <!-- 왼쪽 -->
+                    <div class="left-box">
+                        <div class="d-flex align-items-end">
+                            <div class="form-author bg-basicdark color-white">
+                                작성자 <span class="color-purple"><%=data.req_form_info[0].NICKNAME %></span>
+                            </div>
+                            <div class="form-detail-date">
+                                <%=data.req_form_info[0].LAST_DATETIME.getFullYear()+"-"+("0"+(data.req_form_info[0].LAST_DATETIME.getMonth()+1)).slice(-2) + "-" + ("0"+(data.req_form_info[0].LAST_DATETIME.getDate())).slice(-2) + " " +  ("0"+(data.req_form_info[0].LAST_DATETIME.getHours())).slice(-2) + ":" +  ("0"+(data.req_form_info[0].LAST_DATETIME.getMinutes())).slice(-2) %>
+                            </div>
+                        </div>
+                        
+    
+                        
+                        <form class="form-border-container">
+                        <!-- <form class="form-border-container d-flex align-items-center flex-wrap"> -->
+                            <% if (data.req_members.length == 5){ %>
+                            <div class="form-char-container grid-form-center-5 d-flex flex-wrap justify-content-center ">
+                                <% for(let i=0; i<data.req_members.length; i++){ %>
+                                    <div class="character-5 form_spot">
+                                        <%- include('../components/one_hero_on_form.ejs', {
+                                            i : i,
+                                            data : {
+                                            members : data.req_members,
+                                            myheroaccess: false
+                                        }}) %> 
+                                    </div>
+                                <% } %>
+                            </div>
+                        <% } else if  (data.req_members.length == 10){  %>
+                            <h5>1부대</h5>
+                        <div class="form-char-container w-100 d-flex justify-content-center ">
+                            <% for(let i=0; i<5; i++){ %>
+                                <div class="character-10 form_spot">
+                                    <%- include('../components/one_hero_on_form.ejs', {
+                                        i : i,
+                                        data : {
+                                        members : data.req_members,
+                                        myheroaccess: false
+                                    }}) %> 
+                                </div>
+                            <% } %>
+                        </div>
+                            <h5 class="">2부대</h5>
+                        <div class="form-char-container w-100 d-flex  justify-content-center ">
+                            <% for(let i=5; i<data.req_members.length; i++){ %>
+                            <div class="character-10 form_spot">
+                                <%- include('../components/one_hero_on_form.ejs', {
+                                    i : i,
+                                    data : {
+                                    members : data.req_members,
+                                    myheroaccess: false
+                                }}) %> 
+                            </div>
+                            <% } %>
+                            
+                        </div>
+                        <% } else if  (data.req_members.length == 7){  %>
+                            <div class="form-char-container grid-form-center-7  d-flex flex-wrap justify-content-center ">
+                            <% for(let i=0; i<3; i++){ %>
+                                <div class="character-7 form_spot">
+                                    <%- include('../components/one_hero_on_form.ejs', {
+                                        i : i,
+                                        data : {
+                                        members : data.req_members,
+                                        myheroaccess: false
+                                    }}) %> 
+                                </div>
+                            <% } %>
+                            </div>
+                            <div class="form-char-container grid-form-center-7 d-flex  justify-content-center ">
+                            <% for(let i=3; i<data.req_members.length; i++){ %>
+                                <div class="character-7 form_spot">
+                                    <%- include('../components/one_hero_on_form.ejs', {
+                                        i : i,
+                                        data : {
+                                        members : data.req_members,
+                                        myheroaccess: false
+                                    }}) %> 
+                                </div>
+                            <% } %>
+                            
+                            </div>
+                         <% }%>
+
+                        </form>
+                        
+                    </div>
+
+                    <!-- 오른쪽 -->
+                    <div class="right-box">
+                        <div class="bg-white memo-container color-gray">
+                            <div class="memo explain-content"  > <%=data.req_form_info[0].WRITER_MEMO %> </div>
+                        </div>
+
+                        <!-- 좋아요 / 댓글 펼치기 -->
+                        <div class="btns mg-10px ms-0 me-0 d-flex flex-fill justify-content-between">
+                            <div class="btn-shadow d-flex justify-content-between w-100">
+                                <button data-id="<%= data.req_form_info[0].ID%>" onclick="" class="go-originreq btn-cut bottom-btn btn-blue color-white w-100">원본 요청 글 가기 </button>
+                            </div>
+                        </div>
+                    </div>
+                    <%}%>
+                </div>
+
+            </div>
+
+        <% } %>        
         <!-- 편성 글. 조합 -->
         <div data-id="<%= data.form_info[0].ID%>" class="form-container mypage-form-detail-sizing shadow-basic">
             <!-- 상단바 -->
@@ -336,11 +468,17 @@
     <script>
 
         function resize(obj) {
-
-                obj.style.height = 'auto';
-                obj.style.height = obj.scrollHeight + 'px';
-            
+            obj.style.height = 'auto';
+            obj.style.height = obj.scrollHeight + 'px';
         }
+
+        $(".go-originreq").on("click", function(e){
+            e.preventDefault();
+
+            let id = $(this).data('id');
+            let new_url = `/forum/help/detail/${id }`
+            window.location.href = new_url;
+        })
 
         $(".mypage-remote .go-back").on("click", function(e){
             e.preventDefault();

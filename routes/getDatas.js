@@ -129,17 +129,17 @@ module.exports = {
     * @param {*} req 
     * @param {*} res 
     */
-   getFormInfoNMembers: async function(req, res, connection){
+   getFormInfoNMembers: async function(req, res, connection, form_id = req.params.id){
       
       // id로 inner join 싹 해서 form검색
       var sql = `SELECT HF.ID, HF.WRITER_MEMO, HF.LAST_DATETIME, HF.VIEW, HF.SAVED_CNT, hf.USER_ID = ? AS IS_WRITER, HF.MYHERO_ACCESS, HF.FORM_ACCESS_STATUS_ID,
-               CN.KOR_NAME as CONTENT_NAME  ,FS.STATUS_NAME, FAS.ENG_NAME AS ACCESS ,USER.NICKNAME FROM HERO_FORMS HF
+               HF.COMMENTS_FOR_ID, CN.KOR_NAME as CONTENT_NAME  ,FS.STATUS_NAME, FAS.ENG_NAME AS ACCESS ,USER.NICKNAME FROM HERO_FORMS HF
                INNER JOIN CONTENTS_NAME CN ON HF.CONTENTS_ID = CN.ID
                INNER JOIN FORM_STATUS FS ON HF.FORM_STATUS_ID = FS.ID
                INNER JOIN USER ON HF.USER_ID = USER.ID
                INNER JOIN FORM_ACCESS_STATUS FAS ON HF.FORM_ACCESS_STATUS_ID = FAS.ID 
                WHERE HF.ID = ?;`
-      var [form_info ,fields] = await (await connection).execute(sql, [req.isAuthenticated()?req.user[0].id:-1 , req.params.id]);
+      var [form_info ,fields] = await (await connection).execute(sql, [req.isAuthenticated()?req.user[0].id:-1 , form_id]);
 
       // 편성 멤버 조회
       var sql = `SELECT FM.HERO_LV, FM.HERO_CHO, FM.HERO_GAK, TYPES.ENG_NAME AS TYPE, NAMES.ENG_NAME AS NAME, classes.ENG_NAME AS CLASS  FROM FORM_MEMBERS FM 
@@ -148,7 +148,7 @@ module.exports = {
                INNER JOIN HERO_CLASSES  classes ON classes.IDX = CLASS_ID
                INNER JOIN HERO_TYPES  types ON types.IDX = TYPE_ID
                WHERE FM.FORM_ID = ?;`
-      var [members ,fields] = await (await connection).execute(sql, [req.params.id]);
+      var [members ,fields] = await (await connection).execute(sql, [form_id]);
 
       return [form_info, members];
    },

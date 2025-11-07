@@ -148,6 +148,10 @@ router.get('/formsave/detail/:id', mustLoggedIn, async(req, res) => {
 
         // id로 form검색
         let [form_info, this_members] = await getDatas.getFormInfoNMembers(req, res, connection); 
+        let req_form_info , req_members
+        if(form_info[0].COMMENTS_FOR_ID){
+            [req_form_info, req_members] = await getDatas.getFormInfoNMembers(req, res, connection, form_info[0].COMMENTS_FOR_ID); 
+        }
 
         //where절 생성 
         let [where, q_list] = mypageFormWhereMaker(req, q_content, filtered_heroes_list);
@@ -201,7 +205,7 @@ router.get('/formsave/detail/:id', mustLoggedIn, async(req, res) => {
 
 
         // 게시글 id로 comment 및 reply 검색
-        var [comments, replys] = await getDatas.getCommentsNReplys(req, res, connection, req.params.id)
+        var [comments, replys, help_members] = await getDatas.getCommentsNReplys(req, res, connection, req.params.id)
 
 
         let data = {
@@ -213,10 +217,13 @@ router.get('/formsave/detail/:id', mustLoggedIn, async(req, res) => {
             form_id : req.params.id,
             form_info : form_info,
             members : this_members,
+            req_form_info : req_form_info,
+            req_members : req_members,
             previous : previous,
             next : next,
             comments : comments,
             replys : replys,
+            help_members : help_members,
         }
         res.render('./mypage/mypage_formdetail.ejs',  {data : data})
 

@@ -319,15 +319,10 @@
             // console.log('<%= data.now_formstatus %>');
 
             // 뒤로가기 누르면 편성 상태 따라서 다른 곳으로 가도록
-            if('<%= data.now_formstatus %>' == "편성 공유"){
-                let new_url = `/forum/share${location.search}`
-                window.location.href = new_url;
-                return;
-            } else{
-                let new_url = `/forum/help${location.search}`
-                window.location.href = new_url;
-                return;
-            }
+            let new_url = `/forum/${location.pathname.split("/")[2]}${location.search}`
+            window.location.href = new_url;
+            return;
+
             
         })
 
