@@ -51,7 +51,7 @@ router.get('/edit/:form_id', mustLoggedIn, async(req, res) => {
 
     try{
         // author_id 같거나 저장했고 공개 편성인지 권한 확인
-        var sql = `select * from hero_forms HF where id = ? and (HF.USER_ID = ? OR (HF.ID = (select form_id from form_save where user_id = ?) and HF.form_access_status_id = 1) )`
+        var sql = `select * from hero_forms HF where id = ? and (HF.USER_ID = ? OR (HF.ID in (select form_id from form_save where user_id = ?) and HF.form_access_status_id = 1) )`
         var [result, fields] = await(await connection).execute(sql, [req.params.form_id, req.user[0].id, req.user[0].id]);
         if(result.length <= 0) throw new Error("편성을 수정할 권한이 없습니다.");
 
@@ -189,6 +189,7 @@ router.get('/help/:id', mustLoggedIn, async(req, res) => {
     
 
 })
+
 
 
 

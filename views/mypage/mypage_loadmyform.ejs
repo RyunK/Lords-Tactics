@@ -1,0 +1,680 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>로드의 전술서:불러오기</title>
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <link href="/css/main.css" rel="stylesheet">
+    <link href="/css/mypage.css" rel="stylesheet">
+    <link href="/css/forum.css" rel="stylesheet">
+    <link href="/css/lv_badges.css" rel="stylesheet">
+    <link href="/css/form_making.css" rel="stylesheet">
+    <link href="/css/form_card.css" rel="stylesheet">
+    <!-- <link href="/css/form_detail.css" rel="stylesheet"> -->
+</head>
+<body>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+    <%- include('../nav_and_banner.ejs', {page: '', nickname: data.nickname, notice:'2025.08.01 신규 캐릭터 [물]라플라스 추가 완료'}) %> 
+
+
+    <div class="my-modal-bg">
+
+        <div class="preview-detail-container shadow-basic bg-lightgray">
+            <div class="preview-detail-box-top bg-basicdark color-yellow">
+            미리보기
+            </div>
+            <!-- 편성 글. 조합 -->
+            <!-- 여기는 ajax 통신으로 구현 -->
+            <div class="preview-detail-box-bottom d-flex">
+                <p>이 편성을 현재 편집중인 편성에 불러오시겠습니까?</p>
+                <div class="btns btn-shadow">
+                    <button class="cancel btn-red btn-cut border-0 color-white">취소</button>
+                    <button class="select btn-blue btn-cut border-0 color-white">선택</button>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- 왼쪽 리모콘(?) -->
+    <div class="mypage-remote ">      
+        <div class="tab shadow-basic">
+            <div class="name-container bg-basicdark">
+                <h6 class="color-yellow">마이페이지에서 불러오기</h6>
+            </div>
+            <ul class="load-left-blue-bar width-100">
+                <li class="active border-top-0 "><a class=" color-black">저장한 편성</a></li>
+            </ul>
+        </div>
+        <div class="shadow-filter-basic"> 
+            <form action="" method="get" name="search" class="filter-container">
+                <div>
+                    <h6>편성 공개 여부</h6>
+                    <div class="access-container d-flex flex-fill justify-content-between ">
+                        <label class="charSetting-ele d-flex align-self-center me-3">  
+                            <span class="me-2">전체 </span>
+                            <input type="radio" name="form_access" value="all" class="charPublic-checkbox " <% if(data.query_form_access == 'all') {%> checked <%}%> >
+                            <span class="checkbox-img"></span> 
+                        </label>
+                        <label class="charSetting-ele d-flex align-self-center me-3">  
+                            <span class="me-2">공개 </span> 
+                            <input type="radio" name="form_access" value="public" class="charPublic-checkbox " <% if(data.query_form_access == 'public') {%> checked <%}%> >
+                            <span class="checkbox-img"></span> 
+                        </label>
+                        <label class="charSetting-ele d-flex align-self-center me-3">  
+                            <span class="me-2">비공개 </span> 
+                            <input type="radio" name="form_access" value="private" class="charPublic-checkbox " <% if(data.query_form_access == 'private') {%> checked <%}%>>
+                            <span class="checkbox-img"></span> 
+                        </label>
+                        
+                    </div>
+                    
+                </div>
+                <div>
+                    <h6>편성 상태</h6>
+                    <button type="button" data-btn="form_status" class="form_status-btn color-black"><span><%= data.form_status.status_name %></span> <i class="fa-solid fa-chevron-down"></i></button>
+                    <input type="hidden" name="form_status" value="<%= data.form_status.id %>">
+                </div>
+                <div>
+                    <h6>영웅 필터</h6>
+                    <button type="button" data-btn="hero-search-container" class="color-gray">영웅 이름 검색 <i class="fa-solid fa-magnifying-glass color-black"></i></button>
+                    <div class="search-hero-container d-inline-block mt-3">
+                        <!-- 영웅 얼굴 디스플레이 -->
+                        <% for(let i=0; i<data.filtered_heroes.length; i++){ %>
+                            <div class="search-hero-img d-inline-block">
+                                <img src="/sources/img/characters/<%= data.filtered_heroes_forrender[i].eng_type %>_<%= data.filtered_heroes_forrender[i].eng_name %>_<%= data.filtered_heroes_forrender[i].eng_class %>.png" alt="">
+                                <span></span>
+                                <input type="hidden" name="hero" value="<%= data.filtered_heroes_forrender[i]['ID']%>" >
+                            </div>    
+                        <% } %>
+                    </div>
+                </div>
+                <div>
+                    <h6>컨텐츠</h6>
+                    <button type="button" data-btn="content" class="color-black"><span><%= data.content[0].kor_name %></span><i class="fa-solid fa-chevron-down"></i></button>   
+                    <input type="hidden" name="content" value="<%= data.content[0].eng_name %>" >
+                    
+                </div>
+            </form>
+        </div>
+        <div class="dropdown-contents">
+            <ul class="form_status bg-lightgray">
+                <% for(let i=0; i<data.form_status_list.length; i++){ %>
+                    <li data-id="<%= data.form_status_list[i]['id']%>"><%=data.form_status_list[i]['status_name'] %></li>
+                <% } %>
+            </ul>
+
+            <ul class="content bg-lightgray">
+                <% for(let i=0; i<data.contents_list.length; i++){ %>
+                    <li data-engname="<%= data.contents_list[i]['eng_name']%>"><%=data.contents_list[i]['kor_name'] %></li>
+                <% } %>
+            </ul>
+
+            <div class="hero-search-container">
+                <div class="hero-search-top color-black d-flex color-white justify-content-center align-items-center">
+                    <div class="class-search">
+                        <span>클래스</span>
+                        <input type="text" name="hero-class" class="bg-lightgray border-0">
+                    </div>
+                    <div class="type-search">
+                        <span>속성</span>
+                        <input type="text" name="hero-type" class="bg-lightgray border-0">
+                    </div>
+                    <div class="name-search">
+                        <span>이름</span>
+                        <input type="text" name="hero-name" class="bg-lightgray border-0">
+                    </div>
+                </div>
+
+                <!-- 영웅 검색창 -->
+                <div class="hero-search-bottom d-flex">
+                    <div class="selected-hero-container">
+                        <div class="selected-heros">
+                            <!-- 선택된 캐릭터들 들어가는 곳 -->
+                            <% for(let i=0; i<data.filtered_heroes_forrender.length; i++){  %>
+                            <div class="searching-hero bg-gray d-flex">
+                                <input type="hidden" name="hero_id" value="<%= data.filtered_heroes_forrender[i]['ID']%>">
+                                <img src="/sources/img/characters/<%= data.filtered_heroes_forrender[i].eng_type %>_<%= data.filtered_heroes_forrender[i].eng_name %>_<%= data.filtered_heroes_forrender[i].eng_class %>.png" alt="">
+                                <img src="/sources/img/classes/<%= data.filtered_heroes_forrender[i].eng_class %>.png" alt="" class="class-img">
+                                <img src="/sources/img/types/<%= data.filtered_heroes_forrender[i].eng_type %>.png" alt="">
+                                <span class="flex-fill"><%= data.filtered_heroes_forrender[i].kor_name %></span>
+                                <div class="btn-shadow "><button type="button" class="btn-red"></button></div>
+                            </div>
+                            <% } %>
+
+                        </div>
+                        <div class="selected-btn d-flex justify-content-between">
+                            <div class="selected-num"> <span class="color-blue"><%= data.filtered_heroes.length  %></span>/3</div>
+                            <div class="btn-shadow">
+                                <button type="button" class="trash-btn btn-red btn-close-origin color-white"> <i class="fa-solid fa-trash-can"></i> </button>
+                                <button type="button" class="apply btn-blue color-white">적용</button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="searched-hero-container">
+                        <% for(let i=0; i<data.hero_list.length; i++){  %>
+                        <div class="searching-hero bg-gray d-flex">
+                            <input type="hidden" name="hero_id" value="<%= data.hero_list[i]['ID']%>">
+                            <img src="/sources/img/characters/<%= data.hero_list[i].eng_type %>_<%= data.hero_list[i].eng_name %>_<%= data.hero_list[i].eng_class %>.png" alt=""
+                            onerror="this.onerror=null; this.src='/sources/img/characters/Chr_Error.png';">
+                            <img src="/sources/img/classes/<%= data.hero_list[i].eng_class %>.png" alt="" class="class-img">
+                            <img src="/sources/img/types/<%= data.hero_list[i].eng_type %>.png" alt="">
+                            <span class="flex-fill"><%= data.hero_list[i].kor_name %></span>
+                            <% if(data.filtered_heroes.includes((data.hero_list[i]['ID']).toString())){ %>
+                            <div class="btn-shadow "><button type="button" class="btn-red"></button></div>
+                            <% } else { %>
+                            <div class="btn-shadow btn-plus"><button type="button" class="btn-blue"></button></div>
+                            <% } %>
+                        </div>
+                        <% } %>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+    </div>
+
+    <script>
+        $(".filter-container button").on("click", function(){
+            let btn_name = $(this).data('btn');
+            $(".dropdown-contents").children(`.${btn_name}`).slideToggle();
+            // console.log(btn_name)
+            if(!btn_name.includes('hero')){
+                dropdownIconToggle($(this));
+            }
+        })
+    </script>
+
+    <!-- 오른쪽 컨텐츠 -->
+    <div class="mypage-maincontents shadow-basic" >
+        <div class="forum-posts-container">
+            <div class="forum-preview bg-basicdark">
+                <!-- <h6 class="forum-search-result-title color-yellow"><i class="fa-solid fa-feather-pointed"></i> 검색 결과 124건</h5> -->
+                <ul class="mypage-sort d-flex justify-content-end color-white mb-0 me-1">
+                    <li> <% if(data.sort == "saved_cnt"){ %>
+                        <a href="?sort=saved_cnt" class="active">• 저장 수</a>
+                    <% } else { %>
+                        <a href="?sort=saved_cnt" class="color-black">• 저장 수</a>
+                    <% }  %></li>
+                    <li><% if(data.sort == "view"){ %>
+                        <a href="?sort=view" class="active">• 조회수</a>
+                    <% } else { %>
+                        <a href="?sort=view" class="color-black">• 조회수</a>
+                    <% }  %></li>
+                    <li><% if(data.sort == "new"){ %>
+                        <a href="?sort=new" class="active">• 최신순</a>
+                    <% } else { %>
+                        <a href="?sort=new" class="color-black">• 최신순</a>
+                    <% }  %></li>
+      
+                </ul>
+                <!-- <div class="d-flex justify-content-evenly flex-wrap">  -->
+
+                <div class="load-form forum-preview-posts">
+                    <% for(let i=0; i<data.form_list.length; i++) { %>
+                    <!-- 공유 게시글 하나 -->
+                        <%- include('../components/form_preview.ejs', {i: i, data : {
+                            from : data.from,
+                            form_list : data.form_list,
+                            members : data.members,
+                            saved_forms : data.saved_forms,
+                        }}) %> 
+                    <!-- 공유 게시글 하나 끝 -->
+                    <% } %>
+                    
+
+
+                        
+                            
+                    
+                </div>
+            </div>
+                
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script> 
+    <script>
+    
+
+    $(document).on('click', function(e){
+        // 빈 곳 클릭하면 영웅 필터 올라감
+        if(!$(e.target).closest(".hero-search-container").length>0
+        && !$(e.target).closest(".filter-container button[data-btn='hero-search-container']").length>0
+        && !$(e.target).closest(".hero-namesearch").length>0
+        && !$(e.target).closest(".btn-red").length>0){
+            $(".hero-search-container").slideUp(200);
+        }
+
+        if(!$(e.target).closest(".dropdown-contents ul").length>0
+        && !$(e.target).closest(".filter-container button").length>0
+        && !$(e.target).closest(".hero-namesearch").length>0
+        && !$(e.target).closest(".btn-red").length>0){
+            $(".dropdown-contents ul").slideUp(200);
+        }
+    });
+
+
+    /**
+     * 캐릭터 선택시 호출
+     */
+
+    class HeroSelecter{
+        static selected_heroes = [];
+
+        static add(idx){
+            HeroSelecter.selected_heroes.push(idx);
+            return HeroSelecter.selected_heroes;
+        }
+        
+        static remove(idx){
+            HeroSelecter.selected_heroes = HeroSelecter.selected_heroes.filter((element) => element !== idx)
+            return HeroSelecter.selected_heroes;
+        }
+
+        static getter(){
+            return HeroSelecter.selected_heroes;
+        }
+
+        static reset(){
+            HeroSelecter.selected_heroes = [];
+            return HeroSelecter.selected_heroes;
+        }
+
+
+    }
+
+        
+
+    window.onload = function() {
+        
+        // 필터된 영웅들 선택하기
+        let filtered_hero_list = '<%- JSON.stringify(data.filtered_heroes) %>'; 
+        filtered_hero_list = JSON.parse(filtered_hero_list);
+        for(let i=0; i<filtered_hero_list.length; i++){
+            // HeroSelector 리스트에다가 목록 고대로 넣기
+            HeroSelecter.add(filtered_hero_list[i]);
+        }
+        reloadHeroFilterFaces();
+    }
+
+    /**
+     * 드롭다운 아이콘 토글 함수
+     **/
+    function dropdownIconToggle(btn){
+        const now_i = btn.children("i");
+
+        // console.log(now_i)
+        if(now_i.attr('class') == "fa-solid fa-chevron-down"){
+            now_i.attr('class', "fa-solid fa-chevron-up");
+        } else {
+            now_i.attr('class', "fa-solid fa-chevron-down");
+        }
+    }
+
+    $(document).ready(function() {
+        function dropdownSelect($btn, $content, dataname){
+            $btn.children('span').text($content.text());
+            $btn.siblings('input').val($content.data(dataname));
+            $content.parent().slideUp();
+            dropdownIconToggle($btn);
+            $("form").submit();
+        }
+
+        $(".dropdown-contents .form_status li").on('click', function(e){
+            dropdownSelect($(".filter-container button[data-btn='form_status']"), $(this), 'id');
+        })
+
+
+        $(".dropdown-contents .content li").on('click', function(e){
+            dropdownSelect($(".filter-container button[data-btn='content']"), $(this), 'engname');
+        })
+
+        // 편성 공개 여부 바뀔 때
+        $('.filter-container .access-container input').on("change", function(){
+            $("form").submit();
+            
+        })
+
+
+        // 영웅 검색 필터 적용 버튼 
+        $('.selected-hero-container .apply').on("click", function(){
+            $(".hero-search-container").slideUp(200);
+            
+            reloadHeroFilterFaces();
+            $("form").submit();
+            
+        })
+
+        // 얼굴에 -버튼 누르면 해제
+        $(document).on("click", ".search-hero-img ", function(e){
+            // 그냥 - 누르고 적용한거랑 똑같이 동작하면 될듯
+            // console.log("들어옴")
+            let selected_num = parseInt($(".selected-num span").text(), 10);
+            if(selected_num <= 0){
+                return;
+            }
+            $(".selected-num span").text(selected_num - 1);
+
+            let idx = $(this).children('input').val();
+            HeroSelecter.remove(idx);
+
+            let btn = $(`.searched-hero-container input[value=${idx}]`).siblings('div').children('button');
+            btn.removeClass('btn-red');
+            btn.addClass('btn-blue');
+            btn.parent().addClass('btn-plus');
+
+            $(`.selected-heros input[value=${idx}]`).parent().remove();
+
+            reloadHeroFilterFaces();
+            $("form").submit();
+        })
+
+        /**
+         * form 제출 시 쿼리스트링 추가 및 변경만 하기
+         **/
+        $('form').on('submit', function(e){
+            // console.log('어쩌고')
+            e.preventDefault();
+
+            const query = $(this).serializeArray();
+            // console.log(query)
+
+            // let url = new URLSearchParams(window.location.href);
+            const currentparams = new URLSearchParams(window.location.search);
+            const newparams = new URLSearchParams();
+
+            // console.log(query);
+
+            newparams.append('sort', currentparams.get('sort')? currentparams.get('sort'):'saved_cnt');
+            // let i=0;
+            // newparams.append('form_status',  query[0]['value']);
+            // i++;
+            for(let i=0; i<query.length; i++){
+                newparams.append(query[i]['name'], query[i]['value']);
+            }
+            // newparams.append('content', query[i]['value']);
+
+            console.log(newparams.toString());
+            
+
+            let newUrl = `${window.location.pathname}?${newparams}`
+
+            // 새로운 URL로 이동하며 페이지를 새로고침
+            window.location.href = newUrl;
+        })
+
+        $(".todetail-link").on("click", function(e){
+            e.preventDefault();
+            let id = $(this).data('id');
+            $.ajax({
+                url: `./preview/detail/${id}`, 
+                method: 'GET', 
+                contentType: 'application/json',
+                data: JSON.stringify({ 
+                }),
+                
+                // 요청 성공 
+                success: function(res) {
+                    if(res.status.includes('2')){
+                        $(".preview-detail-container .form-container").remove();
+                        $(".preview-detail-box-top").after(res.data.html);
+                        $(".my-modal-bg").fadeIn()
+                        $(".preview-detail-container").fadeIn()
+                    } else{
+                        // DB 오류
+                        alert(res.message);
+                    }
+                },                        
+                
+                error: function(xhr, status, error) {
+                    // 오류 
+                    alert(`오류 발생! 다시 시도하세요. ${status} - ${error}`);
+                    console.error('Error:', status, error);
+                }
+            })
+        })
+    });
+
+
+    /**
+     * 미리보기 > 선택 시 기사단 편성으로 이 편성 복붙
+     **/
+    $(document).on('click', '.preview-detail-box-bottom .btns .select', function(e){
+        e.preventDefault();
+        const query = $('.preview-detail .form-border-container').serializeArray();
+        // console.log(query)
+
+        let url = new URL(`${window.location.protocol}//${window.location.host}/formmake`);
+        query.forEach((val, i) => {url.searchParams.append(val.name, val.value)})
+        // url.params.set(query);
+        // console.log(url.toString());
+        window.location.href = url.toString();
+
+    })
+
+    /**
+     *  미리보기 > 취소 시 모달 창 off
+     **/ 
+    $(document).on('click', '.preview-detail-box-bottom .btns .cancel', function(e){
+        e.preventDefault();
+        $(".my-modal-bg").fadeOut();
+        $(".preview-detail-container").fadeOut().delay(1000);
+    })
+
+    
+
+    /**
+     * 정렬 방식 변경 시 쿼리스트링 보존
+     **/
+    $(document).on('click', '.mypage-sort a', function(e){
+        e.preventDefault();
+
+        let url = new URL(window.location.href);
+        const params = url.searchParams;
+
+        let sortquery = $(this).attr('href');
+        sortquery = sortquery.replace('?sort=', '');
+
+        params.set('sort', sortquery);
+
+        let newUrl = `${url.pathname}?${params}`
+        window.location.href = newUrl;
+    })
+
+
+    /**
+     * 영웅 필터링해서 적용까지
+     **/
+    function hero_filter(){
+        let result="";
+        let hero_list = '<%- JSON.stringify(data.hero_list) %>';
+        hero_list = JSON.parse(hero_list);
+
+        let class_name = $('.class-search input').val();
+        let type_name = $('.type-search input').val();
+        let hero_name = $('.name-search input').val();
+
+
+        for(let i=0; i < hero_list.length; i++){
+            if((class_name == hero_list[i]["kor_class"] || !class_name)
+            && (type_name == hero_list[i]["kor_type"] || !type_name)
+            && ((hero_list[i]["kor_name"]).includes(hero_name) || !hero_name)){
+
+                if(HeroSelecter.getter().includes(`${hero_list[i]['ID']}`)){
+                    result = result +
+                        `<div class="searching-hero bg-gray d-flex">
+                            <input type="hidden" name="hero_id" value="${hero_list[i]['ID']}">
+                            <img src="../sources/img/characters/${hero_list[i].eng_type}_${hero_list[i].eng_name}_${hero_list[i].eng_class}.png" alt="">
+                            <img src="../sources/img/classes/${hero_list[i].eng_class}.png" alt="" class="class-img">
+                            <img src="../sources/img/types/${hero_list[i].eng_type}.png" alt="">
+                            <span class="flex-fill">${hero_list[i].kor_name}</span>
+                            <div class="btn-shadow"><button type="button" class="btn-red"></button></div>
+                        </div>`
+                } else{
+                    result = result +
+                        `<div class="searching-hero bg-gray d-flex">
+                            <input type="hidden" name="hero_id" value="${hero_list[i]['ID']}">
+                            <img src="../sources/img/characters/${hero_list[i].eng_type}_${hero_list[i].eng_name}_${hero_list[i].eng_class}.png" alt="">
+                            <img src="../sources/img/classes/${hero_list[i].eng_class}.png" alt="" class="class-img">
+                            <img src="../sources/img/types/${hero_list[i].eng_type}.png" alt="">
+                            <span class="flex-fill">${hero_list[i].kor_name}</span>
+                            <div class="btn-shadow btn-plus"><button type="button" class="btn-blue"></button></div>
+                        </div>`
+                }
+
+            }
+        }
+
+
+
+
+        $(".searched-hero-container").html(result);
+    }
+    
+
+    /**
+     * input 들어올 때 필터
+     **/
+    $(".class-search input").on('propertychange change keyup paste input', function(e){
+        hero_filter();
+    })
+
+    $(".type-search input").on('propertychange change keyup paste input', function(e){
+        hero_filter();
+    })
+
+    $(".name-search input").on('propertychange change keyup paste input', function(e){
+        hero_filter();
+    })
+
+
+    /**
+     * + 누르면 들어가기
+     */
+    $(document).on('click',".searching-hero .btn-blue", function(e){
+
+        let selected_num = parseInt($(".selected-num span").text(), 10);
+        if(selected_num >= 3){
+            return;
+        }
+        $(".selected-num span").text(selected_num + 1);
+
+        $(this).removeClass('btn-blue');
+        $(this).addClass('btn-red');
+        $(this).parent().removeClass('btn-plus');
+
+        $('.selected-heros').append($(this).parent().parent().clone());
+
+        let idx = $(this).parent().siblings('input[name="hero_id"]').val();
+        
+        // console.log(HeroSelecter.getter())
+        HeroSelecter.add(idx);
+
+        // console.log(idx);
+        // console.log(HeroSelecter.getter())
+    })
+
+
+    /**
+     * - 누르면 삭제되기
+     **/
+    $(document).on('click',".selected-heros .btn-red", function(e){
+
+        let selected_num = parseInt($(".selected-num span").text(), 10);
+        if(selected_num <= 0){
+            return;
+        }
+        $(".selected-num span").text(selected_num - 1);
+
+        let idx = $(this).parent().siblings('input[name="hero_id"]').val();
+        
+        // console.log(HeroSelecter.getter())
+        HeroSelecter.remove(idx);
+
+        // console.log(idx);
+        // console.log(HeroSelecter.getter())
+
+        let btn = $(`.searched-hero-container input[value=${idx}]`).siblings('div').children('button');
+        btn.removeClass('btn-red');
+        btn.addClass('btn-blue');
+        btn.parent().addClass('btn-plus');
+
+        $(this).parent().parent().remove();
+
+
+    })
+
+    $(document).on('click',".searched-hero-container .btn-red", function(e){
+
+        let selected_num = parseInt($(".selected-num span").text(), 10);
+        if(selected_num <= 0){
+            return;
+        }
+        $(".selected-num span").text(selected_num - 1);
+
+        $(this).removeClass('btn-red');
+        $(this).addClass('btn-blue');
+        $(this).parent().addClass('btn-plus');
+
+        let idx = $(this).parent().siblings('input[name="hero_id"]').val();
+        // console.log(HeroSelecter.getter())
+        HeroSelecter.remove(idx);
+
+        // console.log(idx);
+        // console.log(HeroSelecter.getter())
+
+        $(`.selected-heros input[value=${idx}]`).parent().remove();
+    })
+
+    // 쓰레기통 리셋
+    $('.trash-btn').on("click", function(e){
+        $('.selected-heros').empty();
+
+        let selected_heros = HeroSelecter.getter();
+
+        for(let i=0; i<selected_heros.length; i++){
+            let btn = $(`input[value=${selected_heros[i]}]`).siblings('div').children('button');
+            btn.removeClass('btn-red');
+            btn.addClass('btn-blue');
+            btn.parent().addClass('btn-plus');
+        }
+
+        HeroSelecter.reset();
+
+        $(".selected-num span").text(0);
+
+    })
+
+
+    $('.hero-namesearch').on("click", function(){
+        $(".hero-search-container").slideToggle(200);
+    })
+
+    function reloadHeroFilterFaces(){
+        $(".search-hero-container").empty();
+        let selected_imgs = $(".selected-heros .searching-hero img[src*=characters]");
+        let selected_idxes = HeroSelecter.getter();
+        
+        for(let i=0; i<selected_idxes.length; i++){
+            let appendig = `
+            <div class="search-hero-img d-inline-block">
+                <img src="${selected_imgs.eq(i).attr('src')}" alt="">
+                <span></span>
+                <input type="hidden" name="hero" value="${selected_idxes[i]}" >
+            </div>`
+
+            $(".search-hero-container").append(appendig);
+        }
+    }
+
+    
+
+    
+    </script>
+</body>
+</html>

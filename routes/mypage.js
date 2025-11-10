@@ -244,6 +244,117 @@ router.get('/formsave/detail/:id', mustLoggedIn, async(req, res) => {
     
 })
 
+// 편성 불러오기
+router.get('/loadmyform', mustLoggedIn, async(req, res) => { 
+    var sql = `SELECT * FROM FORM_STATUS
+            ORDER BY status_name`;
+    var [form_status_list, fields] = await (await connection).execute(sql);
+    
+    let contents_list = await getDatas.getContentsName(req, res, connection);
+
+    var sql = `SELECT * FROM CONTENTS_NAME
+                WHERE ENG_NAME= ?`;
+    var [q_content, fields] = await (await connection).execute(sql, [req.query.content ? req.query.content : 'all']);
+
+    var sql = `SELECT * FROM FORM_STATUS
+                WHERE ID= ?`;
+    var [now_formstatus, fields] = await (await connection).execute(sql, [req.query.form_status ? req.query.form_status : '8']);
+
+    let hero_list = await getDatas.getHeroList(req, res, connection);
+    let filtered_heroes_list, filtered_heroes_list_forrender;
+    try{
+        [filtered_heroes_list, filtered_heroes_list_forrender] = await getDatas.get_filtered_herolist(req, res, connection);
+    }catch(e){
+        filtered_heroes_list = [];
+        filtered_heroes_list_forrender =[];
+    }
+
+    // 쿼리에 맞는 폼만 출력하기
+    // where 절 생성
+    let [where, q_list] = mypageFormWhereMaker(req, q_content, filtered_heroes_list);
+
+    let order = getDatas.formOrderGetter(req, res);
+    
+    var form_list, members;
+    try{
+        [form_list, members] = await getDatas.getFormlistNMembers(req, res, where, order, q_list, connection);
+    }catch(e){
+        console.log(e)
+        form_list = [];
+        members =[];
+    }
+    
+    // 내가 저장한 form 리스트 보내주기
+    let saved_forms = []
+    if(req.isAuthenticated()){
+        var sql = `select * from form_save where user_id = ?`
+        var [mysave, fields] = await(await connection).execute(sql, [req.user[0].id]);
+        saved_forms = mysave.map((e) => e.form_id);
+    }
+ 
+    let data = {
+        from: 'mypage',
+        nickname: getDatas.loggedInNickname(req, res),
+        form_status_list : form_status_list,
+        contents_list : contents_list,
+        sort : req.query.sort? req.query.sort : 'saved_cnt',
+        filtered_heroes : filtered_heroes_list,
+        filtered_heroes_forrender : filtered_heroes_list_forrender,
+        content : q_content,
+        query_form_access : req.query.form_access? req.query.form_access : 'all',
+        form_status : now_formstatus[0],
+        hero_list : hero_list,
+        form_list : form_list,
+        members : members,
+        saved_forms : saved_forms,
+    }
+    res.render('./mypage/mypage_loadmyform.ejs',  {data : data})
+})
+
+
+router.get('/preview/detail/:id', mustLoggedIn, async(req, res) => {     
+    // if(!req.query.n) res.redirect('/formsave');
+    try{
+        // 권한 체크 해야함
+        var sql = `select * from hero_forms HF where id = ? and (HF.USER_ID = ? OR (HF.ID in (select form_id from form_save where user_id = ?) and HF.form_access_status_id = 1) )`
+        var [result, fields] = await(await connection).execute(sql, [req.params.id, req.user[0].id, req.user[0].id]);
+        if(result.length <= 0) throw new Error("편성을 열람할 권한이 없습니다.");
+
+        // console.log(req.params.id)
+
+        // req.params.id로 form검색
+        let [form_info, this_members] = await getDatas.getFormInfoNMembers(req, res, connection); 
+
+        let data = {
+            form_id : req.params.id,
+            form_info : form_info,
+            members : this_members,
+        }
+        res.render('./components/form_preview_detail.ejs',  {data : data}, (err, html) =>{
+            if(err){
+                res.json({
+                    status: "500",
+                    message : err.message,
+                })
+                return;
+            }
+            res.json({
+                status: "200",
+                data : {html : html}
+            })
+        })
+
+    }catch(e){
+        console.log(e);
+        res.json({
+            status: "500",
+            message : err,
+        })
+    }
+
+    
+})
+
 router.get('/myhero', mustLoggedIn, async(req, res) => {
 
     let hero_list = await getDatas.getHeroList(req, res, connection);

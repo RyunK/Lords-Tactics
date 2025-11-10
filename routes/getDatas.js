@@ -133,7 +133,7 @@ module.exports = {
       
       // id로 inner join 싹 해서 form검색
       var sql = `SELECT HF.ID, HF.WRITER_MEMO, HF.LAST_DATETIME, HF.VIEW, HF.SAVED_CNT, hf.USER_ID = ? AS IS_WRITER, HF.MYHERO_ACCESS, HF.FORM_ACCESS_STATUS_ID,
-               HF.COMMENTS_FOR_ID, CN.KOR_NAME as CONTENT_NAME  ,FS.STATUS_NAME, FAS.ENG_NAME AS ACCESS ,USER.NICKNAME FROM HERO_FORMS HF
+               HF.COMMENTS_FOR_ID, CN.KOR_NAME as CONTENT_NAME, CN.ENG_NAME as CONTENT_NAME_ENG  ,FS.STATUS_NAME, FAS.ENG_NAME AS ACCESS ,USER.NICKNAME FROM HERO_FORMS HF
                INNER JOIN CONTENTS_NAME CN ON HF.CONTENTS_ID = CN.ID
                INNER JOIN FORM_STATUS FS ON HF.FORM_STATUS_ID = FS.ID
                INNER JOIN USER ON HF.USER_ID = USER.ID
@@ -142,7 +142,8 @@ module.exports = {
       var [form_info ,fields] = await (await connection).execute(sql, [req.isAuthenticated()?req.user[0].id:-1 , form_id]);
 
       // 편성 멤버 조회
-      var sql = `SELECT FM.HERO_LV, FM.HERO_CHO, FM.HERO_GAK, TYPES.ENG_NAME AS TYPE, NAMES.ENG_NAME AS NAME, classes.ENG_NAME AS CLASS  FROM FORM_MEMBERS FM 
+      var sql = `SELECT FM.HERO_ID, FM.HERO_LV, FM.HERO_CHO, FM.HERO_GAK, TYPES.ENG_NAME AS TYPE, NAMES.ENG_NAME AS NAME, classes.ENG_NAME AS CLASS  
+               FROM FORM_MEMBERS FM 
                INNER JOIN LAUNCHED_HEROES LH  ON FM.HERO_ID = LH.ID 
                INNER JOIN HERO_NAMES  names ON names.IDX = NAME_ID
                INNER JOIN HERO_CLASSES  classes ON classes.IDX = CLASS_ID

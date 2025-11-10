@@ -1,0 +1,152 @@
+<!-- 편성 글. 조합 -->
+<div class="preview-detail form-container " data-id="<%=data.form_info[0].ID %>">
+    <!-- 상단바 -->
+    <div class="form-title ">
+        <dix class="form-status ">
+            <%  if(data.form_info[0].IS_WRITER == 0 ) {  %>
+                <button type="button " class="status-save border-0 d-flex align-items-center justify-content-center">
+                <p>편성 저장</p>
+            <% } else if(data.form_info[0].STATUS_NAME == "편성 공유" ) { %>
+                <button type="button " class="status-share border-0 d-flex align-items-center justify-content-center">
+                <p><%=data.form_info[0].STATUS_NAME %></p>
+            <% } else if(data.form_info[0].STATUS_NAME == "편성 요청" ) {  %>
+                <button type="button " class="status-request border-0 d-flex align-items-center justify-content-center">
+                <p><%=data.form_info[0].STATUS_NAME %></p>
+            
+            <% } else if(data.form_info[0].STATUS_NAME == "편성 도움" ) {  %>
+                <button type="button " class="status-help border-0 d-flex align-items-center justify-content-center">
+                <p><%=data.form_info[0].STATUS_NAME %></p>
+            <% } else if(data.form_info[0].STATUS_NAME == "편성 완료" ) {  %>
+                <button type="button " class="status-end border-0 d-flex align-items-center justify-content-center">
+                <p><%=data.form_info[0].STATUS_NAME %></p>
+            <% } else { %>
+                <button type="button " class="status-share border-0 d-flex align-items-center justify-content-center">
+                <p><%=data.form_info[0].STATUS_NAME %></p>
+            <% } %> 
+            </button>
+        </dix>
+
+        <div class="content-name flex-fill">
+            <button type="button"  class="bg-basicdark  color-yellow border-0 d-flex align-items-center justify-content-between">
+                <p><%=data.form_info[0].CONTENT_NAME %></p>
+                <% if(data.form_info[0].ACCESS == 'private') {%>
+                    <i class="ms-3 fa-solid fa-lock"></i>
+                <% }%>
+            </button>
+
+        </div>
+        
+    </div>
+
+    <!-- 아래 컨텐츠 -->
+    <div class="d-flex contents">
+        
+        <!-- 왼쪽 -->
+        <div class="left-box">
+            <div class="d-flex align-items-end">
+                <div class="form-author bg-basicdark color-white">
+                    작성자 <span class="color-purple"><%=data.form_info[0].NICKNAME %></span>
+                </div>
+                <div class="ms-2 form-detail-date">
+                    <%=data.form_info[0].LAST_DATETIME.getFullYear()+"-"+("0"+(data.form_info[0].LAST_DATETIME.getMonth()+1)).slice(-2) + "-" + ("0"+(data.form_info[0].LAST_DATETIME.getDate())).slice(-2) + " " +  ("0"+(data.form_info[0].LAST_DATETIME.getHours())).slice(-2) + ":" +  ("0"+(data.form_info[0].LAST_DATETIME.getMinutes())).slice(-2) %>
+                </div>
+            </div>
+            
+
+            
+            <form class="form-border-container d-flex align-items-center flex-wrap">
+                <input type="hidden" name="content" value="<%= data.form_info[0].CONTENT_NAME_ENG %>">
+                <input type="hidden" name="writer_memo" value="<%= data.form_info[0].WRITER_MEMO %>">
+                <% if (data.members.length == 5){ %>
+                    <div class="form-char-container w-100 d-flex flex-wrap justify-content-center ">
+                        <% for(let i=0; i<data.members.length; i++){ %>
+                            <div class="character-5 form_spot">
+                                <%- include('./one_hero_on_form.ejs', {
+                                    i : i,
+                                    data : {
+                                    members : data.members,
+                                    myheroaccess: data.form_info[0].MYHERO_ACCESS
+                                }}) %> 
+                                <input type="hidden" name="hero" value="<%= data.members[i].HERO_ID %>">
+                            </div>
+                        <% } %>
+                    </div>
+                <% } else if  (data.members.length == 10){  %>
+                <h5 class="w-100">1 부대</h5>
+                <div class="form-char-container w-100 d-flex flex-wrap justify-content-center ">
+                    <% for(let i=0; i<5; i++){ %>
+                        <div class="character-10 form_spot">
+                            <%- include('./one_hero_on_form.ejs', {
+                                i : i,
+                                data : {
+                                members : data.members,
+                                myheroaccess: data.form_info[0].MYHERO_ACCESS
+                            }}) %> 
+                            <input type="hidden" name="hero" value="<%= data.members[i].HERO_ID %>">
+                        </div>
+                    <% } %>
+                </div>
+                <h5 class="w-100">2 부대</h5>
+                <div class="form-char-container w-100 d-flex flex-wrap justify-content-center ">
+                    <% for(let i=5; i<data.members.length; i++){ %>
+                        <div class="character-10 form_spot">
+                            <%- include('./one_hero_on_form.ejs', {
+                                i : i,
+                                data : {
+                                members : data.members,
+                                myheroaccess: data.form_info[0].MYHERO_ACCESS
+                            }}) %> 
+                            <input type="hidden" name="hero" value="<%= data.members[i].HERO_ID %>">
+                        </div>
+                    <% } %>
+                    
+                </div>
+                <% } else if  (data.members.length == 7){  %>
+                    <div class="form-char-container w-100 d-flex flex-wrap justify-content-center ">
+                    <% for(let i=0; i<data.members.length; i++){ %>
+                        <div class="character-7 form_spot">
+                            <%- include('./one_hero_on_form.ejs', {
+                                i : i,
+                                data : {
+                                members : data.members,
+                                myheroaccess: data.form_info[0].MYHERO_ACCESS
+                            }}) %> 
+                            <input type="hidden" name="hero" value="<%= data.members[i].HERO_ID %>">
+                        </div>
+                        <% if(i == 2){ %>
+                        <div class="change-line"></div>
+                        <% } %>
+                    <% } %>
+                    
+                    </div>
+                    <% }%>
+
+            </form>
+            
+
+            <div class="left-box-bottom d-flex justify-content-start align-items-center">
+                <span class="view">조회수 <span><%=data.form_info[0].VIEW %></span></span>
+                <span <%if(data.form_info[0].IS_WRITER != 0 ){ %> class="mine ms-2" <% } else {%> class="ms-2 saved" <% }%>><i class="fa-solid fa-bookmark"></i> <%=data.form_info[0].SAVED_CNT %></span>
+                <span class="ms-3 report color-red ">신고</span>
+                <span class="ms-2 share"><i class="fa-solid fa-share"></i></span>
+            </div>
+        </div>
+
+        <!-- 오른쪽 -->
+        <div class="right-box">
+            <h5 class="explain-title d-flex align-items-end">작성자 한마디</h5>
+            <div class="bg-white memo-container color-gray">
+                <div class="memo explain-content"  > <%=data.form_info[0].WRITER_MEMO %> </div>
+            </div>
+
+            <!-- 좋아요 / 댓글 펼치기 -->
+            <div class="btns mg-10px ms-0 me-0 d-flex flex-fill justify-content-between">
+                <div class="btn-shadow d-flex justify-content-between w-100">
+                    <button class="form-save-btn btn-cut bottom-btn btn-yellow color-white w-100"><i class="fa-solid fa-bookmark me-2"></i> 편성 저장</button>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+</div>

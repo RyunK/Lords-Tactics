@@ -107,6 +107,23 @@ h6{
     z-index: 1;
 }
 
+.mypage-remote .tab .load-left-blue-bar{
+    height: 100%;
+}
+
+.mypage-remote .tab .load-left-blue-bar::before{
+    content: "";
+
+    display: block;
+    width: 10px;
+    height: 65px;
+
+    background-color: #3b8fff;
+
+    position: absolute;
+    z-index: 1;
+}
+
 .mypage-remote .filter-container {
     width: 100%;
     background-color: #3f3f50;
@@ -209,16 +226,19 @@ h6{
 }
 
 .dropdown-contents .form_status{
-    top: 532px;
+    top: 100%;
+    transform: translateY(-320px);
 }
 
 .dropdown-contents .content{
-    top: 798px;
+    top: 100%;
+    transform: translateY(-50px);
 }
 
 .dropdown-contents .hero-search-container{
     left: 25px;
-    top: 628px;
+    top: 100%;
+    transform: translateY(-220px);
     
 }
 
