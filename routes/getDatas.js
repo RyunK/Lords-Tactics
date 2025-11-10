@@ -164,10 +164,11 @@ module.exports = {
    getCommentsNReplys: async function(req, res, connection, form_id){
       // 게시글 id로 comment 및 reply 검색
       var sql = `SELECT FC.id id, fc.help_form_id , fc.comment_body, fc.last_datetime, (U.ID = ?) AS is_author, 
-               U.nickname, (U.ID = U2.ID) AS is_formauthor FROM FORM_COMMENTS FC 
+               U.nickname, (U.ID = U2.ID) AS is_formauthor, ws.req_id as ws_req_id FROM FORM_COMMENTS FC 
                INNER JOIN user U ON U.ID = FC.AUTHOR_ID 
                INNER JOIN HERO_FORMS HF ON HF.ID = fc.FORM_ID
                INNER JOIN user U2 ON u2.id = hf.USER_ID 
+               LEFT JOIN writer_save ws ON ws.ans_comment_id = fc.help_form_id
                WHERE FC.FORM_ID = ?
                ORDER BY fc.id asc`
       var [comments, fields] = await (await connection).execute(sql,  [req.isAuthenticated()?req.user[0].id:-1, form_id]);

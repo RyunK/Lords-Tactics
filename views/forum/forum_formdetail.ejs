@@ -229,6 +229,7 @@
                         replys : data.replys,
                         help_members : data.help_members,
                         member_length: data.members.length,
+                        saved_forms : data.saved_forms,
                     }}) %> 
                 </div>
                 <form class="write-comment bg-white">
@@ -600,6 +601,61 @@
                                 $('.toast-black').text("편성이 저장되었습니다.").fadeIn(600).delay(1500).fadeOut(600);
                                 $(".left-box-bottom .fa-bookmark").parent().html(`<i class="fa-solid fa-bookmark"></i> ${res.data.saved_cnt}`)
                                 $(".left-box-bottom .fa-bookmark").addClass("color-purple")
+                            }
+                        } else{
+                            // DB 오류
+                            alert(res.message);
+                        }
+                    },                        
+                    
+                    error: function(xhr, status, error) {
+                        // 오류 
+                        alert(`오류 발생! 다시 시도하세요. ${status} - ${error}`);
+                        console.error('Error:', status, error);
+                    }
+                })
+
+            })
+
+            $(document).on("click", ".comment-form-preview .comment-quicksave" , function(e){
+                e.preventDefault();
+                if($(".login").text().includes("로그인")){
+                    alert("편성을 저장하려면 로그인해야 합니다.")
+                    return false;                
+                } 
+
+                // console.log('<% data.form_info[0].IS_WRITER%>');
+
+                if($(this).hasClass("btn-yellow") && $(".writer-save-badge").length <= 0 && '<%= data.form_info[0].IS_WRITER%>' == 1){
+                    alert("도움 받은 편성을 처음 저장하면 편성 상태가 [편성 완료]가 됩니다. \n또, 처음 저장한 편성은 채택되어 저장을 취소하더라도 채택이 취소되지 않습니다. 저장하시겠습니까?")
+                }
+
+                $.ajax({
+                    url: `/forum/formsave/change/${$(this).parent().parent().data("id")}`, 
+                    method: 'POST', 
+                    contentType: 'application/json',
+                    data: JSON.stringify({ 
+                    }),
+                    
+                    // 요청 성공 
+                    success: function(res) {
+                        if(res.status.includes('2')){
+                            // 저장 상태 표시 전환
+                            if(res.data.change == 'delete'){
+                                $(".comment-form-preview .comment-quicksave").eq(res.data.comment_num - 1).addClass('btn-yellow').removeClass('btn-purple').html(`바로 저장`)
+                                $('.toast-black').text("편성 저장이 취소되었습니다.").fadeIn(600).delay(1500).fadeOut(600);
+                            } else{
+                                $(".comment-form-preview .comment-quicksave").eq(res.data.comment_num - 1).addClass('btn-purple').removeClass('btn-yellow').html(`저장 취소`)
+
+                                // 채택
+                                if( $(".writer-save-badge").length <= 0 && '<%= data.form_info[0].IS_WRITER%>' == 1){
+                                    $(".comment-form-preview .comment-quicksave").eq(res.data.comment_num - 1).parent().parent().prepend(`<img class="writer-save-badge" src="/sources/img/choice.png" alt="">`)
+                                    $(".form-container .form-status button").removeClass("status-request").addClass("status-end");
+                                    $(".form-container .form-status p").text("편성 완료")
+                                }
+
+
+                                $('.toast-black').text("편성이 저장되었습니다.").fadeIn(600).delay(1500).fadeOut(600);
                             }
                         } else{
                             // DB 오류

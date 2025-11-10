@@ -14,7 +14,7 @@ router.get('/', mustLoggedIn, (req, res) => {
 
 
 function mypageFormWhereMaker(req, q_content, filtered_heroes_list){
-    var where = `(HF.USER_ID = ? OR (HF.ID = (select form_id from form_save where user_id = ?) and HF.form_access_status_id = 1) )`;
+    var where = `(HF.USER_ID = ? OR (HF.ID in (select form_id from form_save where user_id = ?) and HF.form_access_status_id = 1) )`;
     let q_list = [req.user[0].id, req.user[0].id]
 
     if(req.query.form_status && req.query.form_status != 8 && req.query.form_status != 3){
@@ -126,7 +126,7 @@ router.get('/formsave/detail/:id', mustLoggedIn, async(req, res) => {
     // if(!req.query.n) res.redirect('/formsave');
     try{
         // 권한 체크 해야함
-        var sql = `select * from hero_forms HF where id = ? and (HF.USER_ID = ? OR (HF.ID = (select form_id from form_save where user_id = ?) and HF.form_access_status_id = 1) )`
+        var sql = `select * from hero_forms HF where id = ? and (HF.USER_ID = ? OR (HF.ID in (select form_id from form_save where user_id = ?) and HF.form_access_status_id = 1) )`
         var [result, fields] = await(await connection).execute(sql, [req.params.id, req.user[0].id, req.user[0].id]);
         if(result.length <= 0) throw new Error("편성을 열람할 권한이 없습니다.");
 
@@ -207,6 +207,13 @@ router.get('/formsave/detail/:id', mustLoggedIn, async(req, res) => {
         // 게시글 id로 comment 및 reply 검색
         var [comments, replys, help_members] = await getDatas.getCommentsNReplys(req, res, connection, req.params.id)
 
+        // 내가 저장한 form 리스트 보내주기
+        let saved_forms = []
+        if(req.isAuthenticated()){
+            var sql = `select * from form_save where user_id = ?`
+            var [mysave, fields] = await(await connection).execute(sql, [req.user[0].id]);
+            saved_forms = mysave.map((e) => e.form_id);
+        }
 
         let data = {
             nickname: getDatas.loggedInNickname(req, res),
@@ -224,6 +231,8 @@ router.get('/formsave/detail/:id', mustLoggedIn, async(req, res) => {
             comments : comments,
             replys : replys,
             help_members : help_members,
+            saved_forms : saved_forms,
+            
         }
         res.render('./mypage/mypage_formdetail.ejs',  {data : data})
 

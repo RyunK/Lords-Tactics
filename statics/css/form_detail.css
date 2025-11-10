@@ -230,7 +230,13 @@
 .comment-form-preview .writer-save-badge{
     position: absolute;
 
-}
+    right: 0;
+    top: 0;
+
+    transform: translateX(30%) translateY(-30%);
+    z-index: 1;
+}   
+
 
 .preview-face-container{
     /* margin: 2px 0; */

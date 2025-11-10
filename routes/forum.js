@@ -208,6 +208,14 @@ router.get('/:forumtab/detail/:id', async(req, res) => {
         // 게시글 id로 comment 및 reply 검색
         var [comments, replys, help_members] = await getDatas.getCommentsNReplys(req, res, connection, req.params.id)
 
+        // 내가 저장한 form 리스트 보내주기
+        let saved_forms = []
+        if(req.isAuthenticated()){
+            var sql = `select * from form_save where user_id = ?`
+            var [mysave, fields] = await(await connection).execute(sql, [req.user[0].id]);
+            saved_forms = mysave.map((e) => e.form_id);
+        }
+
 
         // 조회수 +1
         var sql = `UPDATE HERO_FORMS HF 
@@ -232,6 +240,7 @@ router.get('/:forumtab/detail/:id', async(req, res) => {
             comments : comments,
             replys : replys,
             help_members : help_members,
+            saved_forms : saved_forms,
         }
         res.render('./forum/forum_formdetail.ejs',  {data : data})
     }catch(e){
@@ -250,7 +259,7 @@ router.post('/formsave/change/:form_id', mustLoggedIn, async (req, res) => {
         var [r, fields] = await(await connection).execute(sql, [req.user[0].id, req.params.form_id]);
         if(r.length > 0) throw new Error("자신의 편성은 [편성 저장]할 수 없습니다.")
         
-
+        // 없으면 채택해
 
         // 이미 저장돼있나 체크해
         var sql = `select * from form_save
@@ -269,23 +278,46 @@ router.post('/formsave/change/:form_id', mustLoggedIn, async (req, res) => {
             var sql = `insert form_save (user_id, form_id) values (?, ?)`
             var [r, fields] = await(await connection).execute(sql, [req.user[0].id, req.params.form_id])
             change = 'insert'
+        
+            // 질문글 작성자 본인이고 writer_save에 이 편성 채택 내역 있는지 확인해
+            var sql = `select rf.id req_form, ws.id ws_id FROM hero_forms CF
+                inner join hero_forms rf on cf.comments_for_id = rf.id
+                left join writer_save ws on ws.req_id = rf.id
+                where cf.id = ? and rf.user_id = ?`;
+            var [ws, fields] = await(await connection).execute(sql, [req.params.form_id, req.user[0].id]);
+            if(!ws[0].ws_id){
+                var sql = `insert writer_save (req_id, ans_comment_id) values (?, ?)`
+                var [r, fields] = await(await connection).execute(sql, [ws[0].req_form, req.params.form_id])
+
+                var sql = `update hero_forms set form_status_id = 4 where id = ?`
+                var [r, fields] = await(await connection).execute(sql, [ws[0].req_form])
+            }
         }
 
-        
+        // 저장 수 + 1
         var sql = `select * from form_save
                 where form_id = ?`
         var [saved, fields] = await(await connection).execute(sql, [req.params.form_id])
-
         var sql = `update hero_forms
                 set saved_cnt = ?
                 where id = ?`
         var [r, fields] = await(await connection).execute(sql, [saved.length, req.params.form_id])
+
+        // 이 댓글이 이 글의 몇번째 도움 댓글인지도 반환
+        var sql = `SELECT * FROM (
+                SELECT hf.id, ROW_NUMBER() OVER(ORDER BY id) AS rn from HERO_FORMS HF 
+                where hf.COMMENTS_FOR_ID  = (SELECT hf.COMMENTS_FOR_ID WHERE hf.id = ?) ) AS t
+                WHERE t.id = ?;`
+        var [comment_num, fields] = await(await connection).execute(sql, [req.params.form_id, req.params.form_id])
+
+        // console.log(comment_num)
 
         let result = {
             status: '200',
             data : {
                 change :change,
                 saved_cnt : saved.length,
+                comment_num : comment_num[0].rn,
             }
         }
         res.json(result)
@@ -298,6 +330,53 @@ router.post('/formsave/change/:form_id', mustLoggedIn, async (req, res) => {
     }
     
 })
+
+/**
+ * 댓글 ajax 요청 시 새로고침 반환
+ * req.params.form_id로 댓글 및 댓글의 편성 읽어서 반환해줌
+ * @param {*} req 
+ * @param {*} res 
+ */
+async function comment_reload_respond(req, res){
+    // comment 및 reply 다시 select 해서 반환
+    var [comments, replys, help_members] = await getDatas.getCommentsNReplys(req, res, connection, req.params.form_id);
+    
+    var sql = `select cn.num_of_heroes from hero_forms hf
+            inner join contents_name cn on hf.contents_id = cn.id
+            where hf.id = ?`
+    var [member_num, fields] = await(await connection).execute(sql, [req.params.form_id]);
+    let member_length = member_num[0].num_of_heroes;
+
+    // 내가 저장한 form 리스트 보내주기
+    let saved_forms = []
+    if(req.isAuthenticated()){
+        var sql = `select * from form_save where user_id = ?`
+        var [mysave, fields] = await(await connection).execute(sql, [req.user[0].id]);
+        saved_forms = mysave.map((e) => e.form_id);
+    }
+
+    let data = {
+            comments : comments,
+            replys : replys,
+            help_members : help_members,
+            member_length : member_length,
+            saved_forms : saved_forms,
+        }
+
+    res.render('./components/comments_and_replys.ejs', {data: data}, (err, html) =>{
+        if (err) {
+            console.log(err);
+            return res.status(500).send(err);
+        }
+        let result = {
+            status: '200',
+            data : {
+                html : html,
+            }
+        }
+        res.json(result)
+    })
+}
 
 // 댓글 게시
 router.post('/submit/comment/:form_id', mustLoggedIn, async (req, res) => {
@@ -336,46 +415,10 @@ router.post('/submit/comment/:form_id', mustLoggedIn, async (req, res) => {
         }
         // kind == form 이면 comment 테이블에 help_form_id에 form id 넣어서 저장 > 근데 이건 여기서 안하게 될듯
         
-
-        // comment 및 reply 다시 select 해서 반환
-        var [comments, replys, help_members] = await getDatas.getCommentsNReplys(req, res, connection, req.params.form_id);
+        comment_reload_respond(req, res);
         
-        var sql = `select cn.num_of_heroes from hero_forms hf
-                inner join contents_name cn on hf.contents_id = cn.id
-                where hf.id = ?`
-        var [member_num, fields] = await(await connection).execute(sql, [req.params.form_id]);
-        let member_length = member_num[0].num_of_heroes;
 
-        let data = {
-                comments : comments,
-                replys : replys,
-                help_members : help_members,
-                member_length : member_length,
-            }
-
-        res.render('./components/comments_and_replys.ejs', {data: data}, (err, html) =>{
-            if (err) {
-                console.log(err);
-                return res.status(500).send(err);
-            }
-            let result = {
-                status: '200',
-                data : {
-                    html : html,
-                }
-            }
-            res.json(result)
-        })
-
-        // let result = {
-        //     status: '200',
-        //     data : {
-        //         comments : comments,
-        //         replys : replys,
-        //         help_members : help_members
-        //     }
-        // }
-        // res.json(result)
+    
     } catch(e){
         console.log(e)
         res.json({
@@ -440,47 +483,8 @@ router.post('/edit/comment/:form_id', mustLoggedIn, async (req, res) => {
         }
         
 
-        // comment 및 reply 다시 select 해서 반환
-        var [comments, replys, help_members] = await getDatas.getCommentsNReplys(req, res, connection, req.params.form_id);
-
-        var sql = `select cn.num_of_heroes from hero_forms hf
-                inner join contents_name cn on hf.contents_id = cn.id
-                where hf.id = ?`
-        var [member_num, fields] = await(await connection).execute(sql, [req.params.form_id]);
-        let member_length = member_num[0].num_of_heroes;
-
+        comment_reload_respond(req, res);
         
-        let data = {
-                comments : comments,
-                replys : replys,
-                help_members : help_members,
-                member_length : member_length,
-            }
-
-        res.render('./components/comments_and_replys.ejs', {data: data}, (err, html) =>{
-            if (err) {
-                console.log(err);
-                return res.status(500).send(err);
-            }
-            let result = {
-                status: '200',
-                data : {
-                    html : html,
-                }
-            }
-            res.json(result)
-        })
-
-        // let result = {
-        //     status: '200',
-        //     data : {
-        //         comments : comments,
-        //         replys : replys,
-        //         help_members : help_members,
-        //         member_length : member_length,
-        //     }
-        // }
-        // res.json(result)
     } catch(e){
         console.log(e)
         res.json({
@@ -576,45 +580,8 @@ router.post('/delete/comment/:form_id', mustLoggedIn, async (req, res) => {
             var [rst, fields] = await(await connection).execute(sql, [help_form]);
         }
 
-        // comment 및 reply 다시 select 해서 반환
-        var [comments, replys, help_members] = await getDatas.getCommentsNReplys(req, res, connection, req.params.form_id);
+        comment_reload_respond(req, res);
 
-        var sql = `select cn.num_of_heroes from hero_forms hf
-                inner join contents_name cn on hf.contents_id = cn.id
-                where hf.id = ?`
-        var [member_num, fields] = await(await connection).execute(sql, [req.params.form_id]);
-        let member_length = member_num[0].num_of_heroes;
-
-        let data = {
-                comments : comments,
-                replys : replys,
-                help_members : help_members,
-                member_length : member_length,
-            }
-
-        res.render('./components/comments_and_replys.ejs', {data: data}, (err, html) =>{
-            if (err) {
-                console.log(err);
-                return res.status(500).send(err);
-            }
-            let result = {
-                status: '200',
-                data : {
-                    html : html,
-                }
-            }
-            res.json(result)
-        })
-
-        // let result = {
-        //     status: '200',
-        //     data : {
-        //         comments : comments,
-        //         replys : replys,
-        //         help_members : help_members,
-        //     }
-        // }
-        // res.json(result)
     } catch(e){
         console.log(e)
         res.json({
