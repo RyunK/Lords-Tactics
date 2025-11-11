@@ -186,7 +186,7 @@
                 <div class="right-box">
                     <h6 class="explain-title d-flex align-items-end">작성자 한마디</h6>
                     <div class="bg-white memo-container color-gray">
-                        <div class="memo explain-content"  ><%=data.form_info[0].WRITER_MEMO %></div>
+                        <div class="memo explain-content blue-scroll"  ><%=data.form_info[0].WRITER_MEMO %></div>
                     </div>
 
                     <!-- 좋아요 / 댓글 펼치기 -->
@@ -392,6 +392,13 @@
             window.location.href = `/formmake/help/${window.location.pathname.split("/").pop()}`
             
         })
+
+         $(".right-box .formhelp-mypage").on("click", function(e){
+            e.preventDefault();
+            window.location.href = `/mypage/helping/loadmyform/${window.location.pathname.split("/").pop()}`
+            
+        })
+        
         
 
         $(document).on("click", ".comment-bottom .reply-btn", function(e){

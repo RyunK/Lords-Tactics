@@ -71,6 +71,8 @@ body{
     resize: none;
     margin: 0;
     padding: 16px 19px;
+    overflow-y: scroll;
+
 }
 
 .char-selected{
@@ -406,6 +408,15 @@ body{
 
 .character-5 {
     margin:0px 40px 10px 0px;
+    /* width: 90px; */
+    width: calc(100% / 3 - 40px);
+    position: relative;
+
+    z-index: 1;
+}
+
+.askform-container .character-5 {
+    margin:0px 15px 10px 15px;
     /* width: 90px; */
     width: calc(100% / 3 - 40px);
     position: relative;
@@ -853,7 +864,7 @@ body{
         padding: 0 45px;
 
         display: grid;
-        grid-template-rows: 60px 1fr;
+        grid-template-rows: 60px calc(100% - 70px);
         grid-template-columns: 1fr 320px;
         row-gap: 10px;
         column-gap: 70px;
@@ -879,14 +890,13 @@ body{
 
         margin: 15px 0;
 
-        overflow-y: scroll;
 
     }
 
     .askform-container .character-5 {
-        margin:0px 40px 10px 0px;
+        margin:0px 30px 10px 0px;
         /* width: 90px; */
-        width: calc(100% / 3 - 60px);
+        width: calc(100% / 3 - 70px);
         position: relative;
 
         z-index: 1;

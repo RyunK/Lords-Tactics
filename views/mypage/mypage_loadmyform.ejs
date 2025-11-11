@@ -46,7 +46,7 @@
                 <h6 class="color-yellow">마이페이지에서 불러오기</h6>
             </div>
             <ul class="load-left-blue-bar width-100">
-                <li class="active border-top-0 "><a class=" color-black">저장한 편성</a></li>
+                <li class="active border-top-0 "><a class=" color-black">내 편성</a></li>
             </ul>
         </div>
         <div class="shadow-filter-basic"> 
@@ -412,7 +412,7 @@
             e.preventDefault();
             let id = $(this).data('id');
             $.ajax({
-                url: `./preview/detail/${id}`, 
+                url: `/mypage/preview/detail/${id}`, 
                 method: 'GET', 
                 contentType: 'application/json',
                 data: JSON.stringify({ 
@@ -447,13 +447,17 @@
     $(document).on('click', '.preview-detail-box-bottom .btns .select', function(e){
         e.preventDefault();
         const query = $('.preview-detail .form-border-container').serializeArray();
-        // console.log(query)
 
-        let url = new URL(`${window.location.protocol}//${window.location.host}/formmake`);
-        query.forEach((val, i) => {url.searchParams.append(val.name, val.value)})
-        // url.params.set(query);
-        // console.log(url.toString());
-        window.location.href = url.toString();
+        if( '<%= data.from%>' == "mypage_help" ){
+            let url = new URL(`${window.location.protocol}//${window.location.host}/formmake/help/${window.location.pathname.split("/").pop()}`);
+            query.forEach((val, i) => {url.searchParams.append(val.name, val.value)});
+            window.location.href = url.toString();
+        } else{
+            let url = new URL(`${window.location.protocol}//${window.location.host}/formmake`);
+            query.forEach((val, i) => {url.searchParams.append(val.name, val.value)});
+            window.location.href = url.toString();
+        }
+        
 
     })
 

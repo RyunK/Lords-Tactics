@@ -141,7 +141,7 @@
 
                     
                 <div class="bg-white memo-container color-gray">
-                    <div class="memo explain-content" ><%=data.writer_memo %></div>
+                    <div class="memo explain-content blue-scroll" ><%=data.writer_memo %></div>
                 </div>
             </div>    
 
@@ -240,7 +240,7 @@
                     <h6 class="explain-title d-flex align-items-end">작성자 한마디</h6>
                     <div class="bg-white memo-container color-gray">
                         <p class="cnt-text"><span>0</span> / 1000</p>
-                        <textarea class="memo explain-content" placeholder="한마디를 작성하세요. 편성도움에서는 한마디가 댓글 본문이 됩니다."  maxlength="1000" ><%=data.helper_memo %></textarea>
+                        <textarea class="memo explain-conten blue-scroll" placeholder="한마디를 작성하세요. 편성도움에서는 한마디가 댓글 본문이 됩니다."  maxlength="1000" ><%=data.helper_memo %></textarea>
                     </div>
 
                     <!-- 좋아요 / 댓글 펼치기 -->
@@ -330,7 +330,11 @@
 
         <!-- 영웅들 늘어진 칸 -->
         <div class="heroes-speread flex-fill bg-basicdark shadow-basic">
-
+            <% if (data.having_heroes_id){ %>
+            <p class="color-white mb-4">• 현재 편성 요청자의 영웅 육성 상태가 표시됩니다.</p>
+            <% } else{ %>
+            <p class="color-white mb-4">• 편성 요청자가 영웅 정보를 비공개하였으므로 육성 정보가 표시되지 않습니다.</p>
+            <% } %>
             <div class="heroes-spread-container blue-scroll w-100">
                 <% for(let i=0; i<data.hero_list.length; i++){ %>
                     <div class="character-list-box select-liner ">

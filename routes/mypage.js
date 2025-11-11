@@ -12,10 +12,23 @@ router.get('/', mustLoggedIn, (req, res) => {
 
 }) 
 
-
-function mypageFormWhereMaker(req, q_content, filtered_heroes_list){
+/**
+ * 
+ * @param {*} req 
+ * @param {*} q_content 
+ * @param {*} filtered_heroes_list 
+ * @param {boolean} except_save 편성 저장 포함 여부 / 기본 : 포함=false 
+ * @returns 
+ */
+function mypageFormWhereMaker(req, q_content, filtered_heroes_list, except_save = false){
     var where = `(HF.USER_ID = ? OR (HF.ID in (select form_id from form_save where user_id = ?) and HF.form_access_status_id = 1) )`;
     let q_list = [req.user[0].id, req.user[0].id]
+
+    if(except_save){
+        where = `HF.USER_ID = ?`;
+        q_list = [req.user[0].id]
+    }
+
 
     if(req.query.form_status && req.query.form_status != 8 && req.query.form_status != 3){
         where += `AND ( HF.FORM_STATUS_ID = ? and HF.USER_ID = ?) `;
@@ -311,6 +324,73 @@ router.get('/loadmyform', mustLoggedIn, async(req, res) => {
     res.render('./mypage/mypage_loadmyform.ejs',  {data : data})
 })
 
+
+// 편성 불러오기 (편성 요청에 대한 도움)
+router.get('/helping/loadmyform/:req_id', mustLoggedIn, async(req, res) => { 
+    var sql = `SELECT * FROM FORM_STATUS
+            ORDER BY status_name`;
+    var [form_status_list, fields] = await (await connection).execute(sql);
+    
+    let contents_list = await getDatas.getContentsName(req, res, connection);
+
+    var sql = `SELECT * FROM CONTENTS_NAME
+                WHERE ENG_NAME= ?`;
+    var [q_content, fields] = await (await connection).execute(sql, [req.query.content ? req.query.content : 'all']);
+
+    var sql = `SELECT * FROM FORM_STATUS
+                WHERE ID= ?`;
+    var [now_formstatus, fields] = await (await connection).execute(sql, [req.query.form_status ? req.query.form_status : '8']);
+
+    let hero_list = await getDatas.getHeroList(req, res, connection);
+    let filtered_heroes_list, filtered_heroes_list_forrender;
+    try{
+        [filtered_heroes_list, filtered_heroes_list_forrender] = await getDatas.get_filtered_herolist(req, res, connection);
+    }catch(e){
+        filtered_heroes_list = [];
+        filtered_heroes_list_forrender =[];
+    }
+
+    // 쿼리에 맞는 폼만 출력하기
+    // where 절 생성
+    let [where, q_list] = mypageFormWhereMaker(req, q_content, filtered_heroes_list, true);
+    let order = getDatas.formOrderGetter(req, res);
+    
+    var form_list, members;
+    try{
+        [form_list, members] = await getDatas.getFormlistNMembers(req, res, where, order, q_list, connection);
+    }catch(e){
+        console.log(e)
+        form_list = [];
+        members =[];
+    }
+    
+    // 내가 저장한 form 리스트 보내주기
+    let saved_forms = []
+    if(req.isAuthenticated()){
+        var sql = `select * from form_save where user_id = ?`
+        var [mysave, fields] = await(await connection).execute(sql, [req.user[0].id]);
+        saved_forms = mysave.map((e) => e.form_id);
+    }
+ 
+    let data = {
+        from: 'mypage_help', // 마이페이지면 편성 저장 출력용
+        nickname: getDatas.loggedInNickname(req, res),
+        form_status_list : form_status_list,
+        contents_list : contents_list,
+        sort : req.query.sort? req.query.sort : 'saved_cnt',
+        filtered_heroes : filtered_heroes_list,
+        filtered_heroes_forrender : filtered_heroes_list_forrender,
+        content : q_content,
+        query_form_access : req.query.form_access? req.query.form_access : 'all',
+        form_status : now_formstatus[0],
+        hero_list : hero_list,
+        form_list : form_list,
+        members : members,
+        saved_forms : saved_forms,
+        req_id : req.params.req_id,
+    }
+    res.render('./mypage/mypage_loadmyform.ejs',  {data : data})
+})
 
 router.get('/preview/detail/:id', mustLoggedIn, async(req, res) => {     
     // if(!req.query.n) res.redirect('/formsave');
