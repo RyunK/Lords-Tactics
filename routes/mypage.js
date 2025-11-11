@@ -396,7 +396,8 @@ router.get('/preview/detail/:id', mustLoggedIn, async(req, res) => {
     // if(!req.query.n) res.redirect('/formsave');
     try{
         // 권한 체크 해야함
-        var sql = `select * from hero_forms HF where id = ? and (HF.USER_ID = ? OR (HF.ID in (select form_id from form_save where user_id = ?) and HF.form_access_status_id = 1) )`
+        var sql = `select * from hero_forms HF where id = ? 
+        and (HF.USER_ID = ? OR (HF.ID in (select form_id from form_save where user_id = ?) and HF.form_access_status_id = 1) OR (HF.form_status_id = 7 AND HF.form_access_status_id = 1))`
         var [result, fields] = await(await connection).execute(sql, [req.params.id, req.user[0].id, req.user[0].id]);
         if(result.length <= 0) throw new Error("편성을 열람할 권한이 없습니다.");
 
@@ -405,10 +406,16 @@ router.get('/preview/detail/:id', mustLoggedIn, async(req, res) => {
         // req.params.id로 form검색
         let [form_info, this_members] = await getDatas.getFormInfoNMembers(req, res, connection); 
 
+        // 내가 저장한 편성인지 여부
+        var sql = `select * from form_save where user_id = ? and form_id = ?`
+        var [mysave, fields] = await(await connection).execute(sql, [req.user[0].id, req.params.id]);
+
+
         let data = {
             form_id : req.params.id,
             form_info : form_info,
             members : this_members,
+            saved : mysave.length>0? "true" : "false"
         }
         res.render('./components/form_preview_detail.ejs',  {data : data}, (err, html) =>{
             if(err){

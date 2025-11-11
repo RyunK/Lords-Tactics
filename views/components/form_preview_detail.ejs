@@ -126,7 +126,7 @@
 
             <div class="left-box-bottom d-flex justify-content-start align-items-center">
                 <span class="view">조회수 <span><%=data.form_info[0].VIEW %></span></span>
-                <span <%if(data.form_info[0].IS_WRITER != 0 ){ %> class="mine ms-2" <% } else {%> class="ms-2 saved" <% }%>><i class="fa-solid fa-bookmark"></i> <%=data.form_info[0].SAVED_CNT %></span>
+                <span <%if(data.form_info[0].IS_WRITER != 0 ){ %> class="mine ms-2" <% } else if (data.saved == "true") {%> class="ms-2 saved" <% } else {%> class="ms-2"<% }%>><i class="fa-solid fa-bookmark"></i> <%=data.form_info[0].SAVED_CNT %></span>
                 <span class="ms-3 report color-red ">신고</span>
                 <span class="ms-2 share"><i class="fa-solid fa-share"></i></span>
             </div>
@@ -136,7 +136,7 @@
         <div class="right-box">
             <h5 class="explain-title d-flex align-items-end">작성자 한마디</h5>
             <div class="bg-white memo-container color-gray">
-                <div class="memo explain-content"  > <%=data.form_info[0].WRITER_MEMO %> </div>
+                <div class="memo explain-content blue-scroll"  > <%=data.form_info[0].WRITER_MEMO %> </div>
             </div>
 
             <!-- 좋아요 / 댓글 펼치기 -->

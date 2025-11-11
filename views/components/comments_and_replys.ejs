@@ -37,7 +37,7 @@
                 <% ans_form_cnt += 1 %>
             </div>
             <div class="btns btn-shadow">
-                <button class="me-3 btn-blue btn-cut border-0 color-white">자세히 보기</button>
+                <button class="comment-detail me-3 btn-blue btn-cut border-0 color-white">자세히 보기</button>
                 <% if(data.comments[i].is_author == 1) {%>
                 <% } else if(data.saved_forms.includes(data.comments[i].help_form_id)) { %> 
                 <button class="comment-quicksave btn-purple btn-cut border-0 color-white">저장 취소</button>

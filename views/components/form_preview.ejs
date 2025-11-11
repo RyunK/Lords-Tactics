@@ -65,7 +65,7 @@
                         <% if( data.saved_forms &&data.saved_forms.includes(data.form_list[i].ID)){ %>
                         <i class="fa-solid fa-bookmark color-purple"></i> 
                         <%=data.form_list[i].SAVED_CNT %>
-                        <%} else if(data.form_list[i].STATUS_NAME == "편성 요청" ){ %>
+                        <%} else if(data.form_list[i].STATUS_NAME == "편성 요청" || data.form_list[i].STATUS_NAME == "편성 완료" ){ %>
                         <% } else { %>
                         <i class="fa-solid fa-bookmark"></i> 
                         <%=data.form_list[i].SAVED_CNT %>

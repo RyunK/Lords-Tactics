@@ -214,7 +214,7 @@
   top:5px; */
 }
 
-.preview-detail{
+.preview-detail-container .preview-detail{
     width: 700px;
     min-width: 700px;
     font-size: 0.8em;

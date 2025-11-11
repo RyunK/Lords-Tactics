@@ -10,6 +10,7 @@
     <link href="/css/main.css" rel="stylesheet">
     <link href="/css/mypage.css" rel="stylesheet">
     <link href="/css/lv_badges.css" rel="stylesheet">
+    <link href="/css/form_card.css" rel="stylesheet">
     <link href="/css/form_making.css" rel="stylesheet">
     <link href="/css/form_detail.css" rel="stylesheet">
 </head>
@@ -19,6 +20,25 @@
 
     <div class="toast-black">
         
+    </div>
+
+    <div class="my-modal-bg">
+
+        <div class="preview-detail-container shadow-basic bg-lightgray">
+            <div class="preview-detail-box-top bg-basicdark color-yellow">
+            미리보기
+            </div>
+            <!-- 편성 글. 조합 -->
+            <!-- 여기는 ajax 통신으로 구현 -->
+            <div class="preview-detail-box-bottom d-flex">
+                <p></p>
+                <div class="btns btn-shadow">
+                    <button class="cancel btn-red btn-cut border-0 color-white">닫기</button>
+                    <button class="save btn-yellow btn-cut border-0 color-white">저장</button>
+                </div>
+            </div>
+        </div>
+
     </div>
 
     <!-- 왼쪽 리모콘(?) -->
@@ -543,6 +563,15 @@
             
         })
 
+        /**
+         *  미리보기 > 취소 시 모달 창 off
+         **/ 
+        $(document).on('click', '.preview-detail-box-bottom .btns .cancel', function(e){
+            e.preventDefault();
+            $(".my-modal-bg").fadeOut();
+            $(".preview-detail-container").fadeOut().delay(1000);
+        })
+
         $(document).on("click", ".comment-bottom .reply-btn", function(e){
             if($(".login").text().includes("로그인")) alert("답글을 작성하려면 로그인해야 합니다.")
             if($(this).text() == "답글쓰기" && $(this).parent().parent().hasClass("comment")){
@@ -749,20 +778,21 @@
 
             })
 
-            $(document).on("click", ".comment-form-preview .comment-quicksave" , function(e){
+            function form_save(e, id){
                 e.preventDefault();
                 if($(".login").text().includes("로그인")){
                     alert("편성을 저장하려면 로그인해야 합니다.")
                     return false;                
                 } 
 
+                // console.log('<% data.form_info[0].IS_WRITER%>');
 
                 if($(this).hasClass("btn-yellow") && $(".writer-save-badge").length <= 0 && '<%= data.form_info[0].IS_WRITER%>' == 1){
                     alert("도움 받은 편성을 처음 저장하면 편성 상태가 [편성 완료]가 됩니다. \n또, 처음 저장한 편성은 채택되어 저장을 취소하더라도 채택이 취소되지 않습니다. 저장하시겠습니까?")
                 }
 
                 $.ajax({
-                    url: `/forum/formsave/change/${$(this).parent().parent().data("id")}`, 
+                    url: `/forum/formsave/change/${id}`, 
                     method: 'POST', 
                     contentType: 'application/json',
                     data: JSON.stringify({ 
@@ -775,9 +805,11 @@
                             if(res.data.change == 'delete'){
                                 $(".comment-form-preview .comment-quicksave").eq(res.data.comment_num - 1).addClass('btn-yellow').removeClass('btn-purple').html(`바로 저장`)
                                 $('.toast-black').text("편성 저장이 취소되었습니다.").fadeIn(600).delay(1500).fadeOut(600);
+                                $(".my-modal-bg").fadeOut();
+                                $(".preview-detail-container").fadeOut();
                             } else{
                                 $(".comment-form-preview .comment-quicksave").eq(res.data.comment_num - 1).addClass('btn-purple').removeClass('btn-yellow').html(`저장 취소`)
-
+                                
                                 // 채택
                                 if( $(".writer-save-badge").length <= 0 && '<%= data.form_info[0].IS_WRITER%>' == 1){
                                     $(".comment-form-preview .comment-quicksave").eq(res.data.comment_num - 1).parent().parent().prepend(`<img class="writer-save-badge" src="/sources/img/choice.png" alt="">`)
@@ -785,7 +817,8 @@
                                     $(".form-container .form-status p").text("편성 완료")
                                 }
 
-
+                                $(".my-modal-bg").fadeOut();
+                                $(".preview-detail-container").fadeOut();
                                 $('.toast-black').text("편성이 저장되었습니다.").fadeIn(600).delay(1500).fadeOut(600);
                             }
                         } else{
@@ -800,7 +833,54 @@
                         console.error('Error:', status, error);
                     }
                 })
+            }
 
+            $(document).on("click", ".comment-form-preview .comment-quicksave" , function(e){
+                form_save(e, $(this).parent().parent().data("id"));
+            })
+
+            $(document).on("click", ".preview-detail-box-bottom .btns .save" , function(e){
+                form_save(e,$(this).parent().parent().siblings(".preview-detail").data("id") );
+            })
+            $(document).on("click", ".comment-form-preview .comment-detail", function(e){
+                e.preventDefault();
+                if($(this).siblings(".comment-quicksave").length <= 0){
+                    $(".preview-detail-box-bottom .btns .save").remove();
+                } else if($(".preview-detail-box-bottom .btns .save") <= 0 && $(this).siblings(".comment-quicksave").hasClass("btn-yellow")){
+                    $(".preview-detail-box-bottom .btns").append(`<button class="save btn-yellow btn-cut border-0 color-white">저장</button>`);
+                } else if($(".preview-detail-box-bottom .btns .save") <= 0 && $(this).siblings(".comment-quicksave").hasClass("btn-purple")){
+                    $(".preview-detail-box-bottom .btns").append(`<button class="save btn-purple btn-cut border-0 color-white">저장 취소</button>`);
+                }else if ($(this).siblings(".comment-quicksave").hasClass("btn-yellow")){
+                    $(".preview-detail-box-bottom .btns .save").addClass("btn-yellow").removeClass("btn-purple").text("저장");
+                }else if ($(this).siblings(".comment-quicksave").hasClass("btn-purple")){
+                    $(".preview-detail-box-bottom .btns .save").addClass("btn-purple").removeClass("btn-yellow").text("저장 취소");
+                }
+                $.ajax({
+                    url: `/mypage/preview/detail/${$(this).parent().parent().data("id")}`, 
+                    method: 'GET', 
+                    contentType: 'application/json',
+                    data: JSON.stringify({ 
+                    }),
+                    
+                    // 요청 성공 
+                    success: function(res) {
+                        if(res.status.includes('2')){
+                            $(".preview-detail-container .form-container").remove();
+                            $(".preview-detail-box-top").after(res.data.html);
+                            $(".my-modal-bg").fadeIn()
+                            $(".preview-detail-container").fadeIn()
+                        } else{
+                            // DB 오류
+                            alert(res.message);
+                        }
+                    },                        
+                    
+                    error: function(xhr, status, error) {
+                        // 오류 
+                        alert(`오류 발생! 다시 시도하세요. ${status} - ${error}`);
+                        console.error('Error:', status, error);
+                    }
+                })
             })
         })
 
