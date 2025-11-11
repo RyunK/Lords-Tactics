@@ -203,13 +203,10 @@ body{
    
     width: 1000px;
     min-width: 1000px;
-    /* height: 600px; */
     aspect-ratio: 5/3;
 
     background-color: #BFC3D4;
 
-    /* margin-left: auto;
-    margin-right: auto; */
 
     margin-top: 30px;
 
@@ -415,6 +412,7 @@ body{
     z-index: 1;
 }
 
+.preview-detail .character-5,
 .askform-container .character-5 {
     margin:0px 15px 10px 15px;
     /* width: 90px; */
@@ -532,27 +530,72 @@ body{
     background: rgba(0, 0, 0, 0.4);
 
     display: none;
+
+    
 }
 
 .save-check{
-    background-color: #BFC3D4;
-    display: none;
+    background-color: #3f3f50;
+    color: white;
+    padding: 20px 25px;
+    position: relative;
+    clip-path: polygon(100% 0, 100% calc(100% - 15px), calc(100% - 15px) 100%, 15px 100%, 0% calc(100% - 15px), 0 0);
+    margin-bottom: 15px;
+    width: 100%;
+    /* display: none; */
 }
+
+.save-check::before {
+    content: '';
+    position: absolute;
+    right: calc(100% - 15px);
+    bottom: 0;
+    width: 15px;
+    height: auto;
+    aspect-ratio: 1 / 1;
+    background: linear-gradient(45deg, transparent 50%, #BFC3D4 50%);
+}
+.save-check::after {
+    content: '';
+    position: absolute;
+    right: 0;
+    bottom: 0;
+    width: 15px;
+    height: auto;
+    aspect-ratio: 1 / 1;
+    background: linear-gradient(135deg, #BFC3D4 50%, transparent 50%);
+}
+
+.save-check p{
+    font-size: 0.9em;
+    font-weight: lighter;
+    color: #efefef;
+}
+
+.save-check .form-status-check{
+    margin-bottom: 25px;
+}
+
 
 
 .charSetting-ele{
     padding: 3px 0;
     margin-right: 30px;
+    align-items: center;
 }
 
 .charSetting-ele:hover{
     cursor: pointer;
-    color: #666666;
+    /* color: #666666; */
+    opacity: 90%;
 }
 
-.charSetting-ele span{
-    font-weight: 600;
+.form-status-check .charSetting-ele span{
+    font-weight: 500;
+}
 
+.charSetting-ele span {
+    font-weight: 600;
 }
 
 .charPublic-checkbox{
@@ -560,20 +603,21 @@ body{
 }
 
 .charPublic-checkbox + .checkbox-img {
-    margin-top: 3px;
+    /* margin-top: 3px; */
     width: 14px;
     height: 14px;
 
     border: 3px solid white;
+    position: relative;
 }
 
 .charPublic-checkbox:checked + .checkbox-img::before{
     content:'✔';
     font-size: 1.6em;
     text-align: center;
-    position:relative;
+    position:absolute;
     left: -4px;
-    top: -19px;
+    top: -260%;
 
     color: #3b8fff;
 }

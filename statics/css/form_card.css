@@ -220,6 +220,11 @@
     font-size: 0.8em;
     grid-template-rows: 50px calc(100% - 50px);
     margin: 15px;
+    aspect-ratio: 5/3;
+    background-color: #BFC3D4;
+    display: grid;
+    position: relative;
+
 }
 
 .preview-detail button p,

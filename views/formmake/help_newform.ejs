@@ -8,6 +8,8 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">  
     <link href="/css/main.css" rel="stylesheet">
+    <link href="/css/form_card.css" rel="stylesheet">
+    <link href="/css/form_detail.css" rel="stylesheet">
     <link href="/css/lv_badges.css" rel="stylesheet">
     <link href="/css/form_making.css" rel="stylesheet">
     <link href="/css/hero_setting.css" rel="stylesheet">
@@ -20,36 +22,124 @@
    
 
     <!-- 저장/게시 누르고 확인 -->
-    <div class="madal-background">
-        <form class="save-check">
-            <div class="form-status">
-                <h5>편성 상태</h5>
-                <p class="form-status-txt">편성 공유</p>
-                <label>공개 <input type="radio" name="access" value="public" checked id=""></label>
-                <label>비공개 <input type="radio" name="access" value="private" id="" ></label>
-                <p class="msg">현재 편성이 마이페이지에 저장됩니다. 편성을 저장한 현재 작성자가 아니면 아무도 편성을 볼 수 없습니다.</p>
+    <div class="my-modal-bg">
+        <div class="preview-detail-container shadow-basic bg-lightgray">
+            <div class="preview-detail-box-top bg-basicdark color-yellow">
+            미리보기
             </div>
-            
+            <!-- 편성 글. 조합 -->
+            <div class="preview-detail  ">
+                <!-- 상단바 -->
+                <div class="form-title ">
+                    <dix class="form-status ">
+                        <button type="button " class="status-help border-0 d-flex align-items-center justify-content-center">
+                            <p>편성 도움</p>
+                        </button>
+                    </dix>
 
-            <div class="content">
-                <h5>컨텐츠</h5>
-                <p class="content-text">아레나</p>
+                    <div class="content-name flex-fill">
+                        <button type="button"  class="bg-basicdark  color-yellow border-0 d-flex align-items-center justify-content-between">
+                            <p>아레나</p>
+                            <i class="ms-3 fa-solid fa-lock invisible"></i>
+                            
+                        </button>
+
+                    </div>
+                    
+                </div>
+
+                <!-- 아래 컨텐츠 -->
+                <div class="d-flex contents">
+                    
+                    <!-- 왼쪽 -->
+                    <div class="left-box">
+                        <div class="d-flex align-items-end">
+                            <div class="form-author bg-basicdark color-white">
+                                작성자 <span class="color-purple">여덟글자정도어때</span>
+                            </div>
+                            <div class="form-detail-date">
+                                    2025.03.01 04:23
+                            </div>
+                        </div>
+                        
+
+                        
+                        <form class="form-border-container d-flex align-items-center flex-wrap">
+                            
+
+                        </form>
+                        
+
+                        <div class="left-box-bottom d-flex justify-content-start align-items-center">
+                            <span class="view">조회수 <span>0</span></span>
+                            <span class="mine"><i class="fa-solid fa-bookmark"></i> 0</span>
+                            <span class="report color-red ">신고</span>
+                            <span class="share"><i class="fa-solid fa-share"></i></span>
+                        </div>
+                    </div>
+
+                    <!-- 오른쪽 -->
+                    <div class="right-box">
+                        <h5 class="explain-title d-flex align-items-end">작성자 한마디</h5>
+                        <div class="bg-white memo-container color-gray">
+                            <div class="memo explain-content blue-scroll"  > 한때 애용했던 친구들 덱 </div>
+                        </div>
+
+                        <!-- 좋아요 / 댓글 펼치기 -->
+                        <div class="btns mg-10px ms-0 me-0 d-flex flex-fill justify-content-between">
+                            <div class="btn-shadow d-flex justify-content-between w-100">
+                                <button class="form-save-btn btn-cut bottom-btn btn-yellow color-white w-100"><i class="fa-solid fa-bookmark me-2"></i> 편성 저장</button>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+
             </div>
+            <div class="preview-detail-box-bottom d-flex flex-wrap">
+            <form class="save-check">
+                    <div class="form-status-check">
+                        <div class="d-flex justify-content-between align-items-cente mb-1">
+                            <h5>편성게시판 공개 여부</h5>
+                            <div class="d-flex align-items-center">
+                                <label class="charSetting-ele d-flex align-items-center">
+                                    <span class="me-2">공개</span>
+                                    <input type="radio" name="access" value="public" checked class="charPublic-checkbox">
+                                    <span class="checkbox-img"></span>  
+                                </label>
+                                <label class="charSetting-ele d-flex align-items-center">
+                                    <span class="me-2">비공개</span>
+                                    <input type="radio" name="access" value="private" class="charPublic-checkbox" >
+                                    <span class="checkbox-img"></span>  
+                                </label>
+                            </div>
+                            
+                        </div>
+                        
+                        <p class="msg">현재 편성이 공개 상태로 게시판에 올라갑니다. 누구나 게시판을 통해 볼 수 있습니다.</p>
+                    </div>
 
+                    <div class="myhero-access">
+                        <label class="charSetting-ele d-flex mb-1">
+                            <h5 class="me-2">나의 영웅들 공개하기</h5>
+                            <input type="checkbox" name="character_public" class="charPublic-checkbox" onclick="return false;">
+                            <span class="checkbox-img"></span>  
+                        </label>
+                        <p class="msg">현재 작성자의 영웅 육성 상황이 공개됩니다.</p>
+                    </div>
 
-            <div class="last-datetime">
-                <p>저장 일시</p>
-                <p class="now-datetime">2025-10-30 15:26</p>
+                
+                    
+
+                </form>
+                <p>현재 조합한 편성으로 저장/게시 하시겠습니까?</p>
+
+                <div class="btn-shadow btns">
+                    <button class="cancel-btn btn-red btn-cut border-0 color-white">취소</button>
+                    <button class="upload-btn btn-yellow btn-cut border-0 color-white">저장/게시</button>
+                </div>
             </div>
-            
-
-            <div class="btn-shadow">
-                <button type="button" class=" cancel-btn">취소</button>
-                <button type="button" class="upload-btn">저장/게시</button>
-            </div>
-            
-
-        </form>
+        </div>
     </div>
 
 
@@ -239,7 +329,7 @@
                 <div class="right-box">
                     <h6 class="explain-title d-flex align-items-end">작성자 한마디</h6>
                     <div class="bg-white memo-container color-gray">
-                        <p class="cnt-text"><span>0</span> / 1000</p>
+                        <p class="cnt-text"><span><%=data.helper_memo.length %></span> / 1000</p>
                         <textarea class="memo explain-conten blue-scroll" placeholder="한마디를 작성하세요. 편성도움에서는 한마디가 댓글 본문이 됩니다."  maxlength="1000" ><%=data.helper_memo %></textarea>
                     </div>
 
@@ -387,167 +477,11 @@
         </div>
     </div>
 
-    <script>
-        class NowFormHeroes{
-            static heroes_arr = new Array(10).fill(0);
-
-            static setter(arr){
-                this.heroes_arr = arr;
-                return this.heroes_arr;
-            }
-            
-            static getter(arr){
-                return this.heroes_arr;
-            }
-
-            static oneHeroSet(idx, hero_id){
-                hero_id = parseInt(hero_id);
-                this.heroes_arr[idx] = hero_id;
-                return this.heroes_arr;
-            }
-            
-            static removeByHeroId(hero_id){
-                if(hero_id == 0) return Hthis.heroes_arr;
-                hero_id = parseInt(hero_id);
-                this.heroes_arr[this.heroes_arr.indexOf(hero_id)] = 0;
-                return this.heroes_arr;
-            }
-
-            static init(num_of_heroes){
-                this.heroes_arr = new Array(parseInt(num_of_heroes)).fill(0);
-                return this.heroes_arr;
-            }
-
-            // 지금 선택되어 있는 게 몇 번째인지 반환
-            static indexOfFormSpot(){
-                let now_selected 
-                if($(".spot-selected-full").length > 0) now_selected = $(".spot-selected-full").parent();
-                else now_selected = $(".spot-selected-empty").parent();
-
-                let idx = $('.form-container .form_spot').index(now_selected);
-                return idx;
-            }
-
-            /**
-             * 편성에 들어있는 영웅들에 선택된 이펙트 추가해줌.
-             **/ 
-            static addSelectedEffect(){
-                $('.character-list-box .form-selected').remove();
-                for(let i=0; i<this.heroes_arr.length; i++){
-                    $(`.character-list img[data-id = "${this.heroes_arr[i]}"]`).parent().before(`<div class="form-selected"><i class="fa-solid fa-plus color-gray"></i> </div> `);
-                }
-            }
-
-            /**
-             * 현재 선택된 자리만 리로드
-             **/
-            static reloadOnlySelected(){
-                let i = this.indexOfFormSpot();
-                let spot = $('.form-container .form_spot .select-liner').eq(i)
-                // spot.empty();
-                if(this.heroes_arr[i] == 0 || i > this.heroes_arr.length - 1){
-                    spot.html(`<div class="empty"><i class="fa-solid fa-plus color-gray"></i> </div>
-                                <input value="0"  name="hero" type="hidden"> `);
-                } else {
-                    spot.html(`<input value="${this.heroes_arr[i]}"  name="hero" type="hidden">`)
-                    let img = $(`.character-list img[data-id="${this.heroes_arr[i]}"]`).parent().children().clone().appendTo(spot);
-                }
-            }
-
-            /**
-             * heroes_arr에 저장된대로 편성 ui에 넣어줌
-             **/
-            static addHeroesInForm(){
-                for(let i=0; i<$('.form-container .form_spot .select-liner').length; i++){
-                    let spot = $('.form-container .form_spot .select-liner').eq(i)
-                    spot.empty();
-                    if(this.heroes_arr[i] == 0 || i > this.heroes_arr.length - 1){
-                        spot.append(`<div class="empty"><i class="fa-solid fa-plus color-gray"></i> </div>
-                                    <input value="0"  name="hero" type="hidden"> `);
-                    } else {
-                        let img = $(`.character-list img[data-id="${this.heroes_arr[i]}"]`).parent().children().clone().appendTo(spot);
-                        spot.append(`<input value="${img.data('id')}"  name="hero" type="hidden">`)
-                    }
-                }
-            }
-
-            /**
-             * 편성 ui에 있는 영웅들을 hero_arr에 담음
-             **/ 
-            static addHeroesInArr(){
-                for(let i=0; i<this.heroes_arr.length; i++){
-                    if(i > $('.form-container .form_spot input').length - 1)
-                        this.oneHeroSet(i, 0);
-                    else 
-                        this.oneHeroSet(i, $('.form-container .form_spot input').eq(i).val());
-                    
-                }
-            }
-
-            /**
-             * 현재 편성 상태로 영웅 쿼리스트링 만들어서 주소창에 적어주기
-             **/
-            static makeQueryString(){
-                const url = new URL(window.location.href);
-                url.searchParams.delete("hero");
-                for(let i=0; i<this.heroes_arr.length; i++){
-                    url.searchParams.append("hero", this.heroes_arr[i]);
-                }
-                window.history.replaceState(null, '', url.toString())
-            }
-            
-        }
-
-        /**
-         * DB에서 받아온 원본을 훼손하지 않고 저장하는 클래스
-         */
-        class HavingHeroes{
-            static having_heroes  = '<%- JSON.stringify(data.having_heroes) %>'? JSON.parse('<%- JSON.stringify(data.having_heroes) %>'): "";
-            static having_heroes_id = '<%- JSON.stringify(data.having_heroes_id) %>'? JSON.parse('<%- JSON.stringify(data.having_heroes_id) %>') : "";
-            static hero_list = JSON.parse('<%- JSON.stringify(data.hero_list) %>')
-
-            static setter(heroes){
-                this.having_heroes = heroes;
-                return this.having_heroes;
-            }
-
-            static getter(){
-                return this.having_heroes;
-            }
-
-            static setter_id(idxes){
-                this.having_heroes_id = idxes;
-                return this.having_heroes_id;
-            }
-
-            static getter_id(){
-                return this.having_heroes_id;
-            }
-
-            static hero_list_getter(){
-                return this.hero_list;
-            }
-        }
-
-        
-        /**
-         * 저장/게시 DATETIME 저장
-         **/ 
-        class LastDatetime{
-            static now;
-
-            static init(){
-                this.now = new Date();
-                return this.now;
-            }
-
-            static dateFormating(){
-                return this.now.getFullYear()+"-"+("0"+(this.now.getMonth()+1)).slice(-2) + "-" + ("0"+(this.now.getDate())).slice(-2) + " " +  ("0"+(this.now.getHours())).slice(-2) + ":" +  ("0"+(this.now.getMinutes())).slice(-2)  + ":" +  ("0"+(this.now.getSeconds())).slice(-2)
-            }
-        }
-
-    </script>
+   
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+    <script src="/js/formmake/NowFormHeroes.js"></script>
+    <script src="/js/formmake/HavingHeroes.js"></script>
+    <script src="/js/LastDatetime.js"></script>
     <script src="/js/formmake/dropdownSet.js"></script>
     <script src="/js/formmake/pickHeroes.js"></script>
     <script src="/js/formmake/filterAndSort.js"></script>
@@ -557,8 +491,8 @@
         window.onload = function(){
             NowFormHeroes.setter(JSON.parse('<%- JSON.stringify(data.form_herolist) %>').map((e) => {return parseInt(e)}));
 
-            if($(".content-name button p").data("heronum") == 5) to5layout();
-            else if ($(".content-name button p").data("heronum") == 10) to10layout();
+            if($(".formmake-topcontainer .content-name button p").data("heronum") == 5) to5layout();
+            else if ($(".formmake-topcontainer .content-name button p").data("heronum") == 10) to10layout();
             else to7layout();
 
             NowFormHeroes.addSelectedEffect();
@@ -593,46 +527,58 @@
                 return;
             }
             // 편성 상태
-            let form_status = $(".form-title .form-status button p").text();
-            $(".save-check .form-status-txt").text(form_status);
-            $(".save-check .form-status .msg").text("현재 편성이 편성 요청 게시물의 댓글로 게시됩니다. 공개 여부를 선택할 수 없습니다.")
-            $(".save-check .form-status input[value='public']").prop("checked", true);
-            $(".save-check .form-status input[name='access']").prop("disabled", true);
-            // $(".save-check .form-status .msg").text("현재 편성이 저장됩니다. 공개 여부를 선택하세요.")
-            
+            let form_status = $(".form-container .form-title .form-status button p");
+
+            if(form_status.text().includes("도움") ){
+                $(".save-check .form-status-check .msg").text("현재 편성이 편성 요청의 댓글로 올라갑니다. 공개 여부를 선택할 수 없습니다.")
+                $(".save-check .form-status-check input[value='public']").prop("checked", true);
+                $(".save-check .form-status-check input[name='access']").prop("disabled", true);
+            }
+
+            NowFormHeroes.addHeroesInPreview();
+
+            // 작성자
+            $(".preview-detail-container .form-author span").text($(".form-container  .form-author span").text())
             // 컨텐츠
-            $(".save-check .content-text").text($(".form-title .content-name button p").text())
+            $(".preview-detail-container .form-title .content-name p").text($(".form-container  .form-title .content-name p").text())
+
+            // 작성자 한마디
+            $(".preview-detail-container .memo").text($(".form-container  .memo").val())
+
+            // 나의 영웅들 공개하기
+            let myhero_access = $(".form-container .left-box-bottom .charPublic-checkbox").is(":checked");
+            $(".save-check .myhero-access .charPublic-checkbox").prop("checked", '<%=data.having_heroes_id.length%>'==0? false:true);
+            // $(".save-check .myhero-access .charPublic-checkbox").prop("disabled", true);
+            $(".myhero-access .msg").text("요청자의 영웅이 표시되므로 요청자의 공개 여부와 동일합니다.")
 
             // 저장 일시
             LastDatetime.init()
-            $(".save-check .now-datetime").text(LastDatetime.dateFormating());
+            $(".preview-detail .form-detail-date").text(LastDatetime.dateFormating());
 
 
-            $(".madal-background").fadeIn();
-            $(".save-check").fadeIn();
+            $(".my-modal-bg").fadeIn();
+            $(".preview-detail-container").fadeIn();
         })
 
-        $(".save-check .form-status input[name='access']").on("change", function(){
-            // if($(".form-title .form-status button p").text().includes("요청")) return false;
-            
-            // console.log("여기까지")
-            if($(".save-check .form-status input[name='access']:checked").val() == "public"){
-                $(".save-check .form-status .msg").text("현재 편성이 공개 상태로 게시판에 올라갑니다. 누구나 게시판을 통해 볼 수 있습니다.")
-            } else{
-                $(".save-check .form-status .msg").text("현재 편성이 마이페이지에 저장됩니다. 편성을 저장한 현재 작성자가 아니면 아무도 편성을 볼 수 없습니다.")
+        $(".preview-detail-container .myhero-access .charPublic-checkbox").on("change", function(e){
+            $(".preview-detail-container .select-liner span").toggleClass("invisible");
 
+            if ($(".preview-detail-container .myhero-access .charPublic-checkbox").is(":checked")){
+                $(".myhero-access .msg").text("현재 작성자의 영웅 육성 상황이 공개됩니다.")
+            } else {
+                $(".myhero-access .msg").text("현재 작성자의 영웅 육성 상황이 공개되지 않습니다.")
             }
-            
+                
         })
 
 
-        $(".save-check .cancel-btn").on("click", function(e){
+        $(".preview-detail-container .cancel-btn").on("click", function(e){
             e.preventDefault();
-            $(".madal-background").fadeOut();
-            $(".save-check").fadeOut();
+            $(".my-modal-bg").fadeOut();
+            $(".preview-detail-container").fadeOut();
         })
 
-        $(".save-check .upload-btn").on("click", function(e){
+        $(".preview-detail-container .upload-btn").on("click", function(e){
             e.preventDefault();
             
             var newForm = $('<form></form>');
@@ -641,21 +587,21 @@
             
             
             // 편성 상태 (공유,요청 / 공개,비공개)
-            newForm.append(`<input name="form_status" type="hidden" value="편성 도움">`);
-            newForm.append(`<input name="form_access" type="hidden" value="public">`);
+            newForm.append(`<input name="form_status" type="hidden" value="${$(".preview-detail-container  .form-status button p").text()}">`);
+            newForm.append(`<input name="form_access" type="hidden" value="${$(".preview-detail-container  .save-check input[name='access']:checked").val()}">`);
 
             // 컨텐츠 이름
-            newForm.append(`<input name="content_name" type="hidden" value="${$(".askform-container .form-title .content-name div p").text()}">`);
+            newForm.append(`<input name="content_name" type="hidden" value="${$(".preview-detail-container .content-name button p").text()}">`);
 
             // 편성 칸 정보
             for(let i=0; i<NowFormHeroes.getter().length; i++){
                 newForm.append(`<input name="hero" type="hidden" value="${NowFormHeroes.getter()[i]}">`);
             }
             // 나의 영웅들 공개하기 여부
-            newForm.append(`<input name="myhero_access" type="hidden" value="${$(".askform-container").data("myheroaccess") == 1}">`);
+            newForm.append(`<input name="myhero_access" type="hidden" value="${$(".preview-detail-container  .myhero-access .charPublic-checkbox").is(":checked")}">`);
 
             // 작성자 한마디
-            newForm.append(`<input name="writer_memo" type="hidden" value="${$(".form-container  .memo-container .memo").val()}">`);
+            newForm.append(`<input name="writer_memo" type="hidden" value="${$(".preview-detail-container .memo-container .memo").text()}">`);
 
 
             // 저장 일시
@@ -674,11 +620,11 @@
             }
 
             // 빈 곳 클릭하면 영웅 설정 꺼짐
-            if(!$(e.target).closest(".save-check").length>0
+            if(!$(e.target).closest(".preview-detail-container").length>0
             && !$(e.target).closest(".form-btns .save-btn").length>0
             ){
-                $(".madal-background").fadeOut();
-                $(".save-check").fadeOut();
+                $(".my-modal-bg").fadeOut();
+                $(".preview-detail-container").fadeOut();
             }
         });
 
