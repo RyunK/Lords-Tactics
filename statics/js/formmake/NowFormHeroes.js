@@ -88,6 +88,8 @@ class NowFormHeroes{
         for(let i=0; i<this.heroes_arr.length; i++){
             if(i > $('.form-container .form_spot input').length - 1)
                 this.oneHeroSet(i, 0);
+            else if(!$('.form-container .form_spot input').eq(i).val() || $('.form-container .form_spot input').eq(i).val() == "NaN" || $('.form-container .form_spot input').eq(i).val() == "undefined")
+                this.oneHeroSet(i, 0);
             else 
                 this.oneHeroSet(i, $('.form-container .form_spot input').eq(i).val());
             

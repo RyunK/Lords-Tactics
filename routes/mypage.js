@@ -100,7 +100,7 @@ router.get('/formsave', mustLoggedIn, async(req, res) => {
     
     var form_list, members;
     try{
-        [form_list, members] = await getDatas.getFormlistNMembers(req, res, where, order, q_list, connection);
+        [form_list, members, page, max_page] = await getDatas.getFormlistNMembers(req, res, where, order, q_list, connection);
     }catch(e){
         console.log(e)
         form_list = [];
@@ -130,6 +130,8 @@ router.get('/formsave', mustLoggedIn, async(req, res) => {
         form_list : form_list,
         members : members,
         saved_forms : saved_forms,
+        page : page,
+        max_page : max_page,
     }
     res.render('./mypage/mypage_formsave.ejs',  {data : data})
 })
@@ -290,7 +292,7 @@ router.get('/loadmyform', mustLoggedIn, async(req, res) => {
     
     var form_list, members;
     try{
-        [form_list, members] = await getDatas.getFormlistNMembers(req, res, where, order, q_list, connection);
+        [form_list, members, page, max_page] = await getDatas.getFormlistNMembers(req, res, where, order, q_list, connection);
     }catch(e){
         console.log(e)
         form_list = [];
@@ -320,6 +322,8 @@ router.get('/loadmyform', mustLoggedIn, async(req, res) => {
         form_list : form_list,
         members : members,
         saved_forms : saved_forms,
+        page : page,
+        max_page : max_page,
     }
     res.render('./mypage/mypage_loadmyform.ejs',  {data : data})
 })
@@ -357,7 +361,7 @@ router.get('/helping/loadmyform/:req_id', mustLoggedIn, async(req, res) => {
     
     var form_list, members;
     try{
-        [form_list, members] = await getDatas.getFormlistNMembers(req, res, where, order, q_list, connection);
+        [form_list, members, page, max_page] = await getDatas.getFormlistNMembers(req, res, where, order, q_list, connection);
     }catch(e){
         console.log(e)
         form_list = [];
@@ -388,6 +392,8 @@ router.get('/helping/loadmyform/:req_id', mustLoggedIn, async(req, res) => {
         members : members,
         saved_forms : saved_forms,
         req_id : req.params.req_id,
+        page : page,
+        max_page : max_page,
     }
     res.render('./mypage/mypage_loadmyform.ejs',  {data : data})
 })

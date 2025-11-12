@@ -470,6 +470,41 @@ input[name="hero-name"]{
     top : 5px;
 }
 
+.pagenation{
+    margin-top: 80px;
+    font-size:  16px;
+    align-items: center;
+}
+
+.pagenation a{
+    color:white;
+    margin: 3px;
+}
+
+.pagenation .active{
+    color: #ffed49;
+}
+
+.pagenation .jumps{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.pagenation .jumps a{
+    /* padding: auto; */
+    border: #1d1d26 1px solid;
+    width: 28px;
+    aspect-ratio: 1 / 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.pagenation > div:nth-child(2){
+    margin: 0 25px;
+}
+
 
 @media screen and (max-width: 1500px) {
     /* .forum-container{

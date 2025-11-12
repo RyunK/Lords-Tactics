@@ -59,7 +59,9 @@ module.exports = {
    getFormlistNMembers: async function (req, res, where, order, q_list, connection){
       let rn = 1;
       if(req.query.hero && Array.isArray(req.query.hero)) rn = req.query.hero.length;
-      // console.log(rn)
+      
+      
+
       let user_id;
       if (req.isAuthenticated()){
          user_id = req.user[0].id;
@@ -86,6 +88,23 @@ module.exports = {
             ${order} `;
       
       // console.log(sql);
+      var [form_list_unlimit, fields] = await (await connection).execute(sql, q_list );
+
+      let page_size = 12
+      let max_page = Math.floor(form_list_unlimit.length / page_size) + (form_list_unlimit.length % page_size != 0)
+      let page
+      if(!req.query.p){
+         page = 1;
+      }else if(req.query.p > max_page){
+         page = max_page
+      }else if(req.query.p < 1){
+         page = 1
+      } 
+      else{
+         page = req.query.p
+      }
+
+      sql = sql += `LIMIT ${(page - 1) * page_size}, ${page_size}`
       var [form_list, fields] = await (await connection).execute(sql, q_list );
 
       var form_ids = form_list.map(function(e){
@@ -108,7 +127,7 @@ module.exports = {
          [members, fields] = await (await connection).execute(sql);
       }
 
-      return [form_list, members];
+      return [form_list, members, page, max_page];
    },
 
    formOrderGetter: function(req, res){

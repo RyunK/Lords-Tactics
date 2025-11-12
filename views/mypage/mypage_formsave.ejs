@@ -196,11 +196,32 @@
                     <!-- 공유 게시글 하나 끝 -->
                     <% } %>
                     
+                </div>
 
-
-                        
-                            
-                    
+                <div class="pagenation d-flex color-white w-100 justify-content-center">
+                    <div class="jumps">
+                        <a href="javascript:moveToPageNum(<%= Math.floor(data.page / 5 - (data.page % 5 == 0)) * 5%>)"><i class="fa-solid fa-angles-left"></i>  </a>
+                        <a href="javascript:moveToPageNum(<%=data.page - 1%>)"><i class="fa-solid fa-angle-left"></i>  </a>
+                    </div>
+                    <div>
+                        <a href="javascript:moveToPageNum(<%= Math.floor(data.page / 5 - (data.page % 5 == 0)) * 5 + 1%>)" <% if(data.page % 5 == 1) {%> class="active" <%}%> ><%= Math.floor(data.page / 5 - (data.page % 5 == 0)) * 5 + 1%></a>
+                        <% if(Math.floor(data.page / 5 - (data.page % 5 == 0)) * 5 + 2  <= data.max_page) {%>
+                        <a href="javascript:moveToPageNum(<%= Math.floor(data.page / 5 - (data.page % 5 == 0)) * 5 + 2%>)" <% if(data.page % 5 == 2) {%> class="active" <%}%> ><%= Math.floor(data.page / 5 - (data.page % 5 == 0)) * 5 + 2 %></a>
+                        <%} %>
+                        <% if(Math.floor(data.page / 5 - (data.page % 5 == 0)) * 5 + 3  <= data.max_page) {%>
+                        <a href="javascript:moveToPageNum(<%= Math.floor(data.page / 5 - (data.page % 5 == 0)) * 5 + 3%>)" <% if(data.page % 5 == 3) {%> class="active" <%}%> ><%= Math.floor(data.page / 5 - (data.page % 5 == 0)) * 5 + 3 %></a>
+                        <%} %>
+                        <% if(Math.floor(data.page / 5 - (data.page % 5 == 0)) * 5 + 4  <= data.max_page) {%>
+                        <a href="javascript:moveToPageNum(<%= Math.floor(data.page / 5 - (data.page % 5 == 0)) * 5 + 4%>)" <% if(data.page % 5 == 4) {%> class="active" <%}%> ><%= Math.floor(data.page / 5 - (data.page % 5 == 0)) * 5 + 4 %></a>
+                        <%} %>
+                        <% if(Math.floor(data.page / 5 - (data.page % 5 == 0)) * 5 + 5  <= data.max_page) {%>
+                        <a href="javascript:moveToPageNum(<%= Math.floor(data.page / 5 - (data.page % 5 == 0)) * 5 + 5%>)" <% if(data.page % 5 == 0) {%> class="active" <%}%> ><%= Math.floor(data.page / 5 - (data.page % 5 == 0)) * 5 + 5 %></a>
+                        <%} %>
+                    </div>
+                    <div class="jumps">
+                        <a href="javascript:moveToPageNum(<%=data.page + 1%>)"><i class="fa-solid fa-angle-right"></i>  </a>
+                        <a href="javascript:moveToPageNum(<%= Math.floor(data.page / 5 - (data.page % 5 == 0)) * 5 + 6%>)"><i class="fa-solid fa-angles-right"></i>  </a>
+                    </div>
                 </div>
             </div>
                 
@@ -210,6 +231,13 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script> 
     <script>
+    function moveToPageNum(num){
+        // console.log($(page).text())
+        url = new URL(window.location.href);
+        url.searchParams.set("p", num);
+        window.location.href = url.toString();
+    }
+
     $(".todetail-link").on("click", function(e){
         e.preventDefault();
 

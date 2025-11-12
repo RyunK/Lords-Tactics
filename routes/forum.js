@@ -16,6 +16,8 @@ router.get('/:forumtab', async(req, res) => {
                 WHERE ENG_NAME= ?`;
     var [q_content, fields] = await (await connection).execute(sql, [req.query.content ? req.query.content : 'all']);
     
+    
+
     let contents_list = await getDatas.getContentsName(req, res, connection);
     let hero_list = await getDatas.getHeroList(req, res, connection);
     let filtered_heroes_list, filtered_heroes_list_forrender;
@@ -60,7 +62,7 @@ router.get('/:forumtab', async(req, res) => {
 
     let order = getDatas.formOrderGetter(req, res);
     try{
-        [form_list, members] = await getDatas.getFormlistNMembers(req, res, where, order, q_list, connection);
+        [form_list, members, page, max_page] = await getDatas.getFormlistNMembers(req, res, where, order, q_list, connection, );
     }catch(e){
         console.log(e)
         form_list = [];
@@ -75,6 +77,8 @@ router.get('/:forumtab', async(req, res) => {
         var [mysave, fields] = await(await connection).execute(sql, [req.user[0].id]);
         saved_forms = mysave.map((e) => e.form_id);
     }
+
+    
     
     let data = {
         from : 'forum',
@@ -89,6 +93,8 @@ router.get('/:forumtab', async(req, res) => {
         hero_list : hero_list,
         form_list : form_list,
         members : members,
+        page : page,
+        max_page : max_page,
     }
 
     res.render('./forum/forum.ejs',  {data : data})
