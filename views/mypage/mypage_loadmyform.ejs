@@ -410,26 +410,18 @@
          * form 제출 시 쿼리스트링 추가 및 변경만 하기
          **/
         $('form').on('submit', function(e){
-            // console.log('어쩌고')
             e.preventDefault();
 
             const query = $(this).serializeArray();
-            // console.log(query)
 
-            // let url = new URLSearchParams(window.location.href);
             const currentparams = new URLSearchParams(window.location.search);
             const newparams = new URLSearchParams();
 
-            // console.log(query);
 
             newparams.append('sort', currentparams.get('sort')? currentparams.get('sort'):'saved_cnt');
-            // let i=0;
-            // newparams.append('form_status',  query[0]['value']);
-            // i++;
             for(let i=0; i<query.length; i++){
                 newparams.append(query[i]['name'], query[i]['value']);
             }
-            // newparams.append('content', query[i]['value']);
 
             console.log(newparams.toString());
             

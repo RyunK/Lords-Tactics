@@ -159,3 +159,95 @@
     left: 83px;
     top: 16px;
 }
+
+.pw-id-find-container{
+    width: 500px;
+    position: fixed;
+    right: 50%;
+    top : 50%;
+    transform: translateX(50%) translateY(-50%);
+    display: none;
+    
+}
+
+.pw-id-find-container .tabs button{
+    width: 50%;
+    padding: 20px 0;
+    font-size: 18px;
+    font-weight: 600;
+    background-color: #3f3f50;
+    color: #BFC3D4;
+    border: none;
+}
+
+.pw-id-find-container .tabs .active{
+    background-color: #BFC3D4;
+    color: #3f3f50;
+}
+
+.pw-id-find-container .main-contents{
+    padding: 20px 30px;
+    height: 345px;
+    position: relative;
+}
+
+.pw-id-find-container .main-contents .pw-find,
+.pw-id-find-container .main-contents .id-find{
+    position: absolute;
+    width: calc(100% - 60px);
+}
+
+.pw-id-find-container .main-contents h5{
+    margin-bottom: 8px;
+    font-weight: 600;
+}
+
+.pw-id-find-container .main-contents p{
+    font-size: 16px;
+}
+
+.pw-id-find-container .main-contents .info-msg{
+    color: #666666;
+    font-weight: 600;
+    margin-bottom: 50px;
+}
+
+.pw-id-find-container .main-contents .fault-msg{
+    margin-bottom: 5px;
+    text-align: center;
+    font-weight: 500;
+    color: #ff4747;
+
+    position: absolute;
+    right: 50%;
+    transform: translateX(50%);
+    top: 283px;
+}
+
+.pw-id-find-container .btns{
+    padding: 10px 30px;
+    padding-bottom: 17px;
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+}
+
+.pw-id-find-container .btns button{
+    padding: 8px 35px;
+    border: none;
+    font-size: 16px;
+    font-weight: 600;
+}
+
+.pw-id-find-container .id-find .id-list{
+    width: 100%;
+    height: 130px;
+    margin-bottom: 20px;
+
+    padding: 15px 20px;
+    overflow-y: scroll;
+
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    grid-template-rows: repeat(auto-fill, minmax(28px, 30px));
+}
