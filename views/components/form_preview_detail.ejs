@@ -3,7 +3,7 @@
     <!-- 상단바 -->
     <div class="form-title ">
         <dix class="form-status ">
-            <%  if(data.form_info[0].IS_WRITER == 0 ) {  %>
+            <%  if(data.form_info[0].IS_WRITER == 0 && data.saved == "true") {  %>
                 <button type="button " class="status-save border-0 d-flex align-items-center justify-content-center">
                 <p>편성 저장</p>
             <% } else if(data.form_info[0].STATUS_NAME == "편성 공유" ) { %>

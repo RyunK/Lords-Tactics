@@ -312,7 +312,7 @@ router.post('/formsave/change/:form_id', mustLoggedIn, async (req, res) => {
         // 이 댓글이 이 글의 몇번째 도움 댓글인지도 반환
         var sql = `SELECT * FROM (
                 SELECT hf.id, ROW_NUMBER() OVER(ORDER BY id) AS rn from HERO_FORMS HF 
-                where hf.COMMENTS_FOR_ID  = (SELECT hf.COMMENTS_FOR_ID WHERE hf.id = ?) ) AS t
+                where hf.COMMENTS_FOR_ID  = (SELECT COMMENTS_FOR_ID FROM HERO_FORMS WHERE id = ?) ) AS t
                 WHERE t.id = ?;`
         var [comment_num, fields] = await(await connection).execute(sql, [req.params.form_id, req.params.form_id])
 

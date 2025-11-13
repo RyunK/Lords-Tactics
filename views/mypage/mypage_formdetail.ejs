@@ -26,7 +26,7 @@
 
         <div class="preview-detail-container shadow-basic bg-lightgray">
             <div class="preview-detail-box-top bg-basicdark color-yellow">
-            미리보기
+            자세히 보기
             </div>
             <!-- 편성 글. 조합 -->
             <!-- 여기는 ajax 통신으로 구현 -->
@@ -778,16 +778,16 @@
 
             })
 
-            function form_save(e, id){
+            function form_save(e, id, this_btn){
                 e.preventDefault();
                 if($(".login").text().includes("로그인")){
                     alert("편성을 저장하려면 로그인해야 합니다.")
                     return false;                
                 } 
 
-                // console.log('<% data.form_info[0].IS_WRITER%>');
+                // console.log('<%= data.form_info[0].IS_WRITER%>');
 
-                if($(this).hasClass("btn-yellow") && $(".writer-save-badge").length <= 0 && '<%= data.form_info[0].IS_WRITER%>' == 1){
+                if(this_btn.hasClass("btn-yellow") && $(".writer-save-badge").length <= 0 && '<%= data.form_info[0].IS_WRITER%>' == 1){
                     alert("도움 받은 편성을 처음 저장하면 편성 상태가 [편성 완료]가 됩니다. \n또, 처음 저장한 편성은 채택되어 저장을 취소하더라도 채택이 취소되지 않습니다. 저장하시겠습니까?")
                 }
 
@@ -836,11 +836,11 @@
             }
 
             $(document).on("click", ".comment-form-preview .comment-quicksave" , function(e){
-                form_save(e, $(this).parent().parent().data("id"));
+                form_save(e, $(this).parent().parent().data("id"), $(this));
             })
 
             $(document).on("click", ".preview-detail-box-bottom .btns .save" , function(e){
-                form_save(e,$(this).parent().parent().siblings(".preview-detail").data("id") );
+                form_save(e,$(this).parent().parent().siblings(".preview-detail").data("id"), $(this) );
             })
             $(document).on("click", ".comment-form-preview .comment-detail", function(e){
                 e.preventDefault();
