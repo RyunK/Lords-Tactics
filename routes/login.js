@@ -202,9 +202,100 @@ async function usernameCheck(username){
 }
 
 router.post('/register/idcheck', async (req, res) => {
-  // console.log(`요청 들어옴. 데이터 : ${req.body.username}`);
-  // console.log( await usernameCheck(req.body.username))
   res.send({result : await usernameCheck(req.body.username)});
+})
+
+router.get('/find/:which_find', async (req, res) => {
+  try{
+    let data = {};
+
+    console.log(req.query.email)
+
+    if(req.params.which_find == "id"){
+      // 이메일 기반으로 아이디 찾아서 전달
+
+      if(!req.query.email) throw new Error("이메일을 입력하세요.")
+
+      var sql = `SELECT U.username FROM USER U
+          INNER JOIN USER_EMAILS UE ON UE.USER_ID = U.ID
+          WHERE UE.USER_EMAIL = ?` ;
+            
+      let [result, fields] = await (await connection).execute(sql, [ req.query.email ]);
+
+      if (result.length <= 0) throw new Error("일치하는 아이디가 없습니다.");
+
+      data = {
+        type : "username",
+        usernames : result
+      }
+    } else{
+      // 아이디와 이메일이 모두 같은 계정이 있는지 확인
+      var sql = `SELECT U.username FROM USER U
+              INNER JOIN USER_EMAILS UE ON UE.USER_ID = U.ID
+              WHERE UE.USER_EMAIL = ? AND u.username = ?`
+      let [result, fields] = await (await connection).execute(sql, [ req.query.email, req.query.username ]);
+
+      if(result.length <= 0) throw new Error("일치하는 계정이 없습니다.");
+
+      // 있으면 비밀번호 랜덤 문자열로 바꾸고 이메일 보내주기
+      let new_pw = Math.random().toString(16).substr(2, 10);
+      var sql = `UPDATE USER_PW_TABLE UPT, USER U
+                SET USER_PASSWORD = ?
+                WHERE u.ID  = upt.USER_ID AND u.username = ?` ;
+        
+      var [rst, f] = await (await connection).execute(sql, [ await bcrypt.hash(new_pw, 10) , req.query.username]);
+      console.log(rst);
+      
+      let emailTemplete;
+      ejs.renderFile(appDir+'/templates/pw_change_mail.ejs', {new_pw : new_pw}, function (err, data) {
+          if(err){
+            console.log(err);
+           throw new Error("이메일을 전송할 수 없습니다.")
+          }
+          emailTemplete = data;
+      });
+
+      let transporter = nodemailer.createTransport({
+          service: 'Gmail',
+          host: 'smtp.gmail.com',
+          port: 465,
+          secure: false,
+          auth: {
+              user: process.env.NODEMAILER_USER,
+              pass: process.env.NODEMAILER_PASS,
+          },
+      });
+
+      let mailOptions = {
+          to: req.query.email,
+          subject: '[로드의 전술서] 새 비밀번호 발급',
+          html: emailTemplete,
+      };
+
+
+      transporter.sendMail(mailOptions, function (error, info) {
+          if (error) {
+              console.log(error);
+              throw new Error("이메일을 전송할 수 없습니다.")
+          }
+      });
+      
+      data = {message : "새 비밀번호를 전송하였습니다. 이메일을 확인하세요."}
+    }
+    console.log(data);
+
+    let result = {
+        status: '200',
+        data : data
+    }
+    res.json(result)
+    }catch(e){
+        console.log(e);
+        res.json({
+            status : '500',
+            message: e.message
+        });
+    }
 })
 
 /**

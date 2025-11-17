@@ -29,7 +29,7 @@
                     <h5>이메일</h5>
                     <input type="text" name="email" class="input-box" placeholder="가입한 이메일을 입력해주세요.">
                     <p class="info-msg mt-3">이메일로 임시 비밀번호를 보내드립니다.</p>
-                    <p class="fault-msg">존재하지 않는 이메일입니다.</p>
+                    <p class="fault-msg"></p>
                 </div>
                 <div class="id-find invisible">
                     <input type="hidden" name="which_find" value="id">
@@ -39,7 +39,7 @@
                     <div class="id-list bg-lightgray blue-scroll">
                         
                     </div>
-                    <p class="fault-msg">존재하지 않는 이메일입니다.</p>
+                    <p class="fault-msg"></p>
                 </div>
 
             </form>
@@ -135,27 +135,40 @@
             $(".pw-id-find-container .submit").on("click", function(e){
                 e.preventDefault();
                 
-                let finding_div = $(".main-contents").children("invisible").siblings("div");
+                let finding_div = $(".main-contents > div:not(.invisible)")
+                $('.id-find .id-list').empty();
+                $(".pw-id-find-container .fault-msg").text("")
 
                 $.ajax({
-                    url: `/login/find/${finding_div.children("input[name='which_find']").val()}`, 
-                    method: 'POST', 
+                    url: `/login/find/${finding_div.children("input[name='which_find']").val()}?email=${finding_div.children("input[name='email']").val()}&username=${finding_div.children("input[name='username']").val()}`, 
+                    method: 'GET', 
                     contentType: 'application/json',
                     data: JSON.stringify({ 
                     }),
                     
                     // 요청 성공 
                     success: function(res) {
+
                         if(res.status.includes('2')){
                             // 아이디 찾기일 경우 - 아이디 목록 업데이트
+                            if(res.data.type == "username"){
+                                for(let i=0; i<res.data.usernames.length; i++){
+                                    $('.id-find .id-list').append(`<span> ${res.data.usernames[i].username} </span>`)
+                                }
+                                $(".pw-id-find-container .fault-msg").text("")
+                            } else{
+                                $(".my-modal-bg").fadeOut();
+                                $(".pw-id-find-container").fadeOut();
+                                alert(res.data.message);
+                            }                            
 
                             // fault-msg 업데이트
-                            $(".pw-id-find-container .fault-msg").text(res.message)
+                            $(".pw-id-find-container .fault-msg").text(res.data.message)
+
+                            
                         } else{
-                            // DB 오류
-                            // alert(res.message);
-                            // fault-msg 업데이트
-                            $(".pw-id-find-container .fault-msg").text(res.message);
+                            $(".pw-id-find-container .fault-msg").text(res.message)
+                            
                         }
                     },                        
                     
