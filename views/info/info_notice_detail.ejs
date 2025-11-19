@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>이용 안내</title>
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <link href="/css/main.css" rel="stylesheet">
+    <link href="/css/instruction.css" rel="stylesheet">
+</head>
+<body>
+    <%- include('../nav_and_banner.ejs', {page: 'notice', nickname: data.nickname, notice:'2025.08.01 신규 캐릭터 [물]라플라스 추가 완료'}) %> 
+    
+    <div class="instruction-contents">
+        <div class="notice-container notice-detail-container">
+            <div class="top-btns btn-shadow d-flex">
+                <a href="/info/notice" class="btn-blue btn-cut color-white me-auto"><i class="fa-solid fa-chevron-left"></i><span class="flex-fill text-center">목록으로</span></a>
+                <% if(data.isit_admin){ %>
+                <a href="#" class="btn-red btn-cut color-white me-2">삭제하기</a>
+                <a href="#" class="btn-yellow btn-cut color-white ">수정하기</a>
+                <% } %>
+            </div>
+
+            <div class="subject bg-basicdark">
+                <span class="color-white"><%= data.notice_detail[0].subject %></span>
+                <span class="color-middlegray">
+                    <%=data.notice_detail[0].upload_datetime.getFullYear()+"-"+("0"+(data.notice_detail[0].upload_datetime.getMonth()+1)).slice(-2) + "-" + ("0"+(data.notice_detail[0].upload_datetime.getDate())).slice(-2) + " " +  ("0"+(data.notice_detail[0].upload_datetime.getHours())).slice(-2) + ":" +  ("0"+(data.notice_detail[0].upload_datetime.getMinutes())).slice(-2) %>
+                </span>
+            </div>
+            <div class="content-background bg-gray">
+                <div class="content">
+                    <%- data.notice_detail[0].body %>
+                </div>
+            </div>
+            
+            <% if(data.previous.length == 1){ %>
+            <a href="/info/notice/detail/<%= data.previous[0].id %>" class="near-posts bg-basicdark">
+                <span class="color-middlegray me-5"><%= data.previous[0].order_number %></span>
+                <span class="color-white flex-fill"><%= data.previous[0].subject %></span>
+                <span class="color-middlegray me-4">
+                    <%=data.previous[0].upload_datetime.getFullYear()+"-"+("0"+(data.previous[0].upload_datetime.getMonth()+1)).slice(-2) + "-" + ("0"+(data.previous[0].upload_datetime.getDate())).slice(-2) %>
+                </span>
+                <span class="color-yellow">이전 글</span>
+            </a>
+            <% } %>
+
+            <% if(data.next.length == 1){ %>
+            <a href="/info/notice/detail/<%= data.next[0].id %>" class="near-posts bg-basicdark">
+                <span class="color-middlegray me-5"><%= data.next[0].order_number %></span>
+                <span class="color-white flex-fill"><%= data.next[0].subject %></span>
+                <span class="color-middlegray me-4">
+                    <%=data.next[0].upload_datetime.getFullYear()+"-"+("0"+(data.next[0].upload_datetime.getMonth()+1)).slice(-2) + "-" + ("0"+(data.next[0].upload_datetime.getDate())).slice(-2) %>
+                </span>
+                <span class="color-yellow">다음 글</span>
+            </a>
+            <% } %>
+
+
+        </div>
+        
+    </div>
+    
+        
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+    
+    <script>
+        function moveToPageNum(num){
+            // console.log($(page).text())
+            url = new URL(window.location.href);
+            url.searchParams.set("p", num);
+            window.location.href = url.toString();
+        }
+
+    </script>
+    
+
+
+</body>
+</html>

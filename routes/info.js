@@ -25,9 +25,12 @@ const upload = multer({
   })
 })
 
+router.get('/', (req, res) => {
+  res.redirect('/info/notice')
+})
 
 
-router.get('/', async(req, res) => {
+router.get('/notice', async(req, res) => {
     
   // 공지사항 데이터 select 해서 출력
   var sql = `select id, pin, subject, upload_datetime from notice_table where pin = true`;
@@ -112,6 +115,67 @@ router.post('/writeNewNotice', mustAdmin, async(req, res) => {
     res.redirect('/?error=' + e.message);
   }
     
+})
+
+router.get('/notice/detail/:id', async(req, res) => {
+
+  try{
+    // 공지 내용 select
+    var sql = `SELECT * FROM (
+            select *, row_number() over(ORDER BY id) AS order_number from notice_table
+            ) AS t
+            WHERE id = ?`;
+    var [notice_detail, fields] = await (await connection).execute(sql, [req.params.id]);
+
+    if(notice_detail.length <= 0){
+      throw new Error("존재하지 않는 글입니다.")
+    }
+
+    // 앞뒤 select
+    var sql = `SELECT * FROM (
+            select id, subject, upload_datetime, row_number() over(ORDER BY id) AS order_number from notice_table
+            ) AS t
+            WHERE order_number = ?`;
+    var [previous, fields] = await (await connection).execute(sql, [notice_detail[0].order_number - 1]);
+
+    var sql = `SELECT * FROM (
+            select id, subject, upload_datetime, row_number() over(ORDER BY id) AS order_number from notice_table
+            ) AS t
+            WHERE order_number = ?`;
+    var [next, fields] = await (await connection).execute(sql, [notice_detail[0].order_number + 1]);
+
+    var sql = `select user_auth_id from user where id = ?`;
+    var [user_auth_id, fields] = await (await connection).execute(sql, [req.isAuthenticated()? req.user[0].id:0]);
+
+    let data = {
+      nickname: getDatas.loggedInNickname(req, res),
+      isit_admin : user_auth_id[0].user_auth_id == 0,
+      notice_detail : notice_detail,
+      previous : previous,
+      next : next,
+    }
+
+    res.render('./info/info_notice_detail.ejs',  {data : data})
+  }catch(e){
+    res.redirect('/?error=' + e.message);
+  }
+
+  
+
+})
+
+router.get('/faq', async(req, res) => {
+
+  var sql = `select user_auth_id from user where id = ?`;
+  var [user_auth_id, fields] = await (await connection).execute(sql, [req.isAuthenticated()? req.user[0].id:0]);
+
+  let data = {
+    nickname: getDatas.loggedInNickname(req, res),
+    isit_admin : user_auth_id[0].user_auth_id == 0,
+  }
+
+  res.render('./info/info_faq.ejs',  {data : data})
+
 })
 
 module.exports=router;
