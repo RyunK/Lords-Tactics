@@ -79,6 +79,7 @@ app.use('/forum', require('./routes/forum.js'));
 app.use('/formmake', require('./routes/formmake.js'));
 app.use('/mypage', require('./routes/mypage.js'));
 app.use('/main',  require('./routes/main.js'))
+app.use('/info',  require('./routes/info.js'))
 
 const getDatas = require('./routes/getDatas.js')
 
