@@ -11,135 +11,85 @@
     <link href="../css/instruction.css" rel="stylesheet">
 </head>
 <body>
-
-    <nav class="bg-basicdark shadow-basic d-flex justify-content-between align-items-center">
-        <div class="nav-box">
-            <a href="#" >기사단 편성</a>
-            <a href="#" >조합 공유 게시판</a>
-            <a href="#">마이페이지</a>
-            <a href="#" class="nav-selected">이용안내</a>
-        </div>
-        <div class="nav-box">
-            <a href="#" class="color-white">로그인/회원가입</a>
-        </div>
-    </nav>
-    <div class="top-banner shadow-basic">
-        <a href="/"><img src="../sources/img/banners/basic.jpg" alt="" width="100%"></a>
-        <!-- 공지사항 배너 -->
-        <a class="notice-banner bg-white d-flex align-items-center color-black" href="#">
-            <span  class="ms-5 ps-3 pe-3">공지사항</span>
-            <span  class="ms-5 ">2025.08.01 신규 캐릭터 [물]라플라스 추가 완료</span>
-        </a>
-    </div>
-
-    <div class="instruction-header">
-        <h4 class="text-center forum-title">이용 안내</h4>
-
-        <div class="forum-category btn-shadow" >
-            <a class="btn-cut active">공지사항</a>
-            <a class="btn-cut ">자주 묻는 질문</a>
-            <a class="btn-cut ">문의하기</a>
-        </div>
-    </div>
-
+    <%- include('../nav_and_banner.ejs', {page: 'notice', nickname: data.nickname, notice:'2025.08.01 신규 캐릭터 [물]라플라스 추가 완료'}) %> 
+    
+    <%- include('./info_tab.ejs', {from: 'notice'}) %> 
+    
+    <% if(data.isit_admin){ %>
+    <a href="/info/notice/write" class="admin-noticewrite btn-cut btn-blue color-white">글 작성</a>
+    <% } %>
     <div class="instruction-contents">
-        
+
         <ul class="notice-container  shadow-basic">
             <li class="top"></li>
+            <% for(let i=0; i<data.pinned_notice.length; i++){ %>
             <li class="important">
+                <a href="/info/notice/<%= data.pinned_notice[i].id %>" class="instruction-post">
+                    <span ><i class="fa-solid fa-thumbtack"></i></span>
+                    <span class="flex-fill" ><%= data.pinned_notice[i].subject %></span>
+                    <span>
+                        <%=data.pinned_notice[i].upload_datetime.getFullYear()+"-"+("0"+(data.pinned_notice[i].upload_datetime.getMonth()+1)).slice(-2) + "-" + ("0"+(data.pinned_notice[i].upload_datetime.getDate())).slice(-2) %>
+                    </span> 
+                </a>
+            </li>
+            <% } %>
+
+            <!-- <li class="important">
                 <a class="instruction-post">
                     <span ><i class="fa-solid fa-thumbtack"></i></span>
                     <span class="flex-fill" >[이용방법] 로드의 전술서 이용 방법</span>
                     <span>2025-11-12</span> 
                 </a>
-            </li>
+            </li> -->
 
-            <li class="important">
-                <a class="instruction-post">
-                    <span ><i class="fa-solid fa-thumbtack"></i></span>
-                    <span class="flex-fill" >[이용방법] 로드의 전술서 이용 방법</span>
-                    <span>2025-11-12</span> 
+            <% for(let i=data.unpinned_notice.length - 1; i >= 0; i--){ %>
+            <li class="">
+                <a href="/info/notice/<%= data.unpinned_notice[i].id %>" class="instruction-post">
+                    <span ><%= i + 1  %></span>
+                    <span class="flex-fill" ><%= data.unpinned_notice[i].subject %></span>
+                    <span>
+                        <%=data.unpinned_notice[i].upload_datetime.getFullYear()+"-"+("0"+(data.unpinned_notice[i].upload_datetime.getMonth()+1)).slice(-2) + "-" + ("0"+(data.unpinned_notice[i].upload_datetime.getDate())).slice(-2) %>
+                    </span> 
                 </a>
             </li>
+            <% } %>
 
-            <li class="">
-                <a class="instruction-post">
-                    <span >8</span>
-                    <span class="flex-fill" >[게임 업데이트] 2026.01.02 게임 업데이트 신캐릭터 어둠 자이라 추가</span>
-                    <span>2025-11-12</span> 
-                </a>
-            </li>
-
-            <li class="">
+            <!-- <li class="">
                 <a class="instruction-post">
                     <span >7</span>
                     <span class="flex-fill" >[게임 업데이트] 2026.01.02 게임 업데이트 신캐릭터 어둠 자이라 추가</span>
                     <span>2025-11-12</span> 
                 </a>
-            </li>
+            </li> -->
 
-            <li class="">
-                <a class="instruction-post">
-                    <span >6</span>
-                    <span class="flex-fill" >[게임 업데이트] 2026.01.02 게임 업데이트 신캐릭터 어둠 자이라 추가</span>
-                    <span>2025-11-12</span> 
-                </a>
-            </li>
-
-            <li class="">
-                <a class="instruction-post">
-                    <span >5</span>
-                    <span class="flex-fill" >[게임 업데이트] 2026.01.02 게임 업데이트 신캐릭터 어둠 자이라 추가</span>
-                    <span>2025-11-12</span> 
-                </a>
-            </li>
-
-            <li class="">
-                <a class="instruction-post">
-                    <span >4</span>
-                    <span class="flex-fill" >[게임 업데이트] 2026.01.02 게임 업데이트 신캐릭터 어둠 자이라 추가</span>
-                    <span>2025-11-12</span> 
-                </a>
-            </li>
-
-            <li class="">
-                <a class="instruction-post">
-                    <span >3</span>
-                    <span class="flex-fill" >[게임 업데이트] 2026.01.02 게임 업데이트 신캐릭터 어둠 자이라 추가</span>
-                    <span>2025-11-12</span> 
-                </a>
-            </li>
-
-            <li class="">
-                <a class="instruction-post">
-                    <span >2</span>
-                    <span class="flex-fill" >[게임 업데이트] 2026.01.02 게임 업데이트 신캐릭터 어둠 자이라 추가</span>
-                    <span>2025-11-12</span> 
-                </a>
-            </li>
-
-            <li class="">
-                <a class="instruction-post">
-                    <span >1</span>
-                    <span class="flex-fill" >[게임 업데이트] 2026.01.02 게임 업데이트 신캐릭터 어둠 자이라 추가</span>
-                    <span>2025-11-12</span> 
-                </a>
-            </li>
+            
         </ul>
     </div>
 
 
     <div class="pagenation  d-flex w-100 justify-content-center">
         <div class="jumps">
-            <a href="#"><i class="fa-solid fa-angles-left"></i>  </a>
-            <a href="#"><i class="fa-solid fa-angle-left"></i>  </a>
+            <a href="javascript:moveToPageNum(<%= Math.floor((data.page - 5) / 5 - ((data.page - 5) % 5 == 0)) * 5 + 1%>)"><i class="fa-solid fa-angles-left"></i>  </a>
+            <a href="javascript:moveToPageNum(<%=data.page - 1%>)"><i class="fa-solid fa-angle-left"></i>  </a>
         </div>
         <div>
-            <a href="#"> 1</a>
+            <a href="javascript:moveToPageNum(<%= Math.floor(data.page / 5 - (data.page % 5 == 0)) * 5 + 1%>)" <% if(data.page % 5 == 1) {%> class="active" <%}%> ><%= Math.floor(data.page / 5 - (data.page % 5 == 0)) * 5 + 1%></a>
+            <% if(Math.floor(data.page / 5 - (data.page % 5 == 0)) * 5 + 2  <= data.max_page) {%>
+            <a href="javascript:moveToPageNum(<%= Math.floor(data.page / 5 - (data.page % 5 == 0)) * 5 + 2%>)" <% if(data.page % 5 == 2) {%> class="active" <%}%> ><%= Math.floor(data.page / 5 - (data.page % 5 == 0)) * 5 + 2 %></a>
+            <%} %>
+            <% if(Math.floor(data.page / 5 - (data.page % 5 == 0)) * 5 + 3  <= data.max_page) {%>
+            <a href="javascript:moveToPageNum(<%= Math.floor(data.page / 5 - (data.page % 5 == 0)) * 5 + 3%>)" <% if(data.page % 5 == 3) {%> class="active" <%}%> ><%= Math.floor(data.page / 5 - (data.page % 5 == 0)) * 5 + 3 %></a>
+            <%} %>
+            <% if(Math.floor(data.page / 5 - (data.page % 5 == 0)) * 5 + 4  <= data.max_page) {%>
+            <a href="javascript:moveToPageNum(<%= Math.floor(data.page / 5 - (data.page % 5 == 0)) * 5 + 4%>)" <% if(data.page % 5 == 4) {%> class="active" <%}%> ><%= Math.floor(data.page / 5 - (data.page % 5 == 0)) * 5 + 4 %></a>
+            <%} %>
+            <% if(Math.floor(data.page / 5 - (data.page % 5 == 0)) * 5 + 5  <= data.max_page) {%>
+            <a href="javascript:moveToPageNum(<%= Math.floor(data.page / 5 - (data.page % 5 == 0)) * 5 + 5%>)" <% if(data.page % 5 == 0) {%> class="active" <%}%> ><%= Math.floor(data.page / 5 - (data.page % 5 == 0)) * 5 + 5 %></a>
+            <%} %>
         </div>
         <div class="jumps">
-            <a href="#"><i class="fa-solid fa-angle-right"></i>  </a>
-            <a href="#"><i class="fa-solid fa-angles-right"></i>  </a>
+            <a href="javascript:moveToPageNum(<%=data.page + 1%>)"><i class="fa-solid fa-angle-right"></i>  </a>
+            <a href="javascript:moveToPageNum(<%= Math.floor(data.page / 5 - (data.page % 5 == 0)) * 5 + 6%>)"><i class="fa-solid fa-angles-right"></i>  </a>
         </div>
     </div>
         
@@ -148,7 +98,12 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
     
     <script>
-
+        function moveToPageNum(num){
+            // console.log($(page).text())
+            url = new URL(window.location.href);
+            url.searchParams.set("p", num);
+            window.location.href = url.toString();
+        }
 
     </script>
     

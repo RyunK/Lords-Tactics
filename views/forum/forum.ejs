@@ -176,7 +176,7 @@
                     </div>
                     <div class="pagenation d-flex color-white w-100 justify-content-center">
                         <div class="jumps">
-                            <a href="javascript:moveToPageNum(<%= Math.floor(data.page / 5 - (data.page % 5 == 0)) * 5%>)"><i class="fa-solid fa-angles-left"></i>  </a>
+                            <a href="javascript:moveToPageNum(<%= Math.floor((data.page - 5) / 5 - ((data.page - 5) % 5 == 0)) * 5%>)"><i class="fa-solid fa-angles-left"></i>  </a>
                             <a href="javascript:moveToPageNum(<%=data.page - 1%>)"><i class="fa-solid fa-angle-left"></i>  </a>
                         </div>
                         <div>

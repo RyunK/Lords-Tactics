@@ -1,3 +1,5 @@
+const connection = require('../database.js')
+
 exports.mustLoggedIn = (req, res, next) => {
    // isAuthenticated()로 검사해 로그인이 되어있으면
    if (req.isAuthenticated()) {
@@ -17,6 +19,24 @@ exports.mustNotLoggedIn = (req, res, next) => {
       const message = encodeURIComponent('이미 로그인되었습니다.');
       res.redirect(`/?error=${message}`);
       // res.set("Content-Type", "text/html; charset=utf-8");
+   }
+};
+
+exports.mustAdmin = async (req, res, next) => {
+   try{
+      if(!req.isAuthenticated()){
+         throw new Error("권한이 없습니다.")
+      }
+      var sql = `select * from user where id = ? and user_auth_id = ?`
+      var [result, fields] = await (await connection).execute(sql, [req.user[0].id, 0]);
+      // console.log(result);
+      
+      if(result.length <= 0){
+         throw new Error("권한이 없습니다.")
+      }
+      next(); 
+   }catch(e){
+      res.redirect(`/?error=${e.message}`);
    }
 };
 

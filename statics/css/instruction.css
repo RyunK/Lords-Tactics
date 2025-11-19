@@ -155,6 +155,19 @@
     filter: brightness(1.07);
 }
 
+.admin-noticewrite{
+    display: block;
+    padding: 8px 15px;
+    width: 100px;
+    text-align: center;
+
+    position: absolute;
+    right: calc(50% - 700px );
+    top: 600px;
+    
+    z-index: 1;
+}
+
 .faq-container .instruction-post span{
     color: #3f3f50;
 }
@@ -266,7 +279,7 @@ input[type=file] {
 }
 
 .pagenation .active{
-    color: #ffed49;
+    color: #3b8fff;
 }
 
 .pagenation .jumps{
@@ -275,17 +288,12 @@ input[type=file] {
     align-items: center;
 }
 
-.pagenation .jumps a{
-    /* padding: auto; */
-    width: 28px;
-    aspect-ratio: 1 / 1;
+.pagenation .jumps{
     display: flex;
     justify-content: center;
     align-items: center;
-    background-color: #BFC3D4;
-
-    
 }
+
 
 .pagenation > div:nth-child(2){
     margin: 0 25px;
