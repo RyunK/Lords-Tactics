@@ -236,10 +236,11 @@
 
     position: absolute;
     right: calc(50% - 700px );
-    top: 600px;
+    top: 650px;
 
     z-index: 1;
 }
+
 
 .faq-container .instruction-post span{
     color: #3f3f50;
@@ -370,4 +371,9 @@ input[type=file] {
 
 .pagenation > div:nth-child(2){
     margin: 0 25px;
+}
+
+.faq-edit-textarea{
+
+    background: transparent;
 }

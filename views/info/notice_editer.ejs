@@ -22,15 +22,15 @@
             <h3>공지 작성</h3>
             <label style="display: flex; margin-bottom: 20px;">
                 <h4>상단 고정</h4>                    
-                <input type="checkbox" name="pin" >
+                <input type="checkbox" <% if(data.pin && data.pin == true) {%> checked <% } %> name="pin" >
             </label>
             <h4 style="margin-bottom: 8px;">제목</h4>
-            <input type="text" name="subject" placeholder="제목 입력" class="input-box" style=" margin-bottom: 10px; width: 1400px; ">
+            <input type="text" name="subject" placeholder="제목 입력" <% if(data.subject) {%> value="<%= data.subject %>" <% } %> class="input-box" style=" margin-bottom: 10px; width: 1400px; " >
         </div>
 
         <form method="post"  class="summernote-form" style="position: relative;">
             <input type="submit" value="작성완료" class="submit-notice btn-blue color-white btn-cut" style="border: none; padding: 8px 15px; margin-bottom: 10px; position: absolute; right: 20px; top: 3px; z-index: 2;">
-            <textarea id="summernote" name="editordata"></textarea>
+            <textarea id="summernote" name="editordata"><% if(data.content) {%> <%- data.content %> <% } %></textarea>
         </form>
     </div>
 
@@ -41,7 +41,12 @@
             if(confirm("이대로 공지사항을 게시할까요?")){
                 let form = $("<form></form>")
                 form.attr("method","post");
-                form.attr("action","/info/writeNewNotice");
+
+                if(parseInt(window.location.href.split('/').pop())){
+                    form.attr("action","/info/editnotice/" + window.location.href.split('/').pop());
+                } else{
+                    form.attr("action","/info/writeNewNotice");
+                }
                 
                 form.append(`<input name='pin' type='hidden' value='${$("input[name='pin']").prop("checked") == true}'>`);
                 form.append(`<input name='subject' type='hidden' value='${$("input[name='subject']").val()}'>`);

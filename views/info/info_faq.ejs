@@ -16,23 +16,27 @@
     <%- include('./info_tab.ejs', {from: 'faq'}) %> 
     
     <div class="instruction-contents">
-        
+        <% if(data.isit_admin){ %>
+            <a href="/info/faq/edit" class="admin-noticewrite btn-cut btn-blue color-white">수정/추가</a>
+        <% } %>
         <ul class="notice-container faq-container shadow-basic">
             <li class="top"></li>
 
+            <% for(let i=0; i<data.faqs.length; i++) {%>
             <li class="">
                 <div class="instruction-post">
                     <span ><i class="fa-solid fa-q"></i></span>
-                    <span class="flex-fill" >질문 제목</span>
+                    <span class="flex-fill" ><%= data.faqs[i].question %></span>
                     <span><i class="fa-solid fa-chevron-down"></i></span> 
                 </div>
                 <div class="answer-post bg-basicdark">
                     <span class="color-blue"><i class="fa-solid fa-a"></i></span>
-                    <span class="flex-fill color-white" >어쩌고저쩌고 답변 예시 s어쩌고저쩌고 답변 예시 어쩌고저쩌고 답변 예시 어쩌고저쩌고 답변 예시 어쩌고저쩌고 답변 예시 어쩌고저쩌고 답변 예시 어쩌고저쩌고 답변 예시 어쩌고저쩌고 답변 예시어쩌고저쩌고 답변 예시어쩌고저쩌고 답변 예시</span>
+                    <span class="flex-fill color-white" ><%= data.faqs[i].answer %></span>
                 </div>
             </li>
+            <% } %>
 
-            <li class="">
+            <!-- <li class="">
                 <div class="instruction-post">
                     <span ><i class="fa-solid fa-q"></i></span>
                     <span class="flex-fill" >질문 제목</span>
@@ -42,103 +46,9 @@
                     <span class="color-blue"><i class="fa-solid fa-a"></i></span>
                     <span class="flex-fill color-white" >어쩌고저쩌고 답변 </span>
                 </div>
-            </li>
+            </li> -->
 
-            <li class="">
-                <div class="instruction-post">
-                    <span ><i class="fa-solid fa-q"></i></span>
-                    <span class="flex-fill" >질문 제목</span>
-                    <span><i class="fa-solid fa-chevron-down"></i></span> 
-                </div>
-                <div class="answer-post bg-basicdark">
-                    <span class="color-blue"><i class="fa-solid fa-a"></i></span>
-                    <span class="flex-fill color-white" >어쩌고저쩌고 답변 예시 s어쩌고저쩌고 답변 예시 어쩌고저쩌고 답변 예시 어쩌고저쩌고 답변 예시 어쩌고저쩌고 답변 예시 어쩌고저쩌고 답변 예시 어쩌고저쩌고 답변 예시 어쩌고저쩌고 답변 예시어쩌고저쩌고 답변 예시어쩌고저쩌고 답변 예시</span>
-                </div>
-            </li>
-
-            <li class="">
-                <div class="instruction-post">
-                    <span ><i class="fa-solid fa-q"></i></span>
-                    <span class="flex-fill" >질문 제목</span>
-                    <span><i class="fa-solid fa-chevron-down"></i></span> 
-                </div>
-                <div class="answer-post bg-basicdark">
-                    <span class="color-blue"><i class="fa-solid fa-a"></i></span>
-                    <span class="flex-fill color-white" >어쩌고저쩌고 답변 예시 s어쩌고저쩌고 답변 예시 어쩌고저쩌고 답변 예시 어쩌고저쩌고 답변 예시 어쩌고저쩌고 답변 예시 어쩌고저쩌고 답변 예시 어쩌고저쩌고 답변 예시 어쩌고저쩌고 답변 예시어쩌고저쩌고 답변 예시어쩌고저쩌고 답변 예시</span>
-                </div>
-            </li>
-
-            <li class="">
-                <div class="instruction-post">
-                    <span ><i class="fa-solid fa-q"></i></span>
-                    <span class="flex-fill" >질문 제목</span>
-                    <span><i class="fa-solid fa-chevron-down"></i></span> 
-                </div>
-                <div class="answer-post bg-basicdark">
-                    <span class="color-blue"><i class="fa-solid fa-a"></i></span>
-                    <span class="flex-fill color-white" >어쩌고저쩌고 답변 예시 s어쩌고저쩌고 답변 예시 어쩌고저쩌고 답변 예시 어쩌고저쩌고 답변 예시 어쩌고저쩌고 답변 예시 어쩌고저쩌고 답변 예시 어쩌고저쩌고 답변 예시 어쩌고저쩌고 답변 예시어쩌고저쩌고 답변 예시어쩌고저쩌고 답변 예시</span>
-                </div>
-            </li>
-
-            <li class="">
-                <div class="instruction-post">
-                    <span ><i class="fa-solid fa-q"></i></span>
-                    <span class="flex-fill" >질문 제목</span>
-                    <span><i class="fa-solid fa-chevron-down"></i></span> 
-                </div>
-                <div class="answer-post bg-basicdark">
-                    <span class="color-blue"><i class="fa-solid fa-a"></i></span>
-                    <span class="flex-fill color-white" >어쩌고저쩌고 답변 예시 s어쩌고저쩌고 답변 예시 어쩌고저쩌고 답변 예시 어쩌고저쩌고 답변 예시 어쩌고저쩌고 답변 예시 어쩌고저쩌고 답변 예시 어쩌고저쩌고 답변 예시 어쩌고저쩌고 답변 예시어쩌고저쩌고 답변 예시어쩌고저쩌고 답변 예시</span>
-                </div>
-            </li>
-
-            <li class="">
-                <div class="instruction-post">
-                    <span ><i class="fa-solid fa-q"></i></span>
-                    <span class="flex-fill" >질문 제목</span>
-                    <span><i class="fa-solid fa-chevron-down"></i></span> 
-                </div>
-                <div class="answer-post bg-basicdark">
-                    <span class="color-blue"><i class="fa-solid fa-a"></i></span>
-                    <span class="flex-fill color-white" >어쩌고저쩌고 답변 예시 s어쩌고저쩌고 답변 예시 어쩌고저쩌고 답변 예시 어쩌고저쩌고 답변 예시 어쩌고저쩌고 답변 예시 어쩌고저쩌고 답변 예시 어쩌고저쩌고 답변 예시 어쩌고저쩌고 답변 예시어쩌고저쩌고 답변 예시어쩌고저쩌고 답변 예시</span>
-                </div>
-            </li>
-
-            <li class="">
-                <div class="instruction-post">
-                    <span ><i class="fa-solid fa-q"></i></span>
-                    <span class="flex-fill" >질문 제목</span>
-                    <span><i class="fa-solid fa-chevron-down"></i></span> 
-                </div>
-                <div class="answer-post bg-basicdark">
-                    <span class="color-blue"><i class="fa-solid fa-a"></i></span>
-                    <span class="flex-fill color-white" >어쩌고저쩌고 답변 예시 s어쩌고저쩌고 답변 예시 어쩌고저쩌고 답변 예시 어쩌고저쩌고 답변 예시 어쩌고저쩌고 답변 예시 어쩌고저쩌고 답변 예시 어쩌고저쩌고 답변 예시 어쩌고저쩌고 답변 예시어쩌고저쩌고 답변 예시어쩌고저쩌고 답변 예시</span>
-                </div>
-            </li>
-
-            <li class="">
-                <div class="instruction-post">
-                    <span ><i class="fa-solid fa-q"></i></span>
-                    <span class="flex-fill" >질문 제목</span>
-                    <span><i class="fa-solid fa-chevron-down"></i></span> 
-                </div>
-                <div class="answer-post bg-basicdark">
-                    <span class="color-blue"><i class="fa-solid fa-a"></i></span>
-                    <span class="flex-fill color-white" >어쩌고저쩌고 답변 예시 s어쩌고저쩌고 답변 예시 어쩌고저쩌고 답변 예시 어쩌고저쩌고 답변 예시 어쩌고저쩌고 답변 예시 어쩌고저쩌고 답변 예시 어쩌고저쩌고 답변 예시 어쩌고저쩌고 답변 예시어쩌고저쩌고 답변 예시어쩌고저쩌고 답변 예시</span>
-                </div>
-            </li>
-
-            <li class="">
-                <div class="instruction-post">
-                    <span ><i class="fa-solid fa-q"></i></span>
-                    <span class="flex-fill" >질문 제목</span>
-                    <span><i class="fa-solid fa-chevron-down"></i></span> 
-                </div>
-                <div class="answer-post bg-basicdark">
-                    <span class="color-blue"><i class="fa-solid fa-a"></i></span>
-                    <span class="flex-fill color-white" >어쩌고저쩌고 답변 예시 s어쩌고저쩌고 답변 예시 어쩌고저쩌고 답변 예시 어쩌고저쩌고 답변 예시 어쩌고저쩌고 답변 예시 어쩌고저쩌고 답변 예시 어쩌고저쩌고 답변 예시 어쩌고저쩌고 답변 예시어쩌고저쩌고 답변 예시어쩌고저쩌고 답변 예시</span>
-                </div>
-            </li>
+            
 
             
         </ul>
@@ -147,15 +57,27 @@
 
     <div class="pagenation  d-flex w-100 justify-content-center">
         <div class="jumps">
-            <a href="#"><i class="fa-solid fa-angles-left"></i>  </a>
-            <a href="#"><i class="fa-solid fa-angle-left"></i>  </a>
+            <a href="javascript:moveToPageNum(<%= Math.floor((data.page - 5) / 5 - ((data.page - 5) % 5 == 0)) * 5 + 1%>)"><i class="fa-solid fa-angles-left"></i>  </a>
+            <a href="javascript:moveToPageNum(<%=data.page - 1%>)"><i class="fa-solid fa-angle-left"></i>  </a>
         </div>
         <div>
-            <a href="#"> 1</a>
+            <a href="javascript:moveToPageNum(<%= Math.floor(data.page / 5 - (data.page % 5 == 0)) * 5 + 1%>)" <% if(data.page % 5 == 1) {%> class="active" <%}%> ><%= Math.floor(data.page / 5 - (data.page % 5 == 0)) * 5 + 1%></a>
+            <% if(Math.floor(data.page / 5 - (data.page % 5 == 0)) * 5 + 2  <= data.max_page) {%>
+            <a href="javascript:moveToPageNum(<%= Math.floor(data.page / 5 - (data.page % 5 == 0)) * 5 + 2%>)" <% if(data.page % 5 == 2) {%> class="active" <%}%> ><%= Math.floor(data.page / 5 - (data.page % 5 == 0)) * 5 + 2 %></a>
+            <%} %>
+            <% if(Math.floor(data.page / 5 - (data.page % 5 == 0)) * 5 + 3  <= data.max_page) {%>
+            <a href="javascript:moveToPageNum(<%= Math.floor(data.page / 5 - (data.page % 5 == 0)) * 5 + 3%>)" <% if(data.page % 5 == 3) {%> class="active" <%}%> ><%= Math.floor(data.page / 5 - (data.page % 5 == 0)) * 5 + 3 %></a>
+            <%} %>
+            <% if(Math.floor(data.page / 5 - (data.page % 5 == 0)) * 5 + 4  <= data.max_page) {%>
+            <a href="javascript:moveToPageNum(<%= Math.floor(data.page / 5 - (data.page % 5 == 0)) * 5 + 4%>)" <% if(data.page % 5 == 4) {%> class="active" <%}%> ><%= Math.floor(data.page / 5 - (data.page % 5 == 0)) * 5 + 4 %></a>
+            <%} %>
+            <% if(Math.floor(data.page / 5 - (data.page % 5 == 0)) * 5 + 5  <= data.max_page) {%>
+            <a href="javascript:moveToPageNum(<%= Math.floor(data.page / 5 - (data.page % 5 == 0)) * 5 + 5%>)" <% if(data.page % 5 == 0) {%> class="active" <%}%> ><%= Math.floor(data.page / 5 - (data.page % 5 == 0)) * 5 + 5 %></a>
+            <%} %>
         </div>
         <div class="jumps">
-            <a href="#"><i class="fa-solid fa-angle-right"></i>  </a>
-            <a href="#"><i class="fa-solid fa-angles-right"></i>  </a>
+            <a href="javascript:moveToPageNum(<%=data.page + 1%>)"><i class="fa-solid fa-angle-right"></i>  </a>
+            <a href="javascript:moveToPageNum(<%= Math.floor(data.page / 5 - (data.page % 5 == 0)) * 5 + 6%>)"><i class="fa-solid fa-angles-right"></i>  </a>
         </div>
     </div>
         

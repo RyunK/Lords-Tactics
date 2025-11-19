@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>이용 안내</title>
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <link href="/css/main.css" rel="stylesheet">
+    <link href="/css/instruction.css" rel="stylesheet">
+</head>
+<body>
+    <%- include('../nav_and_banner.ejs', {page: 'notice', nickname: data.nickname, notice:'2025.08.01 신규 캐릭터 [물]라플라스 추가 완료'}) %> 
+    
+    <div class="mt-5 mb-4  d-flex flex-wrap flex-column justify-content-center align-items-center">
+
+    <h2 class="text-center">수정 중</h2>
+    <a href="/info/faq/edit" class="admin-noticewrite submit-qna btn-cut btn-blue color-white" style="position: static; ">완료</a>
+    <a href="#" class="admin-noticewrite add-qna mt-3 btn-cut btn-yellow color-white" style="position: static; ">질문 추가</a>
+    </div>    
+    
+    <form class="instruction-contents">
+        <ul class="notice-container faq-container faq-editor shadow-basic">
+            <li class="top"></li>
+
+            <% for(let i=0; i<data.faqs.length; i++) {%>
+            <li class="border">
+                <div class="d-flex bg-gray">
+                    (아래 질문 정보에 해당)
+                    <div class="ms-3">ID : <input type="text" readonly name="id" value="<%= data.faqs[i].id %>" class="bg-gray color-gray"></div>
+                    <div class="ms-2">순서 : <input type="text" readonly name="order_num" value="<%= data.faqs[i].order_num %>" class="bg-gray color-gray"></div>
+                    <button type="button" class="btn-up ms-2 btn-purple color-white border-0">⬆️ 한 칸 위로</button>
+                    <button type="button" class="btn-down ms-2 btn-purple color-white border-0">⬇️ 한 칸 아래로</button>
+                    <button type="button" class="ms-2 btn-red color-white border-0">삭제</button>
+                </div>
+                <div class="instruction-post">
+                    <span ><i class="fa-solid fa-q"></i></span>
+                    <textarea name="question" class="faq-edit-textarea flex-fill" ><%= data.faqs[i].question %></textarea>
+                    <span><i class="fa-solid fa-chevron-down"></i></span> 
+                </div>
+                <div class="answer-post bg-basicdark">
+                    <span class="color-blue"><i class="fa-solid fa-a"></i></span>
+                    <textarea name="answer" class="faq-edit-textarea flex-fill color-white" ><%= data.faqs[i].answer %></textarea>
+                </div>
+            </li>
+            <% } %>    
+
+            
+        </ul>
+    </form>
+
+
+    
+        
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+    
+    <script>
+        function moveToPageNum(num){
+            // console.log($(page).text())
+            url = new URL(window.location.href);
+            url.searchParams.set("p", num);
+            window.location.href = url.toString();
+        }
+        
+        $(document).on("click", ".faq-container .instruction-post", function(){
+            // console.log("sdfas")
+            if($(this).siblings(".answer-post").css("height") == '0px'){
+                $(".faq-container .answer-post").css("height", "0").css("padding", "0 60px")
+                $(".faq-container .instruction-post .fa-chevron-up").removeClass("fa-chevron-up").addClass("fa-chevron-down").removeClass("color-blue")
+                $(this).siblings(".answer-post").css("height", "auto").css("padding", "30px 60px")
+                $(this).children('span').eq(1).children("i").removeClass("fa-chevron-down").addClass("fa-chevron-up").addClass("color-blue")
+            } else{
+                $(".faq-container .answer-post").css("height", "0").css("padding", "0 60px")
+                $(this).children('span').eq(1).children("i").removeClass("fa-chevron-up").addClass("fa-chevron-down").removeClass("color-blue")
+            }
+
+        })
+
+        $(".add-qna").on("click", function(e){
+            e.preventDefault()
+            // 밑에다 하나 붙여주기
+            let row_num = $("input[name='order_num']").last().val()
+            row_num = parseInt(row_num) + 1
+
+            let qna = `
+            <li class="border">
+                <div class="d-flex bg-gray">
+                    (아래 질문 정보에 해당)
+                    <div class="ms-3">ID : <input type="text" readonly name="id" value="new" class="bg-gray color-gray"></div>
+                    <div class="ms-2">순서 : <input type="text" readonly name="order_num" value="${row_num}" class="bg-gray color-gray"></div>
+                    <button type="button" class="btn-up ms-2 btn-purple color-white border-0">⬆️ 한 칸 위로</button>
+                    <button type="button" class="btn-down ms-2 btn-purple color-white border-0">⬇️ 한 칸 아래로</button>
+                    <button type="button" class="ms-2 btn-red color-white border-0">삭제</button>
+                </div>
+                <div class="instruction-post">
+                    <span ><i class="fa-solid fa-q"></i></span>
+                    <textarea name="question" class="faq-edit-textarea flex-fill" ></textarea>
+                    <span><i class="fa-solid fa-chevron-down"></i></span> 
+                </div>
+                <div class="answer-post bg-basicdark">
+                    <span class="color-blue"><i class="fa-solid fa-a"></i></span>
+                    <textarea name="answer" class="faq-edit-textarea flex-fill color-white" ></textarea>
+                </div>
+            </li>`
+
+            $(".instruction-contents .faq-editor").append(qna);
+        })  
+
+        // 삭제했을 때, 만약 id가 new면 그냥 ui 삭제
+        // id 숫자면 ajax 요청 후 성공시 ui 삭제
+
+        // 완료 누르면 제출
+        
+        // 한 칸 아래로 버튼 누르면 ui 옮기면서 순서 바꾸기
+        $(document).on("click", ".btn-down", function(e){
+            let this_li = $(this).parent().parent();
+            let next_li = this_li.next();
+            // console.log(next_li);
+            if(next_li.length <= 0) return false;
+
+
+            let this_order = $(this).siblings("div").eq(1).children("input").val();
+            let next_order = next_li.children("div").eq(0).children('div').eq(1).children("input").val()
+            $(this).siblings("div").eq(1).children("input").val(next_order);
+            next_li.children("div").eq(0).children('div').eq(1).children("input").val(this_order);
+            
+            next_li.after(this_li);
+        })
+
+        // 한 칸 위로 버튼 누르면 ui 옮기면서 순서 바꾸기
+        $(document).on("click", ".btn-up", function(e){
+            let this_li = $(this).parent().parent();
+            let prev_li = this_li.prev();
+            // console.log(next_li);
+            if(prev_li.length <= 0 || prev_li.children("div").length <= 0) return false;
+
+
+            let this_order = $(this).siblings("div").eq(1).children("input").val();
+            let prev_order = prev_li.children("div").eq(0).children('div').eq(1).children("input").val()
+            $(this).siblings("div").eq(1).children("input").val(prev_order);
+            prev_li.children("div").eq(0).children('div').eq(1).children("input").val(this_order);
+            
+            prev_li.before(this_li);
+        })
+
+    </script>
+    
+
+
+</body>
+</html>

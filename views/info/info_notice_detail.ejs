@@ -18,8 +18,8 @@
             <div class="top-btns btn-shadow d-flex">
                 <a href="/info/notice" class="btn-blue btn-cut color-white me-auto"><i class="fa-solid fa-chevron-left"></i><span class="flex-fill text-center">목록으로</span></a>
                 <% if(data.isit_admin){ %>
-                <a href="#" class="btn-red btn-cut color-white me-2">삭제하기</a>
-                <a href="#" class="btn-yellow btn-cut color-white ">수정하기</a>
+                <a href="/info/notice/delete/<%= data.notice_detail[0].id %>" class="delete btn-red btn-cut color-white me-2">삭제하기</a>
+                <a href="/info/notice/write/<%= data.notice_detail[0].id %>" class="btn-yellow btn-cut color-white ">수정하기</a>
                 <% } %>
             </div>
 
@@ -74,6 +74,20 @@
             url.searchParams.set("p", num);
             window.location.href = url.toString();
         }
+
+        $(".top-btns .delete").on("click", function(e){
+            e.preventDefault();
+
+            if(confirm("정말로 삭제할까요?")){
+                let form = $('<form></form>');
+                form.attr("method", "post");
+                form.attr("action", "/info/notice/delete");
+                form.append(`<input name='id' type='hidden' value='${window.location.href.split('/').pop()}'>`);
+
+                form.appendTo('body');
+                form.submit();
+            }
+        })
 
     </script>
     
