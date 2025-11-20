@@ -254,7 +254,7 @@ router.get('/faq', async(req, res) => {
       page = req.query.p
   }
 
-  var sql = `select * from faq_table LIMIT ${(page - 1) * page_size}, ${page_size}`;
+  var sql = `select * from faq_table  ORDER BY ORDER_NUM LIMIT ${(page - 1) * page_size}, ${page_size}`;
   var [faqs, fields] = await (await connection).execute(sql);
 
   var sql = `select user_auth_id from user where id = ?`;
@@ -293,14 +293,42 @@ router.get('/faq/edit', mustAdmin, async(req, res) => {
 
 })
 
-router.post('/faq/edit/save', mustAdmin, async(req, res) => {
+router.post('/faq/edit/delete', mustAdmin, async(req, res) => {
   try{
+    // db에서 찾아서 order_num 반환
+    var sql = `select * from faq_table where id = ?`
+    var [selected, fields] = await (await connection).execute(sql, [req.body.id])
+
+    if(selected.length <= 0) throw new Error("존재하지 않는 질문입니다.")
+
     // db에서 삭제
-    var sql = `delete from notice_table where id = ?`
+    var sql = `delete from faq_table where id = ?`
     var [result, fields] = await (await connection).execute(sql, [req.body.id])
     
-    // 쓰고 있던 이미지 파일 있으면 aws s3에서도 삭제(했으면좋겠다.)
-    res.redirect('/info')
+    res.json({status:'200', data : {this_order : selected[0].order_num}})
+  }catch(e){
+    console.log(e)
+    res.json({status:'500', message: e.message})
+  }
+    
+})
+
+router.post('/faq/edit/save', mustAdmin, async(req, res) => {
+  try{
+    // console.log(req.body)
+
+    for(let i=0; i<req.body.id.length; i++){
+      if(req.body.id[i] == "new"){
+        var sql = `insert into faq_table (question, answer, order_num) value (?, ?, ?)`
+        var [result, fields] = await (await connection).execute(sql, [req.body.question[i], req.body.answer[i], req.body.order_num[i]])
+      } else{
+        var sql = `update faq_table set question = ?, answer = ?, order_num = ? where id = ?`
+        var [result, fields] = await (await connection).execute(sql, [req.body.question[i], req.body.answer[i], req.body.order_num[i], req.body.id[i]])
+      }
+    }
+
+    res.redirect('/info/faq')
+
   }catch(e){
     console.log(e)
     res.redirect('/?error=' + e.message);

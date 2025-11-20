@@ -16,11 +16,11 @@
     <div class="mt-5 mb-4  d-flex flex-wrap flex-column justify-content-center align-items-center">
 
     <h2 class="text-center">수정 중</h2>
-    <a href="/info/faq/edit" class="admin-noticewrite submit-qna btn-cut btn-blue color-white" style="position: static; ">완료</a>
+    <a href="#" class="admin-noticewrite submit-qna btn-cut btn-blue color-white" style="position: static; ">완료</a>
     <a href="#" class="admin-noticewrite add-qna mt-3 btn-cut btn-yellow color-white" style="position: static; ">질문 추가</a>
     </div>    
     
-    <form class="instruction-contents">
+    <form class="instruction-contents" action="/info/faq/edit/save" method="post">
         <ul class="notice-container faq-container faq-editor shadow-basic">
             <li class="top"></li>
 
@@ -32,16 +32,16 @@
                     <div class="ms-2">순서 : <input type="text" readonly name="order_num" value="<%= data.faqs[i].order_num %>" class="bg-gray color-gray"></div>
                     <button type="button" class="btn-up ms-2 btn-purple color-white border-0">⬆️ 한 칸 위로</button>
                     <button type="button" class="btn-down ms-2 btn-purple color-white border-0">⬇️ 한 칸 아래로</button>
-                    <button type="button" class="ms-2 btn-red color-white border-0">삭제</button>
+                    <button type="button" class="btn-delete ms-2 btn-red color-white border-0">삭제</button>
                 </div>
                 <div class="instruction-post">
                     <span ><i class="fa-solid fa-q"></i></span>
-                    <textarea name="question" class="faq-edit-textarea flex-fill" ><%= data.faqs[i].question %></textarea>
+                    <textarea placeholder="질문 내용 입력" name="question" class="faq-edit-textarea flex-fill" ><%= data.faqs[i].question %></textarea>
                     <span><i class="fa-solid fa-chevron-down"></i></span> 
                 </div>
                 <div class="answer-post bg-basicdark">
                     <span class="color-blue"><i class="fa-solid fa-a"></i></span>
-                    <textarea name="answer" class="faq-edit-textarea flex-fill color-white" ><%= data.faqs[i].answer %></textarea>
+                    <textarea placeholder="대답 내용 입력" name="answer" class="faq-edit-textarea flex-fill color-white" ><%= data.faqs[i].answer %></textarea>
                 </div>
             </li>
             <% } %>    
@@ -93,16 +93,16 @@
                     <div class="ms-2">순서 : <input type="text" readonly name="order_num" value="${row_num}" class="bg-gray color-gray"></div>
                     <button type="button" class="btn-up ms-2 btn-purple color-white border-0">⬆️ 한 칸 위로</button>
                     <button type="button" class="btn-down ms-2 btn-purple color-white border-0">⬇️ 한 칸 아래로</button>
-                    <button type="button" class="ms-2 btn-red color-white border-0">삭제</button>
+                    <button type="button" class="btn-delete ms-2 btn-red color-white border-0">삭제</button>
                 </div>
                 <div class="instruction-post">
                     <span ><i class="fa-solid fa-q"></i></span>
-                    <textarea name="question" class="faq-edit-textarea flex-fill" ></textarea>
+                    <textarea placeholder="질문 내용 입력" name="question" class="faq-edit-textarea flex-fill" ></textarea>
                     <span><i class="fa-solid fa-chevron-down"></i></span> 
                 </div>
                 <div class="answer-post bg-basicdark">
                     <span class="color-blue"><i class="fa-solid fa-a"></i></span>
-                    <textarea name="answer" class="faq-edit-textarea flex-fill color-white" ></textarea>
+                    <textarea placeholder="대답 내용 입력" name="answer" class="faq-edit-textarea flex-fill color-white" ></textarea>
                 </div>
             </li>`
 
@@ -111,8 +111,68 @@
 
         // 삭제했을 때, 만약 id가 new면 그냥 ui 삭제
         // id 숫자면 ajax 요청 후 성공시 ui 삭제
+        $(document).on("click", ".faq-editor .btn-delete",  function(){
+
+            if(!confirm("항목을 삭제할까요? 되돌릴 수 없으니 주의하세요."))
+                return false;
+
+            let id = $(this).siblings("div").eq(0).children("input").val();
+            // console.log(id)
+            // 이거 아래것들 순서 바꾸기 
+            let this_order = $(this).siblings("div").eq(1).children("input").val()
+            let order_list = $(".faq-editor input[name='order_num']")
+
+            if(id == "new"){
+                for(let i=parseInt(this_order); i<order_list.length; i++){
+                    $(order_list[i]).val(i)
+                }
+                $(this).parent().parent().remove();
+            } else{
+                $.ajax({
+                    url: `/info/faq/edit/delete`, 
+                    method: 'POST', 
+                    contentType: 'application/json',
+                    data: JSON.stringify({ 
+                        id : id,
+                    }),
+                    
+                    // 요청 성공 
+                    success: function(res) {
+                        if(res.status.includes('2')){
+                            // 아래 내용들 순서 바꾸기 (this_order 받아와야 할듯)
+                            let order_list = $(".faq-editor input[name='order_num']")
+                            for(let i=parseInt(res.data.this_order); i<order_list.length; i++){
+                                $(order_list[i]).val(i)
+                            }
+
+                            // ui 삭제
+                            $('.faq-container li').eq(res.data.this_order).remove();
+
+                        } else{
+                            // DB 오류
+                            alert(res.message);
+                        }
+                    },                        
+                    
+                    error: function(xhr, status, error) {
+                        // 오류 
+                        alert(`오류 발생! 다시 시도하세요. ${status} - ${error}`);
+                        console.error('Error:', status, error);
+                    }
+                })
+            }
+        })
 
         // 완료 누르면 제출
+        $(".submit-qna").on('click', function(e){
+            e.preventDefault();
+
+            if(!confirm("이대로 자주 묻는 질문을 저장할까요?"))
+                return false;
+
+            $(".instruction-contents").submit();
+
+        })
         
         // 한 칸 아래로 버튼 누르면 ui 옮기면서 순서 바꾸기
         $(document).on("click", ".btn-down", function(e){
