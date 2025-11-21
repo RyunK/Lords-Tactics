@@ -4,6 +4,11 @@ const connection = require('../database.js')
 const { mustLoggedIn, mustNotLoggedIn, mustAdmin } = require('./middlewares'); // 내가 만든 사용자 미들웨어
 const getDatas = require('./getDatas.js')
 
+const nodemailer = require('nodemailer');
+const ejs = require('ejs');
+const path = require('path');
+var appDir = path.dirname(require.main.filename);
+
 const { S3Client } = require('@aws-sdk/client-s3')
 const multer = require('multer')
 const multerS3 = require('multer-s3')
@@ -334,6 +339,122 @@ router.post('/faq/edit/save', mustAdmin, async(req, res) => {
     res.redirect('/?error=' + e.message);
   }
     
+})
+
+router.get('/ask', async(req, res) => {
+  
+  let user_email = ""
+  if(req.isAuthenticated()){
+    var sql = `select user_email from user inner join user_emails on user.id = user_emails.user_id
+             where id = ?`;
+    var [user_auth_id, fields] = await (await connection).execute(sql, [req.user[0].id]);
+    user_email = user_auth_id[0].user_email
+  }
+
+  var sql = `select user_auth_id from user where id = ?`;
+  var [user_auth_id, fields] = await (await connection).execute(sql, [req.isAuthenticated()? req.user[0].id:0]);
+
+  let data = {
+    nickname: getDatas.loggedInNickname(req, res),
+    isit_admin : user_auth_id[0].user_auth_id == 0,
+    user_email : user_email,
+  }
+
+  res.render('./info/info_ask.ejs',  {data : data})
+
+})
+
+router.post('/ask/sendmail', async(req, res) => {
+  // console.log(req.body)
+  try{
+    // console.log(req.body.file_name)
+    if(!req.body.title || !req.body.from || !req.body.inq_body) throw new Error("이메일에 필요한 내용을 전부 적어주세요.");
+
+    let attatchments = [];
+    if(req.body.file){
+      let files = req.body.file;
+      let file_names = req.body.file_name;
+      if(typeof(files) == 'string'){
+        files = [files]
+        file_names = [file_names]
+      }
+      for(let i=0; i<files.length; i++){
+        let temp = {
+          filename: file_names[i],
+          path : files[i]
+        }
+        attatchments.push(temp)
+      }
+      
+    }
+    // console.log(attatchments)
+
+    let transporter = nodemailer.createTransport({
+        service: 'Gmail',
+        host: 'smtp.gmail.com',
+        port: 465,
+        secure: false,
+        auth: {
+            user: process.env.NODEMAILER_USER,
+            pass: process.env.NODEMAILER_PASS,
+        },
+    });
+
+    let ask_emailTemplete;
+    ejs.renderFile(appDir+'/templates/ask_mail.ejs', {from : req.body.from, title:req.body.title , inq_body : req.body.inq_body}, function (err, data) {
+        if(err){
+          console.log(err);
+          throw new Error("이메일을 전송할 수 없습니다.")
+        }
+        ask_emailTemplete = data;
+    });
+
+    let mailOptions = {
+        to: 'teamsanghyang@gmail.com',
+        subject: '[문의]' + req.body.title,
+        html: ask_emailTemplete,
+        attachments: attatchments,
+    };
+
+
+    transporter.sendMail(mailOptions, function (error, info) {
+        if (error) {
+            console.log(error);
+            throw new Error("이메일을 전송할 수 없습니다.")
+        }
+    });
+
+    let confirm_emailTemplete;
+    ejs.renderFile(appDir+'/templates/ask_confirm_mail.ejs', {inq_body : req.body.inq_body}, function (err, data) {
+        if(err){
+          console.log(err);
+          throw new Error("이메일을 전송할 수 없습니다.")
+        }
+        confirm_emailTemplete = data;
+    });
+
+    mailOptions = {
+        to: req.body.from,
+        subject: '[로드의 전술서] 문의가 접수되었습니다.',
+        html: confirm_emailTemplete,
+        attachments: attatchments,
+    };
+
+
+    transporter.sendMail(mailOptions, function (error, info) {
+        if (error) {
+            console.log(error);
+            throw new Error("이메일을 전송할 수 없습니다.")
+        }
+    });
+
+    res.redirect('/info/ask')
+  }catch(e){
+    console.log(e)
+    res.redirect('/?error=' + e.message);
+  }
+  
+
 })
 
 module.exports=router;
