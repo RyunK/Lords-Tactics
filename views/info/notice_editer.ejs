@@ -35,8 +35,10 @@
     </div>
 
     <script>
+        let imgs = "";
         $(".summernote-form").on("submit", function(e){
             e.preventDefault();
+            $(window).unbind('beforeunload');
 
             if(confirm("이대로 공지사항을 게시할까요?")){
                 let form = $("<form></form>")
@@ -48,8 +50,16 @@
                     form.attr("action","/info/writeNewNotice");
                 }
                 
+                let html_imgs = $('img').map(function(){
+                    return $(this).data('key');
+                }).get();
+
+                html_imgs.forEach(function(element){
+                    form.append(`<input name='html_imgs' type='hidden' value='${element}'>`);
+                })
                 form.append(`<input name='pin' type='hidden' value='${$("input[name='pin']").prop("checked") == true}'>`);
                 form.append(`<input name='subject' type='hidden' value='${$("input[name='subject']").val()}'>`);
+                form.append(`<input name='aws_imgs' type='hidden' value='${imgs}'>`);
                 form.append(`<textarea name='content' type='hidden'>${$('#summernote').summernote('code')}</textarea>`)
                 
                 form.appendTo("body");
@@ -70,6 +80,20 @@
                     }
                 }
             });
+
+            $(window).bind('beforeunload',  
+                function (e) {  
+                $.ajax({
+                    url : "/info/deleteImage/all",
+                    data : {imgs : imgs},
+                    method : "POST",
+                    success(data){
+                        console.log(data);
+                    },
+                    error : console.log
+                });
+                return "변경 사항을 저장하지 않을 수 있습니다. 정말로 이 페이지를 떠나시겠습니까?";
+            });
         });
 
         function sendFile(file, editor){
@@ -86,10 +110,14 @@
                 // multer-s3를 활용하므로 multipart/form-data형태로 넘겨줘야 한다.
                 enctype: "multipart/form-data",
                 processData: false,
-                success: function (response) {
+                success: function (res) {
                 var imgurl = $('<img>').attr({
-                    'src': response,
+                    'src': res.imgurl,
+                    'data-key' : res.imgkey,
                 });
+                
+                imgs += '/' + res.imgkey;
+                // console.log(imgurl);
                 $("#summernote").summernote("insertNode", imgurl[0]);
                 // insertNode는 html tag를 summernote 내부에 삽입해주는 기능.
                 },
