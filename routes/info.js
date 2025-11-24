@@ -496,16 +496,24 @@ router.post('/ask/sendmail', async(req, res) => {
     if(req.body.file){
       let files = req.body.file;
       let file_names = req.body.file_name;
+      let file_bytes = 0;
       if(typeof(files) == 'string'){
         files = [files]
         file_names = [file_names]
       }
+
       for(let i=0; i<files.length; i++){
         let temp = {
           filename: file_names[i],
           path : files[i]
         }
         attatchments.push(temp)
+        file_bytes += Buffer.from(files[i].substring(files[i].indexOf(',') + 1)).length;
+      }
+      
+      // console.log(file_bytes)
+      if(file_bytes > 25000000){
+        throw new Error("파일 크기가 너무 큽니다.")
       }
       
     }

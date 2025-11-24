@@ -75,8 +75,22 @@
         }
 
         $("#file").on('change',function(){
-            let file_names = $("#file").prop("files")
-            if(file_names.length > 3 || file_names.length < 0) return false;
+            // let file_names = $("#file").prop("files")
+            let files = document.querySelector('#file').files;
+            if(files.length > 3 || files.length < 0){
+                alert("파일 개수는 3개까지만 첨부 가능합니다.");
+                return false;
+            }
+
+            let file_size = 0;
+            for(let i=0; i<files.length; i++){
+                file_size += files[i].size
+            }
+            console.log(file_size)
+            if(file_size > 15000000){
+                alert("파일 크기가 너무 큽니다.")
+                return false;
+            }
             fileNameRender()
         });
 
@@ -140,6 +154,7 @@
                 new_form.append(`<input name='file_name' type='hidden' value='${files[i].name}'>`)
                 new_form.append(`<input type='hidden' name='file' value='${await fileToBase64(files[i])}'>`)
             }
+            
 
 
             new_form.appendTo('body');
