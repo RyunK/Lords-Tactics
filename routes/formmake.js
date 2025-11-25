@@ -41,6 +41,7 @@ router.get('/', async(req, res) => {
             writer_memo : req.query.writer_memo? req.query.writer_memo : "", 
             having_heroes : having_heroes,
             having_heroes_id : having_heroes_id,
+            banner_notice : req.banner_notice,
         }
 
     res.render('./formmake/form_making2.ejs', {data : data})
@@ -103,6 +104,7 @@ router.get('/edit/:form_id', mustLoggedIn, async(req, res) => {
                 writer_memo : form[0].writer_memo? form[0].writer_memo : "", 
                 having_heroes : having_heroes,
                 having_heroes_id : having_heroes_id,
+                banner_notice : req.banner_notice,
             }
 
         res.render('./formmake/form_making2.ejs', {data : data})
@@ -179,6 +181,7 @@ router.get('/help/:id', mustLoggedIn, async(req, res) => {
                 having_heroes : having_heroes,
                 having_heroes_id : having_heroes_id,
                 helper_memo : req.query.writer_memo? req.query.writer_memo : "", 
+                banner_notice : req.banner_notice,
             }
 
         res.render('./formmake/help_newform.ejs', {data : data})

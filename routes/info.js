@@ -72,6 +72,7 @@ router.get('/notice', async(req, res) => {
     page : page,
     max_page : max_page,
     isit_admin : user_auth_id[0].user_auth_id == 0,
+    banner_notice : req.banner_notice,
   }
 
   res.render('./info/info_notice.ejs',  {data : data})
@@ -108,12 +109,22 @@ router.get('/notice/detail/:id', async(req, res) => {
     var sql = `select user_auth_id from user where id = ?`;
     var [user_auth_id, fields] = await (await connection).execute(sql, [req.isAuthenticated()? req.user[0].id:0]);
 
+    // 조회수 + 1
+    var sql = `UPDATE notice_table NT 
+                    SET NT.VIEW = (
+                    SELECT T.VIEW FROM (SELECT NT.VIEW FROM notice_table NT 
+                    WHERE NT.ID = ?) AS T
+                    ) +1
+                    WHERE NT.ID = ?;`
+    var [result, fields] = await(await connection).execute(sql, [req.params.id, req.params.id])
+
     let data = {
       nickname: getDatas.loggedInNickname(req, res),
       isit_admin : user_auth_id[0].user_auth_id == 0,
       notice_detail : notice_detail,
       previous : previous,
       next : next,
+      banner_notice : req.banner_notice,
     }
 
     res.render('./info/info_notice_detail.ejs',  {data : data})
@@ -244,16 +255,19 @@ router.post('/writeNewNotice', mustAdmin, async(req, res) => {
     else if(req.body.subject.length <= 0) throw new Error("제목이 없습니다.")
     else if(req.body.content.length <= 0) throw new Error("내용이 없습니다.")
     
-    // aws_imgs 파싱
-    console.log(req.body.aws_imgs);
-    let aws_imgs = req.body.aws_imgs.split("/");
-    aws_imgs.shift();
+    if(req.body.aws_imgs.length > 0){
+      // aws_imgs 파싱
+      console.log(req.body.aws_imgs);
+      let aws_imgs = req.body.aws_imgs.split("/");
+      aws_imgs.shift();
 
-    let html_imgs = req.body.html_imgs;
-    if(typeof(html_imgs) == 'string') html_imgs = [html_imgs];
+      let html_imgs = req.body.html_imgs;
+      if(typeof(html_imgs) == 'string') html_imgs = [html_imgs];
 
-    // aws_imgs와 html_imgs 비교해서 html_imgs에 없는 aws_img는 s3에서 삭제
-    dumpImgs(aws_imgs, html_imgs);
+      // aws_imgs와 html_imgs 비교해서 html_imgs에 없는 aws_img는 s3에서 삭제
+      dumpImgs(aws_imgs, html_imgs);
+    }
+    
 
     // db에 업로드
     var sql = `insert into notice_table (pin, subject, body, upload_datetime)
@@ -264,9 +278,12 @@ router.post('/writeNewNotice', mustAdmin, async(req, res) => {
     var sql = `insert into notice_imgs (notice_id, img_key)
               value (?, ?)`;
     let notice_id = result.insertId
-    html_imgs.forEach(async (element) => {
-      var [result, fields] = await (await connection).execute(sql, [notice_id, element])
-    })
+    if(html_imgs.length > 0){
+      html_imgs.forEach(async (element) => {
+        var [result, fields] = await (await connection).execute(sql, [notice_id, element])
+      })
+    }
+    
 
     res.redirect('/info')
   }catch(e){
@@ -291,7 +308,9 @@ router.post('/editnotice/:id', mustAdmin, async(req, res) => {
 
     // aws_imgs + mysql에 있는 애들이랑 html_imgs 비교해서 삭제.
     // aws_imgs 파싱
-    console.log(req.body.aws_imgs);
+    // console.log(req.body.aws_imgs);
+    
+
     let aws_imgs = req.body.aws_imgs.split("/");
     aws_imgs.shift();
 
@@ -304,19 +323,23 @@ router.post('/editnotice/:id', mustAdmin, async(req, res) => {
     let html_imgs = req.body.html_imgs;
     if(typeof(html_imgs) == 'string') html_imgs = [html_imgs];
     
-    // DB배열/실제 html배열 받아서 html에 없으면 s3와 mysql에서 모두 삭제해주는 함수
-    dumpImgs(aws_imgs, html_imgs);
+    if(aws_imgs.length > 0 || html_imgs.length > 0){
+      // DB배열/실제 html배열 받아서 html에 없으면 s3와 mysql에서 모두 삭제해주는 함수
+      dumpImgs(aws_imgs, html_imgs);
 
-    // 그리고 html 이미지들중에 mysql에 없는 이미지들만 추가로 저장하기
-    var sql = `select img_key from notice_imgs where notice_id = ?`
-    var [notice_imgs_after, fields] = await (await connection).execute(sql, [req.params.id])
-    html_imgs.forEach(async (element) => {
-      if(!notice_imgs_after.some(e => e.img_key == element)){
-        var sql = `insert into notice_imgs (notice_id, img_key)
-              value (?, ?)`
-        var [result, fields] = await (await connection).execute(sql, [req.params.id, element])
-      }
-    })
+      // 그리고 html 이미지들중에 mysql에 없는 이미지들만 추가로 저장하기
+      var sql = `select img_key from notice_imgs where notice_id = ?`
+      var [notice_imgs_after, fields] = await (await connection).execute(sql, [req.params.id])
+      html_imgs.forEach(async (element) => {
+        if(!notice_imgs_after.some(e => e.img_key == element)){
+          var sql = `insert into notice_imgs (notice_id, img_key)
+                value (?, ?)`
+          var [result, fields] = await (await connection).execute(sql, [req.params.id, element])
+        }
+      })
+    }
+
+    
 
     // db 업데이트
     var sql = `update notice_table 
@@ -339,20 +362,22 @@ router.post('/notice/delete', mustAdmin, async(req, res) => {
     var sql = `select img_key from notice_imgs where notice_id = ?`
     var [db_imgs, fields] = await (await connection).execute(sql, [req.body.id])
 
-    db_imgs.forEach(async (element) => {
-      const deleteObjectCommand = new DeleteObjectCommand({
-          Bucket: process.env.AWSBUCKET,  
-          Key: element.img_key,
-      });
+    if(db_imgs.length > 0){
+      db_imgs.forEach(async (element) => {
+        const deleteObjectCommand = new DeleteObjectCommand({
+            Bucket: process.env.AWSBUCKET,  
+            Key: element.img_key,
+        });
 
-      await s3.send(deleteObjectCommand);
-    });
+        await s3.send(deleteObjectCommand);
+      });
+    }
+    
 
     // db에서 삭제
     var sql = `delete from notice_table where id = ?`
     var [result, fields] = await (await connection).execute(sql, [req.body.id])
     
-    // 쓰고 있던 이미지 파일 있으면 aws s3에서도 삭제(했으면좋겠다.)
     res.redirect('/info')
   }catch(e){
     console.log(e)
@@ -393,6 +418,7 @@ router.get('/faq', async(req, res) => {
     faqs : faqs,
     page : page,
     max_page : max_page,
+    banner_notice : req.banner_notice,
   }
 
   res.render('./info/info_faq.ejs',  {data : data})
@@ -409,6 +435,7 @@ router.get('/faq/edit', mustAdmin, async(req, res) => {
 
     data = {
       faqs : faqs,
+      banner_notice : req.banner_notice,
     }
 
     res.render('./info/info_faq_edit.ejs',  {data : data})
@@ -480,6 +507,7 @@ router.get('/ask', async(req, res) => {
     nickname: getDatas.loggedInNickname(req, res),
     isit_admin : user_auth_id[0].user_auth_id == 0,
     user_email : user_email,
+    banner_notice : req.banner_notice,
   }
 
   res.render('./info/info_ask.ejs',  {data : data})

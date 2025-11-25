@@ -1,4 +1,4 @@
-const express = require('express')
+ const express = require('express')
 const app = express()
 app.use(express.json({ limit: '25mb' }));
 app.use(express.urlencoded({ limit: '25mb', extended: true }));
@@ -73,6 +73,22 @@ app.use((req, res, next) => {
     console.log(req.session.returnTo)
     req.session.save();
   }
+  next();
+});
+
+/**
+ * 고정된 공지사항 + 최신 공지사항 1개 제목과 id를 req.notice_banner에 담아 전달
+ */
+app.use(async (req, res, next) => {
+  var sql = `(select id, subject from notice_table
+            where pin = TRUE)
+            UNION
+            (SELECT id, subject FROM NOTICE_TABLE
+            WHERE pin = FALSE 
+            ORDER BY UPLOAD_DATETIME DESC
+            LIMIT 1);`;
+  var [result, fields] = await (await connection).execute(sql);
+  req.banner_notice = result;
   next();
 });
 

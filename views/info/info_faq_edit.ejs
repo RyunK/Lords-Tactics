@@ -11,7 +11,8 @@
     <link href="/css/instruction.css" rel="stylesheet">
 </head>
 <body>
-    <%- include('../nav_and_banner.ejs', {page: 'notice', nickname: data.nickname, notice:'2025.08.01 신규 캐릭터 [물]라플라스 추가 완료'}) %> 
+    
+    <%- include('../nav_and_banner.ejs', {page: 'notice', nickname: data.nickname, notice:data.banner_notice }) %> 
     
     <div class="mt-5 mb-4  d-flex flex-wrap flex-column justify-content-center align-items-center">
 

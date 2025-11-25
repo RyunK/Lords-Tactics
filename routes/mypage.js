@@ -132,6 +132,7 @@ router.get('/formsave', mustLoggedIn, async(req, res) => {
         saved_forms : saved_forms,
         page : page,
         max_page : max_page,
+        banner_notice : req.banner_notice,
     }
     res.render('./mypage/mypage_formsave.ejs',  {data : data})
 })
@@ -247,6 +248,7 @@ router.get('/formsave/detail/:id', mustLoggedIn, async(req, res) => {
             replys : replys,
             help_members : help_members,
             saved_forms : saved_forms,
+            banner_notice : req.banner_notice,
             
         }
         res.render('./mypage/mypage_formdetail.ejs',  {data : data})
@@ -324,6 +326,7 @@ router.get('/loadmyform', mustLoggedIn, async(req, res) => {
         saved_forms : saved_forms,
         page : page,
         max_page : max_page,
+        banner_notice : req.banner_notice,
     }
     res.render('./mypage/mypage_loadmyform.ejs',  {data : data})
 })
@@ -394,6 +397,7 @@ router.get('/helping/loadmyform/:req_id', mustLoggedIn, async(req, res) => {
         req_id : req.params.req_id,
         page : page,
         max_page : max_page,
+        banner_notice : req.banner_notice,
     }
     res.render('./mypage/mypage_loadmyform.ejs',  {data : data})
 })
@@ -471,6 +475,7 @@ router.get('/myhero', mustLoggedIn, async(req, res) => {
         class_list: class_list,
         having_heroes : having_heroes,
         having_heroes_id : having_heroes_id,
+        banner_notice : req.banner_notice,
 
     }
     res.render('./mypage/mypage_myhero.ejs',  {data : data})
@@ -536,6 +541,7 @@ router.get('/setting', mustLoggedIn, async(req, res) => {
         username: req.user[0].username,
         email : email[0]["USER_EMAIL"],
         provider : provider,
+        banner_notice : req.banner_notice,
     }
     res.render('./mypage/mypage_personalset.ejs',  {data : data})
 })

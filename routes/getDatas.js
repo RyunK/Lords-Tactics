@@ -132,11 +132,11 @@ module.exports = {
 
    formOrderGetter: function(req, res){
       let order = ''
-      if(!req.query.sort || req.query.sort =='saved_cnt'){
+      if( req.query.sort =='saved_cnt'){
          order += 'ORDER BY SAVED_CNT DESC'
       } else if(req.query.sort =='view'){
          order += 'ORDER BY VIEW DESC'
-      } else if(req.query.sort == 'new'){
+      } else if(!req.query.sort || req.query.sort == 'new'){
          order += 'ORDER BY LAST_DATETIME DESC'
       }
 

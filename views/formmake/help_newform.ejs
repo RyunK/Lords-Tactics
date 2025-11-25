@@ -15,7 +15,8 @@
     <link href="/css/hero_setting.css" rel="stylesheet">
 </head>
 <body>
-    <%- include('../nav_and_banner.ejs', {page: ' ', nickname: data.nickname, notice:'2025.08.01 신규 캐릭터 [물]라플라스 추가 완료'}) %> 
+    
+    <%- include('../nav_and_banner.ejs', {page: ' ', nickname: data.nickname, notice:data.banner_notice }) %> 
 
 
     <!-- 영웅 설정 모달 -->
@@ -477,7 +478,11 @@
         </div>
     </div>
 
-   
+   <script>
+        const having_heroes  = '<%- JSON.stringify(data.having_heroes) %>'? JSON.parse('<%- JSON.stringify(data.having_heroes) %>'): "";
+        const having_heroes_id = '<%- JSON.stringify(data.having_heroes_id) %>'? JSON.parse('<%- JSON.stringify(data.having_heroes_id) %>') : "";
+        const hero_list = JSON.parse('<%- JSON.stringify(data.hero_list) %>')
+    </script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
     <script src="/js/formmake/NowFormHeroes.js"></script>
     <script src="/js/formmake/HavingHeroes.js"></script>
@@ -651,123 +656,7 @@
         })
 
 
-        /**
-         * 영웅 설정 부분
-         **/
-        $(".charSetting-btn").on('click', function(){
-            if($('.nav-box .login').text().includes("로그인")){
-                alert("영웅을 설정하려면 로그인 해야 합니다.")
-            }
-            // 선택된 캐릭터 없으면 alert
-            else if($(".spot-selected-full").length <= 0){
-                alert("먼저 설정할 영웅을 선택하세요.")
-            }
-
-            selectHeroSetting($(".spot-selected-full").siblings(".select-liner"));
-            $('.hero-setting-container').fadeIn();
-        })
-
-        $('.hero-setting-container .close').on('click', function(){
-            $('.hero-setting-container').fadeOut();
-        })
-
-        $(document).ready(function(){
-        $(document).on('click', '.setting-normal-submit', function(e){
-            e.preventDefault();
-            const query = $('.setting-form form').serializeArray();
-            // console.log(query)
-
-            $.ajax({
-                    url: '/herosetting/normalsave', 
-                    method: 'POST', 
-                    contentType: 'application/json',
-                    data: JSON.stringify({ 
-                        lv : query[1].value,
-                        cho : query[2].value,
-                        gak : query[3].value,
-                        hero : query[0].value, 
-                    }),
-                    
-                    // 요청 성공 
-                    success: function(res) {
-                        if(res.status.includes('2')){
-                            // 영웅 설정 종료
-                            $('.hero-setting-container').fadeOut();
-
-                            // 보유 영웅 리스트 다시 세팅
-                            HavingHeroes.setter(res.data.having_heroes);
-                            HavingHeroes.setter_id(res.data.having_heroes_id);
-
-                            // 필터 다시 출력
-                            hero_filter();
-
-                            // 편성 UI 다시 표시
-                            NowFormHeroes.addHeroesInForm();
-                        } else{
-                            // DB 오류
-                            alert(res.message);
-                        }
-                    },                        
-                    
-                    error: function(xhr, status, error) {
-                        // 오류 
-                        alert(`오류 발생! 다시 시도하세요. ${status} - ${error}`);
-                        console.error('Error:', status, error);
-                    }
-                });
-
-        })
-
-        $(document).on('click', '.setting-all-submit', function(e){
-            e.preventDefault();
-            const query = $('.setting-form form').serializeArray();
-            // console.log(query)
-
-            $.ajax({
-                    url: '/herosetting/allsave', 
-                    method: 'POST', 
-                    contentType: 'application/json',
-                    data: JSON.stringify({ 
-                        lv : query[1].value,
-                        cho : query[2].value,
-                        gak : query[3].value,
-                    }),
-                    
-                    // 요청 성공 
-                    success: function(res) {
-                        if(res.status.includes('2')){
-                            // 영웅 설정 종료
-                            $('.hero-setting-container').fadeOut();
-
-                            // 보유 영웅 리스트 다시 세팅
-                            HavingHeroes.setter(res.data.having_heroes);
-                            HavingHeroes.setter_id(res.data.having_heroes_id);
-
-                            // 필터 다시 출력
-                            hero_filter();
-
-                            // 편성 UI 다시 표시
-                            NowFormHeroes.addHeroesInForm();
-                        } else{
-                            // DB 오류
-                            alert(res.message);
-                        }
-                    },
-                    
-                    error: function(xhr, status, error) {
-                        // 오류 
-                        alert(`오류 발생! 다시 시도하세요. ${status} - ${error}`);
-                        console.error('Error:', status, error);
-                    }
-                });
-
-        })
-
-        $('.hero-setting-form' ).on('submit',function(e){    
-            e.preventDefault();
-
-        })
-    })
+    
         
 
     </script>

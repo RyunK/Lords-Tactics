@@ -29,7 +29,10 @@ router.get('/', mustNotLoggedIn ,(req, res) => {
   if(req.user){
     res.redirect('/')
   } else {
-    res.render('login.ejs', {data : {nickname: ""}, error: req.flash("error") })
+    res.render('login.ejs', {data : {
+      nickname: "",
+      banner_notice : req.banner_notice,
+    }, error: req.flash("error") })
   }
   
 })
@@ -38,7 +41,10 @@ router.get('/register', mustNotLoggedIn, (req, res) => {
   if(req.user){
     res.redirect('/')
   } else {
-    res.render('register.ejs', {data : {nickname: ""}})
+    res.render('register.ejs', {data : {
+      nickname: "", 
+      banner_notice : req.banner_notice,
+    }})
   }
 })
 

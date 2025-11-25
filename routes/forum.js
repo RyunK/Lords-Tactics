@@ -7,7 +7,7 @@ const getDatas = require('./getDatas.js')
 
 router.get('/', (req, res) => {
     // res.redirect('/forum/share');
-    res.redirect('/forum/share/?sort=tu');
+    res.redirect('/forum/share/?sort=new');
 
 })
 
@@ -84,7 +84,7 @@ router.get('/:forumtab', async(req, res) => {
         from : 'forum',
         nickname: getDatas.loggedInNickname(req, res),
         forumtab: req.params.forumtab,
-        sort : req.query.sort? req.query.sort : 'saved_cnt',
+        sort : req.query.sort? req.query.sort : 'new',
         filtered_heroes : filtered_heroes_list,
         filtered_heroes_forrender : filtered_heroes_list_forrender,
         saved_forms : saved_forms,
@@ -95,6 +95,7 @@ router.get('/:forumtab', async(req, res) => {
         members : members,
         page : page,
         max_page : max_page,
+        banner_notice : req.banner_notice,
     }
 
     res.render('./forum/forum.ejs',  {data : data})
@@ -247,6 +248,7 @@ router.get('/:forumtab/detail/:id', async(req, res) => {
             replys : replys,
             help_members : help_members,
             saved_forms : saved_forms,
+            banner_notice : req.banner_notice,
         }
         res.render('./forum/forum_formdetail.ejs',  {data : data})
     }catch(e){
@@ -367,6 +369,7 @@ async function comment_reload_respond(req, res){
             help_members : help_members,
             member_length : member_length,
             saved_forms : saved_forms,
+            banner_notice : req.banner_notice,
         }
 
     res.render('./components/comments_and_replys.ejs', {data: data}, (err, html) =>{

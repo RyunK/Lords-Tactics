@@ -211,6 +211,15 @@ nav>div> a:hover{
     width: 100%;
 }
 
+.notice-banner-container{
+    height: 40px;
+    overflow: hidden;
+}
+
+.notice-banner-container>div{
+    transition: 1s;
+}
+
 .notice-banner {
     width: 100%;
     height: 40px;

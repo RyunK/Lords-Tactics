@@ -87,6 +87,7 @@ router.get('/', async(req, res) => {
         today_ask_form_list : today_ask_form_list,
         today_ask_members : today_ask_members,
         saved_forms : saved_forms,
+        banner_notice : req.banner_notice,
     }
     // console.log("filtered_heroes : " + filtered_heroes_list)
 

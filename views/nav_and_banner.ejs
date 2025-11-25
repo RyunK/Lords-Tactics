@@ -75,8 +75,27 @@
     <div class="top-banner shadow-basic">
         <a href="/"><img src="/sources/img/banners/basic.jpg" alt="" width="100%"></a>
         <!-- 공지사항 배너 -->
-        <a class="notice-banner bg-white d-flex align-items-center color-black" href="#">
-            <span  class="ms-5 ps-3 pe-3">공지사항</span>
-            <span  class="ms-5 "><%= notice%></span>
-        </a>
+        <div class="notice-banner-container">
+            <div>
+            <% for(let i=0; i<notice.length; i++){ %>
+                <a class="notice-banner bg-white d-flex align-items-center color-black" href="/info/notice/detail/<%= notice[i].id %>">
+                    <span  class="ms-5 ps-3 pe-3">공지사항</span>
+                    <span  class="ms-5 "><%= notice[i].subject%></span>
+                </a>
+            <% }%>
+            </div>
+        </div>
     </div>
+
+    <script>
+        let current_notice = 1;
+        setInterval ( notice_mover, 3000 );
+        // 3초정도마다 한번씩 notice-banner-container 객체를 위로 40px씩 올려준다.
+        // 밑에 내릴 게 더 없으면 다시 맨 처음으로 간다..
+        // 밑에 내릴 게 있는지 없는지는 전체 height로 알 수 있지 않을까
+        function notice_mover(){
+            let notice = document.querySelector(".notice-banner-container>div");
+            let notice_cnt = notice.offsetHeight / 40;
+            notice.style.transform = "translateY(-"+ 40*(current_notice++ % notice_cnt) +"px)"
+        }
+    </script>
