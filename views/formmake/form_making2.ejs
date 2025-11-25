@@ -510,6 +510,7 @@
             
         </div>
     </div>
+    <%- include('../footer.ejs') %> 
     <script>
         const having_heroes  = '<%- JSON.stringify(data.having_heroes) %>'? JSON.parse('<%- JSON.stringify(data.having_heroes) %>'): "";
         const having_heroes_id = '<%- JSON.stringify(data.having_heroes_id) %>'? JSON.parse('<%- JSON.stringify(data.having_heroes_id) %>') : "";
