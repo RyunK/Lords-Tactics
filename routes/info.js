@@ -278,7 +278,7 @@ router.post('/writeNewNotice', mustAdmin, async(req, res) => {
     var sql = `insert into notice_imgs (notice_id, img_key)
               value (?, ?)`;
     let notice_id = result.insertId
-    if(html_imgs.length > 0){
+    if(html_imgs && html_imgs.length > 0){
       html_imgs.forEach(async (element) => {
         var [result, fields] = await (await connection).execute(sql, [notice_id, element])
       })

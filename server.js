@@ -101,6 +101,14 @@ app.use('/info',  require('./routes/info.js'))
 
 const getDatas = require('./routes/getDatas.js')
 
+app.get("/personalinfo", (req, res) =>{
+  data = {
+    nickname: getDatas.loggedInNickname(req, res),
+    banner_notice : req.banner_notice,
+  }
+  res.render('personal_info.ejs', {data: data})
+})
+
 app.get('/', (req, res) => {
 
   // console.log(req.query.error)
