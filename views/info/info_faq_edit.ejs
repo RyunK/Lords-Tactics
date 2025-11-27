@@ -84,7 +84,10 @@
         $(".add-qna").on("click", function(e){
             e.preventDefault()
             // 밑에다 하나 붙여주기
-            let row_num = $("input[name='order_num']").last().val()
+            let row_num = $("input[name='order_num']").last().val();
+
+		if(!parseInt(row_num)) row_num = 0;
+
             row_num = parseInt(row_num) + 1
 
             let qna = `

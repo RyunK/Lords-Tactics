@@ -46,7 +46,7 @@ $('.formmake-topcontainer .form-status li').on('click', function(){
         $('.formmake-topcontainer .form-status button').addClass('btn-blue').removeClass('btn-yellow')
         $(this).addClass('btn-yellow').removeClass('btn-blue')
     } else {
-        $('..formmake-topcontainer form-status button').addClass('btn-yellow').removeClass('btn-blue')
+        $('.formmake-topcontainer .form-status button').addClass('btn-yellow').removeClass('btn-blue')
         $(this).addClass('btn-blue').removeClass('btn-yellow')
     }
 

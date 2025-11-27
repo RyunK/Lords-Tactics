@@ -268,7 +268,7 @@ router.post('/writeNewNotice', mustAdmin, async(req, res) => {
       dumpImgs(aws_imgs, html_imgs);
     }
     
-    // console.log(html_imgs);
+    console.log(html_imgs);
     // db에 업로드
     var sql = `insert into notice_table (pin, subject, body, upload_datetime)
               value (?, ?, ?, NOW())`
@@ -469,15 +469,24 @@ router.post('/faq/edit/delete', mustAdmin, async(req, res) => {
 
 router.post('/faq/edit/save', mustAdmin, async(req, res) => {
   try{
-    // console.log(req.body)
-
-    for(let i=0; i<req.body.id.length; i++){
-      if(req.body.id[i] == "new"){
+	 // console.log(req.body)
+	let body_id = req.body.id;
+	  let body_q = req.body.question;
+	  let body_ans = req.body.answer;
+	  let body_order = req.body.order_num;
+	  if(typeof(req.body.id) == 'string') {
+		  body_id = [body_id];
+		  body_q = [body_q];
+		  body_ans = [body_ans];
+		  body_order = [body_order];
+	  }
+    for(let i=0; i<body_id.length; i++){
+      if(body_id[i] == "new"){
         var sql = `insert into faq_table (question, answer, order_num) value (?, ?, ?)`
-        var [result, fields] = await (await connection).execute(sql, [req.body.question[i], req.body.answer[i], req.body.order_num[i]])
+        var [result, fields] = await (await connection).execute(sql, [body_q[i], body_ans[i], body_order[i]])
       } else{
         var sql = `update faq_table set question = ?, answer = ?, order_num = ? where id = ?`
-        var [result, fields] = await (await connection).execute(sql, [req.body.question[i], req.body.answer[i], req.body.order_num[i], req.body.id[i]])
+        var [result, fields] = await (await connection).execute(sql, [body_q[i], body_ans[i], body_order[i], body_id[i]])
       }
     }
 
