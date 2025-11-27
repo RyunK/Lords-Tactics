@@ -4,3 +4,5 @@ secure/
 statics/sources/img/
 
 .env
+
+.well-known/pki-validation

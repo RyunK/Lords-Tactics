@@ -109,10 +109,10 @@
 
     background: 
     linear-gradient(to bottom, #535f95, rgb(216, 216, 222)), 
-    url("../sources/img/sword-fill-svgrepo-com.svg")
+    url("/sources/img/sword-fill-svgrepo-com.svg")
     ;
-    -webkit-mask: url("../sources/img/sword-fill-svgrepo-com.svg") no-repeat center / contain;
-    mask: url("../sources/img/sword-fill-svgrepo-com.svg") no-repeat center / contain;
+    -webkit-mask: url("/sources/img/sword-fill-svgrepo-com.svg") no-repeat center / contain;
+    mask: url("/sources/img/sword-fill-svgrepo-com.svg") no-repeat center / contain;
     background-size: 270px;
 }
 
@@ -126,10 +126,10 @@
 
     background: 
     linear-gradient(to bottom, #00146c, rgb(207, 207, 235)), 
-    url("../sources/img/free-icon-open-book-2280294.png")
+    url("/sources/img/free-icon-open-book-2280294.png")
     ;
-    -webkit-mask: url("../sources/img/free-icon-open-book-2280294.png") no-repeat center / contain;
-    mask: url("../sources/img/free-icon-open-book-2280294.png") no-repeat center / contain;
+    -webkit-mask: url("/sources/img/free-icon-open-book-2280294.png") no-repeat center / contain;
+    mask: url("/sources/img/free-icon-open-book-2280294.png") no-repeat center / contain;
     background-size: 270px;
 }
 
@@ -143,10 +143,10 @@
 
     background: 
     linear-gradient(to bottom, #071864, rgb(207, 207, 235)), 
-    url("../sources/img/free-icon-gears-3524592.png")
+    url("/sources/img/free-icon-gears-3524592.png")
     ;
-    -webkit-mask: url("../sources/img/free-icon-gears-3524592.png") no-repeat center / contain;
-    mask: url("../sources/img/free-icon-gears-3524592.png") no-repeat center / contain;
+    -webkit-mask: url("/sources/img/free-icon-gears-3524592.png") no-repeat center / contain;
+    mask: url("/sources/img/free-icon-gears-3524592.png") no-repeat center / contain;
     background-size: 270px;
 }
 
