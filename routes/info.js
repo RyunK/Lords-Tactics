@@ -254,21 +254,21 @@ router.post('/writeNewNotice', mustAdmin, async(req, res) => {
     if(req.body.subject.length > 100 ) throw new Error("제목이 너무 깁니다.")
     else if(req.body.subject.length <= 0) throw new Error("제목이 없습니다.")
     else if(req.body.content.length <= 0) throw new Error("내용이 없습니다.")
-    
+    let html_imgs
     if(req.body.aws_imgs.length > 0){
       // aws_imgs 파싱
-      console.log(req.body.aws_imgs);
+      // console.log(req.body.aws_imgs);
       let aws_imgs = req.body.aws_imgs.split("/");
       aws_imgs.shift();
 
-      let html_imgs = req.body.html_imgs;
+      html_imgs = req.body.html_imgs;
       if(typeof(html_imgs) == 'string') html_imgs = [html_imgs];
 
       // aws_imgs와 html_imgs 비교해서 html_imgs에 없는 aws_img는 s3에서 삭제
       dumpImgs(aws_imgs, html_imgs);
     }
     
-
+    // console.log(html_imgs);
     // db에 업로드
     var sql = `insert into notice_table (pin, subject, body, upload_datetime)
               value (?, ?, ?, NOW())`
