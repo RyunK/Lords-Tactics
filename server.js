@@ -198,3 +198,7 @@ app.post('/herosetting/allsave', mustLoggedIn,  async(req, res) => {
     
 })
 
+
+app.use(function (req, res, next) {
+    res.render('error_alret.ejs', {data: {err: '존재하지 않는 페이지입니다.'}})
+});
