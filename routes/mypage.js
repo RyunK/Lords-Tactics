@@ -494,7 +494,7 @@ router.post('/myhero/havingherosave', mustLoggedIn, async(req, res) => {
     var [having_heroes, fields] = await (await connection).execute(sql, [req.user[0].id]);
 
     for(let i=0; i<having_heroes.length; i++){
-        if(!checked_herolist.includes(`${having_heroes[i].hero_id}`)){
+        if( !checked_herolist || checked_herolist.length <= 0 || !checked_herolist.includes(`${having_heroes[i].hero_id}`)){
             var sql = `DELETE FROM HERO_SETTINGS
                 WHERE USER_ID = ? AND HERO_ID = ?`;
             var [result, fields] = await (await connection).execute(sql, [req.user[0].id, having_heroes[i].hero_id]);
@@ -502,7 +502,7 @@ router.post('/myhero/havingherosave', mustLoggedIn, async(req, res) => {
     }
 
     // 리스트에 있는게 DB에 있는지 찾아가지고 없으면 1렙 5초 0각 INSERT
-    for(let i=0; i<checked_herolist.length; i++){
+    for(let i=0; checked_herolist && i<checked_herolist.length; i++){
         var sql = `SELECT * FROM HERO_SETTINGS
                 WHERE USER_ID = ? AND HERO_ID = ?`;
         var [having_heroes, fields] = await (await connection).execute(sql, [req.user[0].id, checked_herolist[i]]);

@@ -159,7 +159,8 @@ app.post('/herosetting/normalsave', mustLoggedIn,  async(req, res) => {
         }
       }
       res.json(result)
-    } catch{
+    } catch(e){
+	console.log(e.message);
         res.json({
           status : '500',
           message: "오류가 발생했습니다. 다시 시도하세요."

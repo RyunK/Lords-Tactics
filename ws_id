@@ -293,8 +293,7 @@ router.post('/formsave/change/:form_id', mustLoggedIn, async (req, res) => {
                 left join writer_save ws on ws.req_id = rf.id
                 where cf.id = ? and rf.user_id = ?`;
             var [ws, fields] = await(await connection).execute(sql, [req.params.form_id, req.user[0].id]);
-            // console.log(ws.length);
-	    if(ws.length > 0 && !ws[0].ws_id){
+            if(ws.length > 0 && !ws[0].ws_id){
                 var sql = `insert writer_save (req_id, ans_comment_id) values (?, ?)`
                 var [r, fields] = await(await connection).execute(sql, [ws[0].req_form, req.params.form_id])
 
@@ -319,7 +318,6 @@ router.post('/formsave/change/:form_id', mustLoggedIn, async (req, res) => {
                 WHERE t.id = ?;`
         var [comment_num, fields] = await(await connection).execute(sql, [req.params.form_id, req.params.form_id])
 
-
         // console.log(comment_num)
 
         let result = {
@@ -327,7 +325,7 @@ router.post('/formsave/change/:form_id', mustLoggedIn, async (req, res) => {
             data : {
                 change :change,
                 saved_cnt : saved.length,
-                comment_num : comment_num.length > 0? comment_num[0].rn:0,
+                comment_num : comment_num[0].rn,
             }
         }
         res.json(result)
