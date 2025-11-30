@@ -24,6 +24,10 @@
     <%- include('../nav_and_banner.ejs', {page: 'formmake', nickname: data.nickname, notice:data.banner_notice }) %> 
     <% } %>
 
+    <div class="toast-black">
+        
+    </div>
+
     <!-- 영웅 설정 모달 -->
     <div class="hero-setting-container">
         <div class="hero-setting shadow-basic bg-gray ">
@@ -762,6 +766,7 @@
 
                             // 편성 UI 다시 표시
                             NowFormHeroes.addHeroesInForm();
+                            $('.toast-black').text("영웅 설정이 저장되었습니다.").fadeIn(600).delay(1500).fadeOut(600);
                         } else{
                             // DB 오류
                             alert(res.message);
@@ -779,6 +784,7 @@
 
         $(document).on('click', '.setting-all-submit', function(e){
             e.preventDefault();
+            if(!confirm("모든 보유 영웅의 설정을 변경하시겠습니까?")) return false;
             const query = $('.setting-form form').serializeArray();
             // console.log(query)
 
@@ -807,6 +813,7 @@
 
                             // 편성 UI 다시 표시
                             NowFormHeroes.addHeroesInForm();
+                            $('.toast-black').text("모든 보유 영웅에게 영웅 설정이 저장되었습니다.").fadeIn(600).delay(1500).fadeOut(600);
                         } else{
                             // DB 오류
                             alert(res.message);
