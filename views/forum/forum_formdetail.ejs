@@ -39,6 +39,27 @@
             </div>
         </div>
 
+        <div class="report-container shadow-basic bg-lightgray">
+            <div class="preview-detail-box-top bg-basicdark color-yellow">
+            신고하기
+            </div>
+            <form class="report-box-body">
+                <p class="color-red">접수된 신고는 검토 후 처리됩니다.</p>
+                <p class="mb-2">신고 대상 : <span class="report-nickname">닉네임</span> </p>
+                <p class="mb-1">신고 사유 </p>
+                <textarea name="reason"></textarea>
+                <input type="hidden" name="kind" value="">
+                <input type="hidden" name="id" value="">
+            </form>
+            <div class="report-box-bottom d-flex">
+                <p></p>
+                <div class="btns btn-shadow">
+                    <button class="cancel btn-gray btn-cut border-0 color-white">취소</button>
+                    <button class="report btn-red btn-cut border-0 color-white">신고</button>
+                </div>
+            </div>
+        </div>
+
     </div>
 
 
@@ -375,7 +396,7 @@
 
         $(".left-box-bottom .share").on("click", function(e){
             var urlinput = $("<input type='text'>")
-            urlinput.val(window.location.host + '/forum/detail/' + $(".form-container").data("id") + window.location.search)
+            urlinput.val(window.location.href)
             urlinput.appendTo('body');
             
             urlinput.select();
@@ -433,6 +454,45 @@
             $(".preview-detail-container").fadeOut().delay(1000);
         })
         
+        /**
+         * 신고 클릭시 신고 모달 나오기
+         **/
+        $(".left-box-bottom .report").on("click", function(e){
+            e.preventDefault();
+            $(".report-nickname").text($(".mypage-maincontents .form-author span").text())
+            $(".report-container input[name='kind']").val("formation");
+            $(".report-container input[name='id']").val($(".mypage-maincontents .form-container").data('id'));
+            $(".my-modal-bg").fadeIn();
+            $(".report-container").fadeIn();
+
+        })
+
+        $(document).on("click", ".comment .comment-bottom .report", function(e){
+            e.preventDefault();
+            $(".report-nickname").text($(this).parent().parent().siblings(".comment-author").children(".color-purple").text())
+            $(".report-container input[name='kind']").val("comment");
+            $(".report-container input[name='id']").val($(this).parent().parent().parent().data("commentid"));
+            $(".my-modal-bg").fadeIn();
+            $(".report-container").fadeIn();
+
+        })
+
+        $(document).on("click", ".reply .comment-bottom .report", function(e){
+            e.preventDefault();
+            $(".report-nickname").text($(this).parent().parent().siblings(".comment-author").children(".color-purple").text())
+            $(".report-container input[name='kind']").val("reply");
+            $(".report-container input[name='id']").val($(this).parent().parent().parent().data("commentid"));
+            $(".my-modal-bg").fadeIn();
+            $(".report-container").fadeIn();
+
+        })
+
+        $(".report-box-bottom .cancel").on("click", function(e){
+            e.preventDefault();
+            $(".my-modal-bg").fadeOut();
+            $(".report-container").fadeOut();
+
+        })
 
         $(document).on("click", ".comment-bottom .reply-btn", function(e){
             if($(".login").text().includes("로그인")){
@@ -655,7 +715,7 @@
                     }
                 })
 
-            })
+            });
 
             function form_save(e, id){
                 e.preventDefault();
@@ -761,6 +821,41 @@
                         console.error('Error:', status, error);
                     }
                 })
+            })
+
+            $(".report-box-body").on("submit", function(e){
+                e.preventDefault();
+
+                if(!confirm("정말 신고하시겠습니까?")) return false;
+                const query = $('.report-box-body').serializeArray();
+
+                $.ajax({
+                        url: `/forum/report`, 
+                        method: 'POST', 
+                        contentType: 'application/json',
+                        data: JSON.stringify({ 
+                            reason : query[0].value,
+                            kind : query[1].value,
+                            id : query[2].value,
+                        }),
+                        
+                        // 요청 성공 
+                        success: function(res) {
+                            if(res.status.includes('2')){
+                                // 신고 잘 됐다고 알림
+                                alert("신고가 완료되었습니다.");
+                            } else{
+                                // DB 오류
+                                alert(res.message);
+                            }
+                        },                        
+                        
+                        error: function(xhr, status, error) {
+                            // 오류 
+                            alert(`오류 발생! 다시 시도하세요. ${status} - ${error}`);
+                            console.error('Error:', status, error);
+                        }
+                    })
             })
         })
 
