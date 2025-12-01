@@ -129,6 +129,13 @@ body{
     display: flex;
     justify-content: center;
     flex-wrap: wrap;
+    /* height: 600px; */
+    transform: scale(0.7);
+    width: 100vw;
+
+    
+    margin-top: -40px;
+    margin-bottom: -50px;
 }
 
 .askform-container{
@@ -137,9 +144,6 @@ body{
     height: 600px;
     max-height: 600px;
     background-color: #BFC3D4;
-
-    margin-top: 30px;
-
     margin-right: 20px;
 
     font-size: 17px;
@@ -208,7 +212,6 @@ body{
     background-color: #BFC3D4;
 
 
-    margin-top: 30px;
 
     font-size: 17px;
 
@@ -216,6 +219,8 @@ body{
     grid-template-rows: 60px calc(100% - 60px);
 
     position: relative;
+
+    /* transform: scale(0.8); */
 
 } 
 
@@ -701,11 +706,14 @@ body{
 }
 
 .filter-and-heroes{
-    margin: 30px;
+    padding: 0 50px;
     display: flex;
+    justify-content: center;
+    /* margin-top: 25px; */
 
-    margin-top: 25px;
-    
+    transform: scale(0.7);
+    transform-origin: 0 0;
+    width: 142.5%;
 }
 
 .hero-filter{
