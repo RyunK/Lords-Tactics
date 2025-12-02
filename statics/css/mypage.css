@@ -585,11 +585,15 @@ h6{
     position: fixed;
     left: 0;
     top: 0;
-    width: 100%;
-    height: 100%;
+    width: 125%;
+    height: 125%;
     background: rgba(0, 0, 0, 0.4);
 
     display: none;
+
+    transform: scale(0.8);
+    transform-origin: 0 0;
+    
 }
 
 .pwchange-modal{
