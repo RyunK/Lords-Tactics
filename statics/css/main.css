@@ -28,7 +28,7 @@ body {
     margin-left: auto;
     margin-right: auto;
 
-    min-width: 1200px;
+    min-width: 800px;
 
 
 }
@@ -571,7 +571,7 @@ nav>div> a:hover{
 }
 
 .fasize {
-    font-size: 1.8em;
+    font-size: 25px;
 }
 
 .spinner-blue{

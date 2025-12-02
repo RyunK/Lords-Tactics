@@ -2,19 +2,18 @@
     transform: scale(0.8);
     transform-origin: 0 0;
     width: 125%;
+    display: flex;
 }
 
 .mypage-remote{
-    width: 280px;
-
+    max-width: 280px;
+    min-width: 250px;
+    width: 22%;
+  
     margin-top: 40px;
     margin-left: 30px;
 
-    float: left;
-
     position: relative;
-    /* transform: scale(0.8); */
-    transform-origin: 50% 0;
 }
 
 h6{
@@ -255,10 +254,9 @@ h6{
 }
 
 .mypage-maincontents{
-    width: calc(100% - 420px);
-    /* height: 20px; */
+    width: clamp(700px, 78%, 100%);
 
-    margin: 40px;
+    margin: 40px clamp(15px, 5%, 40px);
 
     float: right;
 
