@@ -34,8 +34,10 @@ $(document).on('click', ".character-list-box", function(e){
 
     // 자리 선택 UI 표시
     let now_selected 
-    if($(".spot-selected-full").length > 0) now_selected = $(".spot-selected-full").parent();
-    else now_selected = $(".spot-selected-empty").parent();
+    now_selected = $(".form-container .form_spot").eq(NowFormHeroes.indexOfFormSpot() + 1)
+    // if($(".spot-selected-full").length > 0) now_selected = $(".spot-selected-full").parent().next();
+    // else now_selected = $(".spot-selected-empty").parent().next();
+    if(now_selected.length <= 0) now_selected = $(".form-container .form_spot").eq(0)
     selectTargetForm(now_selected)
 
     // 편성에 있는 캐릭터 위에 X 표시
