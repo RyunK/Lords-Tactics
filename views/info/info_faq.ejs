@@ -16,11 +16,11 @@
     
     
     <%- include('./info_tab.ejs', {from: 'faq'}) %> 
-    
-    <div class="instruction-contents">
-        <% if(data.isit_admin){ %>
+    <% if(data.isit_admin){ %>
             <a href="/info/faq/edit" class="admin-noticewrite btn-cut btn-blue color-white">수정/추가</a>
         <% } %>
+    <div class="instruction-contents">
+        
         <ul class="notice-container faq-container shadow-basic">
             <li class="top"></li>
 

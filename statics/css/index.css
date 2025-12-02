@@ -1,7 +1,7 @@
 
 
 .move-btn-container{
-    margin-top: 40px;
+    /* margin-top: 40px; */
 
 
     width: 1050px;
@@ -10,6 +10,7 @@
 
     height: 350px;
     /* overflow: hidden; */
+    transform: scale(0.8);
 }
 
 .move-btn-container > div{

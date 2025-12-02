@@ -20,6 +20,7 @@
 
 
     <!-- 왼쪽 리모콘(?) -->
+    <div class="mypage-container">
     <div class="mypage-remote ">      
         <%- include('mypage_nav.ejs', {page: 'form save', nickname: data.nickname}) %> 
         <div class="shadow-filter-basic"> 
@@ -150,6 +151,8 @@
         
     </div>
 
+
+
     <script>
         $(".filter-container button").on("click", function(){
             let btn_name = $(this).data('btn');
@@ -228,6 +231,7 @@
             </div>
                 
         </div>
+    </div>
     </div>
     <%- include('../footer.ejs') %> 
 
