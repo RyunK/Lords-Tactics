@@ -152,4 +152,18 @@
 }
 
 
+.report-dropdown{
+    position: absolute;
+    background-color: rgb(252, 249, 225);
+    overflow: hidden;
+}
 
+.report-dropdown li{
+    padding: 7px 11px;
+    border: 1px solid gray;
+}
+
+.report-dropdown li:hover{
+    background-color: rgb(240, 235, 196);
+    cursor: pointer;
+}

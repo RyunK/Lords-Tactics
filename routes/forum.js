@@ -665,6 +665,18 @@ var appDir = path.dirname(require.main.filename);
 // 신고 라우터
 router.post('/report', mustLoggedIn,  async(req, res) => {
     try{
+        // 이미 신고했는지 db에서 확인
+      var sql = `select * from reports where reporter_id = ? and object_kind = ? and object_id = ?`
+      var [r, f] = await(await connection).execute(sql, [req.user[0].id, req.body.kind, req.body.id ]);
+      if(r.length > 0){
+        let result = {
+            status: '400',
+            message : "이미 신고했습니다. 처리를 기다려주세요. 추가할 내용이 있으신 경우 이메일 주소를 통해 문의해주시기 바랍니다."
+        } 
+        res.json(result);
+        return;
+      }
+
       // db에 저장
       var sql = `insert into reports (reporter_id, object_kind, object_id, reason) values(?, ?, ?, ?)`
       var [r, f] = await(await connection).execute(sql, [req.user[0].id, req.body.kind, req.body.id, req.body.reason ]);
