@@ -657,4 +657,115 @@ router.post('/delete/form/:form_id', mustLoggedIn, async(req, res) => {
 
 })
 
+const nodemailer = require('nodemailer');
+const ejs = require('ejs');
+const path = require('path');
+var appDir = path.dirname(require.main.filename);
+
+// 신고 라우터
+router.post('/report', mustLoggedIn,  async(req, res) => {
+    try{
+      // db에 저장
+      var sql = `insert into reports (reporter_id, object_kind, object_id, reason) values(?, ?, ?, ?)`
+      var [r, f] = await(await connection).execute(sql, [req.user[0].id, req.body.kind, req.body.id, req.body.reason ]);
+      
+      // 대상 컨텐츠 찾기
+      let object_content;
+      if(req.body.kind == "formation"){
+        var sql = `select writer_memo from hero_forms where id = ?`
+        var [rst, f] = await(await connection).execute(sql, [req.body.id]);
+        object_content = rst[0].writer_memo;
+      } else if (req.body.kind == "comment"){
+        var sql = `select comment_body from form_comments where id = ?`
+        var [rst, f] = await(await connection).execute(sql, [req.body.id]);
+        object_content = rst[0].writer_memo;
+      } else{
+        var sql = `select reply_body from form_replys where id = ?`
+        var [rst, f] = await(await connection).execute(sql, [req.body.id]);
+        object_content = rst[0].writer_memo;
+      }
+      
+      let transporter = nodemailer.createTransport({
+            service: 'Gmail',
+            host: 'smtp.gmail.com',
+            port: 465,
+            secure: false,
+            auth: {
+                user: process.env.NODEMAILER_USER,
+                pass: process.env.NODEMAILER_PASS,
+            },
+        });
+      // teamsanghyang@google.com으로 이메일 전송 
+      
+      
+        let ask_emailTemplete;
+        ejs.renderFile(appDir+'/templates/report_mail.ejs', {from : req.user[0].id, object_content:object_content, reason : req.body.reason}, function (err, data) {
+            if(err){
+            console.log(err);
+            throw new Error("이메일 양식 생성에 실패했습니다.")
+            }
+            ask_emailTemplete = data;
+        });
+
+        let mailOptions = {
+            to: 'teamsanghyang@gmail.com',
+            subject: '[신고 접수]',
+            html: ask_emailTemplete,
+        };
+
+
+        transporter.sendMail(mailOptions, function (error, info) {
+            if (error) {
+                console.log(error);
+                throw new Error("이메일을 전송할 수 없습니다.")
+            }
+        });
+
+        // 신고자에게 이메일 전송
+        var sql = `select user_email from user_emails where user_id = ?`
+        var [user_email, f] = await(await connection).execute(sql, [req.user[0].id]);
+
+        let confirm_emailTemplete;
+        ejs.renderFile(appDir+'/templates/report_confirm_mail.ejs', { object_content:object_content, reason : req.body.reason}, function (err, data) {
+            if(err){
+            console.log(err);
+            throw new Error("이메일 양식 생성에 실패했습니다.")
+            }
+            confirm_emailTemplete = data;
+        });
+
+        mailOptions = {
+            to: user_email[0].user_email,
+            subject: '[로드의 전술서] 신고가 접수되었습니다.',
+            html: confirm_emailTemplete,
+        };
+
+
+        transporter.sendMail(mailOptions, function (error, info) {
+            if (error) {
+                console.log(error);
+                throw new Error("이메일을 전송할 수 없습니다.")
+            }
+        });
+      
+
+
+
+      let result = {
+        status: '200',
+        data : {
+
+        }
+      }
+      res.json(result)
+    } catch(e){
+        console.log(e)
+        res.json({
+          status : '500',
+          message: "오류가 발생했습니다. 다시 시도하세요."
+        });
+    }
+    
+})
+
 module.exports=router;

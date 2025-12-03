@@ -657,11 +657,9 @@ router.post('/withdraw', mustLoggedIn, async(req, res) => {
         var sql = `UPDATE USER SET USERNAME = '', NICKNAME="(탈퇴한 유저)" WHERE ID = ?`
         await (await connection).execute(sql, [req.user[0].id]);
 
-        
 
-        // 추후, 게시되지 않은 폼들과 그 폼에 포함된 영웅 정보들 모두 삭제를 권장
-        // var sql = `DELETE FROM hero_forms WHERE user_id = ? AND NOT (form_status_id = 1);` ;
-        // await (await connection).execute(sql, [req.user[0].id]);
+        var sql = `DELETE FROM hero_forms WHERE user_id = ? AND form_access_status_id = 2;` ;
+        await (await connection).execute(sql, [req.user[0].id]);
 
         // 로그아웃
         req.session.destroy(function(err){

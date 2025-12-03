@@ -43,11 +43,12 @@
             <div class="preview-detail-box-top bg-basicdark color-yellow">
             신고하기
             </div>
-            <form class="report-box-body">
-                <p class="color-red">접수된 신고는 검토 후 처리됩니다.</p>
+            <form class="report-box-body position-relative" >
+                <p class="color-red">접수된 신고는 검토 후 처리되며, 검토 및 처리 경과는 가입하신 이메일로 전송됩니다.</p>
                 <p class="mb-2">신고 대상 : <span class="report-nickname">닉네임</span> </p>
                 <p class="mb-1">신고 사유 </p>
-                <textarea name="reason"></textarea>
+                <textarea name="reason" placeholder="신고 사유(500자 이내)" ></textarea>
+                <p class="report-length text-end"><span>0</span>/500</p>
                 <input type="hidden" name="kind" value="">
                 <input type="hidden" name="id" value="">
             </form>
@@ -461,6 +462,10 @@
          **/
         $(".left-box-bottom .report").on("click", function(e){
             e.preventDefault();
+            if($(".login").text().includes("로그인") ){
+                alert("신고하려면 로그인해야 합니다.");
+                return false;
+            }
             $(".report-nickname").text($(".mypage-maincontents .form-author span").text())
             $(".report-container input[name='kind']").val("formation");
             $(".report-container input[name='id']").val($(".mypage-maincontents .form-container").data('id'));
@@ -471,6 +476,10 @@
 
         $(document).on("click", ".comment .comment-bottom .report", function(e){
             e.preventDefault();
+            if($(".login").text().includes("로그인") ){
+                alert("신고하려면 로그인해야 합니다.");
+                return false;
+            }
             $(".report-nickname").text($(this).parent().parent().siblings(".comment-author").children(".color-purple").text())
             $(".report-container input[name='kind']").val("comment");
             $(".report-container input[name='id']").val($(this).parent().parent().parent().data("commentid"));
@@ -481,6 +490,10 @@
 
         $(document).on("click", ".reply .comment-bottom .report", function(e){
             e.preventDefault();
+            if($(".login").text().includes("로그인")){
+                alert("신고하려면 로그인해야 합니다.");
+                return false;
+            }
             $(".report-nickname").text($(this).parent().parent().siblings(".comment-author").children(".color-purple").text())
             $(".report-container input[name='kind']").val("reply");
             $(".report-container input[name='id']").val($(this).parent().parent().parent().data("commentid"));
@@ -489,8 +502,34 @@
 
         })
 
+
+        $("textarea[name='reason']").on('propertychange change keyup paste input', function(){
+            let content = $(this).val();
+
+            // 글자수 세기
+            if (content.length == 0 || content == '') {
+                $('.report-length span').text('0');
+            } else {
+                $('.report-length span').text(content.length);
+            }
+            
+            // 글자수 제한
+            if (content.length > 500) {
+                // 200자 부터는 타이핑 되지 않도록
+                $(this).val($(this).val().substring(0, 500));
+            };
+        })
+
         $(".report-box-bottom .cancel").on("click", function(e){
             e.preventDefault();
+            $(".my-modal-bg").fadeOut();
+            $(".report-container").fadeOut();
+
+        })
+
+        $(".report-box-bottom .report").on("click", function(e){
+            e.preventDefault();
+            $(".report-box-body").submit()
             $(".my-modal-bg").fadeOut();
             $(".report-container").fadeOut();
 
@@ -846,6 +885,7 @@
                             if(res.status.includes('2')){
                                 // 신고 잘 됐다고 알림
                                 alert("신고가 완료되었습니다.");
+                                $("textarea[name='reason']").val("");
                             } else{
                                 // DB 오류
                                 alert(res.message);
