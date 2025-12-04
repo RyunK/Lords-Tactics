@@ -451,7 +451,7 @@ h6{
 }
 
 .havinghero-blocker{
-    z-index: 2;
+    /* z-index: 2; */
     position: fixed;
     left: 0;
     top: 0;

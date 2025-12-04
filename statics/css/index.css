@@ -156,6 +156,7 @@
     position: absolute;
     background-color: rgb(252, 249, 225);
     overflow: hidden;
+    z-index: 1;
 }
 
 .report-dropdown li{
