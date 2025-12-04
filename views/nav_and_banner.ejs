@@ -1,7 +1,7 @@
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
 
 <nav class="main-nav fw-bold bg-basicdark shadow-basic d-flex justify-content-between align-items-center">
-        <div class="nav-box ">
+        <div class="nav-box nav-links ">
             <a href="/formmake" class="formmake" >기사단 편성</a>
             <a href="/forum/share" class="forum">편성 공유 게시판</a>
             <a href="/info" class="notice">이용안내</a>
@@ -45,6 +45,10 @@
             break;
         case 'notice':
             $('.notice').addClass('nav-selected');
+            break;
+        case 'admin':
+            $('.nav-box > a').remove();
+            $('.nav-links').append(`<a href="/admin" class="notice">관리자 메인</a>`)
             break;
         }
         
