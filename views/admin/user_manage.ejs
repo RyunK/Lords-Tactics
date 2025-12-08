@@ -15,6 +15,7 @@
     <link href="/css/index.css" rel="stylesheet">
 </head>
 <body>
+    <div class="toast-black"></div>
     
         <%- include('../nav_and_banner.ejs', {page: 'admin', nickname: data.nickname, notice:data.banner_notice }) %> 
 
@@ -24,10 +25,10 @@
         <h3 class=""><유저 관리></h3>
         <p class="color-red">
             유저 테이블id는 고유 키. 소셜 로그인 유저들 구분용
-            <br>정지 상태 일반 시, 종료일 무효
-            <br>정지 상태 정지 후 종료일 지정 안할 경우, 한달 뒤로 자동 지정
+            <br>정지 상태 '일반' 시, 종료일 무효
+            <br>정지 상태 '정지' 후 종료일 지정 안할 경우, 한달 뒤로 자동 지정
+            <br>정지 상태 '정지'에서 '일반'으로 변경할 경우, 종료일이 어제 날짜로 지정됨.
         </p>
-        <button type="submit" class="btn btn-danger mt-2 mb-2">저장하기</button>
         <table class="table w-100 table-bordered table-striped">
             <thead>
                 <tr>
@@ -47,10 +48,11 @@
             <tbody>
                 <% for(let i=0; i<data.user_data.length; i++){ %>
                 <tr class="position-relative">
+                    <input type="hidden" name="user_id" value="<%= data.user_data[i].id%>" >
                     <th scope="row"><%= data.user_data[i].id%></th>
                     <td><%= data.user_data[i].username%></td>
                     <td><%= data.user_data[i].nickname%></td>
-                    <td><input readonly name="how" style="width: 80px;" value="<%= data.user_data[i].auth_name%>">
+                    <td><input readonly name="auth" class="dropdown-input" style="width: 80px;" value="<%= data.user_data[i].auth_name%>">
                         <ul class="report-dropdown" style="display: none;">
                             <li>일반이용자</li>
                             <li>관리자</li>
@@ -58,19 +60,47 @@
                     </td>
                     <td><%= data.user_data[i].user_email%></td>
                     <td><%= data.stopped_cnt[i].stopped_cnt%></td>
-                    <td><input readonly name="how" style="width: 80px;" value="<%= data.user_data[i].u_status%>">
+                    <td><input readonly name="stat" class="dropdown-input" style="width: 80px;" value="<%= data.user_data[i].u_status%>">
                         <ul class="report-dropdown" style="display: none;">
                             <li>일반</li>
                             <li>정지</li>
                         </ul>
                     </td>
                     <td><input type="date" name="end_date" value="<%=data.user_data[i].u_enddate? data.user_data[i].u_enddate.getFullYear()+"-"+("0"+(data.user_data[i].u_enddate.getMonth()+1)).slice(-2) + "-" + ("0"+(data.user_data[i].u_enddate.getDate())).slice(-2) : null%>"></td>
+                    <td>
+                        <button type="submit" class="btn btn-danger mt-2 mb-2">저장</button>
+                    </td>
                 </tr>
                 <% } %>
             </tbody>
         </table>
     </form>
-   
+    
+    <div class="pagenation  d-flex w-100 justify-content-center mb-5 mt-4">
+        <div class="jumps">
+            <a href="javascript:moveToPageNum(<%= Math.floor((data.page - 5) / 5 - ((data.page - 5) % 5 == 0)) * 5 + 1%>)"><i class="fa-solid fa-angles-left"></i>  </a>
+            <a href="javascript:moveToPageNum(<%=data.page - 1%>)"><i class="fa-solid fa-angle-left"></i>  </a>
+        </div>
+        <div class="ms-2 me-2">
+            <a href="javascript:moveToPageNum(<%= Math.floor(data.page / 5 - (data.page % 5 == 0)) * 5 + 1%>)" <% if(data.page % 5 == 1) {%> class="active" <%}%> ><%= Math.floor(data.page / 5 - (data.page % 5 == 0)) * 5 + 1%></a>
+            <% if(Math.floor(data.page / 5 - (data.page % 5 == 0)) * 5 + 2  <= data.max_page) {%>
+            <a href="javascript:moveToPageNum(<%= Math.floor(data.page / 5 - (data.page % 5 == 0)) * 5 + 2%>)" <% if(data.page % 5 == 2) {%> class="active" <%}%> ><%= Math.floor(data.page / 5 - (data.page % 5 == 0)) * 5 + 2 %></a>
+            <%} %>
+            <% if(Math.floor(data.page / 5 - (data.page % 5 == 0)) * 5 + 3  <= data.max_page) {%>
+            <a href="javascript:moveToPageNum(<%= Math.floor(data.page / 5 - (data.page % 5 == 0)) * 5 + 3%>)" <% if(data.page % 5 == 3) {%> class="active" <%}%> ><%= Math.floor(data.page / 5 - (data.page % 5 == 0)) * 5 + 3 %></a>
+            <%} %>
+            <% if(Math.floor(data.page / 5 - (data.page % 5 == 0)) * 5 + 4  <= data.max_page) {%>
+            <a href="javascript:moveToPageNum(<%= Math.floor(data.page / 5 - (data.page % 5 == 0)) * 5 + 4%>)" <% if(data.page % 5 == 4) {%> class="active" <%}%> ><%= Math.floor(data.page / 5 - (data.page % 5 == 0)) * 5 + 4 %></a>
+            <%} %>
+            <% if(Math.floor(data.page / 5 - (data.page % 5 == 0)) * 5 + 5  <= data.max_page) {%>
+            <a href="javascript:moveToPageNum(<%= Math.floor(data.page / 5 - (data.page % 5 == 0)) * 5 + 5%>)" <% if(data.page % 5 == 0) {%> class="active" <%}%> ><%= Math.floor(data.page / 5 - (data.page % 5 == 0)) * 5 + 5 %></a>
+            <%} %>
+        </div>
+        <div class="jumps">
+            <a href="javascript:moveToPageNum(<%=data.page + 1%>)"><i class="fa-solid fa-angle-right"></i>  </a>
+            <a href="javascript:moveToPageNum(<%= Math.floor(data.page / 5 - (data.page % 5 == 0)) * 5 + 6%>)"><i class="fa-solid fa-angles-right"></i>  </a>
+        </div>
+    </div>
 
 
     
@@ -80,15 +110,22 @@
 
     <script>
 
+        function moveToPageNum(num){
+            // console.log($(page).text())
+            url = new URL(window.location.href);
+            url.searchParams.set("p", num);
+            window.location.href = url.toString();
+        }
+
     $(document).on("click", function(e){
-        if(!$(e.target).closest("input[name='how']").length>0
+        if(!$(e.target).closest(".dropdown-input").length>0
         && !$(e.target).closest(".report-dropdown li").length>0
         ){
             $(".report-dropdown").slideUp();
             
         }
     })
-    $("input[name='how']").on("click active", function(e){
+    $(".dropdown-input").on("click active", function(e){
         if(this.nextElementSibling.style.display == 'none'){
             $(".report-dropdown").slideUp();
             $(this).siblings(".report-dropdown").slideToggle();
@@ -100,6 +137,44 @@
     $(".report-dropdown li").on("click active", function(e){
         $(".report-dropdown").slideUp();
         $(this).parent().siblings("input").val($(this).text())
+    })
+
+    $(document).ready(function(){
+       
+
+        $("button[type='submit']").on("click", function(e){
+            e.preventDefault();
+            const tr = $(this).parent().parent()
+            $.ajax({
+                    url: '/admin/manage/user/submit', 
+                    method: 'POST', 
+                    contentType: 'application/json',
+                    data: JSON.stringify({ 
+                        user_id : tr.children("input").val(),
+                        auth : tr.find("input").eq(1).val(),
+                        user_stat : tr.find("input").eq(2).val(),
+                        end_date : tr.find("input").eq(3).val(),
+                    }),
+                    
+                    // 요청 성공 
+                    success: function(res) {
+                        if(res.status.includes('2')){
+                            // 영웅 설정 선택 해제
+                            $('.toast-black').text("유저 정보 저장 완료").fadeIn(600).delay(1500).fadeOut(600);
+
+                        } else{
+                            // DB 오류
+                            alert(res.message);
+                        }
+                    },                        
+                    
+                    error: function(xhr, status, error) {
+                        // 오류 
+                        alert(`오류 발생! 다시 시도하세요. ${status} - ${error}`);
+                        console.error('Error:', status, error);
+                    }
+                });
+        });
     })
     </script>
 </body>

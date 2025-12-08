@@ -23,11 +23,11 @@
     <form class="container mt-5">
         <h3 class=""><신고 내역></h3>
         <p class="color-red">
-            지정 후 버튼 누르면 일괄 적용. 종료일은 정지 처분 시에 지정됨. 정지 지정 후 종료일 지정 안할 시 1달 뒤로 자동 지정.
-            <br> 중복 대상에 대한 처분 시, 가장 강력한 것 기준으로 진행. (삭제+정지 > 정지만/삭제만 > 처분 안함 > 나중에)
-            <br> 정지만 및 삭제만이 공존 시, 삭제 + 가장 긴 기간 정지
+            지정 후 바로 옆의 저장 버튼 누르면 적용. 종료일은 정지 처분 시에 지정됨. 정지 지정 후 종료일 지정 안할 시 1달 뒤로 자동 지정.
+            <br> 중복되는 신고 내용은 하나만 적용하면 전부 처리됨.
+            <br> '나중에'는 처리되지 않고 이 뷰에 남아있음.
+            <br> 종류 formation : 편성 글 / comment : 댓글 / reply : 답글
         </p>
-        <button type="submit" class="btn btn-danger mt-2 mb-2">저장하기</button>
         <table class="table w-100 table-bordered table-striped">
             <thead>
                 <tr>
@@ -70,12 +70,40 @@
                         </ul>
                     </td>
                     <td><input type="date" name="end_date" ></td>
+                    <td>
+                        <button type="submit" class="btn btn-danger mt-2 mb-2">저장</button>
+                    </td>
                 </tr>
                 <% } %>
             </tbody>
         </table>
     </form>
    
+    <div class="pagenation  d-flex w-100 justify-content-center  mb-5 mt-4">
+        <div class="jumps">
+            <a href="javascript:moveToPageNum(<%= Math.floor((data.page - 5) / 5 - ((data.page - 5) % 5 == 0)) * 5 + 1%>)"><i class="fa-solid fa-angles-left"></i>  </a>
+            <a href="javascript:moveToPageNum(<%=data.page - 1%>)"><i class="fa-solid fa-angle-left"></i>  </a>
+        </div>
+        <div class="ms-2 me-2">
+            <a href="javascript:moveToPageNum(<%= Math.floor(data.page / 5 - (data.page % 5 == 0)) * 5 + 1%>)" <% if(data.page % 5 == 1) {%> class="active" <%}%> ><%= Math.floor(data.page / 5 - (data.page % 5 == 0)) * 5 + 1%></a>
+            <% if(Math.floor(data.page / 5 - (data.page % 5 == 0)) * 5 + 2  <= data.max_page) {%>
+            <a href="javascript:moveToPageNum(<%= Math.floor(data.page / 5 - (data.page % 5 == 0)) * 5 + 2%>)" <% if(data.page % 5 == 2) {%> class="active" <%}%> ><%= Math.floor(data.page / 5 - (data.page % 5 == 0)) * 5 + 2 %></a>
+            <%} %>
+            <% if(Math.floor(data.page / 5 - (data.page % 5 == 0)) * 5 + 3  <= data.max_page) {%>
+            <a href="javascript:moveToPageNum(<%= Math.floor(data.page / 5 - (data.page % 5 == 0)) * 5 + 3%>)" <% if(data.page % 5 == 3) {%> class="active" <%}%> ><%= Math.floor(data.page / 5 - (data.page % 5 == 0)) * 5 + 3 %></a>
+            <%} %>
+            <% if(Math.floor(data.page / 5 - (data.page % 5 == 0)) * 5 + 4  <= data.max_page) {%>
+            <a href="javascript:moveToPageNum(<%= Math.floor(data.page / 5 - (data.page % 5 == 0)) * 5 + 4%>)" <% if(data.page % 5 == 4) {%> class="active" <%}%> ><%= Math.floor(data.page / 5 - (data.page % 5 == 0)) * 5 + 4 %></a>
+            <%} %>
+            <% if(Math.floor(data.page / 5 - (data.page % 5 == 0)) * 5 + 5  <= data.max_page) {%>
+            <a href="javascript:moveToPageNum(<%= Math.floor(data.page / 5 - (data.page % 5 == 0)) * 5 + 5%>)" <% if(data.page % 5 == 0) {%> class="active" <%}%> ><%= Math.floor(data.page / 5 - (data.page % 5 == 0)) * 5 + 5 %></a>
+            <%} %>
+        </div>
+        <div class="jumps">
+            <a href="javascript:moveToPageNum(<%=data.page + 1%>)"><i class="fa-solid fa-angle-right"></i>  </a>
+            <a href="javascript:moveToPageNum(<%= Math.floor(data.page / 5 - (data.page % 5 == 0)) * 5 + 6%>)"><i class="fa-solid fa-angles-right"></i>  </a>
+        </div>
+    </div>
 
 
     
@@ -84,6 +112,12 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
 
     <script>
+        function moveToPageNum(num){
+            // console.log($(page).text())
+            url = new URL(window.location.href);
+            url.searchParams.set("p", num);
+            window.location.href = url.toString();
+        }
 
     $(document).on("click", function(e){
         if(!$(e.target).closest("input[name='how']").length>0

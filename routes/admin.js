@@ -27,6 +27,23 @@ router.get('/', mustAdmin, async(req, res) => {
 
 router.get('/report', mustAdmin, async(req, res) => {
     try{
+        var sql = `SELECT count(*) as cnt FROM reports`
+        var [data_cnt, fields] = await (await connection).execute(sql);
+        
+        let page_size = 30
+        let max_page = Math.floor(data_cnt[0].cnt / page_size) + (data_cnt[0].cnt % page_size != 0)
+        let page
+        if(!req.query.p){
+            page = 1;
+        }else if(req.query.p > max_page){
+            page = max_page
+        }else if(req.query.p < 1){
+            page = 1
+        } 
+        else{
+            page = req.query.p
+        }
+
         // 신고자 id + 신고 대상 + 신고 대상이 신고당한 횟수 카운트 select
         var sql = `SELECT t.*, count(*) OVER (PARTITION BY t.object_user) AS user_cnt
                     FROM (
@@ -58,17 +75,19 @@ router.get('/report', mustAdmin, async(req, res) => {
                     LEFT JOIN (
                         SELECT FORM_REPLYS.*, u.USERNAME, u.ID u_id  FROM FORM_REPLYS INNER JOIN user U  ON u.id = FORM_REPLYS.AUTHOR_ID  
                     )FR ON fr.id = r.OBJECT_ID) AS t
-                    ORDER BY id;`;
+                    ORDER BY id
+                    LIMIT ${(page - 1) * page_size}, ${page_size};`;
     
         var [report_data, fields] = await (await connection).execute(sql);
         // console.log(report_data)
-         
         // 보내주기
 
         let data = {
             nickname: getDatas.loggedInNickname(req, res),
             banner_notice : req.banner_notice,
             report_data : report_data,
+            page : page,
+            max_page : max_page,
         }
         // console.log("filtered_heroes : " + filtered_heroes_list)
 
@@ -82,6 +101,23 @@ router.get('/report', mustAdmin, async(req, res) => {
 
 router.get('/manage/user', mustAdmin, async(req, res) => {
     try{
+        var sql = `SELECT count(*) as cnt FROM user`
+        var [data_cnt, fields] = await (await connection).execute(sql);
+
+        let page_size = 30
+        let max_page = Math.floor(data_cnt[0].cnt / page_size) + (data_cnt[0].cnt % page_size != 0)
+        let page
+        if(!req.query.p){
+            page = 1;
+        }else if(req.query.p > max_page){
+            page = max_page
+        }else if(req.query.p < 1){
+            page = 1
+        } 
+        else{
+            page = req.query.p
+        }
+
         // 유저 목록 + 현재 정지 상태 조회
         var sql = `SELECT u.*, ue.user_email, ua.auth_name,
                 CASE
@@ -94,7 +130,8 @@ router.get('/manage/user', mustAdmin, async(req, res) => {
                 FROM user U 
                 INNER JOIN USER_EMAILS UE ON u.id = ue.USER_ID 
                 INNER JOIN USER_AUTH UA ON ua.ID = u.USER_AUTH_ID 
-                ORDER BY u.id;`;
+                ORDER BY u.id
+                LIMIT ${(page - 1) * page_size}, ${page_size};`;
     
         var [user_data, fields] = await (await connection).execute(sql);
         // 정지 횟수 조회
@@ -103,7 +140,8 @@ router.get('/manage/user', mustAdmin, async(req, res) => {
                 INNER JOIN USER_EMAILS UE ON u.id = ue.USER_ID 
                 LEFT JOIN USER_PURNISHMENT UP ON u.id = up.USER_ID 
                 GROUP BY u.id
-                ORDER BY u.id;`;
+                ORDER BY u.id
+                LIMIT ${(page - 1) * page_size}, ${page_size};`;
     
         var [stopped_cnt, fields] = await (await connection).execute(sql);
 
@@ -112,8 +150,11 @@ router.get('/manage/user', mustAdmin, async(req, res) => {
             banner_notice : req.banner_notice,
             user_data : user_data,
             stopped_cnt : stopped_cnt,
+            page : page,
+            max_page : max_page,
         }
         // console.log("filtered_heroes : " + filtered_heroes_list)
+
 
         res.render('./admin/user_manage.ejs',  {data : data})
     }catch(err){
@@ -122,5 +163,128 @@ router.get('/manage/user', mustAdmin, async(req, res) => {
     }
 
 })
+
+/**
+ * user_id와 end_date 받아서 유저 정지시키기
+ * @param {string} user_id 
+ * @param {Date} end_date 
+ */
+async function user_stop(user_id, end_date) {
+    // user_id와 end_date 받아와서 db user_purnishment 테이블에 저장
+    // user_purnishment 테이블에서 최신 내역 찾기
+    var sql = `select * from user_purnishment where user_id = ? order by end_date desc limit 1`
+    var [r, f] = await (await connection).execute(sql, [user_id]);
+    // console.log(r[0].end_date > new Date())
+
+    // end_date 비어있으면 한 달 뒤로 지정
+    if(!end_date){
+        end_date = new Date();
+        end_date.setMonth(end_date.getMonth + 1);
+    }
+
+    // 없거나 end_date가 지났으면 신규 추가
+    if(r.length <= 0 || r[0].end_date < new Date()){
+        var sql = `insert into user_purnishment (user_id, end_date) value(?, ?)`
+        var [r, f] = await (await connection).execute(sql, [user_id, end_date]);
+    } else{ // 있으면 가장 최신 내역 end_date 변경
+        var sql = `update user_purnishment set end_date = ? where user_id = ?`
+        var [r, f] = await (await connection).execute(sql, [ end_date, user_id]);
+    }
+
+}
+
+/**
+ * kind에 따라 서로 다른 테이블에서 id를 찾아 삭제해줌.
+ * 편성 : 아예 삭제 / 댓글이나 답글 : 내용과 작성자 바꾸기
+ * @param {String} kind 
+ * @param {int} id 
+ */
+async function content_delete (kind, id){
+    if(kind.includes("formation")){
+        sql = `delete from hero_forms where id = ?`
+    } else if (kind.includes("comment")){
+        sql = `update form_comments set author_id = 0, comment_body = "관리자에 의해 삭제되었습니다." where id = ?`
+    } else{
+        sql = `update form_replys set author_id = 0, reply_body = "관리자에 의해 삭제되었습니다." where id = ?`
+    }
+    var [r, f] = await (await connection).execute(sql, [id]);
+}
+
+/**
+ * 신고 내역 처리
+ */
+router.post('/report/process', mustAdmin, async(req, res) => {
+    try{
+        // 작성자, 컨텐츠(종류/id), 처분(종류/종료일) 받기
+
+        // 처분에 "정지" 들어있을 경우, 유저 id와 종료일을 전달하며 정지시키기. 만약, 종료일이 존재하지 않으면 30일 뒤로 지정
+
+        // 처분에 "삭제" 들어있을 경우, 컨텐츠 종류와 id 전달하며 삭제하기
+       let result = {
+            status: '200',
+            data : {
+            }
+        }
+        res.json(result)
+    }catch(err){
+        console.log(err);
+        res.json({
+          status : '500',
+          message: "오류가 발생했습니다. 다시 시도하세요."
+        });
+    }
+
+})
+
+/**
+ * 유저 관리
+ */
+router.post('/manage/user/submit', mustAdmin, async(req, res) => {
+    try{
+        // 유저 정보 db에서 권한 변경
+        let user_auth;
+        if(req.body.auth.includes("관리자")) user_auth = 0;
+        else user_auth = 1;
+
+        var sql = `update user set user_auth_id = ? where id = ?`
+        var [r, f] = await (await connection).execute(sql, [user_auth, req.body.user_id]);
+        
+
+        // 정지 상태를 감별
+        var sql = `select * from user_purnishment where user_id = ? order by end_date desc limit 1`
+        var [r, f] = await (await connection).execute(sql, [req.body.user_id]);
+
+        // 변화가 있다면 유저 아이디와 정지 상태를 전달하여 정지.
+        // 없거나 지났다 + 상태 일반 > 아무것도 안함
+        
+        if((r.length<=0 || r[0].end_date < new Date() ) && req.body.user_stat.includes("정지")){ // 없거나 지났다 + 상태 정지 > 정지시킨다
+            user_stop(req.body.user_id, req.body.end_date)
+        } else if((r.length > 0 && r[0].end_date > new Date() ) && req.body.user_stat.includes("일반")){ // 있으며 진행중이다 + 상태 일반 > 레코드 종료일을 전날로 바꾸기
+            let end_date = new Date();
+            end_date.setDate(end_date.getDate() - 1);
+            user_stop(req.body.user_id, end_date)
+        } else if((r.length > 0 && r[0].end_date > new Date() ) && req.body.user_stat.includes("정지")){ // 있으며 진행중이다 + 상태 정지 > 레코드 종료일을 받은 날짜로 바꾸기
+            user_stop(req.body.user_id, req.body.end_date)
+        }
+
+       let result = {
+            status: '200',
+            data : {
+            }
+        }
+        res.json(result)
+    }catch(err){
+        console.log(err);
+        res.json({
+          status : '500',
+          message: "오류가 발생했습니다. 다시 시도하세요."
+        });
+    }
+
+})
+
+
+
+
 
 module.exports=router;
