@@ -4,7 +4,7 @@ const connection = require('../database.js')
 const getDatas = require('./getDatas.js')
 const setDatas = require('./setDatas.js')
 
-const { mustLoggedIn, mustNotLoggedIn } = require('./middlewares'); 
+const { mustLoggedIn, mustNotLoggedIn, stoppedCheck } = require('./middlewares'); 
 
 
 router.get('/', async(req, res) => {
@@ -197,7 +197,7 @@ router.get('/help/:id', mustLoggedIn, async(req, res) => {
 
 
 
-router.post('/postform', mustLoggedIn ,async(req, res) => {
+router.post('/postform', mustLoggedIn , stoppedCheck ,async(req, res) => {
     
     // console.log(req.body);
     try{
@@ -213,7 +213,7 @@ router.post('/postform', mustLoggedIn ,async(req, res) => {
 })
 
 // 수정 후 게시
-router.post('/edit/:form_id/postform', mustLoggedIn ,async(req, res) => {
+router.post('/edit/:form_id/postform', mustLoggedIn , stoppedCheck, async(req, res) => {
     
     try{
         // author_id 같거나 저장했는지 권한 확인
@@ -241,7 +241,7 @@ router.post('/edit/:form_id/postform', mustLoggedIn ,async(req, res) => {
 
 })
 
-router.post('/help/:form_id/postform', mustLoggedIn ,async(req, res) => {
+router.post('/help/:form_id/postform', mustLoggedIn , stoppedCheck, async(req, res) => {
     
     // console.log(req.body);
     try{

@@ -208,7 +208,7 @@ async function content_delete (kind, id){
     if(kind.includes("formation")){
         sql = `delete from hero_forms where id = ?`
     } else if (kind.includes("comment")){
-        sql = `update form_comments set author_id = 0, comment_body = "관리자에 의해 삭제되었습니다.", hero_form_id = null where id = ?`
+        sql = `update form_comments set author_id = 0, comment_body = "관리자에 의해 삭제되었습니다.", help_form_id = null where id = ?`
     } else{
         sql = `update form_replys set author_id = 0, reply_body = "관리자에 의해 삭제되었습니다." where id = ?`
     }

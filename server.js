@@ -205,3 +205,27 @@ app.post('/herosetting/allsave', mustLoggedIn,  async(req, res) => {
 app.use(function (req, res, next) {
     res.render('error_alret.ejs', {data: {err: '존재하지 않는 페이지입니다.'}})
 });
+
+app.use((err, req, res, next) => {
+    console.error(err); // 서버 로그에 에러 기록
+    
+    // 이미 헤더가 전송되었다면 Express 기본 에러 핸들러에 위임
+    if (res.headersSent) {
+        return next(err);
+    }
+    
+    const status = err.status || 500;
+    // 💡 Ajax 요청 여부 확인
+    const isAjax = req.xhr || (req.headers['x-requested-with'] === 'XMLHttpRequest');
+    if (isAjax) {
+        // JSON 응답 로직
+        res.status(status).json({
+        message: err.message,
+    });
+    } else {
+      res.redirect("/?error=" + err.message)
+    }
+    
+    // 모든 에러를 JSON 형식으로 응답
+    
+});

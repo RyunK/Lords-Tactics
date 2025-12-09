@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const connection = require('../database.js')
-const { mustLoggedIn, mustNotLoggedIn } = require('./middlewares'); // 내가 만든 사용자 미들웨어
+const { mustLoggedIn, mustNotLoggedIn, stoppedCheck } = require('./middlewares'); // 내가 만든 사용자 미들웨어
 const getDatas = require('./getDatas.js')
 
 
@@ -390,7 +390,7 @@ async function comment_reload_respond(req, res){
 }
 
 // 댓글 게시
-router.post('/submit/comment/:form_id', mustLoggedIn, async (req, res) => {
+router.post('/submit/comment/:form_id', mustLoggedIn, stoppedCheck, async (req, res) => {
 
     try{
 
@@ -434,7 +434,7 @@ router.post('/submit/comment/:form_id', mustLoggedIn, async (req, res) => {
         console.log(e)
         res.json({
           status : '500',
-          message: "오류가 발생했습니다. 다시 시도하세요."
+          message: e.message
         });
     }
     
@@ -442,7 +442,7 @@ router.post('/submit/comment/:form_id', mustLoggedIn, async (req, res) => {
 
 
 // 댓글 수정
-router.post('/edit/comment/:form_id', mustLoggedIn, async (req, res) => {
+router.post('/edit/comment/:form_id', mustLoggedIn, stoppedCheck, async (req, res) => {
 
     try{
 
@@ -500,7 +500,7 @@ router.post('/edit/comment/:form_id', mustLoggedIn, async (req, res) => {
         console.log(e)
         res.json({
           status : '500',
-          message: "오류가 발생했습니다. 다시 시도하세요."
+          message: e.message
         });
     }
     
@@ -779,5 +779,7 @@ router.post('/report', mustLoggedIn,  async(req, res) => {
     }
     
 })
+
+
 
 module.exports=router;

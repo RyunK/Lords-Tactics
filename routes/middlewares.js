@@ -40,3 +40,26 @@ exports.mustAdmin = async (req, res, next) => {
    }
 };
 
+/**
+ * 정지됐는지 체크
+ * @param {*} req 
+ * @param {*} res 
+ * @param {*} next 
+ */
+exports.stoppedCheck = async (req, res, next) => {
+   if(!req.isAuthenticated()) next();
+   var sql = `select * from user_purnishment where user_id = ? order by id desc limit 1`
+   var [result, fields] = await (await connection).execute(sql, [req.user[0].id]);
+
+   var now_date = new Date();
+   if(result.length > 0 && result[0].end_date > now_date){
+      var end_date = (result[0].end_date.getYear() - 100) + "-" + ("0" + (result[0].end_date.getMonth()+1)).substr(-2) + "-" + ("0" + result[0].end_date.getDate()).substr(-2)
+      const err = new Error("활동이 정지되었습니다. \n정지 기한 : " + end_date );
+      err.status = 403;
+      return next(err);
+   }
+   next(); 
+};
+
+
+

@@ -606,8 +606,10 @@
                         
                         error: function(xhr, status, error) {
                             // 오류 
-                            alert(`오류 발생! 다시 시도하세요. ${status} - ${error}`);
-                            console.error('Error:', status, error);
+                            // console.log(xhr.responseJSON)
+                            alert(xhr.responseJSON.message)
+                            // alert(`오류 발생! 다시 시도하세요. ${status} - ${error}`);
+                            console.error('Error:', xhr.responseJSON);
                         }
                     })
             })
@@ -668,8 +670,9 @@
                         
                         error: function(xhr, status, error) {
                             // 오류 
-                            alert(`오류 발생! 다시 시도하세요. ${status} - ${error}`);
-                            console.error('Error:', status, error);
+                            alert(xhr.responseJSON.message)
+                            // alert(`오류 발생! 다시 시도하세요. ${status} - ${error}`);
+                            console.error('Error:', xhr.responseJSON);
                         }
                     })
             })
@@ -707,8 +710,9 @@
                         
                         error: function(xhr, status, error) {
                             // 오류 
-                            alert(`오류 발생! 다시 시도하세요. ${status} - ${error}`);
-                            console.error('Error:', status, error);
+                            alert(xhr.responseJSON.message)
+                            // alert(`오류 발생! 다시 시도하세요. ${status} - ${error}`);
+                            console.error('Error:', xhr.responseJSON);
                         }
                     })
                 }
@@ -751,8 +755,9 @@
                     
                     error: function(xhr, status, error) {
                         // 오류 
-                        alert(`오류 발생! 다시 시도하세요. ${status} - ${error}`);
-                        console.error('Error:', status, error);
+                        alert(xhr.responseJSON.message)
+                        // alert(`오류 발생! 다시 시도하세요. ${status} - ${error}`);
+                        console.error('Error:', xhr.responseJSON);
                     }
                 })
 
@@ -808,9 +813,9 @@
                     },                        
                     
                     error: function(xhr, status, error) {
-                        // 오류 
-                        alert(`오류 발생! 다시 시도하세요. ${status} - ${error}`);
-                        console.error('Error:', status, error);
+                        alert(xhr.responseJSON.message)
+                        // alert(`오류 발생! 다시 시도하세요. ${status} - ${error}`);
+                        console.error('Error:', xhr.responseJSON);
                     }
                 })
             }
@@ -894,7 +899,7 @@
                         
                         error: function(xhr, status, error) {
                             // 오류 
-                            alert(`오류 발생! 다시 시도하세요. ${status} - ${error}`);
+                            alert(`오류 발생! 다시 시도하세요. ${status} - ${error.message}`);
                             console.error('Error:', status, error);
                         }
                     })
