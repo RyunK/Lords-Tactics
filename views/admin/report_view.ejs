@@ -140,6 +140,43 @@
         $(".report-dropdown").slideUp();
         $(this).parent().siblings("input").val($(this).text())
     })
+
+    $(document).ready(function(){
+       
+
+        $("button[type='submit']").on("click", function(e){
+            e.preventDefault();
+            const tr = $(this).parent().parent()
+            $.ajax({
+                    url: '/admin/report/process', 
+                    method: 'POST', 
+                    contentType: 'application/json',
+                    data: JSON.stringify({ 
+                        report_id : tr.children("input").val(),
+                        how : tr.find("input").eq(1).val(),
+                        end_date : tr.find("input").eq(2).val(),
+                    }),
+                    
+                    // 요청 성공 
+                    success: function(res) {
+                        if(res.status.includes('2')){
+                            // $('.toast-black').text("신고 처리 완료").fadeIn(600).delay(1500).fadeOut(600);
+                            location.reload(true);
+
+                        } else{
+                            // DB 오류
+                            alert(res.message);
+                        }
+                    },                        
+                    
+                    error: function(xhr, status, error) {
+                        // 오류 
+                        alert(`오류 발생! 다시 시도하세요. ${status} - ${error}`);
+                        console.error('Error:', status, error);
+                    }
+                });
+        });
+    })
     </script>
 </body>
 </html>

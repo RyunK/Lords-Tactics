@@ -47,34 +47,36 @@ router.get('/report', mustAdmin, async(req, res) => {
         // 신고자 id + 신고 대상 + 신고 대상이 신고당한 횟수 카운트 select
         var sql = `SELECT t.*, count(*) OVER (PARTITION BY t.object_user) AS user_cnt
                     FROM (
-                    SELECT r.*, u.USERNAME, 
-                    CASE
-                        WHEN R.OBJECT_KIND = "formation" THEN HF. WRITER_MEMO
-                        WHEN R.OBJECT_KIND = "comment" THEN fc.COMMENT_BODY
-                        WHEN R.OBJECT_KIND = "reply" THEN fr.REPLY_BODY
-                    END AS object_body,
-                    CASE
-                        WHEN R.OBJECT_KIND = "formation" THEN HF. u_id
-                        WHEN R.OBJECT_KIND = "comment" THEN fc.u_id
-                        WHEN R.OBJECT_KIND = "reply" THEN fr.u_id
-                    END AS object_user,
-                    CASE
-                        WHEN R.OBJECT_KIND = "formation" THEN HF.ID
-                        WHEN R.OBJECT_KIND = "comment" THEN fc.form_id
-                        WHEN R.OBJECT_KIND = "reply" THEN (SELECT fc.form_id FROM form_comments fc WHERE fc.id = fr.comment_id)
-                    END AS link_id,
-                    count(*) OVER (PARTITION BY OBJECT_KIND, object_id) AS content_cnt
-                    FROM REPORTS R 
-                    INNER JOIN user U  ON r.REPORTER_ID  = u.ID 
-                    LEFT JOIN (
-                        SELECT HERO_FORMS.*, u.USERNAME, u.ID u_id  FROM HERO_FORMS INNER JOIN user U  ON u.id = HERO_FORMS.USER_ID 
-                    ) HF ON hf.ID = r.OBJECT_ID
-                    LEFT JOIN (
-                        SELECT FORM_COMMENTS.*, u.USERNAME, u.ID u_id  FROM FORM_COMMENTS INNER JOIN user U  ON u.id = FORM_COMMENTS.AUTHOR_ID  
-                    )FC ON fc.ID = r.OBJECT_ID
-                    LEFT JOIN (
-                        SELECT FORM_REPLYS.*, u.USERNAME, u.ID u_id  FROM FORM_REPLYS INNER JOIN user U  ON u.id = FORM_REPLYS.AUTHOR_ID  
-                    )FR ON fr.id = r.OBJECT_ID) AS t
+                        SELECT r.*, u.USERNAME, 
+                        CASE
+                            WHEN R.OBJECT_KIND = "formation" THEN HF. WRITER_MEMO
+                            WHEN R.OBJECT_KIND = "comment" THEN fc.COMMENT_BODY
+                            WHEN R.OBJECT_KIND = "reply" THEN fr.REPLY_BODY
+                        END AS object_body,
+                        CASE
+                            WHEN R.OBJECT_KIND = "formation" THEN HF. u_id
+                            WHEN R.OBJECT_KIND = "comment" THEN fc.u_id
+                            WHEN R.OBJECT_KIND = "reply" THEN fr.u_id
+                        END AS object_user,
+                        CASE
+                            WHEN R.OBJECT_KIND = "formation" THEN HF.ID
+                            WHEN R.OBJECT_KIND = "comment" THEN fc.form_id
+                            WHEN R.OBJECT_KIND = "reply" THEN (SELECT fc.form_id FROM form_comments fc WHERE fc.id = fr.comment_id)
+                        END AS link_id,
+                        count(*) OVER (PARTITION BY OBJECT_KIND, object_id) AS content_cnt
+                        FROM REPORTS R 
+                        INNER JOIN user U  ON r.REPORTER_ID  = u.ID 
+                        LEFT JOIN (
+                            SELECT HERO_FORMS.*, u.USERNAME, u.ID u_id  FROM HERO_FORMS INNER JOIN user U  ON u.id = HERO_FORMS.USER_ID 
+                        ) HF ON hf.ID = r.OBJECT_ID
+                        LEFT JOIN (
+                            SELECT FORM_COMMENTS.*, u.USERNAME, u.ID u_id  FROM FORM_COMMENTS INNER JOIN user U  ON u.id = FORM_COMMENTS.AUTHOR_ID  
+                        )FC ON fc.ID = r.OBJECT_ID
+                        LEFT JOIN (
+                            SELECT FORM_REPLYS.*, u.USERNAME, u.ID u_id  FROM FORM_REPLYS INNER JOIN user U  ON u.id = FORM_REPLYS.AUTHOR_ID  
+                        )FR ON fr.id = r.OBJECT_ID
+                        WHERE R.end = 0
+                    ) AS t
                     ORDER BY id
                     LIMIT ${(page - 1) * page_size}, ${page_size};`;
     
@@ -177,10 +179,13 @@ async function user_stop(user_id, end_date) {
     // console.log(r[0].end_date > new Date())
 
     // end_date 비어있으면 한 달 뒤로 지정
+    // console.log(end_date)
+    // console.log(end_date == 0)
     if(!end_date){
         end_date = new Date();
-        end_date.setMonth(end_date.getMonth + 1);
+        end_date.setMonth(end_date.getMonth() + 1);
     }
+    console.log(end_date)
 
     // 없거나 end_date가 지났으면 신규 추가
     if(r.length <= 0 || r[0].end_date < new Date()){
@@ -203,7 +208,7 @@ async function content_delete (kind, id){
     if(kind.includes("formation")){
         sql = `delete from hero_forms where id = ?`
     } else if (kind.includes("comment")){
-        sql = `update form_comments set author_id = 0, comment_body = "관리자에 의해 삭제되었습니다." where id = ?`
+        sql = `update form_comments set author_id = 0, comment_body = "관리자에 의해 삭제되었습니다.", hero_form_id = null where id = ?`
     } else{
         sql = `update form_replys set author_id = 0, reply_body = "관리자에 의해 삭제되었습니다." where id = ?`
     }
@@ -216,10 +221,37 @@ async function content_delete (kind, id){
 router.post('/report/process', mustAdmin, async(req, res) => {
     try{
         // 작성자, 컨텐츠(종류/id), 처분(종류/종료일) 받기
-
-        // 처분에 "정지" 들어있을 경우, 유저 id와 종료일을 전달하며 정지시키기. 만약, 종료일이 존재하지 않으면 30일 뒤로 지정
+        var sql = `select r.*, 
+                CASE
+                    WHEN R.OBJECT_KIND = "formation" THEN HF. USER_ID 
+                    WHEN R.OBJECT_KIND = "comment" THEN fc.AUTHOR_ID 
+                    WHEN R.OBJECT_KIND = "reply" THEN fr.AUTHOR_ID 
+                END AS object_u_id
+                from reports r
+                LEFT JOIN hero_forms hf ON hf.id = r.OBJECT_ID 
+                LEFT JOIN FORM_COMMENTS FC ON fc.ID = r.OBJECT_ID 
+                LEFT JOIN FORM_REPLYS FR ON fr.id = r.OBJECT_ID 
+                where r.id=?`
+        var [report_data, f] = await (await connection).execute(sql, [req.body.report_id]);
+        // console.log(report_data)
 
         // 처분에 "삭제" 들어있을 경우, 컨텐츠 종류와 id 전달하며 삭제하기
+        if(req.body.how.includes("삭제")){
+            content_delete(report_data[0].object_kind, report_data[0].object_id);
+        }
+
+        // 처분에 "정지" 들어있을 경우, 유저 id와 종료일을 전달하며 정지시키기.
+        if(req.body.how.includes("정지")){
+            user_stop(report_data[0].object_u_id, req.body.end_date);
+        }
+
+        // 처리된 신고는 완료됨 처리
+        if(!req.body.how.includes("나중에")){
+            sql = `update reports set reports.end = 1 where reports.object_kind=? and object_id=?`
+            var [r, f] = await (await connection).execute(sql, [report_data[0].object_kind, report_data[0].object_id]);
+        }
+        
+        
        let result = {
             status: '200',
             data : {
