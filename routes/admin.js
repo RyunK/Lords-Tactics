@@ -166,21 +166,22 @@ router.get('/manage/user', mustAdmin, async(req, res) => {
 
 })
 
+const nodemailer = require('nodemailer');
+const ejs = require('ejs');
+const path = require('path');
+var appDir = path.dirname(require.main.filename);
+
 /**
  * user_id와 end_date 받아서 유저 정지시키기
  * @param {string} user_id 
  * @param {Date} end_date 
  */
 async function user_stop(user_id, end_date) {
-    // user_id와 end_date 받아와서 db user_purnishment 테이블에 저장
     // user_purnishment 테이블에서 최신 내역 찾기
     var sql = `select * from user_purnishment where user_id = ? order by end_date desc limit 1`
     var [r, f] = await (await connection).execute(sql, [user_id]);
-    // console.log(r[0].end_date > new Date())
 
     // end_date 비어있으면 한 달 뒤로 지정
-    // console.log(end_date)
-    // console.log(end_date == 0)
     if(!end_date){
         end_date = new Date();
         end_date.setMonth(end_date.getMonth() + 1);
@@ -196,6 +197,43 @@ async function user_stop(user_id, end_date) {
         var [r, f] = await (await connection).execute(sql, [ end_date, user_id]);
     }
 
+    var sql = `select * from user u inner join user_emails ue on u.id = ue.user_id where user_id = ? `
+    var [user, f] = await (await connection).execute(sql, [user_id]);
+
+    // 이메일 보내기
+    let transporter = nodemailer.createTransport({
+        service: 'Gmail',
+        host: 'smtp.gmail.com',
+        port: 465,
+        secure: false,
+        auth: {
+            user: process.env.NODEMAILER_USER,
+            pass: process.env.NODEMAILER_PASS,
+        },
+    });
+
+    let emailTemplete;
+    ejs.renderFile(appDir+'/templates/user_stop.ejs', {username: user[0].username, end_date : end_date}, function (err, data) {
+        if(err){
+            console.log(err);
+            throw new Error("이메일을 전송할 수 없습니다.")
+        }
+        emailTemplete = data;
+    });
+
+    let mailOptions = {
+        to: user[0].user_email,
+        subject: '[로드의 전술서] 계정이 정지되었습니다.',
+        html: emailTemplete,
+    };
+
+
+    transporter.sendMail(mailOptions, function (error, info) {
+        if (error) {
+            console.log(error);
+            throw new Error("이메일을 전송할 수 없습니다.")
+        }
+    });
 }
 
 /**
