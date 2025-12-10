@@ -690,11 +690,11 @@ router.post('/report', mustLoggedIn,  async(req, res) => {
       } else if (req.body.kind == "comment"){
         var sql = `select comment_body from form_comments where id = ?`
         var [rst, f] = await(await connection).execute(sql, [req.body.id]);
-        object_content = rst[0].writer_memo;
+        object_content = rst[0].comment_body;
       } else{
         var sql = `select reply_body from form_replys where id = ?`
         var [rst, f] = await(await connection).execute(sql, [req.body.id]);
-        object_content = rst[0].writer_memo;
+        object_content = rst[0].reply_body;
       }
       
       let transporter = nodemailer.createTransport({

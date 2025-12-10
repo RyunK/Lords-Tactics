@@ -212,20 +212,35 @@ async function user_stop(user_id, end_date) {
         },
     });
 
-    let emailTemplete;
-    ejs.renderFile(appDir+'/templates/user_stop.ejs', {username: user[0].username, end_date : end_date}, function (err, data) {
-        if(err){
-            console.log(err);
-            throw new Error("이메일을 전송할 수 없습니다.")
-        }
-        emailTemplete = data;
-    });
-
-    let mailOptions = {
-        to: user[0].user_email,
-        subject: '[로드의 전술서] 계정이 정지되었습니다.',
-        html: emailTemplete,
-    };
+    let emailTemplete, mailOptions;
+    let username = user[0].username == 'oauth'? '본 소셜 계정' : user[0].username
+    if(end_date <= new Date()){
+        ejs.renderFile(appDir+'/templates/user_endstop.ejs', {username: username}, function (err, data) {
+            if(err){
+                console.log(err);
+                throw new Error("이메일을 전송할 수 없습니다.")
+            }
+            emailTemplete = data;
+        });
+        mailOptions = {
+            to: user[0].user_email,
+            subject: '[로드의 전술서] 계정 정지가 해제되었습니다.',
+            html: emailTemplete,
+        };
+    }else{
+        ejs.renderFile(appDir+'/templates/user_stop.ejs', {username: username, end_date : end_date}, function (err, data) {
+            if(err){
+                console.log(err);
+                throw new Error("이메일을 전송할 수 없습니다.")
+            }
+            emailTemplete = data;
+        });
+        mailOptions = {
+            to: user[0].user_email,
+            subject: '[로드의 전술서] 계정이 정지되었습니다.',
+            html: emailTemplete,
+        };
+    }
 
 
     transporter.sendMail(mailOptions, function (error, info) {
@@ -324,9 +339,7 @@ router.post('/manage/user/submit', mustAdmin, async(req, res) => {
         var sql = `select * from user_purnishment where user_id = ? order by end_date desc limit 1`
         var [r, f] = await (await connection).execute(sql, [req.body.user_id]);
 
-        // 변화가 있다면 유저 아이디와 정지 상태를 전달하여 정지.
-        // 없거나 지났다 + 상태 일반 > 아무것도 안함
-        
+        // 변화가 있다면 유저 아이디와 정지 상태를 전달하여 정지. 
         if((r.length<=0 || r[0].end_date < new Date() ) && req.body.user_stat.includes("정지")){ // 없거나 지났다 + 상태 정지 > 정지시킨다
             user_stop(req.body.user_id, req.body.end_date)
         } else if((r.length > 0 && r[0].end_date > new Date() ) && req.body.user_stat.includes("일반")){ // 있으며 진행중이다 + 상태 일반 > 레코드 종료일을 전날로 바꾸기
