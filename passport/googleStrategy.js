@@ -10,6 +10,7 @@ module.exports = () => {
         clientID: process.env.GOOGLE_ID, // 구글 로그인에서 발급받은 REST API 키
         clientSecret: process.env.GOOGLE_SECRET,
         callbackURL: '/login/google/callback', // 구글 로그인 Redirect URI 경로
+        proxy: true,
     },
     async function validate(accessToken, refreshToken, profile, cb) {
         // console.log('google profile : ', profile);

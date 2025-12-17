@@ -10,6 +10,7 @@ module.exports = () => {
             clientID: process.env.NAVER_ID,
             clientSecret: process.env.NAVER_SECRET,
             callbackURL: '/login/naver/callback',
+            proxy: true,
          },
          async (accessToken, refreshToken, profile, cb) => {
             console.log('naver accessToken : ', accessToken);
