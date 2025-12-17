@@ -1,7 +1,7 @@
 const passport = require('passport');
 const { Strategy: NaverStrategy, Profile: NaverProfile } = require('passport-naver-v2');
 
-const connection = require('../database.js')
+const  pool = require('../database.js')
 
 module.exports = () => {
    passport.use(
@@ -10,7 +10,7 @@ module.exports = () => {
             clientID: process.env.NAVER_ID,
             clientSecret: process.env.NAVER_SECRET,
             callbackURL: '/login/naver/callback',
-            proxy: true,
+            proxy: true
          },
          async (accessToken, refreshToken, profile, cb) => {
             console.log('naver accessToken : ', accessToken);
@@ -23,7 +23,7 @@ module.exports = () => {
                     'https://nid.naver.com',
                     profile.id
                 ]
-                var [cred, fields] = await (await connection).execute(sql, data);
+                var [cred, fields] = await  pool.execute(sql, data);
 
                 // console.log("cred :", cred);
 
@@ -33,21 +33,21 @@ module.exports = () => {
                     // new user record and associate it with the Google account.
                     var sql = `INSERT INTO user (username, nickname) VALUES (?, ?)`;
                     var data = [ 'oauth' ,profile.nickname ]
-                    var [result, fields] = await (await connection).execute(sql, data);
+                    var [result, fields] = await  pool.execute(sql, data);
 
                     var id = result.insertId
                     var sql = `INSERT INTO federated_credentials (user_id, provider, subject) VALUES (?, ?, ?)`;
                     var data = [ id, 'https://nid.naver.com', profile.id ]
-                    var [result, fields] = await (await connection).execute(sql, data);
+                    var [result, fields] = await  pool.execute(sql, data);
 
                     var sql = `INSERT INTO user_emails (user_id, user_email) VALUES (?, ?)`;
                     var data = [ id, profile.email]
-                    var [result, fields] = await (await connection).execute(sql, data);
+                    var [result, fields] = await  pool.execute(sql, data);
 
                     var sql = `SELECT * FROM user
                                 WHERE username = ? AND id = ?`;
                     var data = [ 'oauth' , id ]
-                    var [user, fields] = await (await connection).execute(sql, data);
+                    var [user, fields] = await  pool.execute(sql, data);
                     if (!user) { return  cb(null, false, {message: err}); }
                     return cb(null, user);
                 } else {
@@ -59,7 +59,7 @@ module.exports = () => {
                     var sql = `SELECT * FROM user
                                 WHERE username = ? AND id = ?`;
                     var data = [ 'oauth', id ]
-                    var [user, fields] = await (await connection).execute(sql, data);
+                    var [user, fields] = await  pool.execute(sql, data);
                     if (!user) { return  cb(null, false, {message: err}); }
                     return cb(null, user);
                 }

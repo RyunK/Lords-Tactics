@@ -8,14 +8,14 @@ module.exports = {
       }
    },
 
-   getContentsName :  async function (req, res, connection){
+   getContentsName :  async function (req, res,  pool){
       var sql = `SELECT * FROM CONTENTS_NAME
                 ORDER BY KOR_NAME`;
-      var [contents_list, fields] = await (await connection).execute(sql);
+      var [contents_list, fields] = await  pool.execute(sql);
       return contents_list;
    },
    
-   getHeroList : async function (req, res, connection){
+   getHeroList : async function (req, res,  pool){
       var sql = `SELECT LH.ID, types.ENG_NAME AS 'eng_type', types.KOR_NAME AS 'kor_type', 
                 names.ENG_NAME AS 'eng_name', names.KOR_NAME AS 'kor_name', 
                 classes.ENG_NAME AS 'eng_class', classes.KOR_NAME AS 'kor_class'  FROM LAUNCHED_HEROES AS LH
@@ -25,12 +25,12 @@ module.exports = {
                 WHERE NOT LH.ID = '0'
                 ORDER BY names.KOR_NAME, types.KOR_NAME
                 `;
-      var [hero_list, fields] = await (await connection).execute(sql);
+      var [hero_list, fields] = await  pool.execute(sql);
       // console.log(hero_list)
       return hero_list;
    },
 
-   get_filtered_herolist: async function (req, res, connection){
+   get_filtered_herolist: async function (req, res,  pool){
       let filtered_heroes_list = req.query.hero? req.query.hero : [];
       let filtered_heroes_list_forrender = []
 
@@ -46,7 +46,7 @@ module.exports = {
                   INNER JOIN HERO_CLASSES  classes ON classes.IDX = CLASS_ID
                   INNER JOIN HERO_TYPES  types ON types.IDX = TYPE_ID
                   WHERE LH.ID = ?`;
-         var [filtered_hero, fields] = await (await connection).execute(sql, [filtered_heroes_list[i]]);
+         var [filtered_hero, fields] = await  pool.execute(sql, [filtered_heroes_list[i]]);
 
          filtered_heroes_list_forrender.push(filtered_hero[0]);
       }
@@ -56,7 +56,7 @@ module.exports = {
       return [filtered_heroes_list, filtered_heroes_list_forrender];
    },
 
-   getFormlistNMembers: async function (req, res, where, order, q_list, connection){
+   getFormlistNMembers: async function (req, res, where, order, q_list,  pool){
       let rn = 1;
       if(req.query.hero && Array.isArray(req.query.hero)) rn = req.query.hero.length;
       
@@ -88,7 +88,7 @@ module.exports = {
             ${order} `;
       
       // console.log(sql);
-      var [form_list_unlimit, fields] = await (await connection).execute(sql, q_list );
+      var [form_list_unlimit, fields] = await  pool.execute(sql, q_list );
 
       let page_size = 12
       let max_page = Math.floor(form_list_unlimit.length / page_size) + (form_list_unlimit.length % page_size != 0)
@@ -105,7 +105,7 @@ module.exports = {
       }
 
       sql = sql += `LIMIT ${(page - 1) * page_size}, ${page_size}`
-      var [form_list, fields] = await (await connection).execute(sql, q_list );
+      var [form_list, fields] = await  pool.execute(sql, q_list );
 
       var form_ids = form_list.map(function(e){
          return e.ID;
@@ -124,7 +124,7 @@ module.exports = {
                INNER JOIN HERO_TYPES  types ON types.IDX = TYPE_ID
                WHERE form_id IN (${form_ids})
                ORDER BY form_id;`;
-         [members, fields] = await (await connection).execute(sql);
+         [members, fields] = await  pool.execute(sql);
       }
 
       return [form_list, members, page, max_page];
@@ -148,7 +148,7 @@ module.exports = {
     * @param {*} req 
     * @param {*} res 
     */
-   getFormInfoNMembers: async function(req, res, connection, form_id = req.params.id){
+   getFormInfoNMembers: async function(req, res,  pool, form_id = req.params.id){
       
       // id로 inner join 싹 해서 form검색
       var sql = `SELECT HF.ID, HF.WRITER_MEMO, HF.LAST_DATETIME, HF.VIEW, HF.SAVED_CNT, hf.USER_ID = ? AS IS_WRITER, HF.MYHERO_ACCESS, HF.FORM_ACCESS_STATUS_ID,
@@ -158,7 +158,7 @@ module.exports = {
                INNER JOIN USER ON HF.USER_ID = USER.ID
                INNER JOIN FORM_ACCESS_STATUS FAS ON HF.FORM_ACCESS_STATUS_ID = FAS.ID 
                WHERE HF.ID = ?;`
-      var [form_info ,fields] = await (await connection).execute(sql, [req.isAuthenticated()?req.user[0].id:-1 , form_id]);
+      var [form_info ,fields] = await  pool.execute(sql, [req.isAuthenticated()?req.user[0].id:-1 , form_id]);
 
       // 편성 멤버 조회
       var sql = `SELECT FM.HERO_ID, FM.HERO_LV, FM.HERO_CHO, FM.HERO_GAK, TYPES.ENG_NAME AS TYPE, NAMES.ENG_NAME AS NAME, classes.ENG_NAME AS CLASS  
@@ -168,7 +168,7 @@ module.exports = {
                INNER JOIN HERO_CLASSES  classes ON classes.IDX = CLASS_ID
                INNER JOIN HERO_TYPES  types ON types.IDX = TYPE_ID
                WHERE FM.FORM_ID = ?;`
-      var [members ,fields] = await (await connection).execute(sql, [form_id]);
+      var [members ,fields] = await  pool.execute(sql, [form_id]);
 
       return [form_info, members];
    },
@@ -177,11 +177,11 @@ module.exports = {
     * form_id를 이용해서 댓글 및 답글들을 모두 select해서 반환
     * @param {*} req 
     * @param {*} res 
-    * @param {*} connection 
+    * @param {*}  pool 
     * @param {int} form_id 
     * @returns 
     */
-   getCommentsNReplys: async function(req, res, connection, form_id){
+   getCommentsNReplys: async function(req, res,  pool, form_id){
       // 게시글 id로 comment 및 reply 검색
       var sql = `SELECT FC.id id, fc.help_form_id , fc.comment_body, fc.last_datetime, (U.ID = ?) AS is_author, 
                U.nickname, (U.ID = U2.ID) AS is_formauthor, ws.req_id as ws_req_id FROM FORM_COMMENTS FC 
@@ -191,7 +191,7 @@ module.exports = {
                LEFT JOIN writer_save ws ON ws.ans_comment_id = fc.help_form_id
                WHERE FC.FORM_ID = ?
                ORDER BY fc.id asc`
-      var [comments, fields] = await (await connection).execute(sql,  [req.isAuthenticated()?req.user[0].id:-1, form_id]);
+      var [comments, fields] = await  pool.execute(sql,  [req.isAuthenticated()?req.user[0].id:-1, form_id]);
 
       var sql = `SELECT FR.id id, FR.comment_id, FR.reply_id , fc.help_form_id , FR.reply_body, FR.last_datetime, U.nickname, 
             (U.ID = ?) AS is_author ,U2.NICKNAME AS reply_nickanme , (U.ID = U3.ID) AS is_formauthor
@@ -204,7 +204,7 @@ module.exports = {
             LEFT JOIN user U2 ON fr2.AUTHOR_ID = U2.ID  
             WHERE FC.FORM_ID = ? 
             ORDER BY comment_id ASC , FR.id ASC`
-      var [replys, fields] = await (await connection).execute(sql,  [ req.isAuthenticated()?req.user[0].id:-1, form_id]);
+      var [replys, fields] = await  pool.execute(sql,  [ req.isAuthenticated()?req.user[0].id:-1, form_id]);
 
       var sql = `SELECT * from(
             SELECT FC.id id, fc.help_form_id,
@@ -219,7 +219,7 @@ module.exports = {
             WHERE FC.FORM_ID = ?
             ) as datas
             WHERE rn <= 5;`
-      var [help_members, fields] = await (await connection).execute(sql,  [form_id]);
+      var [help_members, fields] = await  pool.execute(sql,  [form_id]);
 
 
       return [comments, replys, help_members];

@@ -1,6 +1,6 @@
 const passport = require('passport');
 const { Strategy: LocalStrategy } = require('passport-local');
-const connection = require('../database.js')
+const pool = require('../database.js')
 const bcrypt = require('bcrypt');
 
 module.exports = () => {
@@ -15,7 +15,7 @@ module.exports = () => {
                 INNER JOIN user_pw_table ON USER.id = USER_PW_TABLE.USER_ID
                 WHERE USERNAME= ?`;
 
-        var [result, fields] = await (await connection).execute(sql, [inputid]);
+        var [result, fields] = await  pool.execute(sql, [inputid]);
 
         // console.log(result);
         if (result.length <= 0) {
@@ -25,7 +25,7 @@ module.exports = () => {
         if (await bcrypt.compareSync(inputpw, result[0].user_password)) {
           var sql = `SELECT * FROM USER
                 WHERE USERNAME= ?`;
-          var [result, fields] = await (await connection).execute(sql, [inputid]);
+          var [result, fields] = await  pool.execute(sql, [inputid]);
           return done(null, result)
         } else {
           return done(null, false, { message: '비밀번호가 일치하지 않습니다.' });

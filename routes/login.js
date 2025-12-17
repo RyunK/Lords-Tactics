@@ -7,7 +7,7 @@ var appDir = path.dirname(require.main.filename);
 
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
-const connection = require('../database.js')
+const pool = require('../database.js')
 const { mustLoggedIn, mustNotLoggedIn } = require('./middlewares'); // 내가 만든 사용자 미들웨어
 
 const passport = require('passport')
@@ -108,14 +108,14 @@ router.post('/register', mustNotLoggedIn, async (req, res) => {
     // 이상한 데이터 없음
     try{
       var sql = `INSERT INTO user (username, nickname) VALUES( ? , ?)`;
-      var [result, fields] = await (await connection).execute(sql, [username, nickname]);
+      var [result, fields] = await  pool.execute(sql, [username, nickname]);
 
       let user_id = result.insertId;
       var sql = `INSERT INTO user_emails (user_id, user_email, is_certificated) VALUES(?, ?, 1)`;
-      var [result, fields] = await (await connection).execute(sql, [user_id, email]);
+      var [result, fields] = await  pool.execute(sql, [user_id, email]);
 
       var sql = `INSERT user_pw_table (user_id, user_password) VALUES( ? , ?)`;
-      var [result, fields] = await (await connection).execute(sql, [user_id, password]);
+      var [result, fields] = await  pool.execute(sql, [user_id, password]);
 
       res.send("<script>alert('회원가입에 성공했습니다. 해당 아이디로 로그인하세요.'); location.href='/login';</script>");
     } catch(err) {
@@ -195,7 +195,7 @@ router.post('/logout', mustLoggedIn, async (req, res) => {
 async function usernameCheck(username){
   var sql = `SELECT username from user 
              WHERE username = ?`;
-  let [result, fields] = await (await connection).execute(sql, [username])
+  let [result, fields] = await  pool.execute(sql, [username])
   // console.log(result[0].username);
   
   if(result.length > 0 || username.length >20 || username.length <6 || username.indexOf(' ') > -1){
@@ -226,7 +226,7 @@ router.get('/find/:which_find', async (req, res) => {
           INNER JOIN USER_EMAILS UE ON UE.USER_ID = U.ID
           WHERE UE.USER_EMAIL = ?` ;
             
-      let [result, fields] = await (await connection).execute(sql, [ req.query.email ]);
+      let [result, fields] = await  pool.execute(sql, [ req.query.email ]);
 
       if (result.length <= 0) throw new Error("일치하는 아이디가 없습니다.");
 
@@ -239,7 +239,7 @@ router.get('/find/:which_find', async (req, res) => {
       var sql = `SELECT U.username FROM USER U
               INNER JOIN USER_EMAILS UE ON UE.USER_ID = U.ID
               WHERE UE.USER_EMAIL = ? AND u.username = ?`
-      let [result, fields] = await (await connection).execute(sql, [ req.query.email, req.query.username ]);
+      let [result, fields] = await  pool.execute(sql, [ req.query.email, req.query.username ]);
 
       if(result.length <= 0) throw new Error("일치하는 계정이 없습니다.");
 
@@ -249,7 +249,7 @@ router.get('/find/:which_find', async (req, res) => {
                 SET USER_PASSWORD = ?
                 WHERE u.ID  = upt.USER_ID AND u.username = ?` ;
         
-      var [rst, f] = await (await connection).execute(sql, [ await bcrypt.hash(new_pw, 10) , req.query.username]);
+      var [rst, f] = await  pool.execute(sql, [ await bcrypt.hash(new_pw, 10) , req.query.username]);
       console.log(rst);
       
       let emailTemplete;
@@ -355,7 +355,7 @@ router.post('/mailcheck/sendemail', async(req, res) => {
 
         // 이메일 보내기 전에 DB에 이메일 정보와 AuthNum 저장
         var sql = `INSERT INTO email_certificating (email, cert_num) VALUES(?, ?)`;
-        var [result, fields] = await (await connection).execute(sql, [req.body.email, authNum]);
+        var [result, fields] = await  pool.execute(sql, [req.body.email, authNum]);
         // console.log(result);
 
         let emailTemplete;
@@ -418,7 +418,7 @@ router.get('/mailcheck/numbercheck', async(req, res) => {
     // console.log(req.query);
     var sql = `SELECT * FROM email_certificating
             WHERE id = ? AND email = ? AND cert_num = ?`;
-    var [result, fields] = await (await connection).execute(sql, [req.query.insertId, req.query.email, req.query.authNum]);
+    var [result, fields] = await  pool.execute(sql, [req.query.insertId, req.query.email, req.query.authNum]);
     
 
     if(!result){

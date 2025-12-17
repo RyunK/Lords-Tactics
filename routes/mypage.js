@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const connection = require('../database.js')
+const  pool = require('../database.js')
 const { mustLoggedIn, mustNotLoggedIn } = require('./middlewares'); // 내가 만든 사용자 미들웨어
 const { heroSettingNormalSave, heroSettingAllSave } = require('./setDatas'); // 내가 만든 사용자 미들웨어
 const getDatas = require('./getDatas.js')
@@ -71,22 +71,22 @@ function mypageFormWhereMaker(req, q_content, filtered_heroes_list, except_save 
 router.get('/formsave', mustLoggedIn, async(req, res) => { 
     var sql = `SELECT * FROM FORM_STATUS
             ORDER BY status_name`;
-    var [form_status_list, fields] = await (await connection).execute(sql);
+    var [form_status_list, fields] = await  pool.execute(sql);
     
-    let contents_list = await getDatas.getContentsName(req, res, connection);
+    let contents_list = await getDatas.getContentsName(req, res,  pool);
 
     var sql = `SELECT * FROM CONTENTS_NAME
                 WHERE ENG_NAME= ?`;
-    var [q_content, fields] = await (await connection).execute(sql, [req.query.content ? req.query.content : 'all']);
+    var [q_content, fields] = await  pool.execute(sql, [req.query.content ? req.query.content : 'all']);
 
     var sql = `SELECT * FROM FORM_STATUS
                 WHERE ID= ?`;
-    var [now_formstatus, fields] = await (await connection).execute(sql, [req.query.form_status ? req.query.form_status : '8']);
+    var [now_formstatus, fields] = await  pool.execute(sql, [req.query.form_status ? req.query.form_status : '8']);
 
-    let hero_list = await getDatas.getHeroList(req, res, connection);
+    let hero_list = await getDatas.getHeroList(req, res,  pool);
     let filtered_heroes_list, filtered_heroes_list_forrender;
     try{
-        [filtered_heroes_list, filtered_heroes_list_forrender] = await getDatas.get_filtered_herolist(req, res, connection);
+        [filtered_heroes_list, filtered_heroes_list_forrender] = await getDatas.get_filtered_herolist(req, res,  pool);
     }catch(e){
         filtered_heroes_list = [];
         filtered_heroes_list_forrender =[];
@@ -100,7 +100,7 @@ router.get('/formsave', mustLoggedIn, async(req, res) => {
     
     var form_list, members;
     try{
-        [form_list, members, page, max_page] = await getDatas.getFormlistNMembers(req, res, where, order, q_list, connection);
+        [form_list, members, page, max_page] = await getDatas.getFormlistNMembers(req, res, where, order, q_list,  pool);
     }catch(e){
         console.log(e)
         form_list = [];
@@ -111,7 +111,7 @@ router.get('/formsave', mustLoggedIn, async(req, res) => {
     let saved_forms = []
     if(req.isAuthenticated()){
         var sql = `select * from form_save where user_id = ?`
-        var [mysave, fields] = await(await connection).execute(sql, [req.user[0].id]);
+        var [mysave, fields] = await pool.execute(sql, [req.user[0].id]);
         saved_forms = mysave.map((e) => e.form_id);
     }
  
@@ -143,30 +143,30 @@ router.get('/formsave/detail/:id', mustLoggedIn, async(req, res) => {
     try{
         // 권한 체크 해야함
         var sql = `select * from hero_forms HF where id = ? and (HF.USER_ID = ? OR (HF.ID in (select form_id from form_save where user_id = ?) and HF.form_access_status_id = 1) )`
-        var [result, fields] = await(await connection).execute(sql, [req.params.id, req.user[0].id, req.user[0].id]);
+        var [result, fields] = await pool.execute(sql, [req.params.id, req.user[0].id, req.user[0].id]);
         if(result.length <= 0) throw new Error("편성을 열람할 권한이 없습니다.");
 
         var sql = `SELECT * FROM CONTENTS_NAME
                     WHERE ENG_NAME= ?`;
-        var [q_content, fields] = await (await connection).execute(sql, [req.query.content ? req.query.content : 'all']);
+        var [q_content, fields] = await  pool.execute(sql, [req.query.content ? req.query.content : 'all']);
 
         var sql = `SELECT * FROM FORM_STATUS
                     WHERE ID= ?`;
-        var [now_formstatus, fields] = await (await connection).execute(sql, [req.query.form_status ? req.query.form_status : '8']);
+        var [now_formstatus, fields] = await  pool.execute(sql, [req.query.form_status ? req.query.form_status : '8']);
 
         let filtered_heroes_list, filtered_heroes_list_forrender;
         try{
-            [filtered_heroes_list, filtered_heroes_list_forrender] = await getDatas.get_filtered_herolist(req, res, connection);
+            [filtered_heroes_list, filtered_heroes_list_forrender] = await getDatas.get_filtered_herolist(req, res,  pool);
         }catch(e){
             filtered_heroes_list = [];
             filtered_heroes_list_forrender =[];
         }
 
         // id로 form검색
-        let [form_info, this_members] = await getDatas.getFormInfoNMembers(req, res, connection); 
+        let [form_info, this_members] = await getDatas.getFormInfoNMembers(req, res,  pool); 
         let req_form_info , req_members
         if(form_info[0].COMMENTS_FOR_ID){
-            [req_form_info, req_members] = await getDatas.getFormInfoNMembers(req, res, connection, form_info[0].COMMENTS_FOR_ID); 
+            [req_form_info, req_members] = await getDatas.getFormInfoNMembers(req, res,  pool, form_info[0].COMMENTS_FOR_ID); 
         }
 
         //where절 생성 
@@ -196,7 +196,7 @@ router.get('/formsave/detail/:id', mustLoggedIn, async(req, res) => {
                         ) AS T
                     WHERE T.rn = ${rn}) AS T2
                 WHERE T2.ORDER_NUM = ${parseInt(req.query.n? req.query.n : -2) - 1} `;
-        var [previous, fields] = await (await connection).execute(sql, q_list );
+        var [previous, fields] = await  pool.execute(sql, q_list );
 
         var sql = `SELECT  T2.* 
                 FROM (SELECT T.*, ROW_NUMBER() OVER(${order}) AS ORDER_NUM
@@ -217,17 +217,17 @@ router.get('/formsave/detail/:id', mustLoggedIn, async(req, res) => {
                         ) AS T
                     WHERE T.rn = ${rn}) AS T2
                 WHERE T2.ORDER_NUM = ${parseInt(req.query.n? req.query.n : -2) + 1} `;
-        var [next, fields] = await (await connection).execute(sql, q_list );
+        var [next, fields] = await  pool.execute(sql, q_list );
 
 
         // 게시글 id로 comment 및 reply 검색
-        var [comments, replys, help_members] = await getDatas.getCommentsNReplys(req, res, connection, req.params.id)
+        var [comments, replys, help_members] = await getDatas.getCommentsNReplys(req, res,  pool, req.params.id)
 
         // 내가 저장한 form 리스트 보내주기
         let saved_forms = []
         if(req.isAuthenticated()){
             var sql = `select * from form_save where user_id = ?`
-            var [mysave, fields] = await(await connection).execute(sql, [req.user[0].id]);
+            var [mysave, fields] = await pool.execute(sql, [req.user[0].id]);
             saved_forms = mysave.map((e) => e.form_id);
         }
 
@@ -265,22 +265,22 @@ router.get('/formsave/detail/:id', mustLoggedIn, async(req, res) => {
 router.get('/loadmyform', mustLoggedIn, async(req, res) => { 
     var sql = `SELECT * FROM FORM_STATUS
             ORDER BY status_name`;
-    var [form_status_list, fields] = await (await connection).execute(sql);
+    var [form_status_list, fields] = await  pool.execute(sql);
     
-    let contents_list = await getDatas.getContentsName(req, res, connection);
+    let contents_list = await getDatas.getContentsName(req, res,  pool);
 
     var sql = `SELECT * FROM CONTENTS_NAME
                 WHERE ENG_NAME= ?`;
-    var [q_content, fields] = await (await connection).execute(sql, [req.query.content ? req.query.content : 'all']);
+    var [q_content, fields] = await  pool.execute(sql, [req.query.content ? req.query.content : 'all']);
 
     var sql = `SELECT * FROM FORM_STATUS
                 WHERE ID= ?`;
-    var [now_formstatus, fields] = await (await connection).execute(sql, [req.query.form_status ? req.query.form_status : '8']);
+    var [now_formstatus, fields] = await  pool.execute(sql, [req.query.form_status ? req.query.form_status : '8']);
 
-    let hero_list = await getDatas.getHeroList(req, res, connection);
+    let hero_list = await getDatas.getHeroList(req, res,  pool);
     let filtered_heroes_list, filtered_heroes_list_forrender;
     try{
-        [filtered_heroes_list, filtered_heroes_list_forrender] = await getDatas.get_filtered_herolist(req, res, connection);
+        [filtered_heroes_list, filtered_heroes_list_forrender] = await getDatas.get_filtered_herolist(req, res,  pool);
     }catch(e){
         filtered_heroes_list = [];
         filtered_heroes_list_forrender =[];
@@ -294,7 +294,7 @@ router.get('/loadmyform', mustLoggedIn, async(req, res) => {
     
     var form_list, members;
     try{
-        [form_list, members, page, max_page] = await getDatas.getFormlistNMembers(req, res, where, order, q_list, connection);
+        [form_list, members, page, max_page] = await getDatas.getFormlistNMembers(req, res, where, order, q_list,  pool);
     }catch(e){
         console.log(e)
         form_list = [];
@@ -305,7 +305,7 @@ router.get('/loadmyform', mustLoggedIn, async(req, res) => {
     let saved_forms = []
     if(req.isAuthenticated()){
         var sql = `select * from form_save where user_id = ?`
-        var [mysave, fields] = await(await connection).execute(sql, [req.user[0].id]);
+        var [mysave, fields] = await pool.execute(sql, [req.user[0].id]);
         saved_forms = mysave.map((e) => e.form_id);
     }
  
@@ -336,22 +336,22 @@ router.get('/loadmyform', mustLoggedIn, async(req, res) => {
 router.get('/helping/loadmyform/:req_id', mustLoggedIn, async(req, res) => { 
     var sql = `SELECT * FROM FORM_STATUS
             ORDER BY status_name`;
-    var [form_status_list, fields] = await (await connection).execute(sql);
+    var [form_status_list, fields] = await  pool.execute(sql);
     
-    let contents_list = await getDatas.getContentsName(req, res, connection);
+    let contents_list = await getDatas.getContentsName(req, res,  pool);
 
     var sql = `SELECT * FROM CONTENTS_NAME
                 WHERE ENG_NAME= ?`;
-    var [q_content, fields] = await (await connection).execute(sql, [req.query.content ? req.query.content : 'all']);
+    var [q_content, fields] = await  pool.execute(sql, [req.query.content ? req.query.content : 'all']);
 
     var sql = `SELECT * FROM FORM_STATUS
                 WHERE ID= ?`;
-    var [now_formstatus, fields] = await (await connection).execute(sql, [req.query.form_status ? req.query.form_status : '8']);
+    var [now_formstatus, fields] = await  pool.execute(sql, [req.query.form_status ? req.query.form_status : '8']);
 
-    let hero_list = await getDatas.getHeroList(req, res, connection);
+    let hero_list = await getDatas.getHeroList(req, res,  pool);
     let filtered_heroes_list, filtered_heroes_list_forrender;
     try{
-        [filtered_heroes_list, filtered_heroes_list_forrender] = await getDatas.get_filtered_herolist(req, res, connection);
+        [filtered_heroes_list, filtered_heroes_list_forrender] = await getDatas.get_filtered_herolist(req, res,  pool);
     }catch(e){
         filtered_heroes_list = [];
         filtered_heroes_list_forrender =[];
@@ -364,7 +364,7 @@ router.get('/helping/loadmyform/:req_id', mustLoggedIn, async(req, res) => {
     
     var form_list, members;
     try{
-        [form_list, members, page, max_page] = await getDatas.getFormlistNMembers(req, res, where, order, q_list, connection);
+        [form_list, members, page, max_page] = await getDatas.getFormlistNMembers(req, res, where, order, q_list,  pool);
     }catch(e){
         console.log(e)
         form_list = [];
@@ -375,7 +375,7 @@ router.get('/helping/loadmyform/:req_id', mustLoggedIn, async(req, res) => {
     let saved_forms = []
     if(req.isAuthenticated()){
         var sql = `select * from form_save where user_id = ?`
-        var [mysave, fields] = await(await connection).execute(sql, [req.user[0].id]);
+        var [mysave, fields] = await pool.execute(sql, [req.user[0].id]);
         saved_forms = mysave.map((e) => e.form_id);
     }
  
@@ -408,17 +408,17 @@ router.get('/preview/detail/:id', mustLoggedIn, async(req, res) => {
         // 권한 체크 해야함
         var sql = `select * from hero_forms HF where id = ? 
         and (HF.USER_ID = ? OR (HF.ID in (select form_id from form_save where user_id = ?) and HF.form_access_status_id = 1) OR (HF.form_status_id = 7 AND HF.form_access_status_id = 1))`
-        var [result, fields] = await(await connection).execute(sql, [req.params.id, req.user[0].id, req.user[0].id]);
+        var [result, fields] = await pool.execute(sql, [req.params.id, req.user[0].id, req.user[0].id]);
         if(result.length <= 0) throw new Error("편성을 열람할 권한이 없습니다.");
 
         // console.log(req.params.id)
 
         // req.params.id로 form검색
-        let [form_info, this_members] = await getDatas.getFormInfoNMembers(req, res, connection); 
+        let [form_info, this_members] = await getDatas.getFormInfoNMembers(req, res,  pool); 
 
         // 내가 저장한 편성인지 여부
         var sql = `select * from form_save where user_id = ? and form_id = ?`
-        var [mysave, fields] = await(await connection).execute(sql, [req.user[0].id, req.params.id]);
+        var [mysave, fields] = await pool.execute(sql, [req.user[0].id, req.params.id]);
 
 
         let data = {
@@ -454,15 +454,15 @@ router.get('/preview/detail/:id', mustLoggedIn, async(req, res) => {
 
 router.get('/myhero', mustLoggedIn, async(req, res) => {
 
-    let hero_list = await getDatas.getHeroList(req, res, connection);
+    let hero_list = await getDatas.getHeroList(req, res,  pool);
 
     var sql = `SELECT * FROM HERO_CLASSES
                 ORDER BY KOR_NAME`;
-    var [class_list, fields] = await (await connection).execute(sql);
+    var [class_list, fields] = await  pool.execute(sql);
 
     var sql = `SELECT * FROM HERO_SETTINGS
                 WHERE USER_ID = ?`;
-    var [having_heroes, fields] = await (await connection).execute(sql, [req.user[0].id]);
+    var [having_heroes, fields] = await  pool.execute(sql, [req.user[0].id]);
     let having_heroes_id = having_heroes.map(function(e, i){
         return e.hero_id;
     })
@@ -491,13 +491,13 @@ router.post('/myhero/havingherosave', mustLoggedIn, async(req, res) => {
     // DB에는 있는데 리스트에는 없는거 찾아서 DB 레코드 삭제
     var sql = `SELECT * FROM HERO_SETTINGS
                 WHERE USER_ID = ?`;
-    var [having_heroes, fields] = await (await connection).execute(sql, [req.user[0].id]);
+    var [having_heroes, fields] = await  pool.execute(sql, [req.user[0].id]);
 
     for(let i=0; i<having_heroes.length; i++){
         if( !checked_herolist || checked_herolist.length <= 0 || !checked_herolist.includes(`${having_heroes[i].hero_id}`)){
             var sql = `DELETE FROM HERO_SETTINGS
                 WHERE USER_ID = ? AND HERO_ID = ?`;
-            var [result, fields] = await (await connection).execute(sql, [req.user[0].id, having_heroes[i].hero_id]);
+            var [result, fields] = await  pool.execute(sql, [req.user[0].id, having_heroes[i].hero_id]);
         }
     }
 
@@ -505,12 +505,12 @@ router.post('/myhero/havingherosave', mustLoggedIn, async(req, res) => {
     for(let i=0; checked_herolist && i<checked_herolist.length; i++){
         var sql = `SELECT * FROM HERO_SETTINGS
                 WHERE USER_ID = ? AND HERO_ID = ?`;
-        var [having_heroes, fields] = await (await connection).execute(sql, [req.user[0].id, checked_herolist[i]]);
+        var [having_heroes, fields] = await  pool.execute(sql, [req.user[0].id, checked_herolist[i]]);
 
         if(having_heroes.length <= 0){
              var sql = `INSERT INTO HERO_SETTINGS (USER_ID, HERO_ID, LV, CHO, GAK)
                         VALUES (?, ?, ?, ?, ?);`;
-            var [result, fields] = await (await connection).execute(sql, [req.user[0].id, checked_herolist[i], 1, 5, 0]);
+            var [result, fields] = await  pool.execute(sql, [req.user[0].id, checked_herolist[i], 1, 5, 0]);
         }
     }
 
@@ -524,14 +524,14 @@ router.get('/setting', mustLoggedIn, async(req, res) => {
     var sql = `SELECT U.ID, UE.USER_EMAIL  FROM user U
             INNER JOIN USER_EMAILS UE ON U.ID = UE.USER_ID
             WHERE U.ID = ?`;
-    var [email, fields] = await (await connection).execute(sql, [req.user[0].id]);
+    var [email, fields] = await  pool.execute(sql, [req.user[0].id]);
 
     var provider;
     if(req.user[0].username.includes("oauth")){
         var sql = `SELECT U.ID, FC.PROVIDER FROM user U
             INNER JOIN FEDERATED_CREDENTIALS FC ON U.ID = FC.USER_ID
             WHERE U.ID = ?`;
-        [provider, fields] = await (await connection).execute(sql, [req.user[0].id]);
+        [provider, fields] = await  pool.execute(sql, [req.user[0].id]);
         // console.log(provider)
     }
 
@@ -553,7 +553,7 @@ router.post('/changenickname', mustLoggedIn, async(req, res) => {
                 SET nickname = ?
                 WHERE id = ?` ;
             
-            await (await connection).execute(sql, [ req.body.nickname ,req.user[0].id]);
+            await  pool.execute(sql, [ req.body.nickname ,req.user[0].id]);
 
             let result = {
                 status: '200'
@@ -601,7 +601,7 @@ router.post('/changepassword', mustLoggedIn, async(req, res) => {
                 SET USER_PASSWORD = ?
                 WHERE USER_ID = ?` ;
         
-        await (await connection).execute(sql, [ await bcrypt.hash(req.body.new_pw, 10) , req.user[0].id]);
+        await  pool.execute(sql, [ await bcrypt.hash(req.body.new_pw, 10) , req.user[0].id]);
 
         let result = {
             status: '200'
@@ -636,7 +636,7 @@ async function nowpwCheck(req, res){
     var sql = `SELECT * FROM USER
                 INNER JOIN user_pw_table ON USER.id = USER_PW_TABLE.USER_ID
                 WHERE USER.id = ?`;
-    var [result, fields] = await (await connection).execute(sql, [req.user[0].id]);
+    var [result, fields] = await  pool.execute(sql, [req.user[0].id]);
 
 
     console.log("CompareSync : " + bcrypt.compareSync(req.body.now_pw, result[0].user_password));
@@ -646,20 +646,20 @@ async function nowpwCheck(req, res){
 router.post('/withdraw', mustLoggedIn, async(req, res) => {
     try{
         var sql = `DELETE FROM federated_credentials WHERE user_id = ?;` ;
-        await (await connection).execute(sql, [req.user[0].id]);
+        await  pool.execute(sql, [req.user[0].id]);
         var sql = `DELETE FROM user_pw_table WHERE user_id = ?;` ;
-        await (await connection).execute(sql, [req.user[0].id]);
+        await  pool.execute(sql, [req.user[0].id]);
         var sql = `DELETE FROM user_emails WHERE user_id = ?;` ;
-        await (await connection).execute(sql, [req.user[0].id]);
+        await  pool.execute(sql, [req.user[0].id]);
         var sql = `DELETE FROM hero_settings WHERE user_id = ?;` ;
-        await (await connection).execute(sql, [req.user[0].id]);
+        await  pool.execute(sql, [req.user[0].id]);
 
         var sql = `UPDATE USER SET USERNAME = '', NICKNAME="(탈퇴한 유저)" WHERE ID = ?`
-        await (await connection).execute(sql, [req.user[0].id]);
+        await  pool.execute(sql, [req.user[0].id]);
 
 
         var sql = `DELETE FROM hero_forms WHERE user_id = ? AND form_access_status_id = 2;` ;
-        await (await connection).execute(sql, [req.user[0].id]);
+        await  pool.execute(sql, [req.user[0].id]);
 
         // 로그아웃
         req.session.destroy(function(err){

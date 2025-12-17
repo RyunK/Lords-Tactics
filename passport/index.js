@@ -2,7 +2,7 @@ const passport = require('passport');
 const local = require('./localStrategy');
 const google = require('./googleStrategy'); // 구글 서버로 로그인할 때
 const naver = require('./naverStrategy'); // 네이버 서버로 로그인할 때
-const connection = require('../database.js');
+const pool = require('../database.js');
 
 
 module.exports = () => {
@@ -18,7 +18,7 @@ module.exports = () => {
     var sql = `SELECT * FROM USER
                 WHERE ID= ?`;
 
-    let [result, fields] = await (await connection).execute(sql, [user.id]);
+    let [result, fields] = await  pool.execute(sql, [user.id]);
     process.nextTick(() => {
         return done(null, result)
     })

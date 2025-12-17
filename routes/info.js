@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const connection = require('../database.js')
+const  pool = require('../database.js')
 const { mustLoggedIn, mustNotLoggedIn, mustAdmin } = require('./middlewares'); // 내가 만든 사용자 미들웨어
 const getDatas = require('./getDatas.js')
 
@@ -39,10 +39,10 @@ router.get('/notice', async(req, res) => {
     
   // 공지사항 데이터 select 해서 출력
   var sql = `select id, pin, subject, upload_datetime from notice_table where pin = true`;
-  var [pinned_notice, fields] = await (await connection).execute(sql);
+  var [pinned_notice, fields] = await  pool.execute(sql);
 
   var sql = `SELECT COUNT(*) AS cnt FROM NOTICE_TABLE NT WHERE pin = false`;
-  var [unpinned_cnt, fields] = await (await connection).execute(sql);
+  var [unpinned_cnt, fields] = await  pool.execute(sql);
 
   let page_size = 10
   let max_page = Math.floor(unpinned_cnt[0].cnt / page_size) + (unpinned_cnt[0].cnt % page_size != 0)
@@ -60,10 +60,10 @@ router.get('/notice', async(req, res) => {
 
   sql = `select id, pin, subject, upload_datetime from notice_table where pin = false
       LIMIT ${(page - 1) * page_size}, ${page_size}`
-  var [unpinned_notice, fields] = await (await connection).execute(sql);
+  var [unpinned_notice, fields] = await  pool.execute(sql);
 
   var sql = `select user_auth_id from user where id = ?`;
-  var [user_auth_id, fields] = await (await connection).execute(sql, [req.isAuthenticated()? req.user[0].id:0]);
+  var [user_auth_id, fields] = await  pool.execute(sql, [req.isAuthenticated()? req.user[0].id:0]);
 
   let data = {
     nickname: getDatas.loggedInNickname(req, res),
@@ -87,7 +87,7 @@ router.get('/notice/detail/:id', async(req, res) => {
             select *, row_number() over(ORDER BY id) AS order_number from notice_table
             ) AS t
             WHERE id = ?`;
-    var [notice_detail, fields] = await (await connection).execute(sql, [req.params.id]);
+    var [notice_detail, fields] = await  pool.execute(sql, [req.params.id]);
 
     if(notice_detail.length <= 0){
       throw new Error("존재하지 않는 글입니다.")
@@ -98,16 +98,16 @@ router.get('/notice/detail/:id', async(req, res) => {
             select id, subject, upload_datetime, row_number() over(ORDER BY id) AS order_number from notice_table
             ) AS t
             WHERE order_number = ?`;
-    var [previous, fields] = await (await connection).execute(sql, [notice_detail[0].order_number - 1]);
+    var [previous, fields] = await  pool.execute(sql, [notice_detail[0].order_number - 1]);
 
     var sql = `SELECT * FROM (
             select id, subject, upload_datetime, row_number() over(ORDER BY id) AS order_number from notice_table
             ) AS t
             WHERE order_number = ?`;
-    var [next, fields] = await (await connection).execute(sql, [notice_detail[0].order_number + 1]);
+    var [next, fields] = await  pool.execute(sql, [notice_detail[0].order_number + 1]);
 
     var sql = `select user_auth_id from user where id = ?`;
-    var [user_auth_id, fields] = await (await connection).execute(sql, [req.isAuthenticated()? req.user[0].id:0]);
+    var [user_auth_id, fields] = await  pool.execute(sql, [req.isAuthenticated()? req.user[0].id:0]);
 
     // 조회수 + 1
     var sql = `UPDATE notice_table NT 
@@ -116,7 +116,7 @@ router.get('/notice/detail/:id', async(req, res) => {
                     WHERE NT.ID = ?) AS T
                     ) +1
                     WHERE NT.ID = ?;`
-    var [result, fields] = await(await connection).execute(sql, [req.params.id, req.params.id])
+    var [result, fields] = await pool.execute(sql, [req.params.id, req.params.id])
 
     let data = {
       nickname: getDatas.loggedInNickname(req, res),
@@ -138,7 +138,7 @@ router.get('/notice/write', mustAdmin, async(req, res) => {
   
   try{
     var sql = `select * from user where id = ? and user_auth_id = ?`
-    var [result, fields] = await (await connection).execute(sql, [req.user[0].id, 0])
+    var [result, fields] = await  pool.execute(sql, [req.user[0].id, 0])
 
     if(!result){
       throw new Error("권한이 없습니다.")
@@ -157,11 +157,11 @@ router.get('/notice/write/:id', mustAdmin, async(req, res) => {
   try{
 
     var sql = `select * from notice_table where id = ?`
-    var [result, fields] = await (await connection).execute(sql, [req.params.id])
+    var [result, fields] = await  pool.execute(sql, [req.params.id])
 
     // notice_imgs 꺼내서 주기
     var sql = `select * from notice_imgs where notice_id = ?`
-    var [imgs, fields] = await (await connection).execute(sql, [req.params.id])
+    var [imgs, fields] = await  pool.execute(sql, [req.params.id])
 
     if(result.length <= 0){
       throw new Error("존재하지 않는 글입니다.")
@@ -244,7 +244,7 @@ function dumpImgs(db_imgs, html_imgs){
 
       // mysql 데이터 삭제
       var sql = `delete from notice_imgs where img_key = ?`
-      var [result, fields] = await (await connection).execute(sql, [element])
+      var [result, fields] = await  pool.execute(sql, [element])
     }
   });
 }
@@ -272,7 +272,7 @@ router.post('/writeNewNotice', mustAdmin, async(req, res) => {
     // db에 업로드
     var sql = `insert into notice_table (pin, subject, body, upload_datetime)
               value (?, ?, ?, NOW())`
-    var [result, fields] = await (await connection).execute(sql, [req.body.pin == 'true'? 1:0, req.body.subject, req.body.content])
+    var [result, fields] = await  pool.execute(sql, [req.body.pin == 'true'? 1:0, req.body.subject, req.body.content])
     
     // html_imgs mysql에 업로드
     var sql = `insert into notice_imgs (notice_id, img_key)
@@ -280,7 +280,7 @@ router.post('/writeNewNotice', mustAdmin, async(req, res) => {
     let notice_id = result.insertId
     if(html_imgs && html_imgs.length > 0){
       html_imgs.forEach(async (element) => {
-        var [result, fields] = await (await connection).execute(sql, [notice_id, element])
+        var [result, fields] = await  pool.execute(sql, [notice_id, element])
       })
     }
     
@@ -300,7 +300,7 @@ router.post('/editnotice/:id', mustAdmin, async(req, res) => {
     else if(req.body.content.length <= 0) throw new Error("내용을 입력하세요.")
 
     var sql = `select * from notice_table where id = ?`
-    var [result, fields] = await (await connection).execute(sql, [req.params.id])
+    var [result, fields] = await  pool.execute(sql, [req.params.id])
 
     if(result.length <= 0){
       throw new Error("존재하지 않는 글입니다.")
@@ -315,7 +315,7 @@ router.post('/editnotice/:id', mustAdmin, async(req, res) => {
     aws_imgs.shift();
 
     var sql = `select img_key from notice_imgs where notice_id = ?`
-    var [notice_imgs, fields] = await (await connection).execute(sql, [req.params.id])
+    var [notice_imgs, fields] = await  pool.execute(sql, [req.params.id])
     notice_imgs.forEach((element) => {
       aws_imgs.push(element.img_key)
     })
@@ -329,12 +329,12 @@ router.post('/editnotice/:id', mustAdmin, async(req, res) => {
 
       // 그리고 html 이미지들중에 mysql에 없는 이미지들만 추가로 저장하기
       var sql = `select img_key from notice_imgs where notice_id = ?`
-      var [notice_imgs_after, fields] = await (await connection).execute(sql, [req.params.id])
+      var [notice_imgs_after, fields] = await  pool.execute(sql, [req.params.id])
       html_imgs.forEach(async (element) => {
         if(!notice_imgs_after.some(e => e.img_key == element)){
           var sql = `insert into notice_imgs (notice_id, img_key)
                 value (?, ?)`
-          var [result, fields] = await (await connection).execute(sql, [req.params.id, element])
+          var [result, fields] = await  pool.execute(sql, [req.params.id, element])
         }
       })
     }
@@ -345,7 +345,7 @@ router.post('/editnotice/:id', mustAdmin, async(req, res) => {
     var sql = `update notice_table 
               set pin = ? , subject = ?, body = ?
               where id = ?`
-    var [result, fields] = await (await connection).execute(sql, [req.body.pin == 'true'? 1:0, req.body.subject, req.body.content, req.params.id])
+    var [result, fields] = await  pool.execute(sql, [req.body.pin == 'true'? 1:0, req.body.subject, req.body.content, req.params.id])
     
     res.redirect('/info')
   }catch(e){
@@ -360,7 +360,7 @@ router.post('/notice/delete', mustAdmin, async(req, res) => {
     if(!req.body.id || req.body.id.length <= 0 ) throw new Error("게시물 id를 받아오지 못했습니다.")
      
     var sql = `select img_key from notice_imgs where notice_id = ?`
-    var [db_imgs, fields] = await (await connection).execute(sql, [req.body.id])
+    var [db_imgs, fields] = await  pool.execute(sql, [req.body.id])
 
     if(db_imgs.length > 0){
       db_imgs.forEach(async (element) => {
@@ -376,7 +376,7 @@ router.post('/notice/delete', mustAdmin, async(req, res) => {
 
     // db에서 삭제
     var sql = `delete from notice_table where id = ?`
-    var [result, fields] = await (await connection).execute(sql, [req.body.id])
+    var [result, fields] = await  pool.execute(sql, [req.body.id])
     
     res.redirect('/info')
   }catch(e){
@@ -390,7 +390,7 @@ router.post('/notice/delete', mustAdmin, async(req, res) => {
 
 router.get('/faq', async(req, res) => {
   var sql = `SELECT COUNT(*) AS cnt FROM faq_table `;
-  var [faqs_cnt, fields] = await (await connection).execute(sql);
+  var [faqs_cnt, fields] = await  pool.execute(sql);
 
   let page_size = 10
   let max_page = Math.floor(faqs_cnt[0].cnt / page_size) + (faqs_cnt[0].cnt % page_size != 0)
@@ -407,10 +407,10 @@ router.get('/faq', async(req, res) => {
   }
 
   var sql = `select * from faq_table  ORDER BY ORDER_NUM LIMIT ${(page - 1) * page_size}, ${page_size}`;
-  var [faqs, fields] = await (await connection).execute(sql);
+  var [faqs, fields] = await  pool.execute(sql);
 
   var sql = `select user_auth_id from user where id = ?`;
-  var [user_auth_id, fields] = await (await connection).execute(sql, [req.isAuthenticated()? req.user[0].id:0]);
+  var [user_auth_id, fields] = await  pool.execute(sql, [req.isAuthenticated()? req.user[0].id:0]);
 
   let data = {
     nickname: getDatas.loggedInNickname(req, res),
@@ -431,7 +431,7 @@ router.get('/faq/edit', mustAdmin, async(req, res) => {
     
 
     var sql = `select * from faq_table ORDER BY ORDER_NUM `;
-    var [faqs, fields] = await (await connection).execute(sql);
+    var [faqs, fields] = await  pool.execute(sql);
 
     data = {
       faqs : faqs,
@@ -451,13 +451,13 @@ router.post('/faq/edit/delete', mustAdmin, async(req, res) => {
   try{
     // db에서 찾아서 order_num 반환
     var sql = `select * from faq_table where id = ?`
-    var [selected, fields] = await (await connection).execute(sql, [req.body.id])
+    var [selected, fields] = await  pool.execute(sql, [req.body.id])
 
     if(selected.length <= 0) throw new Error("존재하지 않는 질문입니다.")
 
     // db에서 삭제
     var sql = `delete from faq_table where id = ?`
-    var [result, fields] = await (await connection).execute(sql, [req.body.id])
+    var [result, fields] = await  pool.execute(sql, [req.body.id])
     
     res.json({status:'200', data : {this_order : selected[0].order_num}})
   }catch(e){
@@ -483,10 +483,10 @@ router.post('/faq/edit/save', mustAdmin, async(req, res) => {
     for(let i=0; i<body_id.length; i++){
       if(body_id[i] == "new"){
         var sql = `insert into faq_table (question, answer, order_num) value (?, ?, ?)`
-        var [result, fields] = await (await connection).execute(sql, [body_q[i], body_ans[i], body_order[i]])
+        var [result, fields] = await  pool.execute(sql, [body_q[i], body_ans[i], body_order[i]])
       } else{
         var sql = `update faq_table set question = ?, answer = ?, order_num = ? where id = ?`
-        var [result, fields] = await (await connection).execute(sql, [body_q[i], body_ans[i], body_order[i], body_id[i]])
+        var [result, fields] = await  pool.execute(sql, [body_q[i], body_ans[i], body_order[i], body_id[i]])
       }
     }
 
@@ -505,12 +505,12 @@ router.get('/ask', async(req, res) => {
   if(req.isAuthenticated()){
     var sql = `select user_email from user inner join user_emails on user.id = user_emails.user_id
              where id = ?`;
-    var [user_auth_id, fields] = await (await connection).execute(sql, [req.user[0].id]);
+    var [user_auth_id, fields] = await  pool.execute(sql, [req.user[0].id]);
     user_email = user_auth_id[0].user_email
   }
 
   var sql = `select user_auth_id from user where id = ?`;
-  var [user_auth_id, fields] = await (await connection).execute(sql, [req.isAuthenticated()? req.user[0].id:0]);
+  var [user_auth_id, fields] = await  pool.execute(sql, [req.isAuthenticated()? req.user[0].id:0]);
 
   let data = {
     nickname: getDatas.loggedInNickname(req, res),

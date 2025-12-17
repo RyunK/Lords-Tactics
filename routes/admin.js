@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const connection = require('../database.js')
+const pool = require('../database.js')
 const { mustLoggedIn, mustNotLoggedIn, mustAdmin } = require('./middlewares'); 
 const getDatas = require('./getDatas.js');
 
@@ -28,7 +28,7 @@ router.get('/', mustAdmin, async(req, res) => {
 router.get('/report', mustAdmin, async(req, res) => {
     try{
         var sql = `SELECT count(*) as cnt FROM reports`
-        var [data_cnt, fields] = await (await connection).execute(sql);
+        var [data_cnt, fields] = await pool.execute(sql);
         
         let page_size = 30
         let max_page = Math.floor(data_cnt[0].cnt / page_size) + (data_cnt[0].cnt % page_size != 0)
@@ -80,7 +80,7 @@ router.get('/report', mustAdmin, async(req, res) => {
                     ORDER BY id
                     LIMIT ${(page - 1) * page_size}, ${page_size};`;
     
-        var [report_data, fields] = await (await connection).execute(sql);
+        var [report_data, fields] = await pool.execute(sql);
         // console.log(report_data)
         // 보내주기
 
@@ -104,7 +104,7 @@ router.get('/report', mustAdmin, async(req, res) => {
 router.get('/manage/user', mustAdmin, async(req, res) => {
     try{
         var sql = `SELECT count(*) as cnt FROM user`
-        var [data_cnt, fields] = await (await connection).execute(sql);
+        var [data_cnt, fields] = await pool.execute(sql);
 
         let page_size = 30
         let max_page = Math.floor(data_cnt[0].cnt / page_size) + (data_cnt[0].cnt % page_size != 0)
@@ -135,7 +135,7 @@ router.get('/manage/user', mustAdmin, async(req, res) => {
                 ORDER BY u.id
                 LIMIT ${(page - 1) * page_size}, ${page_size};`;
     
-        var [user_data, fields] = await (await connection).execute(sql);
+        var [user_data, fields] = await pool.execute(sql);
         // 정지 횟수 조회
         
         var sql = `SELECT u.id, count(CASE WHEN up.id IS NOT NULL THEN 1 END) AS stopped_cnt  FROM user U
@@ -145,7 +145,7 @@ router.get('/manage/user', mustAdmin, async(req, res) => {
                 ORDER BY u.id
                 LIMIT ${(page - 1) * page_size}, ${page_size};`;
     
-        var [stopped_cnt, fields] = await (await connection).execute(sql);
+        var [stopped_cnt, fields] = await pool.execute(sql);
 
         let data = {
             nickname: getDatas.loggedInNickname(req, res),
@@ -179,7 +179,7 @@ var appDir = path.dirname(require.main.filename);
 async function user_stop(user_id, end_date) {
     // user_purnishment 테이블에서 최신 내역 찾기
     var sql = `select * from user_purnishment where user_id = ? order by end_date desc limit 1`
-    var [r, f] = await (await connection).execute(sql, [user_id]);
+    var [r, f] = await pool.execute(sql, [user_id]);
 
     // end_date 비어있으면 한 달 뒤로 지정
     if(!end_date){
@@ -191,14 +191,14 @@ async function user_stop(user_id, end_date) {
     // 없거나 end_date가 지났으면 신규 추가
     if(r.length <= 0 || r[0].end_date < new Date()){
         var sql = `insert into user_purnishment (user_id, end_date) value(?, ?)`
-        var [r, f] = await (await connection).execute(sql, [user_id, end_date]);
+        var [r, f] = await pool.execute(sql, [user_id, end_date]);
     } else{ // 있으면 가장 최신 내역 end_date 변경
         var sql = `update user_purnishment set end_date = ? where user_id = ?`
-        var [r, f] = await (await connection).execute(sql, [ end_date, user_id]);
+        var [r, f] = await pool.execute(sql, [ end_date, user_id]);
     }
 
     var sql = `select * from user u inner join user_emails ue on u.id = ue.user_id where user_id = ? `
-    var [user, f] = await (await connection).execute(sql, [user_id]);
+    var [user, f] = await pool.execute(sql, [user_id]);
 
     // 이메일 보내기
     let transporter = nodemailer.createTransport({
@@ -265,7 +265,7 @@ async function content_delete (kind, id){
     } else{
         sql = `update form_replys set author_id = 0, reply_body = "관리자에 의해 삭제되었습니다." where id = ?`
     }
-    var [r, f] = await (await connection).execute(sql, [id]);
+    var [r, f] = await pool.execute(sql, [id]);
 }
 
 /**
@@ -285,7 +285,7 @@ router.post('/report/process', mustAdmin, async(req, res) => {
                 LEFT JOIN FORM_COMMENTS FC ON fc.ID = r.OBJECT_ID 
                 LEFT JOIN FORM_REPLYS FR ON fr.id = r.OBJECT_ID 
                 where r.id=?`
-        var [report_data, f] = await (await connection).execute(sql, [req.body.report_id]);
+        var [report_data, f] = await pool.execute(sql, [req.body.report_id]);
         // console.log(report_data)
 
         // 처분에 "삭제" 들어있을 경우, 컨텐츠 종류와 id 전달하며 삭제하기
@@ -301,7 +301,7 @@ router.post('/report/process', mustAdmin, async(req, res) => {
         // 처리된 신고는 완료됨 처리
         if(!req.body.how.includes("나중에")){
             sql = `update reports set reports.end = 1 where reports.object_kind=? and object_id=?`
-            var [r, f] = await (await connection).execute(sql, [report_data[0].object_kind, report_data[0].object_id]);
+            var [r, f] = await pool.execute(sql, [report_data[0].object_kind, report_data[0].object_id]);
         }
         
         
@@ -332,12 +332,12 @@ router.post('/manage/user/submit', mustAdmin, async(req, res) => {
         else user_auth = 1;
 
         var sql = `update user set user_auth_id = ? where id = ?`
-        var [r, f] = await (await connection).execute(sql, [user_auth, req.body.user_id]);
+        var [r, f] = await pool.execute(sql, [user_auth, req.body.user_id]);
         
 
         // 정지 상태를 감별
         var sql = `select * from user_purnishment where user_id = ? order by end_date desc limit 1`
-        var [r, f] = await (await connection).execute(sql, [req.body.user_id]);
+        var [r, f] = await pool.execute(sql, [req.body.user_id]);
 
         // 변화가 있다면 유저 아이디와 정지 상태를 전달하여 정지. 
         if((r.length<=0 || r[0].end_date < new Date() ) && req.body.user_stat.includes("정지")){ // 없거나 지났다 + 상태 정지 > 정지시킨다

@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const connection = require('../database.js')
+const  pool = require('../database.js')
 const { mustLoggedIn, mustNotLoggedIn } = require('./middlewares'); // 내가 만든 사용자 미들웨어
 const getDatas = require('./getDatas.js')
 
@@ -18,7 +18,7 @@ router.get('/', async(req, res) => {
                 WHERE HF.FORM_ACCESS_STATUS_ID = 1 AND hf.form_status_id = 1
                 LIMIT 5; `;
     
-    var [best_form_list, fields] = await (await connection).execute(sql);
+    var [best_form_list, fields] = await  pool.execute(sql);
 
     var best_form_ids = best_form_list.map(function(e){
         return e.ID;
@@ -38,7 +38,7 @@ router.get('/', async(req, res) => {
             INNER JOIN HERO_TYPES  types ON types.IDX = TYPE_ID
             WHERE form_id IN (${best_form_ids})
             ORDER BY form_id;`;
-        [best_members, fields] = await (await connection).execute(sql);
+        [best_members, fields] = await  pool.execute(sql);
     }
 
     var sql = `SELECT HF.ID, HF.WRITER_MEMO, HF.LAST_DATETIME, HF.VIEW, HF.SAVED_CNT,
@@ -49,7 +49,7 @@ router.get('/', async(req, res) => {
                 WHERE HF.FORM_ACCESS_STATUS_ID = 1 AND (hf.form_status_id = 2 OR hf.form_status_id = 4)
                 LIMIT 5; `;
     
-    var [today_ask_form_list, fields] = await (await connection).execute(sql);
+    var [today_ask_form_list, fields] = await  pool.execute(sql);
 
     var today_ask_form_ids = today_ask_form_list.map(function(e){
         return e.ID;
@@ -68,14 +68,14 @@ router.get('/', async(req, res) => {
             INNER JOIN HERO_TYPES  types ON types.IDX = TYPE_ID
             WHERE form_id IN (${today_ask_form_ids})
             ORDER BY form_id;`;
-        [today_ask_members, fields] = await (await connection).execute(sql);
+        [today_ask_members, fields] = await  pool.execute(sql);
     }
 
     // 내가 저장한 form 리스트 보내주기
     let saved_forms = []
     if(req.isAuthenticated()){
         var sql = `select * from form_save where user_id = ?`
-        var [mysave, fields] = await(await connection).execute(sql, [req.user[0].id]);
+        var [mysave, fields] = await pool.execute(sql, [req.user[0].id]);
         saved_forms = mysave.map((e) => e.form_id);
     }
     

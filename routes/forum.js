@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const connection = require('../database.js')
+const pool = require('../database.js')
 const { mustLoggedIn, mustNotLoggedIn, stoppedCheck } = require('./middlewares'); // 내가 만든 사용자 미들웨어
 const getDatas = require('./getDatas.js')
 
@@ -14,15 +14,15 @@ router.get('/', (req, res) => {
 router.get('/:forumtab', async(req, res) => {
     var sql = `SELECT * FROM CONTENTS_NAME
                 WHERE ENG_NAME= ?`;
-    var [q_content, fields] = await (await connection).execute(sql, [req.query.content ? req.query.content : 'all']);
+    var [q_content, fields] = await  pool.execute(sql, [req.query.content ? req.query.content : 'all']);
     
     
 
-    let contents_list = await getDatas.getContentsName(req, res, connection);
-    let hero_list = await getDatas.getHeroList(req, res, connection);
+    let contents_list = await getDatas.getContentsName(req, res,  pool);
+    let hero_list = await getDatas.getHeroList(req, res,  pool);
     let filtered_heroes_list, filtered_heroes_list_forrender;
     try{
-        [filtered_heroes_list, filtered_heroes_list_forrender] = await getDatas.get_filtered_herolist(req, res, connection);
+        [filtered_heroes_list, filtered_heroes_list_forrender] = await getDatas.get_filtered_herolist(req, res,  pool);
     }catch(e){
         filtered_heroes_list = [];
         filtered_heroes_list_forrender =[];
@@ -62,7 +62,7 @@ router.get('/:forumtab', async(req, res) => {
 
     let order = getDatas.formOrderGetter(req, res);
     try{
-        [form_list, members, page, max_page] = await getDatas.getFormlistNMembers(req, res, where, order, q_list, connection, );
+        [form_list, members, page, max_page] = await getDatas.getFormlistNMembers(req, res, where, order, q_list,  pool, );
     }catch(e){
         console.log(e)
         form_list = [];
@@ -74,7 +74,7 @@ router.get('/:forumtab', async(req, res) => {
     let saved_forms = []
     if(req.isAuthenticated()){
         var sql = `select * from form_save where user_id = ?`
-        var [mysave, fields] = await(await connection).execute(sql, [req.user[0].id]);
+        var [mysave, fields] = await pool.execute(sql, [req.user[0].id]);
         saved_forms = mysave.map((e) => e.form_id);
     }
 
@@ -108,11 +108,11 @@ router.get('/:forumtab/detail/:id', async(req, res) => {
 
     var sql = `SELECT * FROM CONTENTS_NAME
                 WHERE ENG_NAME= ?`;
-    var [q_content, fields] = await (await connection).execute(sql, [req.query.content ? req.query.content : 'all']);
+    var [q_content, fields] = await  pool.execute(sql, [req.query.content ? req.query.content : 'all']);
 
     let filtered_heroes_list, filtered_heroes_list_forrender;
     try{
-        [filtered_heroes_list, filtered_heroes_list_forrender] = await getDatas.get_filtered_herolist(req, res, connection);
+        [filtered_heroes_list, filtered_heroes_list_forrender] = await getDatas.get_filtered_herolist(req, res,  pool);
     }catch(e){
         filtered_heroes_list = [];
         filtered_heroes_list_forrender =[];
@@ -120,14 +120,14 @@ router.get('/:forumtab/detail/:id', async(req, res) => {
 
     try{
         // id로 form검색
-        let [form_info, this_members] = await getDatas.getFormInfoNMembers(req, res, connection); 
+        let [form_info, this_members] = await getDatas.getFormInfoNMembers(req, res,  pool); 
         if(form_info[0].FORM_ACCESS_STATUS_ID != 1){
             throw new Error("이 편성에는 접근할 수 없습니다.")
         }
 
         // 내가 편성 저장 했는지 검색
         var sql = `select * from form_save where user_id = ? and form_id = ?`
-        var [result, fields] = await(await connection).execute(sql, [req.isAuthenticated()?req.user[0].id:-1, req.params.id]);
+        var [result, fields] = await pool.execute(sql, [req.isAuthenticated()?req.user[0].id:-1, req.params.id]);
         let saved = result.length;
 
         // console.log(this_members)
@@ -188,7 +188,7 @@ router.get('/:forumtab/detail/:id', async(req, res) => {
                         ) AS T
                     WHERE T.rn = ${rn}) AS T2
                 WHERE T2.ORDER_NUM = ${parseInt(req.query.n? req.query.n : -2) - 1} `;
-        var [previous, fields] = await (await connection).execute(sql, q_list );
+        var [previous, fields] = await  pool.execute(sql, q_list );
 
         var sql = `SELECT  T2.* 
                 FROM (SELECT T.*, ROW_NUMBER() OVER(${order}) AS ORDER_NUM
@@ -209,17 +209,17 @@ router.get('/:forumtab/detail/:id', async(req, res) => {
                         ) AS T
                     WHERE T.rn = ${rn}) AS T2
                 WHERE T2.ORDER_NUM = ${parseInt(req.query.n? req.query.n : -2) + 1} `;
-        var [next, fields] = await (await connection).execute(sql, q_list );
+        var [next, fields] = await  pool.execute(sql, q_list );
 
 
         // 게시글 id로 comment 및 reply 검색
-        var [comments, replys, help_members] = await getDatas.getCommentsNReplys(req, res, connection, req.params.id)
+        var [comments, replys, help_members] = await getDatas.getCommentsNReplys(req, res,  pool, req.params.id)
 
         // 내가 저장한 form 리스트 보내주기
         let saved_forms = []
         if(req.isAuthenticated()){
             var sql = `select * from form_save where user_id = ?`
-            var [mysave, fields] = await(await connection).execute(sql, [req.user[0].id]);
+            var [mysave, fields] = await pool.execute(sql, [req.user[0].id]);
             saved_forms = mysave.map((e) => e.form_id);
         }
 
@@ -231,7 +231,7 @@ router.get('/:forumtab/detail/:id', async(req, res) => {
                     WHERE HF.ID = ?) AS T
                     ) +1
                     WHERE HF.ID = ?;`
-        var [result, fields] = await(await connection).execute(sql, [req.params.id, req.params.id])
+        var [result, fields] = await pool.execute(sql, [req.params.id, req.params.id])
 
         let data = {
             nickname: getDatas.loggedInNickname(req, res),
@@ -264,7 +264,7 @@ router.post('/formsave/change/:form_id', mustLoggedIn, async (req, res) => {
         // 본인거면 저장 못함
         var sql = `select * FROM hero_forms
                 where user_id = ? and id = ?`;
-        var [r, fields] = await(await connection).execute(sql, [req.user[0].id, req.params.form_id]);
+        var [r, fields] = await pool.execute(sql, [req.user[0].id, req.params.form_id]);
         if(r.length > 0) throw new Error("자신의 편성은 [편성 저장]할 수 없습니다.")
         
         // 없으면 채택해
@@ -272,19 +272,19 @@ router.post('/formsave/change/:form_id', mustLoggedIn, async (req, res) => {
         // 이미 저장돼있나 체크해
         var sql = `select * from form_save
                 where user_id = ? and form_id = ?`
-        var [r, fields] = await(await connection).execute(sql, [req.user[0].id, req.params.form_id])
+        var [r, fields] = await pool.execute(sql, [req.user[0].id, req.params.form_id])
 
         let change
         // 저장돼있으면 삭제해
         if(r.length > 0){
             var sql = `delete from form_save where user_id = ? and form_id = ?`
-            var [r, fields] = await(await connection).execute(sql, [req.user[0].id, req.params.form_id])
+            var [r, fields] = await pool.execute(sql, [req.user[0].id, req.params.form_id])
             change = 'delete'
         } 
         // 저장 안돼있으면 저장해
         else{
             var sql = `insert form_save (user_id, form_id) values (?, ?)`
-            var [r, fields] = await(await connection).execute(sql, [req.user[0].id, req.params.form_id])
+            var [r, fields] = await pool.execute(sql, [req.user[0].id, req.params.form_id])
             change = 'insert'
         
             // 질문글 작성자 본인이고 writer_save에 이 편성 채택 내역 있는지 확인해
@@ -292,32 +292,32 @@ router.post('/formsave/change/:form_id', mustLoggedIn, async (req, res) => {
                 inner join hero_forms rf on cf.comments_for_id = rf.id
                 left join writer_save ws on ws.req_id = rf.id
                 where cf.id = ? and rf.user_id = ?`;
-            var [ws, fields] = await(await connection).execute(sql, [req.params.form_id, req.user[0].id]);
+            var [ws, fields] = await pool.execute(sql, [req.params.form_id, req.user[0].id]);
             // console.log(ws.length);
 	    if(ws.length > 0 && !ws[0].ws_id){
                 var sql = `insert writer_save (req_id, ans_comment_id) values (?, ?)`
-                var [r, fields] = await(await connection).execute(sql, [ws[0].req_form, req.params.form_id])
+                var [r, fields] = await pool.execute(sql, [ws[0].req_form, req.params.form_id])
 
                 var sql = `update hero_forms set form_status_id = 4 where id = ?`
-                var [r, fields] = await(await connection).execute(sql, [ws[0].req_form])
+                var [r, fields] = await pool.execute(sql, [ws[0].req_form])
             }
         }
 
         // 저장 수 + 1
         var sql = `select * from form_save
                 where form_id = ?`
-        var [saved, fields] = await(await connection).execute(sql, [req.params.form_id])
+        var [saved, fields] = await pool.execute(sql, [req.params.form_id])
         var sql = `update hero_forms
                 set saved_cnt = ?
                 where id = ?`
-        var [r, fields] = await(await connection).execute(sql, [saved.length, req.params.form_id])
+        var [r, fields] = await pool.execute(sql, [saved.length, req.params.form_id])
 
         // 이 댓글이 이 글의 몇번째 도움 댓글인지도 반환
         var sql = `SELECT * FROM (
                 SELECT hf.id, ROW_NUMBER() OVER(ORDER BY id) AS rn from HERO_FORMS HF 
                 where hf.COMMENTS_FOR_ID  = (SELECT COMMENTS_FOR_ID FROM HERO_FORMS WHERE id = ?) ) AS t
                 WHERE t.id = ?;`
-        var [comment_num, fields] = await(await connection).execute(sql, [req.params.form_id, req.params.form_id])
+        var [comment_num, fields] = await pool.execute(sql, [req.params.form_id, req.params.form_id])
 
 
         // console.log(comment_num)
@@ -349,19 +349,19 @@ router.post('/formsave/change/:form_id', mustLoggedIn, async (req, res) => {
  */
 async function comment_reload_respond(req, res){
     // comment 및 reply 다시 select 해서 반환
-    var [comments, replys, help_members] = await getDatas.getCommentsNReplys(req, res, connection, req.params.form_id);
+    var [comments, replys, help_members] = await getDatas.getCommentsNReplys(req, res,  pool, req.params.form_id);
     
     var sql = `select cn.num_of_heroes from hero_forms hf
             inner join contents_name cn on hf.contents_id = cn.id
             where hf.id = ?`
-    var [member_num, fields] = await(await connection).execute(sql, [req.params.form_id]);
+    var [member_num, fields] = await pool.execute(sql, [req.params.form_id]);
     let member_length = member_num[0].num_of_heroes;
 
     // 내가 저장한 form 리스트 보내주기
     let saved_forms = []
     if(req.isAuthenticated()){
         var sql = `select * from form_save where user_id = ?`
-        var [mysave, fields] = await(await connection).execute(sql, [req.user[0].id]);
+        var [mysave, fields] = await pool.execute(sql, [req.user[0].id]);
         saved_forms = mysave.map((e) => e.form_id);
     }
 
@@ -406,23 +406,23 @@ router.post('/submit/comment/:form_id', mustLoggedIn, stoppedCheck, async (req, 
         if(req.body.kind == "none"){
             var sql = `INSERT INTO FORM_COMMENTS (FORM_ID , AUTHOR_ID , COMMENT_BODY, LAST_DATETIME)
                     VALUES (?, ?, ?, ?)`;
-            var [rst, fields] = await (await connection).execute(sql, [req.params.form_id, req.user[0].id, req.body.comment, now_date]);
+            var [rst, fields] = await  pool.execute(sql, [req.params.form_id, req.user[0].id, req.body.comment, now_date]);
         } 
         // kind == commnet 면 reply 테이블에 reply_id = null으로 저장
         else if(req.body.kind == "comment"){
             var sql = `INSERT INTO FORM_REPLYS (COMMENT_ID , REPLY_ID ,AUTHOR_ID, REPLY_BODY, LAST_DATETIME)
                     VALUES (?, ?, ?, ?, ?)`;
-            var [rst, fields] = await (await connection).execute(sql, [req.body.reply_id, null,req.user[0].id, req.body.comment, now_date]);
+            var [rst, fields] = await  pool.execute(sql, [req.body.reply_id, null,req.user[0].id, req.body.comment, now_date]);
         }
         // kind == reply 면 reply 테이블에 reply_id에 id 넣어서 저장
         else if(req.body.kind == "reply"){
             var sql = `SELECT * FROM FORM_REPLYS
                     WHERE ID = ?`
-            var [rst, fields] = await (await connection).execute(sql, [req.body.reply_id]);
+            var [rst, fields] = await  pool.execute(sql, [req.body.reply_id]);
 
             var sql = `INSERT INTO FORM_REPLYS (COMMENT_ID , REPLY_ID , AUTHOR_ID, REPLY_BODY, LAST_DATETIME)
                     VALUES (?, ?, ?, ?, ?)`;
-            var [rst, fields] = await (await connection).execute(sql, [rst[0].comment_id, req.body.reply_id, req.user[0].id, req.body.comment, now_date]);
+            var [rst, fields] = await  pool.execute(sql, [rst[0].comment_id, req.body.reply_id, req.user[0].id, req.body.comment, now_date]);
         }
         // kind == form 이면 comment 테이블에 help_form_id에 form id 넣어서 저장 > 근데 이건 여기서 안하게 될듯
         
@@ -458,7 +458,7 @@ router.post('/edit/comment/:form_id', mustLoggedIn, stoppedCheck, async (req, re
             sql = `SELECT * FROM FORM_REPLYS FR
                 INNER JOIN FORM_COMMENTS FC ON FC.ID = FR.COMMENT_ID
                 WHERE FR.id = ?`
-        var [rst, fields] = await(await connection).execute(sql, [req.body.id]);
+        var [rst, fields] = await pool.execute(sql, [req.body.id]);
         if(rst[0].form_id != req.params.form_id || rst[0].author_id != req.user[0].id){
             throw new Error("댓글을 수정할 권한이 없습니다.");
         }
@@ -477,20 +477,20 @@ router.post('/edit/comment/:form_id', mustLoggedIn, stoppedCheck, async (req, re
             var sql = `UPDATE FORM_COMMENTS 
                     SET COMMENT_BODY = ?, LAST_DATETIME = ?
                     WHERE ID = ?`
-            var [rst, fields] = await(await connection).execute(sql, [req.body.comment , now_date ,req.body.id]);
+            var [rst, fields] = await pool.execute(sql, [req.body.comment , now_date ,req.body.id]);
         } 
         // kind == reply면 reply 테이블에서 id 찾아서 내용 업데이트
         else{
             var sql = `UPDATE FORM_REPLYS 
                     SET REPLY_BODY = ?, LAST_DATETIME = ?
                     WHERE ID = ?`
-            var [rst, fields] = await(await connection).execute(sql, [req.body.comment , now_date ,req.body.id]);
+            var [rst, fields] = await pool.execute(sql, [req.body.comment , now_date ,req.body.id]);
         }
 
         // 도움 편성 댓글을 수정했다면 편성까지 수정
         if(help_form){
             var sql = `update hero_forms set writer_memo = ?, last_datetime = ? where id = ?`
-            var [rst, fields] = await(await connection).execute(sql, [req.body.comment , now_date, help_form]);
+            var [rst, fields] = await pool.execute(sql, [req.body.comment , now_date, help_form]);
         }
         
 
@@ -518,7 +518,7 @@ router.post('/delete/comment/:form_id', mustLoggedIn, async (req, res) => {
             sql = `SELECT fc.form_id, fr.author_id FROM FORM_REPLYS FR
                 INNER JOIN FORM_COMMENTS FC ON FC.ID = FR.COMMENT_ID
                 WHERE FR.id = ?`
-        var [rst, fields] = await(await connection).execute(sql, [req.body.id]);
+        var [rst, fields] = await pool.execute(sql, [req.body.id]);
         if(rst[0].form_id != req.params.form_id || rst[0].author_id != req.user[0].id){
             throw new Error("댓글을 삭제할 권한이 없습니다.");
         }
@@ -531,13 +531,13 @@ router.post('/delete/comment/:form_id', mustLoggedIn, async (req, res) => {
         if(req.body.kind == "comment"){
             var sql = `SELECT SUM(FR.AUTHOR_ID ) AS s FROM FORM_REPLYS FR
                 WHERE comment_id = ?`;
-            [finds, fields] = await(await connection).execute(sql, [req.body.id]);
+            [finds, fields] = await pool.execute(sql, [req.body.id]);
         } 
         // kind == reply면 reply_id 컬럼 중에서 찾아보기
         else{
             var sql = `SELECT SUM(FR.AUTHOR_ID ) AS s FROM FORM_REPLYS FR
                 WHERE reply_id = ?`;
-            [finds, fields] = await(await connection).execute(sql, [req.body.id]);
+            [finds, fields] = await pool.execute(sql, [req.body.id]);
         }
 
         // 답댓이 있으면 유저 id 0, 내용 "삭제된 댓글입니다." 로 변경
@@ -545,18 +545,18 @@ router.post('/delete/comment/:form_id', mustLoggedIn, async (req, res) => {
             var sql = `UPDATE FORM_COMMENTS 
                     SET COMMENT_BODY = "삭제된 댓글입니다.", AUTHOR_ID = 0, help_form_id = null
                     WHERE ID = ?`;
-            [rst, fields] = await(await connection).execute(sql, [req.body.id]);
+            [rst, fields] = await pool.execute(sql, [req.body.id]);
         }else if(finds[0].s > 0 && req.body.kind == "reply"){
             var sql = `UPDATE FORM_REPLYS 
                     SET REPLY_BODY = "삭제된 댓글입니다.", AUTHOR_ID = 0
                     WHERE ID = ?`;
-            [rst, fields] = await(await connection).execute(sql, [req.body.id]);
+            [rst, fields] = await pool.execute(sql, [req.body.id]);
         }
         // 답댓이 없으면(답글들의 author_id가 전부 0이면) 답댓까지 전부 레코드 삭제 + 내가 참조하고 있던 애도 이미 삭제됐으면 같이 삭제
         else if(req.body.kind == "comment"){
             var sql = `DELETE FROM FORM_COMMENTS FC
                     WHERE FC.ID = ?`;
-            [rst, fields] = await(await connection).execute(sql, [req.body.id]);
+            [rst, fields] = await pool.execute(sql, [req.body.id]);
         } else{ // 내가 참조하고 있던 애를 참조하고 있으며 살아있는 애가 없는지 먼저 확인
             var sql = `SELECT comment_id, reply_id
                     FROM FORM_REPLYS
@@ -570,7 +570,7 @@ router.post('/delete/comment/:form_id', mustLoggedIn, async (req, res) => {
                         FROM FORM_REPLYS
                         WHERE id = ?
                     )) AND NOT id = ? AND NOT AUTHOR_ID = 0`
-            var [ref, fields] = await(await connection).execute(sql, [req.body.id, req.body.id, req.body.id]);
+            var [ref, fields] = await pool.execute(sql, [req.body.id, req.body.id, req.body.id]);
             if(ref.length > 0){
                 sql = `DELETE FROM FORM_REPLYS FR
                     WHERE FR.ID = ?`;
@@ -582,13 +582,13 @@ router.post('/delete/comment/:form_id', mustLoggedIn, async (req, res) => {
             }
             
             
-            [rst, fields] = await(await connection).execute(sql, [req.body.id]);
+            [rst, fields] = await pool.execute(sql, [req.body.id]);
         }
         
         // 도움 편성 댓글을 삭제했다면 편성까지 삭제
         if(help_form){
             var sql = `delete from hero_forms where id = ?`
-            var [rst, fields] = await(await connection).execute(sql, [help_form]);
+            var [rst, fields] = await pool.execute(sql, [help_form]);
         }
 
         comment_reload_respond(req, res);
@@ -609,41 +609,41 @@ router.post('/delete/form/:form_id', mustLoggedIn, async(req, res) => {
     try{
 
         var sql = `select * from hero_forms where id = ?`
-        var [result, fields] = await(await connection).execute(sql, [req.params.form_id]);
+        var [result, fields] = await pool.execute(sql, [req.params.form_id]);
         if(result[0].user_id != req.user[0].id) throw new Error("편성을 삭제할 권한이 없습니다.");
         
         let comments_for = result[0].comments_for_id;
 
 
         var sql = `delete from hero_forms where id = ?`
-        var [result, fields] = await(await connection).execute(sql, [req.params.form_id]);
+        var [result, fields] = await pool.execute(sql, [req.params.form_id]);
 
 
         // 삭제한 게 편성 도움이면 댓글까지 찾아서 삭제
         if(comments_for){
 
             var sql = `select * from form_comments where form_id = ? and help_form_id = ?`
-            var [fc, fields] = await(await connection).execute(sql, [comments_for, req.params.form_id]);
+            var [fc, fields] = await pool.execute(sql, [comments_for, req.params.form_id]);
 
 
             let finds =[]
             // 답댓 있는지 확인
             var sql = `SELECT SUM(FR.AUTHOR_ID ) AS s FROM FORM_REPLYS FR
                 WHERE comment_id = ?`;
-            [finds, fields] = await(await connection).execute(sql, [fc[0].id]);
+            [finds, fields] = await pool.execute(sql, [fc[0].id]);
 
             // 답댓이 있으면 유저 id 0, 내용 "삭제된 댓글입니다." 로 변경
             if(finds[0].s > 0 ){
                 var sql = `UPDATE FORM_COMMENTS 
                         SET COMMENT_BODY = "삭제된 댓글입니다.", AUTHOR_ID = 0, help_form_id = null
                         WHERE ID = ?`;
-                [rst, fields] = await(await connection).execute(sql, [fc[0].id]);
+                [rst, fields] = await pool.execute(sql, [fc[0].id]);
             }
             // 답댓이 없으면(답글들의 author_id가 전부 0이면) 답댓까지 전부 레코드 삭제 + 내가 참조하고 있던 애도 이미 삭제됐으면 같이 삭제
             else {
                 var sql = `DELETE FROM FORM_COMMENTS FC
                         WHERE FC.ID = ?`;
-                [rst, fields] = await(await connection).execute(sql, [fc[0].id]);
+                [rst, fields] = await pool.execute(sql, [fc[0].id]);
             } 
 
             
@@ -667,7 +667,7 @@ router.post('/report', mustLoggedIn,  async(req, res) => {
     try{
         // 이미 신고했는지 db에서 확인
       var sql = `select * from reports where reporter_id = ? and object_kind = ? and object_id = ?`
-      var [r, f] = await(await connection).execute(sql, [req.user[0].id, req.body.kind, req.body.id ]);
+      var [r, f] = await pool.execute(sql, [req.user[0].id, req.body.kind, req.body.id ]);
       if(r.length > 0){
         let result = {
             status: '400',
@@ -679,21 +679,21 @@ router.post('/report', mustLoggedIn,  async(req, res) => {
 
       // db에 저장
       var sql = `insert into reports (reporter_id, object_kind, object_id, reason) values(?, ?, ?, ?)`
-      var [r, f] = await(await connection).execute(sql, [req.user[0].id, req.body.kind, req.body.id, req.body.reason ]);
+      var [r, f] = await pool.execute(sql, [req.user[0].id, req.body.kind, req.body.id, req.body.reason ]);
       
       // 대상 컨텐츠 찾기
       let object_content;
       if(req.body.kind == "formation"){
         var sql = `select writer_memo from hero_forms where id = ?`
-        var [rst, f] = await(await connection).execute(sql, [req.body.id]);
+        var [rst, f] = await pool.execute(sql, [req.body.id]);
         object_content = rst[0].writer_memo;
       } else if (req.body.kind == "comment"){
         var sql = `select comment_body from form_comments where id = ?`
-        var [rst, f] = await(await connection).execute(sql, [req.body.id]);
+        var [rst, f] = await pool.execute(sql, [req.body.id]);
         object_content = rst[0].comment_body;
       } else{
         var sql = `select reply_body from form_replys where id = ?`
-        var [rst, f] = await(await connection).execute(sql, [req.body.id]);
+        var [rst, f] = await pool.execute(sql, [req.body.id]);
         object_content = rst[0].reply_body;
       }
       
@@ -735,7 +735,7 @@ router.post('/report', mustLoggedIn,  async(req, res) => {
 
         // 신고자에게 이메일 전송
         var sql = `select user_email from user_emails where user_id = ?`
-        var [user_email, f] = await(await connection).execute(sql, [req.user[0].id]);
+        var [user_email, f] = await pool.execute(sql, [req.user[0].id]);
 
         let confirm_emailTemplete;
         ejs.renderFile(appDir+'/templates/report_confirm_mail.ejs', { object_content:object_content, reason : req.body.reason}, function (err, data) {

@@ -1,4 +1,4 @@
-const connection = require('../database.js')
+const  pool = require('../database.js')
 
 exports.mustLoggedIn = (req, res, next) => {
    // isAuthenticated()로 검사해 로그인이 되어있으면
@@ -28,7 +28,7 @@ exports.mustAdmin = async (req, res, next) => {
          throw new Error("권한이 없습니다.")
       }
       var sql = `select * from user where id = ? and user_auth_id = ?`
-      var [result, fields] = await (await connection).execute(sql, [req.user[0].id, 0]);
+      var [result, fields] = await  pool.execute(sql, [req.user[0].id, 0]);
       // console.log(result);
       
       if(result.length <= 0){
@@ -49,7 +49,7 @@ exports.mustAdmin = async (req, res, next) => {
 exports.stoppedCheck = async (req, res, next) => {
    if(!req.isAuthenticated()) next();
    var sql = `select * from user_purnishment where user_id = ? order by id desc limit 1`
-   var [result, fields] = await (await connection).execute(sql, [req.user[0].id]);
+   var [result, fields] = await  pool.execute(sql, [req.user[0].id]);
 
    var now_date = new Date();
    if(result.length > 0 && result[0].end_date > now_date){

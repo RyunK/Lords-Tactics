@@ -21,7 +21,7 @@ app.use(express.json())
 app.use('/static', express.static('public'));
 app.use(cookieParser());
 
-const connection = require('./database.js')
+const pool = require('./database.js')
 
 const session = require('express-session')
 
@@ -89,7 +89,7 @@ app.use(async (req, res, next) => {
             WHERE pin = FALSE 
             ORDER BY UPLOAD_DATETIME DESC
             LIMIT 1);`;
-  var [result, fields] = await (await connection).execute(sql);
+  var [result, fields] = await pool.execute(sql);
   req.banner_notice = result;
   next();
 });
@@ -125,7 +125,7 @@ app.get('/', (req, res) => {
 
 app.get('/detail/:id', async(req, res) => {
   var sql = `select form_status_id from hero_forms where id=?`
-  var[result, fields] = await(await connection).execute(sql, [req.params.id]);
+  var[result, fields] = awaitpool.execute(sql, [req.params.id]);
 
   if(result[0].form_status_id == 1){
     res.redirect('/forum/share/detail/'+req.params.id);
@@ -146,7 +146,7 @@ app.post('/herosetting/normalsave', mustLoggedIn,  async(req, res) => {
 
       var sql = `SELECT * FROM HERO_SETTINGS
                 WHERE USER_ID = ?`;
-      var [having_heroes, fields] = await (await connection).execute(sql, [req.user[0].id]);
+      var [having_heroes, fields] = await pool.execute(sql, [req.user[0].id]);
       let having_heroes_id = having_heroes.map(function(e, i){
           return e.hero_id;
       })
@@ -178,7 +178,7 @@ app.post('/herosetting/allsave', mustLoggedIn,  async(req, res) => {
 
       var sql = `SELECT * FROM HERO_SETTINGS
                 WHERE USER_ID = ?`;
-      var [having_heroes, fields] = await (await connection).execute(sql, [req.user[0].id]);
+      var [having_heroes, fields] = await pool.execute(sql, [req.user[0].id]);
       let having_heroes_id = having_heroes.map(function(e, i){
           return e.hero_id;
       })
