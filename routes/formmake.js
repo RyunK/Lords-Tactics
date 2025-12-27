@@ -161,7 +161,7 @@ router.get('/help/:id', mustLoggedIn, async(req, res) => {
         if(!form_herolist || form_herolist.length <= 0){
             var sql = `select * from form_members
                 where form_id = ?`
-            var [form_heroes, fields] = awaitpool.execute(sql, [req.params.id]);
+            var [form_heroes, fields] = await pool.execute(sql, [req.params.id]);
             form_herolist = form_heroes.map(function(val){ return val.hero_id });
         }
 
@@ -218,7 +218,7 @@ router.post('/edit/:form_id/postform', mustLoggedIn , stoppedCheck, async(req, r
     try{
         // author_id 같거나 저장했는지 권한 확인
         var sql = `select * from hero_forms HF where id = ? and (HF.USER_ID = ? OR (HF.ID = (select form_id from form_save where user_id = ?) and HF.form_access_status_id = 1) )`
-        var [result, fields] = awaitpool.execute(sql, [req.params.form_id, req.user[0].id, req.user[0].id]);
+        var [result, fields] = await pool.execute(sql, [req.params.form_id, req.user[0].id, req.user[0].id]);
         if(result.length <= 0) throw new Error("편성을 수정할 권한이 없습니다.");
 
         let form_id;
@@ -248,7 +248,7 @@ router.post('/help/:form_id/postform', mustLoggedIn , stoppedCheck, async(req, r
 
         // 공개됐으며 편성 요청인지 검사
         var sql = `select * from hero_forms HF where id = ? and ( form_status_id = 2 or form_status_id = 4) and form_access_status_id = 1`
-        var [now_form, fields] = awaitpool.execute(sql, [req.params.form_id]);
+        var [now_form, fields] = await pool.execute(sql, [req.params.form_id]);
         if(now_form.length <= 0) throw new Error("도움을 줄 수 없습니다.");
         
         let form_id = await setDatas.insertAnswerForm(req, res);
