@@ -125,7 +125,7 @@ app.get('/', (req, res) => {
 
 app.get('/detail/:id', async(req, res) => {
   var sql = `select form_status_id from hero_forms where id=?`
-  var[result, fields] = awaitpool.execute(sql, [req.params.id]);
+  var[result, fields] = await pool.execute(sql, [req.params.id]);
 
   if(result[0].form_status_id == 1){
     res.redirect('/forum/share/detail/'+req.params.id);
