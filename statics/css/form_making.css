@@ -664,6 +664,7 @@ body{
 
 .right-box .memo-container{
     position: relative;
+    overflow: hidden;
 }
 
 .detail-req-form-container .right-box .memo-container{
