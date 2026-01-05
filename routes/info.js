@@ -323,7 +323,7 @@ router.post('/editnotice/:id', mustAdmin, async(req, res) => {
     let html_imgs = req.body.html_imgs;
     if(typeof(html_imgs) == 'string') html_imgs = [html_imgs];
     
-    if(aws_imgs.length > 0 || html_imgs.length > 0){
+    if(aws_imgs && aws_imgs.length > 0 || html_imgs && html_imgs.length > 0){
       // DB배열/실제 html배열 받아서 html에 없으면 s3와 mysql에서 모두 삭제해주는 함수
       dumpImgs(aws_imgs, html_imgs);
 
