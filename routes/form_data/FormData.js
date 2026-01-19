@@ -1,0 +1,156 @@
+// import pool from "../../database"
+const pool = require('../../database.js')
+
+class FormData{
+    #members = [];
+    #formstatus = 0;
+    #formaccess = 0;
+    #contentnum = 0;
+    #writermemo = "";
+
+    constructor(members, form_status, form_access, content_num, writer_memo) {
+        this.members = members;
+        this.formstatus = form_status;
+        this.formaccess = form_access;
+        this.contentnum = content_num;
+        this.writermemo = writer_memo;
+    }
+
+    // formsataus str2num
+    async formstatusStr2num(informstatus){
+        if(Number.isInteger(informstatus)) return informstatus;
+        else if (!isNaN(Number(informstatus))) return Number(informstatus);
+        else if(typeof(informstatus) != 'string'){
+            throw new Error("formstatus가 문자열이 아닙니다.");
+        }
+
+        var sql = `SELECT * FROM FORM_STATUS
+                      WHERE STATUS_NAME = ?`;
+        var [form_status, fields] = await  pool.execute(sql, [informstatus]);
+
+        if(form_status.length <= 0) throw new Error("일치하는 formstatus가 존재하지 않습니다.")
+        return form_status[0].id
+    }
+
+    // formstatus num2str
+    async formstatusNum2str(informstatus){
+        if (isNaN(Number(informstatus))) throw new Error("formstatus가 숫자가 아닙니다.");
+
+        var sql = `SELECT * FROM FORM_STATUS
+                      WHERE ID = ?`;
+        var [form_status, fields] = await  pool.execute(sql, [informstatus]);
+
+        if(form_status.length <= 0) throw new Error("일치하는 formstatus가 존재하지 않습니다.")
+        return form_status[0].status_name
+    }
+
+    // formaccess str2num
+    async formaccessStr2num(informaccess){
+        if(Number.isInteger(informaccess)) return informaccess;
+        else if (!isNaN(Number(informaccess))) return Number(informaccess);
+        else if(typeof(informaccess) != 'string'){
+            throw new Error("formaccess가 문자열이 아닙니다.");
+        }
+
+        let lang;
+        if(/[a-zA-z]/.test(informaccess)) lang = "ENG_NAME";
+        else lang = "KOR_NAME"
+
+        var sql = `SELECT * FROM FORM_ACCESS_STATUS
+                      WHERE ${lang} = ?`;
+        var [form_access_status, fields] = await  pool.execute(sql, [informaccess]);
+
+        if(form_access_status.length <= 0) throw new Error("일치하는 formaccess가 존재하지 않습니다.")
+        return form_access_status[0].id
+    }
+
+    // formaccess num2str
+    async formaccessNum2str(informaccess){
+        if (isNaN(Number(informaccess))) throw new Error("informaccess가 숫자가 아닙니다.");
+
+        var sql = `SELECT * FROM FORM_ACCESS_STATUS
+                      WHERE ID = ?`;
+        var [form_access_status, fields] = await  pool.execute(sql, [informaccess]);
+
+        if(form_access_status.length <= 0) throw new Error("일치하는 formstatus가 존재하지 않습니다.")
+        return {
+            eng_name : form_access_status[0].eng_name,
+            kor_name : form_access_status[0].kor_name,
+        }
+    }
+
+    // contentnum str2num
+    async contentnumStr2num(incontent){
+        if(Number.isInteger(incontent)) return incontent;
+        else if (!isNaN(Number(incontent))) return Number(incontent);
+        else if(typeof(incontent) != 'string'){
+            throw new Error("content가 문자열이 아닙니다.");
+        }
+
+        let lang;
+        if(/[a-zA-z]/.test(incontent)) lang = "ENG_NAME";
+        else lang = "KOR_NAME"
+
+        var sql = `SELECT * FROM CONTENTS_NAME
+                      WHERE ${lang} = ?`;
+        var [content, fields] = await  pool.execute(sql, [incontent.trim()]);
+
+        if(content.length <= 0) throw new Error("일치하는 content가 존재하지 않습니다.")
+        return content[0].id
+    }
+
+    // contentnum num2str
+    async contentNum2str(incontent){
+        if (isNaN(Number(incontent))) throw new Error("content가 숫자가 아닙니다.");
+
+        var sql = `SELECT * FROM CONTENTS_NAME
+                      WHERE ID = ?`;
+        var [content, fields] = await  pool.execute(sql, [incontent]);
+
+        if(content.length <= 0) throw new Error("일치하는 content가 존재하지 않습니다.");
+
+        return {
+            eng_name : content[0].eng_name,
+            kor_name : content[0].kor_name,
+        }
+    }
+
+
+    get members() {
+        return this.#members;
+    }
+    set members(inmembers) {
+        this.#members = inmembers;
+    }
+
+    get formstatus() {
+        return this.#formstatus;
+    }
+    set formstatus(informstatus) {
+        this.#formstatus = formstatusStr2num(informstatus);
+    }
+
+    get formaccess() {
+        return this.#formaccess;
+    }
+    set formaccess(informaccess) {
+        this.#formaccess = formaccessStr2num(informaccess);
+    }
+
+    get contentnum() {
+        return this.#contentnum;
+    }
+    set contentnum(incontentnum) {
+        this.#contentnum = contentnumStr2num(incontentnum);
+    }
+
+    get writermemo() {
+        return this.#writermemo;
+    }
+    set writermemo(inwritermemo) {
+        this.#writermemo = inwritermemo;
+    }  
+    
+}
+
+export {FormData}
