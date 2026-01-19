@@ -2,18 +2,41 @@
 const pool = require('../../database.js')
 
 class FormData{
+    #userid = 0;
     #members = [];
     #formstatus = 0;
     #formaccess = 0;
+    #myheroaccess = true;
     #contentnum = 0;
     #writermemo = "";
+    #lastdatetime;
 
-    constructor(members, form_status, form_access, content_num, writer_memo) {
+    constructor(userid, members, form_status, form_access, myheroaccess, content_num, writer_memo, lastdatetime) {
+        this.userid = userid;
         this.members = members;
         this.formstatus = form_status;
         this.formaccess = form_access;
+        this.myheroaccess = myheroaccess;
         this.contentnum = content_num;
         this.writermemo = writer_memo;
+        this.lastdatetime = lastdatetime;
+    }
+
+    /**
+     * 유저 데이터에서 멤버 성장 데이터 읽기
+     * @param {Integer} i 몇 번째 멤버인지 지정
+     */
+    async getMemberData(i) {
+        var sql = `SELECT * FROM HERO_SETTINGS
+                WHERE USER_ID = ? AND HERO_ID = ?`;
+        var [hero_info, fields] = await  pool.execute(sql, [this.userid, this.members[i]]);
+        let lv, cho, gak;
+        // console.log(hero_info + typeof(hero_info))
+        lv = hero_info.length > 0 ? hero_info[0].lv : 0;
+        cho = hero_info.length > 0  ? hero_info[0].cho : 5;
+        gak = hero_info.length > 0  ? hero_info[0].gak : 0;
+
+        return {lv: lv, cho: cho, gak: gak};
     }
 
     // formsataus str2num
@@ -115,6 +138,12 @@ class FormData{
         }
     }
 
+    get userid() {
+        return this.#userid;
+    }
+    set userid(params) {
+        this.#userid = params;
+    }
 
     get members() {
         return this.#members;
@@ -137,6 +166,13 @@ class FormData{
         this.#formaccess = formaccessStr2num(informaccess);
     }
 
+    get myheroaccess() {
+        return this.#myheroaccess;
+    }
+    set myheroaccess(params) {
+        this.#myheroaccess = params;
+    }
+
     get contentnum() {
         return this.#contentnum;
     }
@@ -150,6 +186,13 @@ class FormData{
     set writermemo(inwritermemo) {
         this.#writermemo = inwritermemo;
     }  
+
+    get lastdatetime() {
+        return this.#lastdatetime;
+    }
+    set lastdatetime(params) {
+        this.#lastdatetime = params;
+    }
     
 }
 
