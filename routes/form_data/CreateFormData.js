@@ -24,6 +24,9 @@ class CreateFormData extends FormData{
             var [hero_info, fields] = await  pool.execute(sql, [form_id, this.members[i], member_data.lv, member_data.cho, member_data.gak]);
         }
 
+        super.formid = form_id;
         return form_id;
     }
 }
+
+export {CreateFormData}

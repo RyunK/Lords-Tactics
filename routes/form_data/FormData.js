@@ -2,6 +2,7 @@
 const pool = require('../../database.js')
 
 class FormData{
+    #formid = 0;
     #userid = 0;
     #members = [];
     #formstatus = 0;
@@ -37,6 +38,10 @@ class FormData{
         gak = hero_info.length > 0  ? hero_info[0].gak : 0;
 
         return {lv: lv, cho: cho, gak: gak};
+    }
+
+    async getCommentsfor(){
+        // formid로 찾아서 반환하기
     }
 
     // formsataus str2num
@@ -136,6 +141,13 @@ class FormData{
             eng_name : content[0].eng_name,
             kor_name : content[0].kor_name,
         }
+    }
+
+    get formid() {
+        return this.#formid;
+    }
+    set formid(params) {
+        this.#formid = params;
     }
 
     get userid() {
