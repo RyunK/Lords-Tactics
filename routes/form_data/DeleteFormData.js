@@ -7,14 +7,11 @@ class DeleteFormData extends FormData{
         super.formid = formid;
     }
 
-    
-
     async deleteData(){        
         var sql = `delete from hero_forms where id = ?`
         var [result, fields] = await pool.execute(sql, [super.formid]);
 
         let commentsfor = this.getCommentsfor()
-
         // 삭제한 게 편성 도움이면 댓글까지 찾아서 삭제
         if(commentsfor){
 

@@ -1,6 +1,6 @@
 
 const  pool = require('../database.js')
-
+import { CreateFormData } from './form_data/CreateFormData.js';
 
 module.exports = {
    heroSettingNormalSave :  async(req, res) =>{
@@ -62,6 +62,7 @@ module.exports = {
    }
     */
    insertNewForm: async(req, res) =>{
+
         var sql = `SELECT * FROM CONTENTS_NAME
               WHERE KOR_NAME = ?`;
         var [content, fields] = await  pool.execute(sql, [req.body.content_name.trim()]);
@@ -83,6 +84,11 @@ module.exports = {
             req.user[0].id, content[0].id, form_status[0].id, form_access_status[0].id, 
             req.body.myhero_access =='true', req.body.writer_memo, req.body.last_datetime];
         var [result, fields] = await  pool.execute(sql, execute_list);
+        
+        // let creater = new CreateFormData(
+        //     req.user[0].id, req.body.hero, req.body.form_status, req.body.form_access, 
+        //     req.body.myhero_access=='true', req.body.content_name.trim(), req.body.writer_memo, req.body.last_datetime
+        // )
         
         let form_id = result.insertId;
         for(let i=0; i<req.body.hero.length; i++){

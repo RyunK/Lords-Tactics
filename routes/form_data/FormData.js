@@ -41,7 +41,10 @@ class FormData{
     }
 
     async getCommentsfor(){
-        // formid로 찾아서 반환하기
+        var sql = `select * from hero_forms where id = ?`
+        var [result, fields] = await pool.execute(sql, [this.formid]);
+        
+        return result[0].comments_for_id;
     }
 
     // formsataus str2num
