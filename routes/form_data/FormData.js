@@ -1,4 +1,4 @@
-// import pool from "../../database"
+// import pool from "../../database.js"
 const pool = require('../../database.js')
 
 class FormData{
@@ -12,13 +12,17 @@ class FormData{
     #writermemo = "";
     #lastdatetime;
 
-    constructor(userid, members, form_status, form_access, myheroaccess, content_num, writer_memo, lastdatetime) {
+    constructor() {
+        
+    }
+
+    async setNewForm(userid, members, form_status, form_access, myheroaccess, content_num, writer_memo, lastdatetime){
         this.userid = userid;
         this.members = members;
-        this.formstatus = form_status;
-        this.formaccess = form_access;
+        await this.setformstatus(form_status);
+        await this.setformaccess(form_access);
         this.myheroaccess = myheroaccess;
-        this.contentnum = content_num;
+        await this.setcontentnum(content_num);
         this.writermemo = writer_memo;
         this.lastdatetime = lastdatetime;
     }
@@ -170,15 +174,15 @@ class FormData{
     get formstatus() {
         return this.#formstatus;
     }
-    set formstatus(informstatus) {
-        this.#formstatus = formstatusStr2num(informstatus);
+    async setformstatus(informstatus) {
+        this.#formstatus = await this.formstatusStr2num(informstatus);
     }
 
     get formaccess() {
         return this.#formaccess;
     }
-    set formaccess(informaccess) {
-        this.#formaccess = formaccessStr2num(informaccess);
+    async setformaccess(informaccess) {
+        this.#formaccess = await this.formaccessStr2num(informaccess);
     }
 
     get myheroaccess() {
@@ -191,8 +195,8 @@ class FormData{
     get contentnum() {
         return this.#contentnum;
     }
-    set contentnum(incontentnum) {
-        this.#contentnum = contentnumStr2num(incontentnum);
+    async setcontentnum(incontentnum) {
+        this.#contentnum = await this.contentnumStr2num(incontentnum);
     }
 
     get writermemo() {
@@ -211,4 +215,5 @@ class FormData{
     
 }
 
-export {FormData}
+module.exports = {FormData}
+// export {FormData}

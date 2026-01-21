@@ -1,11 +1,9 @@
-import { FormData } from "./FormData.js";
-// import pool from "../../database"
+// import { FormData } from "./FormData.js";
+// import pool from "../../database.js"
 const pool = require('../../database.js')
+const {FormData} = require('./FormData.js');
 
 class DeleteFormData extends FormData{
-    constructor(userid, formid) {
-        super.formid = formid;
-    }
 
     async deleteData(){        
         var sql = `delete from hero_forms where id = ?`
@@ -43,5 +41,5 @@ class DeleteFormData extends FormData{
         }
     }
 }
-
-export {DeleteFormData}
+module.exports = {DeleteFormData}
+// export {DeleteFormData}

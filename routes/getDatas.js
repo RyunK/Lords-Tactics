@@ -1,4 +1,5 @@
 
+
 module.exports = {
    loggedInNickname : function (req, res){
       if(req.user){

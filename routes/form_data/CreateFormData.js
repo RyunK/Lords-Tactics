@@ -1,11 +1,9 @@
-import { FormData } from "./FormData.js";
-// import pool from "../../database"
+// import { FormData } from "./FormData.js";
+// import pool from "../../database.js"
 const pool = require('../../database.js')
+const {FormData} = require('./FormData.js');
 
 class CreateFormData extends FormData{
-    constructor(userid, members, form_status, form_access, myheroaccess, content_num, writer_memo, lastdatetime) {
-        super(userid, members, form_status, form_access, myheroaccess, content_num, writer_memo, lastdatetime)
-    }
 
     async insertData(){
         var sql = `INSERT hero_forms (user_id, contents_id, form_status_id, form_access_status_id ,myhero_access, writer_memo, last_datetime) 
@@ -17,7 +15,7 @@ class CreateFormData extends FormData{
         
         let form_id = result.insertId;
         for(let i=0; i<this.members.length; i++){
-            let member_data = this.getMemberData(i)
+            let member_data = await this.getMemberData(i)
             
             var sql = `INSERT FORM_MEMBERS (form_id, hero_id, hero_lv, hero_cho, hero_gak)
                 VALUES(?, ?, ?, ?, ?)`;
@@ -29,4 +27,5 @@ class CreateFormData extends FormData{
     }
 }
 
-export {CreateFormData}
+module.exports = {CreateFormData}
+// export {CreateFormData}

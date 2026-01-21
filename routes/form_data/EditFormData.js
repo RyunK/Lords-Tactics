@@ -1,12 +1,9 @@
-import { FormData } from "./FormData.js";
-// import pool from "../../database"
+// import { FormData } from "./FormData.js";
+// import pool from "../../database.js"
 const pool = require('../../database.js')
+const {FormData} = require('./FormData.js');
 
 class EditFormData extends FormData{
-
-    constructor(userid, members, form_status, form_access, myheroaccess, content_num, writer_memo, lastdatetime) {
-        super(userid, members, form_status, form_access, myheroaccess, content_num, writer_memo, lastdatetime)
-    }
 
     async editData(){            
         var sql = `UPDATE hero_forms
@@ -63,4 +60,5 @@ class EditFormData extends FormData{
     }
 }
 
-export {EditFormData}
+module.exports = {EditFormData}
+// export {EditFormData}
