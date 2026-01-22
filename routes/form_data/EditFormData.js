@@ -15,17 +15,16 @@ class EditFormData extends FormData{
         var [result, fields] = await  pool.execute(sql, execute_list);
 
         // 멤버 업데이트
-        await updateMembers()
+        await this.updateMembers()
 
-        // return form_id;
-           
+        // return form_id;  
     }
 
     async updateMembers(){
         var sql = `SELECT id FROM FORM_MEMBERS FM WHERE FM.FORM_ID = ?;`
         var [members_id, fields] = await  pool.execute(sql, [this.formid]);
 
-        await checkRecordCnt(members_id.length)
+        await this.checkRecordCnt(members_id.length)
 
         for(let i=0; i<this.members.length; i++){
             var sql = `SELECT * FROM HERO_SETTINGS

@@ -8,6 +8,7 @@ const getDatas = require('./getDatas.js')
 const setDatas = require('./setDatas.js')
 
 const { mustLoggedIn, mustNotLoggedIn, stoppedCheck } = require('./middlewares'); 
+const {CreateFormData} = require('./form_data/CreateFormData.js')
 
 
 router.get('/', async(req, res) => {
@@ -199,27 +200,20 @@ router.get('/help/:id', mustLoggedIn, async(req, res) => {
 
 
 
-
-router.post('/postform', mustLoggedIn , stoppedCheck ,async(req, res) => {
-    
-    // console.log(req.body);
+// 편성 공개 게시
+router.post('/postform', mustLoggedIn , stoppedCheck, async(req, res) => {
     try{
-        
         let form_id = await setDatas.insertNewForm(req, res);
         res.redirect('/mypage/formsave/detail/' + form_id);
     }catch(e){
         console.log(e);
         res.redirect(`/?error=${e.message}`);
     }
-
-
 })
 
 // 수정 후 게시
 router.post('/edit/:form_id/postform', mustLoggedIn , stoppedCheck, async(req, res) => {
-    
     try{
-        // author_id 같거나 저장했는지 권한 확인
         var sql = `select * from hero_forms HF 
         where id = ? and 
         (HF.USER_ID = ? OR (HF.ID = (select form_id from form_save where user_id = ? and form_id = ?) 
@@ -236,8 +230,7 @@ router.post('/edit/:form_id/postform', mustLoggedIn , stoppedCheck, async(req, r
             await setDatas.updateForm(req, res);
             form_id = req.params.form_id;
         }
-        
-        
+ 
         res.redirect('/mypage/formsave/detail/' + form_id);
     }catch(e){
         console.log(e);
@@ -247,9 +240,8 @@ router.post('/edit/:form_id/postform', mustLoggedIn , stoppedCheck, async(req, r
 
 })
 
+// 질문에 대한 답변 게시
 router.post('/help/:form_id/postform', mustLoggedIn , stoppedCheck, async(req, res) => {
-    
-    // console.log(req.body);
     try{
 
         // 공개됐으며 편성 요청인지 검사
