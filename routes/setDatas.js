@@ -80,9 +80,9 @@ module.exports = {
     let updater = new EditFormData()
     await updater.setNewForm( 
         req.user[0].id, req.body.hero, req.body.form_status, req.body.form_access, 
-        req.body.myhero_access=='true', req.body.content_name.trim(), req.body.writer_memo, req.body.last_datetime
+        req.body.myhero_access=='true', req.body.content_name.trim(), req.body.writer_memo, req.body.last_datetime, req.params.form_id
     );
-    updater.formid = req.params.form_id;
+    // updater.formid = req.params.form_id;
     await updater.editData();
    },
 

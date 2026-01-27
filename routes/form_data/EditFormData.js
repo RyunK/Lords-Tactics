@@ -16,8 +16,16 @@ class EditFormData extends FormData{
 
         // 멤버 업데이트
         await this.updateMembers()
-
+        // 댓글에서 아이디로 찾아서 내용 수정하기
+        await this.updateCommentForAnswerForm();
         // return form_id;  
+    }
+    
+    async updateCommentForAnswerForm(){
+        var sql = `UPDATE FORM_COMMENTS
+                    SET COMMENT_BODY = ?, last_datetime = ?
+                    WHERE HELP_FORM_ID = ?;`
+        var [hero_info, fields] = await  pool.execute(sql, [this.writermemo, this.lastdatetime, this.formid]);
     }
 
     async updateMembers(){

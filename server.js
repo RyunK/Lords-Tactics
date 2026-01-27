@@ -70,11 +70,12 @@ app.use((req, res, next) => {
   if (!req.isAuthenticated() &&req.method === 'GET' && !(req.path).startsWith('/login')  && !(req.path).includes('error')
     && !req.path.includes('com.chrome.devtools.json') && !req.path.includes('.well-known') && !req.path.includes('.png')
     && !req.path.includes('favicon.ico') && !req.path.includes('.') && !req.path.includes('download') && !req.query.error
-    && !req.path.includes('/personalinfo')) {
+    && !req.path.includes('/personalinfo') && !req.path.includes('preview')) {
     req.session.returnTo = req.originalUrl;
     console.log(req.session.returnTo)
     req.session.save();
   }
+  console.log("요청 url: " + req.originalUrl)
   next();
 });
 

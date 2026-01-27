@@ -20,7 +20,7 @@
 </head>
 <body>
 
-    <% if(data.form_status){ %>
+    <% if(data.formdata){ %>
     <%- include('../nav_and_banner.ejs', {page: ' ', nickname: data.nickname, notice:data.banner_notice }) %> 
     <% }else{ %>
     <%- include('../nav_and_banner.ejs', {page: 'formmake', nickname: data.nickname, notice:data.banner_notice }) %> 
@@ -249,7 +249,7 @@
             <!-- 상단바 -->
             <div class="form-title ">
                 <dix class="form-status ">
-                    <% if(!data.form_status || data.form_status.status_name == "편성 공유") {%>
+                    <% if(!data.formdata.STATUS_NAME || data.formdata.STATUS_NAME == "편성 공유") {%>
                     <button type="button " class="btn-blue color-white border-0 d-flex align-items-center justify-content-center">
                         <i class="fa-solid fa-angle-down"></i><p>편성 공유</p>
                     </button>
@@ -257,7 +257,7 @@
                     <ul>
                         <li class="btn-yellow color-white">편성 요청</li>
                     </ul>
-                    <% } else{ %>
+                    <% } else if(data.formdata.STATUS_NAME == "편성 요청"){ %>
                         <button type="button " class="btn-yellow color-white border-0 d-flex align-items-center justify-content-center">
                             <i class="fa-solid fa-angle-down"></i><p>편성 요청</p>
                         </button>
@@ -265,12 +265,20 @@
                         <ul>
                             <li class="btn-blue color-white">편성 공유</li>
                         </ul>
+                    <% } else if(data.formdata.STATUS_NAME == "편성 도움"){ %> 
+                        <button type="button " class="btn-green color-white border-0 d-flex align-items-center justify-content-center">
+                            <i class="fa-solid fa-angle-down"></i><p>편성 도움</p>
+                        </button>
+                    <% }  else {%>
+                        <button type="button " class="btn-green color-white border-0 d-flex align-items-center justify-content-center">
+                            <i class="fa-solid fa-angle-down"></i><p>편성 완료</p>
+                        </button>
                     <% }  %>
                 </dix>
 
                 <div class="content-name flex-fill">
                     <button type="button"  class="btn-black  color-yellow border-0 d-flex align-items-center">
-                        <i class="fa-solid fa-angle-down"></i><p data-heronum="<%= data.now_content['num_of_heroes']%>"><%= data.now_content.kor_name %></p>
+                        <i class="fa-solid fa-angle-down"></i><p data-heronum="<%= data.formdata.NUM_OF_HEROES%>"><%= data.formdata.CONTENT_NAME %></p>
                     </button>
 
                     <ul>
@@ -351,7 +359,7 @@
                     <div class="left-box-bottom d-flex justify-content-start align-items-center">
                         <label class="charSetting-ele d-flex ">
                             <span class="me-2">나의 영웅들 공개하기</span>
-                            <input type="checkbox" name="character_public" <% if(data.myhero_access == 0){%> <% }else{%> checked <% }%>class="charPublic-checkbox">
+                            <input type="checkbox" name="character_public" <% if(data.formdata.MYHERO_ACCESS == 0){%> <% }else{%> checked <% }%>class="charPublic-checkbox">
                             <span class="checkbox-img"></span>  
                         </label>
                         <div class="btn-shadow">
@@ -366,13 +374,13 @@
                 <div class="right-box">
                     <h6 class="explain-title d-flex align-items-end">작성자 한마디</h6>
                     <div class="bg-white memo-container color-gray">
-                        <p class="cnt-text"><span><%=data.writer_memo.length %></span> / 1000</p>
-                        <textarea class="memo explain-content blue-scroll" placeholder="한마디를 적어주세요"  maxlength="1000" ><%=data.writer_memo %></textarea>
+                        <p class="cnt-text"><span><%=data.formdata.WRITER_MEMO.length %></span> / 1000</p>
+                        <textarea class="memo explain-content blue-scroll" placeholder="한마디를 적어주세요"  maxlength="1000" ><%=data.formdata.WRITER_MEMO %></textarea>
                     </div>
 
                     <!-- 좋아요 / 댓글 펼치기 -->
                     <div class="btns mg-10px ms-0 me-0 d-flex flex-fill justify-content-between">
-                        <% if(data.form_status){ %>
+                        <% if(data.formdata){ %>
                         <div class="form-btns btn-shadow d-flex justify-content-between w-100">
                             <button class="save-btn w-100 btn-cut bottom-btn btn-yellow color-white">수정/게시 </button>
                         </div>
@@ -575,7 +583,8 @@
             let form_status = $(".formmake-topcontainer .form-title .form-status button p");
             $(".preview-detail-container .form-title .form-status button p").text(form_status.text());
             if(form_status.parent().hasClass("btn-blue")) $(".preview-detail-container .form-title .form-status button").removeClass("status-request").addClass("status-share");
-            else $(".preview-detail-container .form-title .form-status button").removeClass("status-share").addClass("status-request");
+            else if(form_status.parent().hasClass("btn-yellow")) $(".preview-detail-container .form-title .form-status button").removeClass("status-share").addClass("status-request");
+            else $(".preview-detail-container .form-title .form-status button").removeClass("status-share").addClass("status-help");
 
             if(form_status.text().includes("요청") ){
                 $(".save-check .form-status-check .msg").text("현재 편성이 편성 요청 전용 게시판에 올라갑니다. 공개 여부를 선택할 수 없습니다.")

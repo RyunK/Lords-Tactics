@@ -38,7 +38,7 @@ function mypageFormWhereMaker(req, q_content, filtered_heroes_list, except_save 
         q_list.push(req.query.form_status)
         q_list.push(req.user[0].id)
     } else if (req.query.form_status == 3){
-        where = `(not HF.USER_ID = ? and (HF.ID = (select form_id from form_save where user_id = ?) and HF.form_access_status_id = 1) )
+        where = `(not HF.USER_ID = ? and (HF.ID in (select form_id from form_save where user_id = ?) and HF.form_access_status_id = 1) )
                 and (hf.form_status_id = 1 or hf.form_status_id = 7)`;
     }
 
@@ -405,7 +405,7 @@ router.get('/helping/loadmyform/:req_id', mustLoggedIn, async(req, res) => {
     res.render('./mypage/mypage_loadmyform.ejs',  {data : data})
 })
 
-router.get('/preview/detail/:id', mustLoggedIn, async(req, res) => {     
+router.get('/preview/detail/:id', async(req, res) => {     
     // if(!req.query.n) res.redirect('/formsave');
     try{
         // 권한 체크 해야함

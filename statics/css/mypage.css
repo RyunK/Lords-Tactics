@@ -233,18 +233,18 @@ h6{
 }
 
 .dropdown-contents .form_status{
-    top: 100%;
+    /* top: 100%; */
     transform: translateY(-320px);
 }
 
 .dropdown-contents .content{
-    top: 100%;
+    /* top: 100%; */
     transform: translateY(-50px);
 }
 
 .dropdown-contents .hero-search-container{
     left: 25px;
-    top: 100%;
+    /* top: 100%; */
     transform: translateY(-220px);
     
 }

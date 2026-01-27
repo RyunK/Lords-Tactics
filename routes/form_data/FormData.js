@@ -16,7 +16,7 @@ class FormData{
         
     }
 
-    async setNewForm(userid, members, form_status, form_access, myheroaccess, content_num, writer_memo, lastdatetime){
+    async setNewForm(userid, members, form_status, form_access, myheroaccess, content_num, writer_memo, lastdatetime, formid = 0){
         this.userid = userid;
         this.members = members;
         await this.setformstatus(form_status);
@@ -25,6 +25,7 @@ class FormData{
         await this.setcontentnum(content_num);
         this.writermemo = writer_memo;
         this.lastdatetime = lastdatetime;
+        this.formid = formid;
     }
 
     /**

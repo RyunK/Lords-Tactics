@@ -8,7 +8,9 @@ const getDatas = require('./getDatas.js')
 const setDatas = require('./setDatas.js')
 
 const { mustLoggedIn, mustNotLoggedIn, stoppedCheck } = require('./middlewares'); 
-const {CreateFormData} = require('./form_data/CreateFormData.js')
+const {CreateFormData} = require('./form_data/CreateFormData.js');
+// const getDatas = require('./getDatas.js')
+
 
 
 router.get('/', async(req, res) => {
@@ -60,19 +62,16 @@ router.get('/edit/:form_id', mustLoggedIn, async(req, res) => {
         var [result, fields] = await pool.execute(sql, [req.params.form_id, req.user[0].id, req.user[0].id]);
         if(result.length <= 0) throw new Error("편성을 수정할 권한이 없습니다.");
 
+        // 일반 데이터 불러오기
         let contents_list = await getDatas.getContentsName(req, res,  pool);
         let hero_list = await getDatas.getHeroList(req, res,  pool);
 
-        var sql = `select * from form_members
-                where form_id = ?`
-        var [form_heroes, fields] = await pool.execute(sql, [req.params.form_id]);
-        let form_herolist = form_heroes.map(function(val){ return val.hero_id });
+        // formdata 불러오기
+        let [formdata, members] = await getDatas.getFormInfoNMembers(req, res, pool, req.params.form_id);
+        let form_herolist = members.map(function(val){ return val.HERO_ID });
 
-        var sql = `SELECT * FROM CONTENTS_NAME
-                WHERE id = (SELECT hf.CONTENTS_ID  FROM HERO_FORMS HF WHERE hf.id = ?)`;
-        var [now_content, fields] = await  pool.execute(sql, [req.params.form_id]);
-
-        var having_heroes, fields, having_heroes_id;
+        // 유저 보유 영웅 출력
+        var having_heroes, having_heroes_id;
         if (req.isAuthenticated()) {
             var sql = `SELECT * FROM HERO_SETTINGS
                     WHERE USER_ID = ?`;
@@ -81,34 +80,16 @@ router.get('/edit/:form_id', mustLoggedIn, async(req, res) => {
                 return e.hero_id;
             })
         }
-
-        var sql = `SELECT * FROM form_status
-                WHERE id = (SELECT hf.form_status_id  FROM HERO_FORMS HF WHERE hf.id = ?)`;
-        var [form_status, fields] = await  pool.execute(sql, [req.params.form_id]);
-
-        var sql = `SELECT * FROM form_access_status
-                WHERE id = (SELECT hf.form_access_status_id  FROM HERO_FORMS HF WHERE hf.id = ?)`;
-        var [form_access_status, fields] = await  pool.execute(sql, [req.params.form_id]);
-
-        var sql = `SELECT myhero_access, writer_memo FROM HERO_FORMS
-                WHERE id = ?`;
-        var [form, fields] = await  pool.execute(sql, [req.params.form_id]);
-
-        
         
         let data = {
                 nickname: getDatas.loggedInNickname(req, res),
                 contents_list : contents_list,
                 hero_list : hero_list,
                 form_herolist : form_herolist,
-                now_content : now_content[0],
-                form_status : form_status[0],
-                form_access_status : form_access_status[0],
-                myhero_access : form[0].myhero_access,
-                writer_memo : form[0].writer_memo? form[0].writer_memo : "", 
                 having_heroes : having_heroes,
                 having_heroes_id : having_heroes_id,
                 banner_notice : req.banner_notice,
+                formdata : formdata[0],
             }
 
         res.render('./formmake/form_making2.ejs', {data : data})

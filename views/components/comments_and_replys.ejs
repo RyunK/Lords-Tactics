@@ -58,7 +58,11 @@
             <span class="reply-btn">답글쓰기</span>
             <% if(data.comments[i].is_author == 1) {%>
             <div>
-                <span class="edit">수정</span>
+                <% if(data.comments[i].help_form_id){ %>
+                    <span><a class="color-black" href="/formmake/edit/<%= data.comments[i].help_form_id %>">수정</a></span>
+                <% }else { %> 
+                    <span class="edit">수정</span>
+                <% } %> 
                 <span class="delete color-red ms-1">삭제</span>
             </div>
             <% } else {%> 
