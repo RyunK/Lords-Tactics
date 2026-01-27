@@ -66,24 +66,24 @@ module.exports = {
    }
     */
    insertNewForm: async(req, res) =>{
+        let creater = new CreateFormData()
+        await creater.setNewForm( 
+            req.user[0].id, req.body.hero, req.body.form_status, req.body.form_access, 
+            req.body.myhero_access=='true', req.body.content_name.trim(), req.body.writer_memo, req.body.last_datetime
+        )
 
-    let creater = new CreateFormData()
-    await creater.setNewForm( 
-        req.user[0].id, req.body.hero, req.body.form_status, req.body.form_access, 
-        req.body.myhero_access=='true', req.body.content_name.trim(), req.body.writer_memo, req.body.last_datetime
-    )
-
-    return creater.insertData();       
+        return creater.insertData();       
    },
 
    updateForm: async(req, res) =>{
-    let updater = new EditFormData()
-    await updater.setNewForm( 
-        req.user[0].id, req.body.hero, req.body.form_status, req.body.form_access, 
-        req.body.myhero_access=='true', req.body.content_name.trim(), req.body.writer_memo, req.body.last_datetime, req.params.form_id
-    );
-    // updater.formid = req.params.form_id;
-    await updater.editData();
+        let updater = new EditFormData()
+        await updater.setNewForm( 
+            req.user[0].id, req.body.hero, req.body.form_status, req.body.form_access, 
+            req.body.myhero_access=='true', req.body.content_name.trim(), req.body.writer_memo, req.body.last_datetime, req.params.form_id
+        );
+        // updater.formid = req.params.form_id;
+        await updater.editData();
+
    },
 
    /**
@@ -107,6 +107,16 @@ module.exports = {
         var [comment, fields] = await  pool.execute(sql, [req.params.form_id, req.user[0].id, form_id, req.body.writer_memo, req.body.last_datetime]);
 
         return form_id;
+   },
+
+   updateAnswerForm: async(req, res) =>{
+        let updater = new EditFormData()
+        await updater.setNewForm( 
+            req.user[0].id, req.body.hero, req.body.form_status, req.body.form_access, 
+            req.body.myhero_access=='true', req.body.content_name.trim(), req.body.writer_memo, req.body.last_datetime, req.params.helpform_id
+        );
+        // updater.formid = req.params.form_id;
+        await updater.editData();
    },
 
 }

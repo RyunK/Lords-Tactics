@@ -124,7 +124,7 @@ router.get('/help/:id', mustLoggedIn, async(req, res) => {
         let [askform_data, this_members] = await getDatas.getFormInfoNMembers(req, res,  pool, req.params.id); 
         
         if(!form_herolist || form_herolist.length <= 0){
-            form_herolist = this_members.map(function(val){ return val.hero_id });
+            form_herolist = this_members.map(function(val){ return val.HERO_ID });
         }
 
         // 질문자 영웅 육성 정보
@@ -161,7 +161,57 @@ router.get('/help/:id', mustLoggedIn, async(req, res) => {
 
 })
 
+// 편성 도움 수정
+router.get('/help/updateform/:helpform_id', mustLoggedIn, async(req, res) => {
 
+    try{
+        // helpform_id 권한 확인
+       
+        // 일반 데이터 불러오기
+        let contents_list = await getDatas.getContentsName(req, res,  pool);
+        let hero_list = await getDatas.getHeroList(req, res,  pool);
+
+        // 도움글 정보 읽기
+        let [helpform_data, help_members] = await getDatas.getFormInfoNMembers(req, res,  pool, req.params.helpform_id); 
+        var form_herolist = help_members.map(function(val){ return val.HERO_ID });
+
+        let askform_id = helpform_data[0].COMMENTS_FOR_ID;
+        // 질문글 정보 읽기
+        let [askform_data, this_members] = await getDatas.getFormInfoNMembers(req, res,  pool, askform_id); 
+
+        // 질문자 영웅 육성 정보
+        var having_heroes, having_heroes_id;
+        if (askform_data[0].MYHERO_ACCESS == 1) {
+            var sql = `select * from hero_forms HF where id = ? `
+            var [now_form, fields] = await pool.execute(sql, [askform_id]);
+            var sql = `SELECT * FROM HERO_SETTINGS
+                    WHERE USER_ID = ?`;
+            [having_heroes, fields] = await  pool.execute(sql, [now_form[0].user_id]);
+            having_heroes_id = having_heroes.map(function(e, i){
+                return e.hero_id;
+            })
+        }
+        let data = {
+                nickname: getDatas.loggedInNickname(req, res),
+                contents_list : contents_list,
+                hero_list : hero_list,
+                askform_data : askform_data[0],
+                form_herolist : form_herolist,
+                members : this_members,
+                having_heroes : having_heroes,
+                having_heroes_id : having_heroes_id,
+                helper_memo : helpform_data[0].WRITER_MEMO, 
+                banner_notice : req.banner_notice,
+            }
+
+        res.render('./formmake/help_newform.ejs', {data : data})
+    }catch(e){
+        console.log(e);
+        res.redirect(`/?error=${e.message}`)
+    }
+    
+
+})
 
 
 // 편성 공개 게시
@@ -200,8 +250,6 @@ router.post('/edit/:form_id/postform', mustLoggedIn , stoppedCheck, async(req, r
         console.log(e);
         res.redirect(`/?error=${e.message}`);
     }
-
-
 })
 
 // 질문에 대한 답변 게시
@@ -219,8 +267,19 @@ router.post('/help/:form_id/postform', mustLoggedIn , stoppedCheck, async(req, r
         console.log(e);
         res.redirect(`/?error=${e.message}`);
     }
+})
 
-
+// 질문에 대한 답변 수정 게시
+router.post('/help/updateform/:helpform_id/postform', mustLoggedIn , stoppedCheck, async(req, res) => {
+    try{
+        await setDatas.updateAnswerForm(req, res);
+        // form_id = req.params.askform_id;
+        console.log(req.body.askform_id)
+        res.redirect('/forum/help/detail/' + req.body.askform_id);
+    }catch(e){
+        console.log(e);
+        res.redirect(`/?error=${e.message}`);
+    }
 })
 
 module.exports=router;

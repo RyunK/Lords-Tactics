@@ -566,7 +566,14 @@
 
         $(".right-box .edit").on("click", function(e){
             e.preventDefault();
-            
+            if($(".form-status p").text() == "편성 저장"){
+                if(!confirm("[편성 저장]은 수정하면 자신의 [편성 공유] 상태로 저장됩니다. 계속하시겠습니까?"))
+                    return;
+            }  else if ($(".form-status p").text().includes("편성 도움")){
+                window.location.href = `/formmake/help/updateform/${window.location.pathname.split("/").pop()}`
+                return;  
+            }
+
             window.location.href = `/formmake/edit/${window.location.pathname.split("/").pop()}`
             
         })

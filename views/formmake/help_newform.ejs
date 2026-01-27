@@ -150,7 +150,7 @@
 
     <div class="formmake-topcontainer d-flex flex-wrap">
         <!-- 편성 요청 글 -->
-        <div class="askform-container shadow-basic" data-myheroaccess = "<%= data.askform_data.MYHERO_ACCESS %>">
+        <div class="askform-container shadow-basic" data-myheroaccess = "<%= data.askform_data.MYHERO_ACCESS %>" data-formid="<%= data.askform_data.ID %>">
             <!-- 상단바 -->
             <div class="form-title ">
                 <dix class="form-status ">
@@ -616,6 +616,10 @@
 
             // 저장 일시
             newForm.append(`<input name="last_datetime" type="hidden" value="${LastDatetime.dateFormating()}">`);
+            
+            // 질문글 id 
+            newForm.append(`<input name="askform_id" type="hidden" value="${$(".askform-container").data("formid")}">`);
+
 
             newForm.appendTo('body');
             newForm.submit();

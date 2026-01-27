@@ -59,7 +59,7 @@
             <% if(data.comments[i].is_author == 1) {%>
             <div>
                 <% if(data.comments[i].help_form_id){ %>
-                    <span><a class="color-black" href="/formmake/edit/<%= data.comments[i].help_form_id %>">수정</a></span>
+                    <span><a class="color-black" href="/formmake/help/updateform/<%= data.comments[i].help_form_id %>">수정</a></span>
                 <% }else { %> 
                     <span class="edit">수정</span>
                 <% } %> 
