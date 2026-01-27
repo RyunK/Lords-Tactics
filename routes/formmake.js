@@ -109,22 +109,27 @@ router.get('/help/:id', mustLoggedIn, async(req, res) => {
         var sql = `select * from hero_forms HF where id = ? and ( form_status_id = 2 or form_status_id = 4) and form_access_status_id = 1`
         var [now_form, fields] = await pool.execute(sql, [req.params.id]);
         if(now_form.length <= 0) throw new Error("도움을 줄 수 없습니다.");
-
+       
+        // 일반 데이터 불러오기
         let contents_list = await getDatas.getContentsName(req, res,  pool);
         let hero_list = await getDatas.getHeroList(req, res,  pool);
 
+        // 쿼리 영웅 정보 있다면 읽기
         let form_herolist = req.query.hero? req.query.hero : [];
         if(typeof(form_herolist) == "string"){
             form_herolist = [form_herolist];
         }
+
+        // 질문글 정보 읽기
+        let [askform_data, this_members] = await getDatas.getFormInfoNMembers(req, res,  pool, req.params.id); 
         
+        if(!form_herolist || form_herolist.length <= 0){
+            form_herolist = this_members.map(function(val){ return val.hero_id });
+        }
 
-        var sql = `SELECT * FROM CONTENTS_NAME
-                WHERE id = (SELECT hf.CONTENTS_ID  FROM HERO_FORMS HF WHERE hf.id = ?)`;
-        var [now_content, fields] = await  pool.execute(sql, [req.params.id]);
-
-        var having_heroes, fields, having_heroes_id;
-        if (now_form[0].myhero_access == 1) {
+        // 질문자 영웅 육성 정보
+        var having_heroes, having_heroes_id;
+        if (askform_data[0].MYHERO_ACCESS == 1) {
             var sql = `SELECT * FROM HERO_SETTINGS
                     WHERE USER_ID = ?`;
             [having_heroes, fields] = await  pool.execute(sql, [now_form[0].user_id]);
@@ -133,36 +138,14 @@ router.get('/help/:id', mustLoggedIn, async(req, res) => {
             })
         }
 
-        var sql = `SELECT * FROM form_status
-                WHERE id = (SELECT hf.form_status_id  FROM HERO_FORMS HF WHERE hf.id = ?)`;
-        var [form_status, fields] = await  pool.execute(sql, [req.params.id]);
-
-        var sql = `SELECT * FROM form_access_status
-                WHERE id = (SELECT hf.form_access_status_id  FROM HERO_FORMS HF WHERE hf.id = ?)`;
-        var [form_access_status, fields] = await pool.execute(sql, [req.params.id]);
-
-        let [form_info, this_members] = await getDatas.getFormInfoNMembers(req, res,  pool); 
-        
-        if(!form_herolist || form_herolist.length <= 0){
-            var sql = `select * from form_members
-                where form_id = ?`
-            var [form_heroes, fields] = await pool.execute(sql, [req.params.id]);
-            form_herolist = form_heroes.map(function(val){ return val.hero_id });
-        }
-
         
         let data = {
                 nickname: getDatas.loggedInNickname(req, res),
                 contents_list : contents_list,
                 hero_list : hero_list,
-                form_herolist : form_herolist,
+                askform_data : askform_data[0],
                 members : this_members,
-                now_content : now_content[0],
-                form_status : form_status[0],
-                form_access_status : form_access_status[0],
-                myhero_access : form_info[0].MYHERO_ACCESS,
-                writer_memo : form_info[0].WRITER_MEMO? form_info[0].WRITER_MEMO : "", 
-                writer : form_info[0].NICKNAME,
+                form_herolist : form_herolist,
                 having_heroes : having_heroes,
                 having_heroes_id : having_heroes_id,
                 helper_memo : req.query.writer_memo? req.query.writer_memo : "", 

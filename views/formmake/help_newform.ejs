@@ -150,7 +150,7 @@
 
     <div class="formmake-topcontainer d-flex flex-wrap">
         <!-- 편성 요청 글 -->
-        <div class="askform-container shadow-basic" data-myheroaccess = "<%= data.myhero_access %>">
+        <div class="askform-container shadow-basic" data-myheroaccess = "<%= data.askform_data.MYHERO_ACCESS %>">
             <!-- 상단바 -->
             <div class="form-title ">
                 <dix class="form-status ">
@@ -161,7 +161,7 @@
 
                 <div class="content-name flex-fill">
                     <div  class="bg-basicdark  color-yellow border-0 d-flex align-items-center">
-                        <p><%= data.now_content.kor_name %></p>
+                        <p><%= data.askform_data.CONTENT_NAME %></p>
                     </div>
                 </div>
             </div>
@@ -169,7 +169,7 @@
             <div class="contents">
                 <div class="d-flex align-items-end">
                     <div class="form-author bg-basicdark color-white">
-                        작성자 <span class="color-purple"><%= data.writer %></span>
+                        작성자 <span class="color-purple"><%= data.askform_data.NICKNAME %></span>
                     </div>
                 </div>
                 <form class="form-border-container d-flex align-items-center flex-wrap">
@@ -181,7 +181,7 @@
                                         i : i,
                                         data : {
                                         members : data.members,
-                                        myheroaccess: data.myhero_access
+                                        myheroaccess: data.askform_data.MYHERO_ACCESS
                                     }}) %> 
                                 </div>
                             <% } %>
@@ -195,7 +195,7 @@
                                     i : i,
                                     data : {
                                     members : data.members,
-                                    myheroaccess: data.myhero_access
+                                    myheroaccess: data.askform_data.MYHERO_ACCESS
                                 }}) %> 
                             </div>
                         <% } %>
@@ -208,7 +208,7 @@
                                 i : i,
                                 data : {
                                 members : data.members,
-                                myheroaccess: data.myhero_access
+                                myheroaccess: data.askform_data.MYHERO_ACCESS
                             }}) %> 
                         </div>
                         <% } %>
@@ -222,7 +222,7 @@
                                     i : i,
                                     data : {
                                     members : data.members,
-                                    myheroaccess: data.myhero_access
+                                    myheroaccess: data.askform_data.MYHERO_ACCESS
                                 }}) %> 
                             </div>
                             <% if(i == 2){ %>
@@ -236,7 +236,7 @@
 
                     
                 <div class="bg-white memo-container color-gray">
-                    <div class="memo explain-content blue-scroll" ><%=data.writer_memo %></div>
+                    <div class="memo explain-content blue-scroll" ><%=data.askform_data.WRITER_MEMO %></div>
                 </div>
             </div>    
 
@@ -258,7 +258,7 @@
 
                 <div class="content-name flex-fill">
                     <button type="button"  class="btn-black  color-yellow border-0 d-flex align-items-center">
-                        <p data-heronum="<%= data.now_content['num_of_heroes']%>"><%= data.now_content.kor_name %></p>
+                        <p data-heronum="<%= data.askform_data['NUM_OF_HEROES']%>"><%= data.askform_data.CONTENT_NAME %></p>
                     </button>
                 </div>
             </div>
